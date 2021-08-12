@@ -24,6 +24,7 @@ exports.protojs2cotjs = (proto) => {
 	const cot = {
 		"event": {
 			"_attributes": {
+				"version": "2.0",
 				"uid": proto.cotEvent.uid,
 				"type": proto.cotEvent.type,
 				"time": new Date(parseInt(proto.cotEvent.sendTime)).toISOString(),
