@@ -2,7 +2,6 @@ const path = require('path')
 const protobuf = require('protobufjs')
 const xmljs = require('xml-js')
 
-
 let TakMessage = null
 
 exports.proto2js = (message) => {
@@ -21,6 +20,8 @@ exports.proto2js = (message) => {
 }
 
 exports.protojs2cotjs = (proto) => {
+	if(!proto.cotEvent) return null
+
 	const cot = {
 		"event": {
 			"_attributes": {

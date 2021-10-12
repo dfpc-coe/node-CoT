@@ -1,6 +1,6 @@
 {
 	"name": "@vidterra/tak.js",
-	"version": "0.0.6",
+	"version": "0.0.7",
 	"description": "Lightweight JavaScript library for parsing and manipulating TAK messages",
 	"main": "index.js",
 	"dependencies": {
