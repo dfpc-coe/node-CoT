@@ -1,7 +1,7 @@
-const cot = require('./src/cot')
-const proto = require('./src/proto')
+import XML from './src/xml.js';
+import Proto from './src/proto.js';
 
-module.exports = {
-	cot,
-	proto
-}
+export {
+    XML,
+    Proto
+};
