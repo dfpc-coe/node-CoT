@@ -1,35 +1,32 @@
 {
-	"name": "@vidterra/tak.js",
-	"version": "0.0.7",
-	"description": "Lightweight JavaScript library for parsing and manipulating TAK messages",
-	"main": "index.js",
-	"dependencies": {
-		"protobufjs": "",
-		"xml-js": ""
-	},
-	"devDependencies": {
-		"jest": ""
-	},
-	"scripts": {
-		"test": "jest"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/vidterra/tak.js.git"
-	},
-	"keywords": [
-		"tak",
-		"atak",
-		"wintak",
-		"cot",
-		"cusor",
-		"target",
-		"tactical"
-	],
-	"author": "Vidterra LLC",
-	"license": "MIT",
-	"bugs": {
-		"url": "https://github.com/vidterra/tak.js/issues"
-	},
-	"homepage": "https://github.com/vidterra/tak.js#readme"
+    "name": "@tak-ps/node-cot",
+    "version": "0.0.7",
+    "description": "Lightweight JavaScript library for parsing and manipulating TAK messages",
+    "main": "index.js",
+    "dependencies": {
+        "protobufjs": "^7.1.2",
+        "xml-js": "^1.6.11"
+    },
+    "scripts": {
+        "test": "jest"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/tak-ps/node-cot.git"
+    },
+    "keywords": [
+        "tak",
+        "atak",
+        "wintak",
+        "cot",
+        "cusor",
+        "target",
+        "tactical"
+    ],
+    "author": "Vidterra LLC",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/vidterra/tak.js/issues"
+    },
+    "homepage": "https://github.com/vidterra/tak.js#readme"
 }
