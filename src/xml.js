@@ -24,7 +24,7 @@ export default class XMLCot {
         return result;
     }
 
-    jsDate2cot(unix) {
+    static jsDate2cot(unix) {
         return new Date(unix).toISOString();
     }
 

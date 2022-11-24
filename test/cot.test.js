@@ -117,7 +117,7 @@ test('Decode COT message', (t) => {
         }
     });
 
-    t.end()
+    t.end();
 });
 
 test('Encode COT message', (t) => {
