@@ -2,7 +2,7 @@ import path from 'path';
 import protobuf from 'protobufjs';
 import xmljs from 'xml-js';
 
-const root = protobuf.loadSync(path.join(__dirname, '../assets/takmessage.proto'));
+const root = protobuf.loadSync(new URL(, '../assets/takmessage.proto', import.meta.url));
 const TakMessage = root.lookupType('atakmap.commoncommo.protobuf.v1.TakMessage');
 
 export default class Proto {
