@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v2.1.1
+
+- :bug: Parse GeoJSON Point coords into COT
+
 ### v2.1.0
 
 - :rocket: Allow setting `type` & `how` from GeoJSON
