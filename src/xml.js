@@ -1,6 +1,25 @@
 import xmljs from 'xml-js';
 
+/**
+ * Convert to and from an XML CoT message
+ * @class
+ */
 export default class XMLCot {
+    /**
+     *
+     */
+    static from_geojson(feature) {
+        if (feature.type !== 'Feature') throw new Error('Must be GeoJSON Feature');
+        if (!feature.geometry || feature.geometry.type !== 'Point') throw new Error('Must be GeoJSON Point Feature');
+        if (!feature.properties) throw new Error('Feature must have properties');
+
+
+    }
+
+    static ping() {
+
+    }
+
     static js2xml(js) {
         if (typeof js === 'undefined' || !js) {
             throw new Error('Attempted to parse empty Object');
