@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v2.1.3
+
+- :bug: Continue squashing a ton of small expectation issues to get an MVP of a point on TAK
+
 ### v2.1.2
 
 - :bug: Parse GeoJSON Point coords into COT
