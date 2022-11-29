@@ -50,6 +50,9 @@ export default class XMLCot {
             if (feature.properties[key]) cot.event._attributes[key] = feature.properties[key];
         }
 
+        cot.event.point.lon = feature.geometry.coordinates[0];
+        cot.event.point.lat = feature.geometry.coordinates[1];
+
         return new XMLCot(cot);
     }
 
