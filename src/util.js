@@ -27,6 +27,21 @@ export default class Util {
     }
 
     /**
+     * Return an event.display object with as many defaults as possible
+     *
+     * @param {String} [callsign=UNKNOWN] Display Callsign
+     *
+     * @returns {Object}
+     */
+    static cot_event_display(callsign = 'UNKNOWN') {
+        return {
+            contact: {
+                _attributes: { callsign }
+            }
+        };
+    }
+
+    /**
      * Generate a random UUID
      *
      * @returns {Object}

@@ -40,11 +40,15 @@ export default class XMLCot {
         if (!feature.properties) throw new Error('Feature must have properties');
 
         const cot = {
-            'event': {
-                '_attributes': Util.cot_event_attr(feature.properties.type || 'a-f-G', feature.properties.how || 'm-g'),
-                'point': Util.cot_point()
+            event: {
+                _attributes: Util.cot_event_attr(feature.properties.type || 'a-f-G', feature.properties.how || 'm-g'),
+                point: Util.cot_point(),
+                display: Util.cot_event_display(feature.properties.callsign)
             }
         };
+
+        if (feature.id) cot.event._attributes.uid = feature.id;
+        if (feature.properties.callsign && !feature.id) cot.event._attributes.uid = feature.properties.callsign;
 
         for (const key of ['time', 'start', 'stale', 'type', 'how']) {
             if (feature.properties[key]) cot.event._attributes[key] = feature.properties[key];
@@ -66,6 +70,7 @@ export default class XMLCot {
             id: this.raw.event._attributes.uid,
             type: 'Feature',
             properties: {
+                callsign: this.raw.event.display.contact._attributes.callsign || 'UNKNOWN',
                 time: this.raw.event._attributes.time,
                 start: this.raw.event._attributes.start,
                 stale: this.raw.event._attributes.stale
