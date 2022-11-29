@@ -1,92 +1,101 @@
 import xmljs from 'xml-js';
+import Util from './util.js';
 
 /**
  * Convert to and from an XML CoT message
  * @class
+ *
+ * @param {String|Object|Buffer} cot A string/buffer containing the XML representation or the xml-js object tree
+ *
+ * @prop {Object} raw Raw XML-JS representation of CoT
  */
 export default class XMLCot {
+    constructor(cot) {
+        if (cot instanceof Buffer) String(cot);
+
+        if (typeof cot === 'string') {
+            this.raw = xmljs.xml2js(cot, { compact: true });
+        } else {
+            this.raw = cot;
+        }
+
+        // Attempt to cast all point to numerics
+        for (const key of Object.keys(this.raw.event.point)) {
+            if (!isNaN(parseFloat(this.raw.event.point[key]))) {
+                this.raw.event.point[key] = parseFloat(this.raw.event.point[key]);
+            }
+        }
+    }
+
     /**
+     * Return an XMLCot Message
      *
+     * @param {Object} feature GeoJSON Point Feature
+     *
+     * @return {XMLCot}
      */
     static from_geojson(feature) {
         if (feature.type !== 'Feature') throw new Error('Must be GeoJSON Feature');
         if (!feature.geometry || feature.geometry.type !== 'Point') throw new Error('Must be GeoJSON Point Feature');
         if (!feature.properties) throw new Error('Feature must have properties');
 
-
-    }
-
-    static ping() {
-
-    }
-
-    static js2xml(js) {
-        if (typeof js === 'undefined' || !js) {
-            throw new Error('Attempted to parse empty Object');
-        }
-
-        return xmljs.js2xml(js, { compact: true });
-    }
-
-    // accepts an Object decoded with xml2js.decodeType(type)
-    static encodeType(type) {
-        let result = type.atom;
-        if (type.descriptor) {
-            result += `-${type.descriptor}`;
-        }
-        if (type.domain) {
-            result += `-${type.domain}`;
-        }
-        if (type.milstd.length > 0) {
-            result += `-${type.milstd.join('-')}`;
-        }
-        return result;
-    }
-
-    static jsDate2cot(unix) {
-        return new Date(unix).toISOString();
-    }
-
-    static xml2js(cot) {
-        if (typeof cot === 'undefined' || cot === null) {
-            throw new Error('Attempted to parse empty COT message');
-        }
-
-        if (typeof cot === 'object') { // accept a data buffer or string for conversion
-            cot = cot.toString();
-        }
-
-        return xmljs.xml2js(cot, { compact: true });
-    }
-
-    // accepts a string formatted like 'a-f-G-U-C-I'
-    static decodeType(type) {
-        const split = type.split('-');
-        const atom = split[0];
-        const descriptor = split[1] || null;
-        const domain = split[2] || null;
-        const milstd = split.slice(3);
-        return {
-            type,
-            atom,
-            descriptor,
-            domain,
-            milstd
+        const cot = {
+            'event': {
+                '_attributes': Util.cot_event_attr('a-f-G', 'm-g'),
+                'point': Util.cot_point()
+            }
         };
+
+        for (const key of ['time', 'start', 'stale']) {
+            if (feature.properties[key]) cot.event._attributes[key] = feature.properties[key];
+        }
+
+        return new XMLCot(cot);
     }
 
-    static cotDate2js(iso) {
-        return Date.parse(iso);
+    /**
+     * Return a GeoJSON Feature from an XML CoT message
+     *
+     * @returns {Object}
+     */
+    to_geojson() {
+        const geojson = {
+            id: this.raw.event._attributes.uid,
+            type: 'Feature',
+            properties: {
+                time: this.raw.event._attributes.time,
+                start: this.raw.event._attributes.start,
+                stale: this.raw.event._attributes.stale
+            },
+            geometry: {
+                type: 'Point',
+                coordinates: [
+                    this.raw.event.point._attributes.lon,
+                    this.raw.event.point._attributes.lon
+                ]
+            }
+        };
+
+        return geojson;
     }
 
-    // convert a decoded point from xml2js(cot) from String to Numbers
-    static parsePoint(point) {
+    to_xml() {
+        return xmljs.js2xml(this.raw, {
+            compact: true
+        });
+    }
+
+    /**
+     * Return a CoT Message
+     *
+     * @returns {XMLCot}
+     */
+    static ping() {
         return {
-            lat: parseFloat(point.lat),
-            lon: parseFloat(point.lon),
-            hae: parseFloat(point.hae),
-            ce: parseFloat(point.ce),
-            le: parseFloat(point.le)
+            event: {
+                _attributes: Util.cot_event_attr('t-x-c-t', 'h-g-i-g-o'),
+                point: Util.cot_point()
+            }
         };
     }
 }
