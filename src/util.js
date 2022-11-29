@@ -14,6 +14,9 @@ export default class Util {
      * @returns {Object}
      */
     static cot_event_attr(type, how) {
+        if (!type) throw new Error('type param required');
+        if (!how) throw new Error('how param required');
+
         return {
             ...Util.cot_version(),
             ...Util.cot_uuid(),
