@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v2.1.0
+
+- :rocket: Allow setting `type` & `how` from GeoJSON
+
 ### v2.0.0
 
 - :rocket: Class based XML CoT approach

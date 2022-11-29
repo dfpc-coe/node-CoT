@@ -46,7 +46,7 @@ export default class XMLCot {
             }
         };
 
-        for (const key of ['time', 'start', 'stale']) {
+        for (const key of ['time', 'start', 'stale', 'type', 'how']) {
             if (feature.properties[key]) cot.event._attributes[key] = feature.properties[key];
         }
 
