@@ -41,7 +41,7 @@ export default class XMLCot {
 
         const cot = {
             'event': {
-                '_attributes': Util.cot_event_attr('a-f-G', 'm-g'),
+                '_attributes': Util.cot_event_attr(feature.properties.type || 'a-f-G', feature.properties.how || 'm-g'),
                 'point': Util.cot_point()
             }
         };
