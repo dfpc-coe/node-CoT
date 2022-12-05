@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v2.2.1
+
+- :bug: `event.display` => `event.detail`
+
 ### v2.2.0
 
 - :bug: Bugfixes in default values
