@@ -43,7 +43,7 @@ export default class XMLCot {
             event: {
                 _attributes: Util.cot_event_attr(feature.properties.type || 'a-f-G', feature.properties.how || 'm-g'),
                 point: Util.cot_point(),
-                display: Util.cot_event_display(feature.properties.callsign)
+                detail: Util.cot_event_detail(feature.properties.callsign)
             }
         };
 

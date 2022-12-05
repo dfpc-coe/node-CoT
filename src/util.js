@@ -27,13 +27,13 @@ export default class Util {
     }
 
     /**
-     * Return an event.display object with as many defaults as possible
+     * Return an event.detail object with as many defaults as possible
      *
      * @param {String} [callsign=UNKNOWN] Display Callsign
      *
      * @returns {Object}
      */
-    static cot_event_display(callsign = 'UNKNOWN') {
+    static cot_event_detail(callsign = 'UNKNOWN') {
         return {
             contact: {
                 _attributes: { callsign }
