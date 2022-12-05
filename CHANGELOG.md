@@ -10,6 +10,11 @@
 
 ## Version History
 
+### v2.2.0
+
+- :bug: Bugfixes in default values
+- :bug: Ensure `to_geojson` is a function call that doesn't modify underlying message
+
 ### v2.1.3
 
 - :bug: Continue squashing a ton of small expectation issues to get an MVP of a point on TAK
