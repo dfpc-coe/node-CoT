@@ -66,20 +66,27 @@ export default class XMLCot {
      * @returns {Object}
      */
     to_geojson() {
+        const raw = JSON.parse(JSON.stringify(this.raw));
+        if (!raw.event.detail) raw.event.detail = {};
+        if (!raw.event.detail.contact) raw.event.detail.contact = {};
+        if (!raw.event.detail.contact._attributes) raw.event.detail.contact._attributes = {};
+
         const geojson = {
-            id: this.raw.event._attributes.uid,
+            id: raw.event._attributes.uid,
             type: 'Feature',
             properties: {
-                callsign: this.raw.event.display.contact._attributes.callsign || 'UNKNOWN',
-                time: this.raw.event._attributes.time,
-                start: this.raw.event._attributes.start,
-                stale: this.raw.event._attributes.stale
+                callsign: raw.event.detail.contact._attributes.callsign || 'UNKNOWN',
+                type: raw.event._attributes.type,
+                how: raw.event._attributes.how,
+                time: raw.event._attributes.time,
+                start: raw.event._attributes.start,
+                stale: raw.event._attributes.stale
             },
             geometry: {
                 type: 'Point',
                 coordinates: [
-                    this.raw.event.point._attributes.lon,
-                    this.raw.event.point._attributes.lon
+                    raw.event.point._attributes.lon,
+                    raw.event.point._attributes.lon
                 ]
             }
         };
@@ -99,11 +106,11 @@ export default class XMLCot {
      * @returns {XMLCot}
      */
     static ping() {
-        return {
+        return new XMLCot({
             event: {
                 _attributes: Util.cot_event_attr('t-x-c-t', 'h-g-i-g-o'),
                 point: Util.cot_point()
             }
-        };
+        });
     }
 }
