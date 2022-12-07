@@ -55,7 +55,7 @@ test('XML.from_geojson - polygon', (t) => {
     t.equals(geo.raw.event._attributes.stale.length, 24);
 
     t.deepEquals(geo.raw.event.point, {
-         _attributes: { lat: 39.065, lon: -108.54599999999999, hae: 0, ce: 9999999, le: 9999999 }
+        _attributes: { lat: 39.065, lon: -108.54599999999999, hae: 0, ce: 9999999, le: 9999999 }
     });
 
     t.deepEquals(geo.raw.event.detail, {
