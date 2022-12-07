@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v2.4.0
+
+- :tada: `from_geojson(Feature.LineString)` Support
+
 ### v2.3.0
 
 - :tada: `from_geojson(Feature.Polygon)` Support
