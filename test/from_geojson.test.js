@@ -37,12 +37,12 @@ test('XML.from_geojson - polygon', (t) => {
         geometry: {
             type: 'Polygon',
             coordinates: [[
-                [ -108.587, 39.098 ],
-                [ -108.587, 39.032 ],
-                [ -108.505, 39.032 ],
-                [ -108.505, 39.098 ],
-                [ -108.587, 39.098 ]
-            ]],
+                [-108.587, 39.098],
+                [-108.587, 39.032],
+                [-108.505, 39.032],
+                [-108.505, 39.098],
+                [-108.587, 39.098]
+            ]]
         }
     });
 
@@ -55,11 +55,23 @@ test('XML.from_geojson - polygon', (t) => {
     t.equals(geo.raw.event._attributes.stale.length, 24);
 
     t.deepEquals(geo.raw.event.point, {
-        _attributes: { lat: 2.2, lon: 1.1, hae: 0, ce: 9999999, le: 9999999 }
+         _attributes: { lat: 39.065, lon: -108.54599999999999, hae: 0, ce: 9999999, le: 9999999 }
     });
 
     t.deepEquals(geo.raw.event.detail, {
-        contact: { _attributes: { callsign: 'UNKNOWN' } }
+        contact: { _attributes: { callsign: 'UNKNOWN' } },
+        link: [
+            { _attributes: { point: '39.098,-108.587' } },
+            { _attributes: { point: '39.032,-108.587' } },
+            { _attributes: { point: '39.032,-108.505' } },
+            { _attributes: { point: '39.098,-108.505' } }
+        ],
+        labels_on: { _attributes: { value: 'false' } },
+        tog: { _attributes: { enabled: '0' } },
+        strokeColor: { _attributes: { value: '-256' } },
+        strokeWeight: { _attributes: { value: '3.0' } },
+        strokeStyle: { _attributes: { value: 'solid' } },
+        fillColor: { _attributes: { value: '-1761607936' } }
     });
 
     t.end();

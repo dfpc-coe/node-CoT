@@ -1,5 +1,6 @@
 import xmljs from 'xml-js';
 import Util from './util.js';
+import PointOnFeature from '@turf/point-on-feature';
 
 /**
  * Convert to and from an XML CoT message
@@ -60,7 +61,28 @@ export default class XMLCot {
             cot.event.point._attributes.lon = feature.geometry.coordinates[0];
             cot.event.point._attributes.lat = feature.geometry.coordinates[1];
         } else if (feature.geometry.type === 'Polygon') {
-            console.error('HERE');
+            // Inner rings are not yet supported
+
+            cot.event.detail.link = [];
+            feature.geometry.coordinates[0].pop(); // Dont' Close Loop in COT
+            for (const coord of feature.geometry.coordinates[0]) {
+                cot.event.detail.link.push({
+                    _attributes: {
+                        point: `${coord[1]},${coord[0]}`
+                    }
+                });
+            }
+
+            cot.event.detail.labels_on = { _attributes: { value: 'false' } };
+            cot.event.detail.tog = { _attributes: { enabled: '0' } };
+            cot.event.detail.strokeColor = { _attributes: { value: '-256' } };
+            cot.event.detail.strokeWeight = { _attributes: { value: '3.0' } };
+            cot.event.detail.strokeStyle = { _attributes: { value: 'solid' } };
+            cot.event.detail.fillColor = { _attributes: { value: '-1761607936' } };
+
+            const centre = PointOnFeature(feature);
+            cot.event.point._attributes.lon = centre.geometry.coordinates[0];
+            cot.event.point._attributes.lat = centre.geometry.coordinates[1];
         }
 
         return new XMLCot(cot);
