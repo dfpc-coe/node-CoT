@@ -1,5 +1,6 @@
 import xmljs from 'xml-js';
 import Util from './util.js';
+import PointOnFeature from '@turf/point-on-feature';
 
 /**
  * Convert to and from an XML CoT message
@@ -20,9 +21,9 @@ export default class XMLCot {
         }
 
         // Attempt to cast all point to numerics
-        for (const key of Object.keys(this.raw.event.point)) {
-            if (!isNaN(parseFloat(this.raw.event.point[key]))) {
-                this.raw.event.point[key] = parseFloat(this.raw.event.point[key]);
+        for (const key of Object.keys(this.raw.event.point._attributes)) {
+            if (!isNaN(parseFloat(this.raw.event.point._attributes[key]))) {
+                this.raw.event.point._attributes[key] = parseFloat(this.raw.event.point._attributes[key]);
             }
         }
     }
@@ -36,7 +37,6 @@ export default class XMLCot {
      */
     static from_geojson(feature) {
         if (feature.type !== 'Feature') throw new Error('Must be GeoJSON Feature');
-        if (!feature.geometry || feature.geometry.type !== 'Point') throw new Error('Must be GeoJSON Point Feature');
         if (!feature.properties) throw new Error('Feature must have properties');
 
         const cot = {
@@ -54,8 +54,36 @@ export default class XMLCot {
             if (feature.properties[key]) cot.event._attributes[key] = feature.properties[key];
         }
 
-        cot.event.point._attributes.lon = feature.geometry.coordinates[0];
-        cot.event.point._attributes.lat = feature.geometry.coordinates[1];
+        if (!feature.geometry) throw new Error('Must have Geometry');
+        if (!['Point', 'Polygon'].includes(feature.geometry.type)) throw new Error('Unsupported Geoemtry Type');
+
+        if (feature.geometry.type === 'Point') {
+            cot.event.point._attributes.lon = feature.geometry.coordinates[0];
+            cot.event.point._attributes.lat = feature.geometry.coordinates[1];
+        } else if (feature.geometry.type === 'Polygon') {
+            // Inner rings are not yet supported
+
+            cot.event.detail.link = [];
+            feature.geometry.coordinates[0].pop(); // Dont' Close Loop in COT
+            for (const coord of feature.geometry.coordinates[0]) {
+                cot.event.detail.link.push({
+                    _attributes: {
+                        point: `${coord[1]},${coord[0]}`
+                    }
+                });
+            }
+
+            cot.event.detail.labels_on = { _attributes: { value: 'false' } };
+            cot.event.detail.tog = { _attributes: { enabled: '0' } };
+            cot.event.detail.strokeColor = { _attributes: { value: '-256' } };
+            cot.event.detail.strokeWeight = { _attributes: { value: '3.0' } };
+            cot.event.detail.strokeStyle = { _attributes: { value: 'solid' } };
+            cot.event.detail.fillColor = { _attributes: { value: '-1761607936' } };
+
+            const centre = PointOnFeature(feature);
+            cot.event.point._attributes.lon = centre.geometry.coordinates[0];
+            cot.event.point._attributes.lat = centre.geometry.coordinates[1];
+        }
 
         return new XMLCot(cot);
     }

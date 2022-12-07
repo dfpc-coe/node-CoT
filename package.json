@@ -9,6 +9,7 @@
         "lint": "eslint *.js src/*.js test/*.js"
     },
     "dependencies": {
+        "@turf/point-on-feature": "^6.5.0",
         "protobufjs": "^7.1.2",
         "uuid": "^9.0.0",
         "xml-js": "^1.6.11"
