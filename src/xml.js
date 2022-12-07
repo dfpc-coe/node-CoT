@@ -20,9 +20,9 @@ export default class XMLCot {
         }
 
         // Attempt to cast all point to numerics
-        for (const key of Object.keys(this.raw.event.point)) {
-            if (!isNaN(parseFloat(this.raw.event.point[key]))) {
-                this.raw.event.point[key] = parseFloat(this.raw.event.point[key]);
+        for (const key of Object.keys(this.raw.event.point._attributes)) {
+            if (!isNaN(parseFloat(this.raw.event.point._attributes[key]))) {
+                this.raw.event.point._attributes[key] = parseFloat(this.raw.event.point._attributes[key]);
             }
         }
     }
