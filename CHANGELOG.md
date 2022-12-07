@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v2.3.0
+
+- :tada: `from_geojson(Feature.Polygon)` Support
+
 ### v2.2.1
 
 - :bug: `event.display` => `event.detail`
