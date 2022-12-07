@@ -55,22 +55,34 @@ export default class XMLCot {
         }
 
         if (!feature.geometry) throw new Error('Must have Geometry');
-        if (!['Point', 'Polygon'].includes(feature.geometry.type)) throw new Error('Unsupported Geoemtry Type');
+        if (!['Point', 'Polygon', 'LineString'].includes(feature.geometry.type)) throw new Error('Unsupported Geoemtry Type');
 
         if (feature.geometry.type === 'Point') {
             cot.event.point._attributes.lon = feature.geometry.coordinates[0];
             cot.event.point._attributes.lat = feature.geometry.coordinates[1];
-        } else if (feature.geometry.type === 'Polygon') {
-            // Inner rings are not yet supported
+        } else if (['Polygon', 'LineString'].includes(feature.geometry.type)) {
+            cot.event._attributes.type = 'u-d-f';
 
-            cot.event.detail.link = [];
-            feature.geometry.coordinates[0].pop(); // Dont' Close Loop in COT
-            for (const coord of feature.geometry.coordinates[0]) {
-                cot.event.detail.link.push({
-                    _attributes: {
-                        point: `${coord[1]},${coord[0]}`
-                    }
-                });
+            if (feature.geometry.type === 'Polygon') {
+                cot.event._attributes.type = 'u-d-r';
+
+                // Inner rings are not yet supported
+                cot.event.detail.link = [];
+                feature.geometry.coordinates[0].pop(); // Dont' Close Loop in COT
+                for (const coord of feature.geometry.coordinates[0]) {
+                    cot.event.detail.link.push({
+                        _attributes: { point: `${coord[1]},${coord[0]}` }
+                    });
+                }
+            } else if (feature.geometry.type === 'LineString') {
+                cot.event._attributes.type = 'u-d-f';
+
+                cot.event.detail.link = [];
+                for (const coord of feature.geometry.coordinates) {
+                    cot.event.detail.link.push({
+                        _attributes: { point: `${coord[1]},${coord[0]}` }
+                    });
+                }
             }
 
             cot.event.detail.labels_on = { _attributes: { value: 'false' } };
