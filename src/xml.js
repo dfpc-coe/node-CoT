@@ -36,7 +36,6 @@ export default class XMLCot {
      */
     static from_geojson(feature) {
         if (feature.type !== 'Feature') throw new Error('Must be GeoJSON Feature');
-        if (!feature.geometry || feature.geometry.type !== 'Point') throw new Error('Must be GeoJSON Point Feature');
         if (!feature.properties) throw new Error('Feature must have properties');
 
         const cot = {
@@ -54,8 +53,15 @@ export default class XMLCot {
             if (feature.properties[key]) cot.event._attributes[key] = feature.properties[key];
         }
 
-        cot.event.point._attributes.lon = feature.geometry.coordinates[0];
-        cot.event.point._attributes.lat = feature.geometry.coordinates[1];
+        if (!feature.geometry) throw new Error('Must have Geometry');
+        if (!['Point', 'Polygon'].includes(feature.geometry.type)) throw new Error('Unsupported Geoemtry Type');
+
+        if (feature.geometry.type === 'Point') {
+            cot.event.point._attributes.lon = feature.geometry.coordinates[0];
+            cot.event.point._attributes.lat = feature.geometry.coordinates[1];
+        } else if (feature.geometry.type === 'Polygon') {
+            console.error('HERE');
+        }
 
         return new XMLCot(cot);
     }
