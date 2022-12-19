@@ -1,0 +1,83 @@
+{
+    "type": "object",
+    "required": [
+        "event"
+    ],
+    "properties": {
+        "event": {
+            "type": "object",
+            "required": [
+                "_attributes",
+                "point"
+            ],
+            "properties": {
+                "_attributes": {
+                    "type": "object",
+                    "required": [
+                        "version",
+                        "uuid",
+                        "type",
+                        "time",
+                        "start",
+                        "stable"
+                    ],
+                    "properties": {
+                        "version": {
+                            "type": "string"
+                        },
+                        "uuid": {
+                            "type": "string"
+                        },
+                        "type": {
+                            "type": "string"
+                        },
+                        "time": {
+                            "type": "string"
+                        },
+                        "start": {
+                            "type": "string"
+                        },
+                        "stable": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "point": {
+                    "type": "object",
+                    "required": [
+                        "_attributes"
+                    ],
+                    "properties": {
+                        "_attributes": {
+                            "type": "object",
+                            "required": [
+                                "lat",
+                                "lon",
+                                "hae",
+                                "ce",
+                                "le"
+                            ],
+                            "properties": {
+                                "lat": {
+                                    "type": "number"
+                                },
+                                "lon": {
+                                    "type": "number"
+                                },
+                                "hae": {
+                                    "type": "number"
+                                },
+                                "ce": {
+                                    "type": "number"
+                                },
+                                "le": {
+                                    "type": "number"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
