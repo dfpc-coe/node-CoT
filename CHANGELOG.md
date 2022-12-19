@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v2.5.0
+
+- :tada: Automatically perform basic schema validation on CoT Creation
+
 ### v2.4.0
 
 - :tada: `from_geojson(Feature.LineString)` Support
