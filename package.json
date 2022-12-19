@@ -10,6 +10,7 @@
     },
     "dependencies": {
         "@turf/point-on-feature": "^6.5.0",
+        "ajv": "^8.11.2",
         "protobufjs": "^7.1.2",
         "uuid": "^9.0.0",
         "xml-js": "^1.6.11"
