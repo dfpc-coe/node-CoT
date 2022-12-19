@@ -6,7 +6,7 @@
     "main": "index.js",
     "scripts": {
         "test": "tape test/**.test.js",
-        "lint": "eslint *.js src/*.js test/*.js"
+        "lint": "eslint *.js lib/*.js test/*.js"
     },
     "dependencies": {
         "@turf/point-on-feature": "^6.5.0",
