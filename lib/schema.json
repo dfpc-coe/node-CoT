@@ -15,17 +15,17 @@
                     "type": "object",
                     "required": [
                         "version",
-                        "uuid",
+                        "uid",
                         "type",
                         "time",
                         "start",
-                        "stable"
+                        "stale"
                     ],
                     "properties": {
                         "version": {
                             "type": "string"
                         },
-                        "uuid": {
+                        "uid": {
                             "type": "string"
                         },
                         "type": {
@@ -37,7 +37,7 @@
                         "start": {
                             "type": "string"
                         },
-                        "stable": {
+                        "stale": {
                             "type": "string"
                         }
                     }
