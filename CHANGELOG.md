@@ -10,6 +10,11 @@
 
 ## Version History
 
+### v2.6.0
+
+- :tada: Add support for passing style properties via GeoJSON Properties
+- :rocket: Add support for encoding/decoding 32bit signed ARGB values
+
 ### v2.5.0
 
 - :tada: Automatically perform basic schema validation on CoT Creation
