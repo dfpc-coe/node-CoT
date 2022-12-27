@@ -68,10 +68,10 @@ test('XML.from_geojson - Polygon', (t) => {
         ],
         labels_on: { _attributes: { value: 'false' } },
         tog: { _attributes: { enabled: '0' } },
-        strokeColor: { _attributes: { value: '-256' } },
-        strokeWeight: { _attributes: { value: '3.0' } },
+        strokeColor: { _attributes: { value: 16776960 } },
+        strokeWeight: { _attributes: { value: 3 } },
         strokeStyle: { _attributes: { value: 'solid' } },
-        fillColor: { _attributes: { value: '-1761607936' } }
+        fillColor: { _attributes: { value: 16776960 } }
     });
 
     t.end();
@@ -116,10 +116,9 @@ test('XML.from_geojson - LineString', (t) => {
         ],
         labels_on: { _attributes: { value: 'false' } },
         tog: { _attributes: { enabled: '0' } },
-        strokeColor: { _attributes: { value: '-256' } },
-        strokeWeight: { _attributes: { value: '3.0' } },
+        strokeColor: { _attributes: { value: 16776960 } },
+        strokeWeight: { _attributes: { value: 3 } },
         strokeStyle: { _attributes: { value: 'solid' } },
-        fillColor: { _attributes: { value: '-1761607936' } }
     });
 
     t.end();
