@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v2.7.0
+
+- :rocket: Improved date parsing in CoT messages created using from_geojson
+
 ### v2.6.0
 
 - :tada: Add support for passing style properties via GeoJSON Properties

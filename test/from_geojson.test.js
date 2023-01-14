@@ -118,7 +118,7 @@ test('XML.from_geojson - LineString', (t) => {
         tog: { _attributes: { enabled: '0' } },
         strokeColor: { _attributes: { value: 16776960 } },
         strokeWeight: { _attributes: { value: 3 } },
-        strokeStyle: { _attributes: { value: 'solid' } },
+        strokeStyle: { _attributes: { value: 'solid' } }
     });
 
     t.end();
