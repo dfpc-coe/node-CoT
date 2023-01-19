@@ -123,3 +123,60 @@ test('XML.from_geojson - LineString', (t) => {
 
     t.end();
 });
+
+test('XML.from_geojson - Start', (t) => {
+    const geo = XML.from_geojson({
+        type: 'Feature',
+        properties: {
+            // 1hr in the future
+            start: new Date(+new Date() + 60 * 60 * 1000)
+        },
+        geometry: {
+            type: 'Point',
+            coordinates: [1.1, 2.2]
+        }
+    });
+
+    // Approx +/- 100ms + 1hr ahead of Now
+    t.ok(+new Date(geo.raw.event._attributes.start) > +new Date() + 60 * 60 * 1000 - 100);
+    t.ok(+new Date(geo.raw.event._attributes.start) < +new Date() + 60 * 60 * 1000 + 100);
+
+    // Approx +/- 100ms ahead of Now
+    t.ok(+new Date(geo.raw.event._attributes.time) > +new Date() - 100);
+    t.ok(+new Date(geo.raw.event._attributes.time) < +new Date() + 100);
+
+    // Approx +/- 100ms +1hr20s ahead of now
+    t.ok(+new Date(geo.raw.event._attributes.stale) > +new Date(geo.raw.event._attributes.start) - 100 + 20 * 1000);
+    t.ok(+new Date(geo.raw.event._attributes.stale) < +new Date(geo.raw.event._attributes.start) + 100 + 20 * 1000);
+
+    t.end();
+});
+
+test('XML.from_geojson - Start/Stale', (t) => {
+    const geo = XML.from_geojson({
+        type: 'Feature',
+        properties: {
+            // 1hr in the future
+            start: new Date(+new Date() + 60 * 60 * 1000),
+            stale: 60 * 1000
+        },
+        geometry: {
+            type: 'Point',
+            coordinates: [1.1, 2.2]
+        }
+    });
+
+    // Approx +/- 100ms + 1hr ahead of Now
+    t.ok(+new Date(geo.raw.event._attributes.start) > +new Date() + 60 * 60 * 1000 - 100);
+    t.ok(+new Date(geo.raw.event._attributes.start) < +new Date() + 60 * 60 * 1000 + 100);
+
+    // Approx +/- 100ms ahead of Now
+    t.ok(+new Date(geo.raw.event._attributes.time) > +new Date() - 100);
+    t.ok(+new Date(geo.raw.event._attributes.time) < +new Date() + 100);
+
+    // Approx +/- 100ms +1hr60s ahead of now
+    t.ok(+new Date(geo.raw.event._attributes.stale) > +new Date(geo.raw.event._attributes.start) - 100 + 60 * 1000);
+    t.ok(+new Date(geo.raw.event._attributes.stale) < +new Date(geo.raw.event._attributes.start) + 100 + 60 * 1000);
+
+    t.end();
+});
