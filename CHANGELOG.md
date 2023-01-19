@@ -10,6 +10,13 @@
 
 ## Version History
 
+### v2.6.0
+
+- :bug: Significant improvements to start/time/stale parsing
+- :white_check_mark: Add tests for date parsing
+- :rocket: Support parsing `Date` types
+- :arrow_up: General Dep Update
+
 ### v2.5.0
 
 - :tada: Automatically perform basic schema validation on CoT Creation
