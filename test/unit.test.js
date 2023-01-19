@@ -16,3 +16,19 @@ test('Util.cot_date - default', (t) => {
 
     t.end();
 });
+
+test('Util.cot_date - stale', (t) => {
+    const res = Util.cot_date(null, null, 1000);
+
+    // Within 100ms of current time
+    t.ok(+new Date(res.time) > +new Date() - 100, 'res.time within 100ms of current time');
+
+    // res.start is the same as res.time
+    t.equals(+new Date(res.start), +new Date(res.time), 'by default res.start === res.time');
+
+    // Approx 1s ahead of start
+    t.ok(+new Date(res.stale) > +new Date(res.start) + 1 * 1000 - 100);
+    t.ok(+new Date(res.stale) < +new Date(res.start) + 1 * 1000 + 100);
+
+    t.end();
+});
