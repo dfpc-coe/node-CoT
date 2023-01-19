@@ -11,8 +11,8 @@ test('Util.cot_date - default', (t) => {
     t.equals(+new Date(res.start), +new Date(res.time), 'by default res.start === res.time');
 
     // Approx 20s ahead of start
-    t.ok(+new Date(res.stale) > +new Date(res.start) + 20 * 1000 - 100)
-    t.ok(+new Date(res.stale) < +new Date(res.start) + 20 * 1000 + 100)
+    t.ok(+new Date(res.stale) > +new Date(res.start) + 20 * 1000 - 100);
+    t.ok(+new Date(res.stale) < +new Date(res.start) + 20 * 1000 + 100);
 
     t.end();
 });
