@@ -10,7 +10,7 @@
 
 ## Version History
 
-### v2.6.0
+### v2.8.0
 
 - :bug: Significant improvements to start/time/stale parsing
 - :white_check_mark: Add tests for date parsing
