@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v2.8.1
+
+- :bug: Fix typo in error message
+
 ### v2.8.0
 
 - :bug: Significant improvements to start/time/stale parsing
