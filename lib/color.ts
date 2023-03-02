@@ -7,8 +7,15 @@ import _color from 'color';
  * @class
  */
 export default class Color {
-    constructor(color) {
+    r: number;
+    g: number;
+    b: number;
+    a: number;
+
+    constructor(color: number | number[]) {
         if (!isNaN(Number(color))) {
+            color = Number(color);
+
             this.r = (color >> 16) & 255;
             this.g = (color >>  8) & 255;
             this.b = (color >> 0) & 255;
@@ -21,26 +28,26 @@ export default class Color {
         } else {
             const c = _color(color);
 
-            this.a = c.valpha;
-            this.r = c.color[0];
-            this.g = c.color[1];
-            this.b = c.color[2];
+            this.a = c.alpha();
+            this.r = c.red();
+            this.g = c.green();
+            this.b = c.blue();
         }
     }
 
-    as_32bit() {
+    as_32bit(): number {
         return (this.a << 24) | (this.r << 16) | (this.g << 8) | this.b;
     }
 
-    as_opacity() {
+    as_opacity(): number {
         return this.a;
     }
 
-    as_argb() {
+    as_argb(): number[] {
         return [this.a, this.r, this.b, this.g];
     }
 
-    as_rgb() {
+    as_rgb(): number[] {
         return [this.r, this.b, this.g];
     }
 }
