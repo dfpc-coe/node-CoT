@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v3.1.1
+
+- :bug: Include schema.json in dist output
+
 ### v3.1.0
 
 - :rocket: Expand use of known vs generic raw attributes
