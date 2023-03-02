@@ -116,6 +116,14 @@ export default class XMLCot {
         if (feature.id) cot.event._attributes.uid = String(feature.id);
         if (feature.properties.callsign && !feature.id) cot.event._attributes.uid = feature.properties.callsign;
 
+        if (feature.properties.icon) {
+            cot.event.detail.usericon = {
+                _attributes: {
+                    iconsetpath: feature.properties.icon
+                }
+            }
+        }
+
         if (!feature.geometry) throw new Error('Must have Geometry');
         if (!['Point', 'Polygon', 'LineString'].includes(feature.geometry.type)) throw new Error('Unsupported Geometry Type');
 

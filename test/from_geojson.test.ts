@@ -180,3 +180,23 @@ test('XML.from_geojson - Start/Stale', (t) => {
 
     t.end();
 });
+
+test('XML.from_geojson - Icon', (t) => {
+    const geo = XML.from_geojson({
+        type: 'Feature',
+        properties: {
+            icon: '66f14976-4b62-4023-8edb-d8d2ebeaa336/Public Safety Air/EMS_ROTOR.png'
+        },
+        geometry: {
+            type: 'Point',
+            coordinates: [1.1, 2.2]
+        }
+    });
+
+    t.deepEquals(geo.raw.event.detail, {
+        contact: { _attributes: { callsign: 'UNKNOWN' } },
+        usericon: { _attributes: { iconsetpath: '66f14976-4b62-4023-8edb-d8d2ebeaa336/Public Safety Air/EMS_ROTOR.png' } }
+    });
+
+    t.end();
+});
