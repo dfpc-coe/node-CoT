@@ -59,19 +59,19 @@
                             ],
                             "properties": {
                                 "lat": {
-                                    "type": "number"
+                                    "type": "string"
                                 },
                                 "lon": {
-                                    "type": "number"
+                                    "type": "string"
                                 },
                                 "hae": {
-                                    "type": "number"
+                                    "type": "string"
                                 },
                                 "ce": {
-                                    "type": "number"
+                                    "type": "string"
                                 },
                                 "le": {
-                                    "type": "number"
+                                    "type": "string"
                                 }
                             }
                         }

@@ -20,7 +20,7 @@ test('XML.from_geojson - Point', (t) => {
     t.equals(geo.raw.event._attributes.stale.length, 24);
 
     t.deepEquals(geo.raw.event.point, {
-        _attributes: { lat: 2.2, lon: 1.1, hae: 0, ce: 9999999, le: 9999999 }
+        _attributes: { lat: '2.2', lon: '1.1', hae: '0.0', ce: '9999999.0', le: '9999999.0' }
     });
 
     t.deepEquals(geo.raw.event.detail, {
@@ -55,7 +55,7 @@ test('XML.from_geojson - Polygon', (t) => {
     t.equals(geo.raw.event._attributes.stale.length, 24);
 
     t.deepEquals(geo.raw.event.point, {
-        _attributes: { lat: 39.065, lon: -108.54599999999999, hae: 0, ce: 9999999, le: 9999999 }
+        _attributes: { lat: '39.065', lon: '-108.54599999999999', hae: '0.0', ce: '9999999.0', le: '9999999.0' }
     });
 
     t.deepEquals(geo.raw.event.detail, {
@@ -102,7 +102,7 @@ test('XML.from_geojson - LineString', (t) => {
     t.equals(geo.raw.event._attributes.stale.length, 24);
 
     t.deepEquals(geo.raw.event.point, {
-        _attributes: { lat: 39.098, lon: -108.505, hae: 0, ce: 9999999, le: 9999999 }
+        _attributes: { lat: '39.098', lon: '-108.505', hae: '0.0', ce: '9999999.0', le: '9999999.0' }
     });
 
     t.deepEquals(geo.raw.event.detail, {

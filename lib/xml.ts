@@ -81,17 +81,10 @@ export default class XMLCot {
             this.raw = cot;
         }
 
-        // Attempt to cast all point to numerics
-        for (const key of Object.keys(this.raw.event.point._attributes)) {
-            if (!isNaN(parseFloat(String(this.raw.event.point._attributes[key])))) {
-                this.raw.event.point._attributes[key] = parseFloat(String(this.raw.event.point._attributes[key]));
-            }
-        }
-
         if (!this.raw.event._attributes.uid) this.raw.event._attributes.uuid = Util.cot_uuid();
 
         ajv(this.raw);
-        if (ajv.errors) throw new Error(ajv.errors[0].message);
+        if (ajv.errors) throw new Error(`${ajv.errors[0].message} (${ajv.errors[0].instancePath})`);
     }
 
     /**
