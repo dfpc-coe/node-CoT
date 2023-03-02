@@ -18,6 +18,51 @@ To install `node-cot` with npm run
 npm install @tak-ps/node-cot
 ```
 
+## GeoJSON Spec
+
+One of the primary use-cases of this library is to make serialization and deserialiation from
+more commmon geospatial formats a breeze. This section will walk through CoT options that are
+exposed via the `from_geojson()` function.
+
+### Supported Geometries
+
+- All Input Geometries must be a GeoJSON `Feature` type
+- `Point`, `Polygon`, and `LineString` are all supported
+- `Multi` Geometries are not supported and must be cast to their non-multi type before being passed to the library
+- Centroids are calulated using a PointOnSurface algorithm
+
+### Supported Properties
+
+The following are the most important/relevant properties
+
+| Property              | Description |
+| --------------------- | ----------- |
+| `.id`                 | Used as the CoT uid - If ommitted a UUID is generated |
+| `.properties.type`    | CoT type - note this will be overridden if geometry is not a Point |
+| `.properties.how`     | CoT how |
+| `.properties.time`    | Time at which CoT was created |
+| `.properties.start`   | Time at which CoT is relevant |
+| `.properties.stale`   | Time at which CoT expires |
+| `.properties.callsign`| Displayed callsign (basically the name of the feature) |
+
+Styles can also be applied to features using the following
+
+| Property                          | Description |
+| --------------------------------- | ----------- |
+| `.properties.stroke`              | Polygon/LineString |
+| `.properties.stroke-opacity`      | Polygon/LineString |
+| `.properties.stroke-width`        | Polygon/LineString |
+| `.properties.stroke-style`        | Polygon/LineString |
+| `.properties.stroke-style`        | Polygon/LineString |
+| `.properties.fill`                | Polygon |
+| `.properties.fill-opacity`        | Polygon |
+
+These are less common properties that can be used:
+
+| Property                          | Description |
+| --------------------------------- | ----------- |
+| `.properties.icon`                | Custom Icon Path (string) |
+
 ## Usage Examples
 
 ### Basic Usage

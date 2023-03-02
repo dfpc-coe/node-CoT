@@ -42,6 +42,30 @@
                         }
                     }
                 },
+                "detail": {
+                    "type": "object",
+                    "properties": {
+                        "usericon": {
+                            "type": "object",
+                            "required": [
+                                "_attributes"
+                            ],
+                            "properties": {
+                                "_attributes": {
+                                    "type": "object",
+                                    "required": [
+                                        "iconsetpath"
+                                    ],
+                                    "properties": {
+                                        "iconsetpath": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
                 "point": {
                     "type": "object",
                     "required": [
@@ -59,19 +83,19 @@
                             ],
                             "properties": {
                                 "lat": {
-                                    "type": "number"
+                                    "type": "string"
                                 },
                                 "lon": {
-                                    "type": "number"
+                                    "type": "string"
                                 },
                                 "hae": {
-                                    "type": "number"
+                                    "type": "string"
                                 },
                                 "ce": {
-                                    "type": "number"
+                                    "type": "string"
                                 },
                                 "le": {
-                                    "type": "number"
+                                    "type": "string"
                                 }
                             }
                         }

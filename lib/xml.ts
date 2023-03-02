@@ -33,6 +33,7 @@ export interface Detail {
     labels_on?: GenericAttributes,
     fillColor?: GenericAttributes,
     link?: object[],
+    usericon?: GenericAttributes,
     TakControl?: {
         TakServerVersionInfo?: GenericAttributes
     },
@@ -81,17 +82,10 @@ export default class XMLCot {
             this.raw = cot;
         }
 
-        // Attempt to cast all point to numerics
-        for (const key of Object.keys(this.raw.event.point._attributes)) {
-            if (!isNaN(parseFloat(String(this.raw.event.point._attributes[key])))) {
-                this.raw.event.point._attributes[key] = parseFloat(String(this.raw.event.point._attributes[key]));
-            }
-        }
-
         if (!this.raw.event._attributes.uid) this.raw.event._attributes.uuid = Util.cot_uuid();
 
         ajv(this.raw);
-        if (ajv.errors) throw new Error(ajv.errors[0].message);
+        if (ajv.errors) throw new Error(`${ajv.errors[0].message} (${ajv.errors[0].instancePath})`);
     }
 
     /**
@@ -121,6 +115,14 @@ export default class XMLCot {
 
         if (feature.id) cot.event._attributes.uid = String(feature.id);
         if (feature.properties.callsign && !feature.id) cot.event._attributes.uid = feature.properties.callsign;
+
+        if (feature.properties.icon) {
+            cot.event.detail.usericon = {
+                _attributes: {
+                    iconsetpath: feature.properties.icon
+                }
+            }
+        }
 
         if (!feature.geometry) throw new Error('Must have Geometry');
         if (!['Point', 'Polygon', 'LineString'].includes(feature.geometry.type)) throw new Error('Unsupported Geometry Type');
