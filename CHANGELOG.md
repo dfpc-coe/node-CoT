@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v3.2.0
+
+- :tada: Add support for icon property parsing in GeoJSON
+
 ### v3.1.1
 
 - :bug: Include schema.json in dist output
