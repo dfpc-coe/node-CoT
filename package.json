@@ -1,7 +1,7 @@
 {
     "name": "@tak-ps/node-cot",
     "type": "module",
-    "version": "3.1.0",
+    "version": "3.1.1",
     "description": "Lightweight JavaScript library for parsing and manipulating TAK messages",
     "main": "dist/index.js",
     "types": "index.js",
