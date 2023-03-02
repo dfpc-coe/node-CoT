@@ -1,39 +1,85 @@
 import xmljs from 'xml-js';
+import { Feature } from 'geojson';
+import { AllGeoJSON } from "@turf/helpers";
 import Util from './util.js';
 import Color from './color.js';
 import PointOnFeature from '@turf/point-on-feature';
 import AJV from 'ajv';
 import fs from 'fs';
 
-const ajv = (new AJV({ allErrors: true })).compile(JSON.parse(fs.readFileSync(new URL('./schema.json', import.meta.url))));
+const ajv = (new AJV({ allErrors: true }))
+    .compile(JSON.parse(String(fs.readFileSync(new URL('./schema.json', import.meta.url)))));
 
+export interface Attributes {
+    version: string,
+    uid: string;
+    type: string;
+    how: string;
+    [k: string]: string;
+}
+
+export interface Detail {
+    contact?: { _attributes: { callsign: string } },
+    tog?: { _attributes: { enabled: string } },
+    strokeColor?: { _attributes: { value: number } },
+    strokeWeight?: { _attributes: { value: number } },
+    strokeStyle?: { _attributes: { value: string } },
+    labels_on?: { _attributes: { value: string } },
+    fillColor?: { _attributes: { value: number } },
+    link?: object[],
+    [k: string]: unknown
+}
+
+export interface Point {
+    _attributes: {
+        lat: string | number;
+        lon: string | number;
+        hae: string | number;
+        ce: string | number;
+        le: string | number;
+        [k: string]: string | number
+    }
+}
+
+export interface JSONCoT {
+    event: {
+        _attributes: Attributes,
+        detail: Detail,
+        point: Point,
+        [k: string]: unknown
+    },
+    [k: string]: unknown
+}
 
 /**
  * Convert to and from an XML CoT message
  * @class
  *
- * @param {String|Object|Buffer} cot A string/buffer containing the XML representation or the xml-js object tree
+ * @param cot A string/buffer containing the XML representation or the xml-js object tree
  *
- * @prop {Object} raw Raw XML-JS representation of CoT
+ * @prop raw Raw XML-JS representation of CoT
  */
 export default class XMLCot {
-    constructor(cot) {
-        if (cot instanceof Buffer) String(cot);
+    raw: JSONCoT;
 
-        if (typeof cot === 'string') {
-            this.raw = xmljs.xml2js(cot, { compact: true });
+    constructor(cot: Buffer | JSONCoT | string) {
+        if (typeof cot === 'string' || cot instanceof Buffer) {
+            if (cot instanceof Buffer) cot = String(cot);
+
+            const raw: any = xmljs.xml2js(cot, { compact: true });
+            this.raw = raw as JSONCoT;
         } else {
             this.raw = cot;
         }
 
         // Attempt to cast all point to numerics
         for (const key of Object.keys(this.raw.event.point._attributes)) {
-            if (!isNaN(parseFloat(this.raw.event.point._attributes[key]))) {
-                this.raw.event.point._attributes[key] = parseFloat(this.raw.event.point._attributes[key]);
+            if (!isNaN(parseFloat(String(this.raw.event.point._attributes[key])))) {
+                this.raw.event.point._attributes[key] = parseFloat(String(this.raw.event.point._attributes[key]));
             }
         }
 
-        if (!this.raw.event._attributes.uid) this.raw.event._attributes.uuid = Util.cot_uuid().uid;
+        if (!this.raw.event._attributes.uid) this.raw.event._attributes.uuid = Util.cot_uuid();
 
         ajv(this.raw);
         if (ajv.errors) throw new Error(ajv.errors[0].message);
@@ -46,11 +92,11 @@ export default class XMLCot {
      *
      * @return {XMLCot}
      */
-    static from_geojson(feature) {
+    static from_geojson(feature: Feature) {
         if (feature.type !== 'Feature') throw new Error('Must be GeoJSON Feature');
         if (!feature.properties) throw new Error('Feature must have properties');
 
-        const cot = {
+        const cot: JSONCoT = {
             event: {
                 _attributes: Util.cot_event_attr(
                     feature.properties.type || 'a-f-G',
@@ -64,15 +110,15 @@ export default class XMLCot {
             }
         };
 
-        if (feature.id) cot.event._attributes.uid = feature.id;
+        if (feature.id) cot.event._attributes.uid = String(feature.id);
         if (feature.properties.callsign && !feature.id) cot.event._attributes.uid = feature.properties.callsign;
 
         if (!feature.geometry) throw new Error('Must have Geometry');
         if (!['Point', 'Polygon', 'LineString'].includes(feature.geometry.type)) throw new Error('Unsupported Geometry Type');
 
         if (feature.geometry.type === 'Point') {
-            cot.event.point._attributes.lon = feature.geometry.coordinates[0];
-            cot.event.point._attributes.lat = feature.geometry.coordinates[1];
+            cot.event.point._attributes.lon = String(feature.geometry.coordinates[0]);
+            cot.event.point._attributes.lat = String(feature.geometry.coordinates[1]);
         } else if (['Polygon', 'LineString'].includes(feature.geometry.type)) {
             const stroke = new Color(feature.properties.stroke || -1761607936);
             if (feature.properties['stroke-opacity']) stroke.a = feature.properties['stroke-opacity'];
@@ -117,9 +163,9 @@ export default class XMLCot {
             cot.event.detail.labels_on = { _attributes: { value: 'false' } };
             cot.event.detail.tog = { _attributes: { enabled: '0' } };
 
-            const centre = PointOnFeature(feature);
-            cot.event.point._attributes.lon = centre.geometry.coordinates[0];
-            cot.event.point._attributes.lat = centre.geometry.coordinates[1];
+            const centre = PointOnFeature(feature as AllGeoJSON);
+            cot.event.point._attributes.lon = String(centre.geometry.coordinates[0]);
+            cot.event.point._attributes.lat = String(centre.geometry.coordinates[1]);
         }
 
         return new XMLCot(cot);
@@ -127,16 +173,14 @@ export default class XMLCot {
 
     /**
      * Return a GeoJSON Feature from an XML CoT message
-     *
-     * @returns {Object}
      */
-    to_geojson() {
+    to_geojson(): Feature {
         const raw = JSON.parse(JSON.stringify(this.raw));
         if (!raw.event.detail) raw.event.detail = {};
         if (!raw.event.detail.contact) raw.event.detail.contact = {};
         if (!raw.event.detail.contact._attributes) raw.event.detail.contact._attributes = {};
 
-        const geojson = {
+        const geojson: Feature = {
             id: raw.event._attributes.uid,
             type: 'Feature',
             properties: {
@@ -174,6 +218,7 @@ export default class XMLCot {
         return new XMLCot({
             event: {
                 _attributes: Util.cot_event_attr('t-x-c-t', 'h-g-i-g-o'),
+                detail: {},
                 point: Util.cot_point()
             }
         });
