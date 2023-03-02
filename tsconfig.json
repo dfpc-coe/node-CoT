@@ -9,6 +9,7 @@
         "lib": ["es2022", "dom"],
         "noImplicitAny": true,
         "moduleResolution": "node",
+        "resolveJsonModule": true,
         "sourceMap": true,
         "outDir": "dist",
         "baseUrl": ".",
@@ -21,6 +22,7 @@
     "include": [
         "index.ts", 
         "test/**/*",
-        "lib/**/*"
+        "lib/**/*",
+        "lib/schema.json"
     ]
 }
