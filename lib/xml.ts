@@ -18,15 +18,24 @@ export interface Attributes {
     [k: string]: string;
 }
 
+export interface GenericAttributes {
+    _attributes: {
+        [k: string]: string;
+    }
+}
+
 export interface Detail {
-    contact?: { _attributes: { callsign: string } },
-    tog?: { _attributes: { enabled: string } },
-    strokeColor?: { _attributes: { value: number } },
-    strokeWeight?: { _attributes: { value: number } },
-    strokeStyle?: { _attributes: { value: string } },
-    labels_on?: { _attributes: { value: string } },
-    fillColor?: { _attributes: { value: number } },
+    contact?: GenericAttributes,
+    tog?: GenericAttributes,
+    strokeColor?: GenericAttributes,
+    strokeWeight?: GenericAttributes,
+    strokeStyle?: GenericAttributes,
+    labels_on?: GenericAttributes,
+    fillColor?: GenericAttributes,
     link?: object[],
+    TakControl?: {
+        TakServerVersionInfo?: GenericAttributes
+    },
     [k: string]: unknown
 }
 
@@ -122,11 +131,11 @@ export default class XMLCot {
         } else if (['Polygon', 'LineString'].includes(feature.geometry.type)) {
             const stroke = new Color(feature.properties.stroke || -1761607936);
             if (feature.properties['stroke-opacity']) stroke.a = feature.properties['stroke-opacity'];
-            cot.event.detail.strokeColor = { _attributes: { value: stroke.as_32bit() } };
+            cot.event.detail.strokeColor = { _attributes: { value: String(stroke.as_32bit()) } };
 
             if (!feature.properties['stroke-width']) feature.properties['stroke-width'] = 3;
             cot.event.detail.strokeWeight = { _attributes: {
-                value: feature.properties['stroke-width']
+                value: String(feature.properties['stroke-width'])
             } };
 
             if (!feature.properties['stroke-style']) feature.properties['stroke-style'] = 'solid';
@@ -157,7 +166,7 @@ export default class XMLCot {
 
                 const fill = new Color(feature.properties.fill || -1761607936);
                 if (feature.properties['fill-opacity']) fill.a = feature.properties['fill-opacity'];
-                cot.event.detail.fillColor = { _attributes: { value: fill.as_32bit() } };
+                cot.event.detail.fillColor = { _attributes: { value: String(fill.as_32bit()) } };
             }
 
             cot.event.detail.labels_on = { _attributes: { value: 'false' } };
