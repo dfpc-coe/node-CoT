@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v3.0.0
+
+- :rocket: Rewrite in TypeScript
+
 ### v2.8.1
 
 - :bug: Fix typo in error message
