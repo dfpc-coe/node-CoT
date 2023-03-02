@@ -42,6 +42,30 @@
                         }
                     }
                 },
+                "detail": {
+                    "type": "object",
+                    "properties": {
+                        "usericon": {
+                            "type": "object",
+                            "required": [
+                                "_attributes"
+                            ],
+                            "properties": {
+                                "_attributes": {
+                                    "type": "object",
+                                    "required": [
+                                        "iconsetpath"
+                                    ],
+                                    "properties": {
+                                        "iconsetpath": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
                 "point": {
                     "type": "object",
                     "required": [

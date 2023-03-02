@@ -33,6 +33,7 @@ export interface Detail {
     labels_on?: GenericAttributes,
     fillColor?: GenericAttributes,
     link?: object[],
+    usericon?: GenericAttributes,
     TakControl?: {
         TakServerVersionInfo?: GenericAttributes
     },
