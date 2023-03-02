@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v3.1.0
+
+- :rocket: Expand use of known vs generic raw attributes
+
 ### v3.0.0
 
 - :rocket: Rewrite in TypeScript
