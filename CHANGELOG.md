@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v3.3.0
+
+- :tada: Add Height Extraction from GeoJSON from `z` coordinate
+
 ### v3.2.0
 
 - :tada: Add support for icon property parsing in GeoJSON
