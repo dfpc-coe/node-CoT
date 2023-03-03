@@ -200,3 +200,39 @@ test('XML.from_geojson - Icon', (t) => {
 
     t.end();
 });
+
+test('XML.from_geojson - Height Above Earth', (t) => {
+    t.deepEquals(XML.from_geojson({
+        type: 'Feature',
+        properties: {
+        },
+        geometry: {
+            type: 'Point',
+            coordinates: [1.1, 2.2]
+        }
+    }).raw.event.point._attributes, {
+        lat: '2.2',
+        lon: '1.1',
+        hae: '0.0',
+        ce: '9999999.0',
+        le: '9999999.0'
+    }, 'default hae');
+
+    t.deepEquals(XML.from_geojson({
+        type: 'Feature',
+        properties: {
+        },
+        geometry: {
+            type: 'Point',
+            coordinates: [1.1, 2.2, 101]
+        }
+    }).raw.event.point._attributes, {
+        lat: '2.2',
+        lon: '1.1',
+        hae: '101',
+        ce: '9999999.0',
+        le: '9999999.0'
+    }, 'custom hae (meters)');
+
+    t.end();
+});

@@ -130,6 +130,7 @@ export default class XMLCot {
         if (feature.geometry.type === 'Point') {
             cot.event.point._attributes.lon = String(feature.geometry.coordinates[0]);
             cot.event.point._attributes.lat = String(feature.geometry.coordinates[1]);
+            cot.event.point._attributes.hae = String(feature.geometry.coordinates[2] || '0.0');
         } else if (['Polygon', 'LineString'].includes(feature.geometry.type)) {
             const stroke = new Color(feature.properties.stroke || -1761607936);
             if (feature.properties['stroke-opacity']) stroke.a = feature.properties['stroke-opacity'];
@@ -206,7 +207,8 @@ export default class XMLCot {
                 type: 'Point',
                 coordinates: [
                     raw.event.point._attributes.lon,
-                    raw.event.point._attributes.lon
+                    raw.event.point._attributes.lon,
+                    raw.event.point._attributes.hae
                 ]
             }
         };
