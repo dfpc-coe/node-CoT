@@ -128,7 +128,7 @@ export default class XMLCot {
         if (feature.properties.callsign && !feature.id) cot.event._attributes.uid = feature.properties.callsign;
 
         if (feature.properties.speed && feature.properties.course) {
-            cot.track = {
+            cot.event.track = {
                 _attributes: Util.cot_track_attr(feature.properties.course, feature.properties.speed)
             }
         }
