@@ -24,6 +24,16 @@ export interface GenericAttributes {
     }
 }
 
+export interface Track {
+    _attributes: TrackAttributes;
+}
+
+export interface TrackAttributes {
+    speed: string,
+    course: string,
+    [k: string]: string
+}
+
 export interface Detail {
     contact?: GenericAttributes,
     tog?: GenericAttributes,
@@ -56,6 +66,7 @@ export interface JSONCoT {
         _attributes: Attributes,
         detail: Detail,
         point: Point,
+        track?: Track,
         [k: string]: unknown
     },
     [k: string]: unknown
@@ -115,6 +126,12 @@ export default class XMLCot {
 
         if (feature.id) cot.event._attributes.uid = String(feature.id);
         if (feature.properties.callsign && !feature.id) cot.event._attributes.uid = feature.properties.callsign;
+
+        if (feature.properties.speed && feature.properties.course) {
+            cot.track = {
+                _attributes: Util.cot_track_attr(feature.properties.course, feature.properties.speed)
+            }
+        }
 
         if (feature.properties.icon) {
             cot.event.detail.usericon = {

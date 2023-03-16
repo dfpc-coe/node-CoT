@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v3.4.0
+
+- :tada: Add `speed` & `course` parsing
+
 ### v3.3.0
 
 - :tada: Add Height Extraction from GeoJSON from `z` coordinate

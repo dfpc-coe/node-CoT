@@ -31,7 +31,7 @@
         "tape": "^5.6.1",
         "ts-node": "^10.9.1",
         "ts-node-test": "^0.3.0",
-        "typescript": "^4.9.5"
+        "typescript": "^4.0.0"
     },
     "repository": {
         "type": "git",

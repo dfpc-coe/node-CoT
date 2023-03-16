@@ -1,6 +1,7 @@
 import { randomUUID } from 'crypto'
 import type {
     Attributes,
+    TrackAttributes,
     Detail,
     Point
 } from './xml.js';
@@ -48,6 +49,19 @@ export default class Util {
             contact: {
                 _attributes: { callsign }
             }
+        };
+    }
+
+    /**
+     * Return a track object with as many defaults as possible
+     *
+     * @param [course] Speed in degrees from north
+     * @param [speed=0] Speed in m/s
+     */
+    static cot_track_attr(course: number, speed = 0): TrackAttributes {
+        return {
+            course: String(course || 0),
+            speed: String(speed || 0)
         };
     }
 

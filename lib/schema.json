@@ -45,6 +45,47 @@
                 "detail": {
                     "type": "object",
                     "properties": {
+                        "track": {
+                            "type": "object",
+                            "required": [
+                                "_attributes"
+                            ],
+                            "properties": {
+                                "_attributes": {
+                                    "type": "object",
+                                    "required": [
+                                        "course",
+                                        "speed"
+                                    ],
+                                    "properties": {
+                                        "course": {
+                                            "type": "string",
+                                            "description": "Speed measured in degrees from north"
+                                        },
+                                        "speed": {
+                                            "type": "string",
+                                            "description": "Speed measured in meters/second"
+                                        },
+                                        "slope": {
+                                            "type": "string",
+                                            "description": "Vertical component of motion vector. Measured in degrees. Negative indicates downward motion."
+                                        },
+                                        "eCourse": {
+                                            "type": "string",
+                                            "description": "1-sigma error on a Gaussian distribution associated with the course attribute"
+                                        },
+                                        "eSpeed": {
+                                            "type": "string",
+                                            "description": "1-sigma error on a Gaussian distribution associated with the speed attribute"
+                                        },
+                                        "eSlope": {
+                                            "type": "string",
+                                            "description": "1-sigma error on a Gaussian distribution associated with the slope attribute"
+                                        }
+                                    }
+                                }
+                            }
+                        },
                         "usericon": {
                             "type": "object",
                             "required": [
