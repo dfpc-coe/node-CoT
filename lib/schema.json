@@ -45,6 +45,25 @@
                 "detail": {
                     "type": "object",
                     "properties": {
+                        "track": {
+                            "type": "object",
+                            "required": [
+                                "_attributes"
+                            ],
+                            "properties": {
+                                "_attributes": {
+                                    "type": "object",
+                                    "properties": {
+                                        "course": {
+                                            "type": "string"
+                                        },
+                                        "speed": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
                         "usericon": {
                             "type": "object",
                             "required": [
