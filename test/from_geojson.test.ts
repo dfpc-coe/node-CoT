@@ -236,3 +236,24 @@ test('XML.from_geojson - Height Above Earth', (t) => {
 
     t.end();
 });
+
+test('XML.from_geojson - Course & Speed', (t) => {
+    t.deepEquals(XML.from_geojson({
+        type: 'Feature',
+        properties: {
+            course: 260,
+            speed: 120
+        },
+        geometry: {
+            type: 'Point',
+            coordinates: [1.1, 2.2]
+        }
+    }).raw.track, {
+        _attributes: {
+            'course': '260',
+            'speed': '120'
+        }
+    }, 'track');
+
+    t.end();
+});
