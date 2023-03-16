@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v3.4.2
+
+- :bug: Fix location of track data
+
 ### v3.4.1
 
 - :bug: Fix location of track data
