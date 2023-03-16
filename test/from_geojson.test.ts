@@ -248,7 +248,7 @@ test('XML.from_geojson - Course & Speed', (t) => {
             type: 'Point',
             coordinates: [1.1, 2.2]
         }
-    }).raw.event.track, {
+    }).raw.event.detail.track, {
         _attributes: {
             'course': '260',
             'speed': '120'

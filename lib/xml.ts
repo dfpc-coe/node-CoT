@@ -44,6 +44,7 @@ export interface Detail {
     fillColor?: GenericAttributes,
     link?: object[],
     usericon?: GenericAttributes,
+    track?: Track,
     TakControl?: {
         TakServerVersionInfo?: GenericAttributes
     },
@@ -66,7 +67,6 @@ export interface JSONCoT {
         _attributes: Attributes,
         detail: Detail,
         point: Point,
-        track?: Track,
         [k: string]: unknown
     },
     [k: string]: unknown
@@ -128,7 +128,7 @@ export default class XMLCot {
         if (feature.properties.callsign && !feature.id) cot.event._attributes.uid = feature.properties.callsign;
 
         if (feature.properties.speed && feature.properties.course) {
-            cot.event.track = {
+            cot.event.detail.track = {
                 _attributes: Util.cot_track_attr(feature.properties.course, feature.properties.speed)
             }
         }
