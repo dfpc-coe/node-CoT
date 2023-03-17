@@ -10,7 +10,7 @@
 
 ## Version History
 
-### v3.4.2
+### v3.4.3
 
 - :arrow_up: `TypeScript@5`
 
