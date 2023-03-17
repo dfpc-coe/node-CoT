@@ -12,6 +12,10 @@
 
 ### v3.4.2
 
+- :arrow_up: `TypeScript@5`
+
+### v3.4.2
+
 - :bug: Fix location of track data
 
 ### v3.4.1
