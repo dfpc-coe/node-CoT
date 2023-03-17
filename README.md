@@ -44,6 +44,8 @@ The following are the most important/relevant properties
 | `.properties.start`   | Time at which CoT is relevant |
 | `.properties.stale`   | Time at which CoT expires |
 | `.properties.callsign`| Displayed callsign (basically the name of the feature) |
+| `.properties.speed`   | Speed in m/s of the object |
+| `.properties.course`  | Course in degrees from north of the object |
 
 Styles can also be applied to features using the following
 
