@@ -10,7 +10,7 @@
 
 ## Version History
 
-### v3.4.3
+### v3.5.0
 
 - :rocket: Add support for the `remarks` field
 
