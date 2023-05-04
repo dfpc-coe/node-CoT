@@ -233,7 +233,8 @@ test('Parse GeoChat message', (t) => {
                         'source': 'BAO.F.ATAK.ANDROID-deadbeef',
                         'to': 'ANDROID-cafebabe',
                         'time': '2021-02-23T22:28:22.191Z'
-                    }, '_text': 'test'
+                    },
+                    '_text': 'test'
                 },
                 '__serverdestination': { '_attributes': { 'destinations': '123.45.67.89:4242:tcp:ANDROID-deadbeef' } },
                 'marti': { 'dest': { '_attributes': { 'callsign': 'JOKER MAN' } } }

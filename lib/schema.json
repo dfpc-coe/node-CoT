@@ -45,6 +45,17 @@
                 "detail": {
                     "type": "object",
                     "properties": {
+                        "remarks": {
+                            "type": "object",
+                            "properties": {
+                                "_attributes": {
+                                    "type": "object"
+                                },
+                                "_text": {
+                                    "type": "string"
+                                }
+                            }
+                        },
                         "track": {
                             "type": "object",
                             "required": [
