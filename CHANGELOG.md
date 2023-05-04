@@ -12,6 +12,10 @@
 
 ### v3.4.3
 
+- :rocket: Add support for the `remarks` field
+
+### v3.4.3
+
 - :arrow_up: `TypeScript@5`
 
 ### v3.4.2

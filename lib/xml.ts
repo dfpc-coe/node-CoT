@@ -192,6 +192,8 @@ export default class XMLCot {
             cot.event.detail.labels_on = { _attributes: { value: 'false' } };
             cot.event.detail.tog = { _attributes: { enabled: '0' } };
 
+            cot.event.detail.remarks = { _attributes: { }, _text: feature.properties.remarks || '' };
+
             const centre = PointOnFeature(feature as AllGeoJSON);
             cot.event.point._attributes.lon = String(centre.geometry.coordinates[0]);
             cot.event.point._attributes.lat = String(centre.geometry.coordinates[1]);

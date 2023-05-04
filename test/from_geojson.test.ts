@@ -71,7 +71,8 @@ test('XML.from_geojson - Polygon', (t) => {
         strokeColor: { _attributes: { value: '16776960' } },
         strokeWeight: { _attributes: { value: '3' } },
         strokeStyle: { _attributes: { value: 'solid' } },
-        fillColor: { _attributes: { value: '16776960' } }
+        fillColor: { _attributes: { value: '16776960' } },
+        remarks: { _attributes: {}, _text: '' }
     });
 
     t.end();
@@ -118,7 +119,8 @@ test('XML.from_geojson - LineString', (t) => {
         tog: { _attributes: { enabled: '0' } },
         strokeColor: { _attributes: { value: '16776960' } },
         strokeWeight: { _attributes: { value: '3' } },
-        strokeStyle: { _attributes: { value: 'solid' } }
+        strokeStyle: { _attributes: { value: 'solid' } },
+        remarks: { _attributes: {}, _text: '' }
     });
 
     t.end();
@@ -243,6 +245,28 @@ test('XML.from_geojson - Course & Speed', (t) => {
         properties: {
             course: 260,
             speed: 120
+        },
+        geometry: {
+            type: 'Point',
+            coordinates: [1.1, 2.2]
+        }
+    }).raw.event.detail.track, {
+        _attributes: {
+            'course': '260',
+            'speed': '120'
+        }
+    }, 'track');
+
+    t.end();
+});
+
+test('XML.from_geojson - Remarks', (t) => {
+    t.deepEquals(XML.from_geojson({
+        type: 'Feature',
+        properties: {
+            course: 260,
+            speed: 120,
+            remarks: 'Test'
         },
         geometry: {
             type: 'Point',
