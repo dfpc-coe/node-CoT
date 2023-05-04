@@ -46,6 +46,7 @@ The following are the most important/relevant properties
 | `.properties.callsign`| Displayed callsign (basically the name of the feature) |
 | `.properties.speed`   | Speed in m/s of the object |
 | `.properties.course`  | Course in degrees from north of the object |
+| `.properties.remarks` | Human readable remarks field |
 
 Styles can also be applied to features using the following
 
