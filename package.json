@@ -8,6 +8,7 @@
     "scripts": {
         "test": "ts-node-test test/",
         "lint": "eslint *.ts lib/*.ts",
+        "doc": "typedoc index.ts",
         "build": "tsc --build",
         "pretest": "npm run lint"
     },
@@ -31,6 +32,7 @@
         "tape": "^5.6.1",
         "ts-node": "^10.9.1",
         "ts-node-test": "^0.4.0",
+        "typedoc": "^0.24.7",
         "typescript": "^5.0.0"
     },
     "repository": {
