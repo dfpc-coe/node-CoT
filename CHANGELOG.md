@@ -12,6 +12,10 @@
 
 ### v3.5.0
 
+- :arrow_up: Update Deps
+
+### v3.5.0
+
 - :rocket: Add support for the `remarks` field
 
 ### v3.4.3
