@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v3.5.3
+
+- :bug: Ensure `to_geojson` FN returns numeric coordinates
+
 ### v3.5.2
 
 - :arrow_up: Update Deps
