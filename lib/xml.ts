@@ -226,7 +226,7 @@ export default class XMLCot {
                 type: 'Point',
                 coordinates: [
                     Number(raw.event.point._attributes.lon),
-                    Number(raw.event.point._attributes.lon),
+                    Number(raw.event.point._attributes.lat),
                     Number(raw.event.point._attributes.hae)
                 ]
             }
