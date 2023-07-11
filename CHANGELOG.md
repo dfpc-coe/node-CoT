@@ -10,6 +10,11 @@
 
 ## Version History
 
+### v3.5.4
+
+- :bug: Ensure `to_geojson` FN returns proper coordinate order
+- :arrow_up: Update Deps
+
 ### v3.5.3
 
 - :bug: Ensure `to_geojson` FN returns numeric coordinates
