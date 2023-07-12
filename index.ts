@@ -1,3 +1,3 @@
-import XML from './lib/xml.js';
+import CoT from './lib/cot.js';
 
-export { XML };
+export default CoT;

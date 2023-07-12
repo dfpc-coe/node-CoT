@@ -4,7 +4,7 @@ import type {
     TrackAttributes,
     Detail,
     Point
-} from './xml.js';
+} from './cot.js';
 
 /**
  * Helper functions for generating CoT data

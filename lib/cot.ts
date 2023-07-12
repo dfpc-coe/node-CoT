@@ -80,14 +80,14 @@ export interface JSONCoT {
  *
  * @prop raw Raw XML-JS representation of CoT
  */
-export default class XMLCot {
+export default class CoT {
     raw: JSONCoT;
 
     constructor(cot: Buffer | JSONCoT | string) {
         if (typeof cot === 'string' || cot instanceof Buffer) {
             if (cot instanceof Buffer) cot = String(cot);
 
-            const raw: any = xmljs.xml2js(cot, { compact: true });
+            const raw = xmljs.xml2js(cot, { compact: true });
             this.raw = raw as JSONCoT;
         } else {
             this.raw = cot;
@@ -100,11 +100,11 @@ export default class XMLCot {
     }
 
     /**
-     * Return an XMLCot Message
+     * Return an CoT Message
      *
      * @param {Object} feature GeoJSON Point Feature
      *
-     * @return {XMLCot}
+     * @return {CoT}
      */
     static from_geojson(feature: Feature) {
         if (feature.type !== 'Feature') throw new Error('Must be GeoJSON Feature');
@@ -199,7 +199,7 @@ export default class XMLCot {
             cot.event.point._attributes.lat = String(centre.geometry.coordinates[1]);
         }
 
-        return new XMLCot(cot);
+        return new CoT(cot);
     }
 
     /**
@@ -235,24 +235,182 @@ export default class XMLCot {
         return geojson;
     }
 
-    to_xml() {
-        return xmljs.js2xml(this.raw, {
-            compact: true
-        });
+    to_xml(): string {
+        return xmljs.js2xml(this.raw, { compact: true });
     }
 
     /**
      * Return a CoT Message
-     *
-     * @returns {XMLCot}
      */
-    static ping() {
-        return new XMLCot({
+    static ping(): CoT {
+        return new CoT({
             event: {
                 _attributes: Util.cot_event_attr('t-x-c-t', 'h-g-i-g-o'),
                 detail: {},
                 point: Util.cot_point()
             }
         });
+    }
+
+    /**
+     * Determines if the CoT message represents a Friendly Element
+     *
+     * @return {boolean}
+     */
+    is_friend(): boolean {
+        return !!this.raw.event._attributes.type.match(/^a-f-/)
+    }
+
+    /**
+     * Determines if the CoT message represents a Hostile Element
+     *
+     * @return {boolean}
+     */
+    is_hostile(): boolean {
+        return !!this.raw.event._attributes.type.match(/^a-h-/)
+    }
+
+    /**
+     * Determines if the CoT message represents a Unknown Element
+     *
+     * @return {boolean}
+     */
+    is_unknown(): boolean {
+        return !!this.raw.event._attributes.type.match(/^a-u-/)
+    }
+
+    /**
+     * Determines if the CoT message represents a Pending Element
+     *
+     * @return {boolean}
+     */
+    is_pending(): boolean {
+        return !!this.raw.event._attributes.type.match(/^a-p-/)
+    }
+
+    /**
+     * Determines if the CoT message represents an Assumed Element
+     *
+     * @return {boolean}
+     */
+    is_assumed(): boolean {
+        return !!this.raw.event._attributes.type.match(/^a-a-/)
+    }
+
+    /**
+     * Determines if the CoT message represents a Neutral Element
+     *
+     * @return {boolean}
+     */
+    is_neutral(): boolean {
+        return !!this.raw.event._attributes.type.match(/^a-n-/)
+    }
+
+    /**
+     * Determines if the CoT message represents a Suspect Element
+     *
+     * @return {boolean}
+     */
+    is_suspect(): boolean {
+        return !!this.raw.event._attributes.type.match(/^a-s-/)
+    }
+
+    /**
+     * Determines if the CoT message represents a Joker Element
+     *
+     * @return {boolean}
+     */
+    is_joker(): boolean {
+        return !!this.raw.event._attributes.type.match(/^a-j-/)
+    }
+
+    /**
+     * Determines if the CoT message represents a Faker Element
+     *
+     * @return {boolean}
+     */
+    is_faker(): boolean {
+        return !!this.raw.event._attributes.type.match(/^a-k-/)
+    }
+
+    /**
+     * Determines if the CoT message represents an Element
+     *
+     * @return {boolean}
+     */
+    is_atom(): boolean {
+        return !!this.raw.event._attributes.type.match(/^a-/)
+    }
+
+    /**
+     * Determines if the CoT message represents an Airborne Element
+     *
+     * @return {boolean}
+     */
+    is_airborne(): boolean {
+        return !!this.raw.event._attributes.type.match(/^a-.-A/)
+    }
+
+    /**
+     * Determines if the CoT message represents a Ground Element
+     *
+     * @return {boolean}
+     */
+    is_ground(): boolean {
+        return !!this.raw.event._attributes.type.match(/^a-.-G/)
+    }
+
+    /**
+     * Determines if the CoT message represents an Installation
+     *
+     * @return {boolean}
+     */
+    is_installation(): boolean {
+        return !!this.raw.event._attributes.type.match(/^a-.-G-I/)
+    }
+
+    /**
+     * Determines if the CoT message represents a Vehicle
+     *
+     * @return {boolean}
+     */
+    is_vehicle(): boolean {
+        return !!this.raw.event._attributes.type.match(/^a-.-G-E-V/)
+    }
+
+    /**
+     * Determines if the CoT message represents Equipment
+     *
+     * @return {boolean}
+     */
+    is_equipment(): boolean {
+        return !!this.raw.event._attributes.type.match(/^a-.-G-E/)
+    }
+
+    /**
+     * Determines if the CoT message represents a Surface Element
+     *
+     * @return {boolean}
+     */
+    is_surface(): boolean {
+        return !!this.raw.event._attributes.type.match(/^a-.-S/)
+    }
+
+    /**
+     * Determines if the CoT message represents a Subsurface Element
+     *
+     * @return {boolean}
+     */
+    is_subsurface(): boolean {
+        return !!this.raw.event._attributes.type.match(/^a-.-U/)
+    }
+
+    /**
+     * Determines if the CoT message represents a UAV Element
+     *
+     * @return {boolean}
+     */
+    is_uav(): boolean {
+        return !!this.raw.event._attributes.type.match(/^a-f-A-M-F-Q-r/)
     }
 }

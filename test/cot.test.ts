@@ -1,10 +1,10 @@
 import test from 'tape';
-import { XML } from '../index.js';
+import CoT from '../index.js';
 
 test('Decode COT message', (t) => {
     const packet = '<event version="2.0" uid="ANDROID-deadbeef" type="a-f-G-U-C" how="m-g" time="2021-02-27T20:32:24.771Z" start="2021-02-27T20:32:24.771Z" stale="2021-02-27T20:38:39.771Z"><point lat="1.234567" lon="-3.141592" hae="-25.7" ce="9.9" le="9999999.0"/><detail><takv os="29" version="4.0.0.0 (deadbeef).1234567890-CIV" device="Some Android Device" platform="ATAK-CIV"/><contact xmppUsername="xmpp@host.com" endpoint="*:-1:stcp" callsign="JENNY"/><uid Droid="JENNY"/><precisionlocation altsrc="GPS" geopointsrc="GPS"/><__group role="Team Member" name="Cyan"/><status battery="78"/><track course="80.24833892285461" speed="0.0"/></detail></event>';
 
-    t.deepEquals((new XML(packet)).raw, {
+    t.deepEquals((new CoT(packet)).raw, {
         'event': {
             '_attributes': {
                 'version': '2.0',
@@ -55,7 +55,7 @@ test('Decode COT message', (t) => {
 test('Decode COT message', (t) => {
     const packet = '<event version="2.0" uid="TEST-deadbeef" type="a" how="m-g" time="2021-03-12T15:49:07.138Z" start="2021-03-12T15:49:07.138Z" stale="2021-03-12T15:49:07.138Z"><point lat="0.000000" lon="0.000000" hae="0.0" ce="9999999.0" le="9999999.0"/><detail><takv os="Android" version="10" device="Some Device" platform="python unittest"/><status battery="83"/><uid Droid="JENNY"/><contact callsign="JENNY" endpoint="*:-1:stcp" phone="800-867-5309"/><__group role="Team Member" name="Cyan"/><track course="90.1" speed="10.3"/></detail></event>';
 
-    t.deepEquals((new XML(packet)).raw, {
+    t.deepEquals((new CoT(packet)).raw, {
         'event': {
             '_attributes': {
                 'version': '2.0',
@@ -167,7 +167,7 @@ test('Encode COT message', (t) => {
     };
 
     t.deepEquals(
-        (new XML(packet)).to_xml(),
+        (new CoT(packet)).to_xml(),
         '<event version="2.0" uid="ANDROID-deadbeef" type="a-f-G-U-C" how="m-g" time="2021-02-27T20:32:24.771Z" start="2021-02-27T20:32:24.771Z" stale="2021-02-27T20:38:39.771Z"><point lat="1.234567" lon="-3.141592" hae="-25.7" ce="9.9" le="9999999"/><detail><takv os="29" version="4.0.0.0 (deadbeef).1234567890-CIV" device="Some Android Device" platform="ATAK-CIV"/><contact xmppUsername="xmpp@host.com" endpoint="*:-1:stcp" callsign="JENNY"/><uid Droid="JENNY"/><precisionlocation altsrc="GPS" geopointsrc="GPS"/><__group role="Team Member" name="Cyan"/><status battery="78"/><track course="80.24833892285461" speed="0.0"/></detail></event>'
     );
 
@@ -190,7 +190,7 @@ test('Parse GeoChat message', (t) => {
         '  </detail>\n' +
         '</event>';
 
-    t.deepEquals((new XML(geochat)).raw, {
+    t.deepEquals((new CoT(geochat)).raw, {
         'event': {
             '_attributes': {
                 'version': '2.0',
