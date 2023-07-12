@@ -10,6 +10,12 @@
 
 ## Version History
 
+### v4.0.0
+
+- :rocket: Rename `XMLCoT` to `CoT` and make it the default export
+- :tada: Add `.is_` fns for testing CoT type
+- :white_check_mark: Add `cot.is_*` unit tests
+
 ### v3.5.4
 
 - :bug: Ensure `to_geojson` FN returns proper coordinate order
