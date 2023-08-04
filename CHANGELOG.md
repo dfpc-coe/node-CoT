@@ -10,6 +10,15 @@
 
 ## Version History
 
+### v4.1.0
+
+- :bug: Fix parsing of `remarks` field in `from_geojson`
+- :rocket: Support for `course` in `to_geojson`
+- :rocket: Support for `speed` in `to_geojson`
+- :rocket: Support for `icon` in `to_geojson`
+- :rocket: Support for `remarks` in `to_geojson`
+- :rocket: Support for HAE in `to_geojson`
+
 ### v4.0.0
 
 - :rocket: Rename `XMLCoT` to `CoT` and make it the default export
