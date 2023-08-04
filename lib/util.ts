@@ -120,7 +120,7 @@ export default class Util {
                 start: (new Date(start || now)).toISOString(),
                 stale: (new Date(new Date(start || now).getTime() + 20 * 1000)).toISOString()
             };
-        } else if (!isNaN(parseInt(String(stale)))) {
+        } else if (typeof stale === 'number') {
             return {
                 time: (new Date(time || now)).toISOString(),
                 start: (new Date(start || now)).toISOString(),

@@ -141,6 +141,8 @@ export default class CoT {
             }
         }
 
+        cot.event.detail.remarks = { _attributes: { }, _text: feature.properties.remarks || '' };
+
         if (!feature.geometry) throw new Error('Must have Geometry');
         if (!['Point', 'Polygon', 'LineString'].includes(feature.geometry.type)) throw new Error('Unsupported Geometry Type');
 
@@ -192,8 +194,6 @@ export default class CoT {
             cot.event.detail.labels_on = { _attributes: { value: 'false' } };
             cot.event.detail.tog = { _attributes: { enabled: '0' } };
 
-            cot.event.detail.remarks = { _attributes: { }, _text: feature.properties.remarks || '' };
-
             const centre = PointOnFeature(feature as AllGeoJSON);
             cot.event.point._attributes.lon = String(centre.geometry.coordinates[0]);
             cot.event.point._attributes.lat = String(centre.geometry.coordinates[1]);
@@ -220,7 +220,7 @@ export default class CoT {
                 how: raw.event._attributes.how,
                 time: raw.event._attributes.time,
                 start: raw.event._attributes.start,
-                stale: raw.event._attributes.stale
+                stale: raw.event._attributes.stale,
             },
             geometry: {
                 type: 'Point',
@@ -231,6 +231,21 @@ export default class CoT {
                 ]
             }
         };
+
+        if (!geojson.properties) geojson.properties = {};
+
+        if (raw.event.detail.remarks && raw.event.detail.remarks._text) {
+            geojson.properties.remarks = raw.event.detail.remarks._text;
+        }
+
+        if (raw.event.detail.track && raw.event.detail.track._attributes) {
+            if (raw.event.detail.track._attributes.course) geojson.properties.course = Number(raw.event.detail.track._attributes.course);
+            if (raw.event.detail.track._attributes.course) geojson.properties.speed = Number(raw.event.detail.track._attributes.speed);
+        }
+
+        if (raw.event.detail.usericon && raw.event.detail.usericon._attributes && raw.event.detail.usericon._attributes.iconsetpath) {
+            geojson.properties.icon = raw.event.detail.usericon._attributes.iconsetpath;
+        }
 
         return geojson;
     }

@@ -24,7 +24,8 @@ test('CoT.from_geojson - Point', (t) => {
     });
 
     t.deepEquals(geo.raw.event.detail, {
-        contact: { _attributes: { callsign: 'UNKNOWN' } }
+        contact: { _attributes: { callsign: 'UNKNOWN' } },
+        remarks: { _attributes: {}, _text: '' }
     });
 
     t.end();
@@ -197,7 +198,7 @@ test('CoT.from_geojson - Icon', (t) => {
 
     t.deepEquals(geo.raw.event.detail, {
         contact: { _attributes: { callsign: 'UNKNOWN' } },
-        usericon: { _attributes: { iconsetpath: '66f14976-4b62-4023-8edb-d8d2ebeaa336/Public Safety Air/EMS_ROTOR.png' } }
+        usericon: { _attributes: { iconsetpath: '66f14976-4b62-4023-8edb-d8d2ebeaa336/Public Safety Air/EMS_ROTOR.png' } }, remarks: { _attributes: {}, _text: '' }
     });
 
     t.end();
@@ -272,11 +273,9 @@ test('CoT.from_geojson - Remarks', (t) => {
             type: 'Point',
             coordinates: [1.1, 2.2]
         }
-    }).raw.event.detail.track, {
-        _attributes: {
-            'course': '260',
-            'speed': '120'
-        }
+    }).raw.event.detail.remarks, {
+        _attributes: {},
+        _text: 'Test'
     }, 'track');
 
     t.end();
