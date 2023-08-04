@@ -243,6 +243,10 @@ export default class CoT {
             if (raw.event.detail.track._attributes.course) geojson.properties.speed = Number(raw.event.detail.track._attributes.speed);
         }
 
+        if (raw.event.detail.usericon && raw.event.detail.usericon._attributes && raw.event.detail.usericon._attributes.iconsetpath) {
+            geojson.properties.icon = raw.event.detail.usericon._attributes.iconsetpath;
+        }
+
         return geojson;
     }
 
