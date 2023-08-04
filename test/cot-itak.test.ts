@@ -51,7 +51,9 @@ test('Decode iTAK COT message', (t) => {
             how: 'm-g',
             time: '2023-07-18T15:23:09.00Z',
             start: '2023-07-18T15:23:09.00Z',
-            stale: '2023-07-18T15:25:09.00Z'
+            stale: '2023-07-18T15:25:09.00Z',
+            course: 137.23542786,
+            speed: 0
         },
         geometry: {
             type: 'Point',
