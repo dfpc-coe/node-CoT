@@ -1,4 +1,4 @@
-<h1 align=center>node-CoT</h1>
+<h1 align=center>Node-CoT</h1>
 
 <p align=center>Javascript Cursor-On-Target Library</p>
 
