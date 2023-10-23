@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v4.1.1
+
+- :arrow_up: Update Core Deps
+
 ### v4.1.0
 
 - :bug: Fix parsing of `remarks` field in `from_geojson`
