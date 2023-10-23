@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v4.1.2
+
+- :pencil2: Update Git Repo Location
+
 ### v4.1.1
 
 - :arrow_up: Update Core Deps
