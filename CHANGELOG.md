@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v4.2.0
+
+- :bug: Fix the polygon type from a Rectangle CoT type to a Polygon
+
 ### v4.1.2
 
 - :pencil2: Update Git Repo Location
