@@ -48,7 +48,7 @@ test('CoT.from_geojson - Polygon', (t) => {
     });
 
     t.equals(geo.raw.event._attributes.version, '2.0');
-    t.equals(geo.raw.event._attributes.type, 'u-d-r');
+    t.equals(geo.raw.event._attributes.type, 'u-d-f');
     t.equals(geo.raw.event._attributes.how, 'm-g');
     t.equals(geo.raw.event._attributes.uid.length, 36);
     t.equals(geo.raw.event._attributes.time.length, 24);
@@ -65,7 +65,8 @@ test('CoT.from_geojson - Polygon', (t) => {
             { _attributes: { point: '39.098,-108.587' } },
             { _attributes: { point: '39.032,-108.587' } },
             { _attributes: { point: '39.032,-108.505' } },
-            { _attributes: { point: '39.098,-108.505' } }
+            { _attributes: { point: '39.098,-108.505' } },
+            { _attributes: { point: '39.098,-108.587' } },
         ],
         labels_on: { _attributes: { value: 'false' } },
         tog: { _attributes: { enabled: '0' } },

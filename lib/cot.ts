@@ -179,7 +179,6 @@ export default class CoT {
 
                 // Inner rings are not yet supported
                 cot.event.detail.link = [];
-                feature.geometry.coordinates[0].pop(); // Dont' Close Loop in COT
                 for (const coord of feature.geometry.coordinates[0]) {
                     cot.event.detail.link.push({
                         _attributes: { point: `${coord[1]},${coord[0]}` }
