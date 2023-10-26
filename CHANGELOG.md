@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v4.3.0
+
+- :bug: Fix Opacity default to a non-zero value
+
 ### v4.2.1
 
 - :bug: Close coordinates in `u-d-f` type
