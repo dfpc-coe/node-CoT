@@ -152,7 +152,7 @@ export default class CoT {
             cot.event.point._attributes.hae = String(feature.geometry.coordinates[2] || '0.0');
         } else if (['Polygon', 'LineString'].includes(feature.geometry.type)) {
             const stroke = new Color(feature.properties.stroke || -1761607936);
-            if (feature.properties['stroke-opacity']) stroke.a = feature.properties['stroke-opacity'];
+            stroke.a = feature.properties['stroke-opacity'] || 128;
             cot.event.detail.strokeColor = { _attributes: { value: String(stroke.as_32bit()) } };
 
             if (!feature.properties['stroke-width']) feature.properties['stroke-width'] = 3;
@@ -186,7 +186,7 @@ export default class CoT {
                 }
 
                 const fill = new Color(feature.properties.fill || -1761607936);
-                if (feature.properties['fill-opacity']) fill.a = feature.properties['fill-opacity'];
+                fill.a = feature.properties['fill-opacity'] || 128;
                 cot.event.detail.fillColor = { _attributes: { value: String(fill.as_32bit()) } };
             }
 

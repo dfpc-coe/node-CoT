@@ -53,12 +53,12 @@ Styles can also be applied to features using the following
 | Property                          | Description |
 | --------------------------------- | ----------- |
 | `.properties.stroke`              | Polygon/LineString |
-| `.properties.stroke-opacity`      | Polygon/LineString |
+| `.properties.stroke-opacity`      | Polygon/LineString: Int from 0-256 |
 | `.properties.stroke-width`        | Polygon/LineString |
 | `.properties.stroke-style`        | Polygon/LineString |
 | `.properties.stroke-style`        | Polygon/LineString |
 | `.properties.fill`                | Polygon |
-| `.properties.fill-opacity`        | Polygon |
+| `.properties.fill-opacity`        | Polygon: Int from 0-256 |
 
 These are less common properties that can be used:
 
