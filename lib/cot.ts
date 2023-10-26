@@ -175,7 +175,7 @@ export default class CoT {
                     });
                 }
             } else if (feature.geometry.type === 'Polygon') {
-                cot.event._attributes.type = 'u-d-r';
+                cot.event._attributes.type = 'u-d-f';
 
                 // Inner rings are not yet supported
                 cot.event.detail.link = [];
