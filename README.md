@@ -83,3 +83,12 @@ cot.to_xml(); // Output String XML Representation
 
 cot.raw; // JSON XML Representation
 ```
+
+## Known Special CoT Types
+
+The following list is a very incomplete list of "special" CoT types and behaviors
+
+| CoT Type | Notes |
+| -------- | ----- |
+| `u-d-f`  | LineString or Polygon |
+| `u-d-r`  | 4 Cornered Rectangle |
