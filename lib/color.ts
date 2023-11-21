@@ -19,7 +19,7 @@ export default class Color {
             this.r = (color >> 16) & 255;
             this.g = (color >>  8) & 255;
             this.b = (color >> 0) & 255;
-            this.a = ((color >> 24) & 255) / 255;
+            this.a = ((color >> 24) & 255);
         } else if (Array.isArray(color)) {
             this.a = color[0];
             this.r = color[1];
@@ -33,6 +33,10 @@ export default class Color {
             this.g = c.green();
             this.b = c.blue();
         }
+    }
+
+    as_hex(): string {
+        return _color.rgb(this.r, this.g, this.b).hex();
     }
 
     as_32bit(): number {

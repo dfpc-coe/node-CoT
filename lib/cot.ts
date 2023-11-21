@@ -1,5 +1,5 @@
 import xmljs from 'xml-js';
-import { Feature } from 'geojson';
+import { Feature, Geometry } from 'geojson';
 import { AllGeoJSON } from "@turf/helpers";
 import Util from './util.js';
 import Color from './color.js';
@@ -42,7 +42,7 @@ export interface Detail {
     strokeStyle?: GenericAttributes,
     labels_on?: GenericAttributes,
     fillColor?: GenericAttributes,
-    link?: object[],
+    link?: GenericAttributes[],
     usericon?: GenericAttributes,
     track?: Track,
     TakControl?: {
@@ -210,7 +210,7 @@ export default class CoT {
         if (!raw.event.detail.contact) raw.event.detail.contact = {};
         if (!raw.event.detail.contact._attributes) raw.event.detail.contact._attributes = {};
 
-        const geojson: Feature = {
+        const feat: Feature = {
             id: raw.event._attributes.uid,
             type: 'Feature',
             properties: {
@@ -231,22 +231,62 @@ export default class CoT {
             }
         };
 
-        if (!geojson.properties) geojson.properties = {};
+        if (!feat.properties) feat.properties = {};
 
         if (raw.event.detail.remarks && raw.event.detail.remarks._text) {
-            geojson.properties.remarks = raw.event.detail.remarks._text;
+            feat.properties.remarks = raw.event.detail.remarks._text;
         }
 
         if (raw.event.detail.track && raw.event.detail.track._attributes) {
-            if (raw.event.detail.track._attributes.course) geojson.properties.course = Number(raw.event.detail.track._attributes.course);
-            if (raw.event.detail.track._attributes.course) geojson.properties.speed = Number(raw.event.detail.track._attributes.speed);
+            if (raw.event.detail.track._attributes.course) feat.properties.course = Number(raw.event.detail.track._attributes.course);
+            if (raw.event.detail.track._attributes.course) feat.properties.speed = Number(raw.event.detail.track._attributes.speed);
         }
 
         if (raw.event.detail.usericon && raw.event.detail.usericon._attributes && raw.event.detail.usericon._attributes.iconsetpath) {
-            geojson.properties.icon = raw.event.detail.usericon._attributes.iconsetpath;
+            feat.properties.icon = raw.event.detail.usericon._attributes.iconsetpath;
         }
 
-        return geojson;
+
+        if (this.raw.event._attributes.type === 'u-d-f' && Array.isArray(this.raw.event.detail.link)) {
+            const coordinates = [];
+
+            for (const l of this.raw.event.detail.link) {
+                coordinates.push(l._attributes.point.split(',').map((p: string) => { return Number(p.trim()) }).splice(0, 2).reverse());
+            }
+
+            if (this.raw.event.detail.strokeColor && this.raw.event.detail.strokeColor._attributes && this.raw.event.detail.strokeColor._attributes.value) {
+                const stroke = new Color(Number(this.raw.event.detail.strokeColor._attributes.value));
+                feat.properties.stroke = stroke.as_hex();
+                feat.properties['stroke-opacity'] = stroke.as_opacity();
+            }
+
+            if (this.raw.event.detail.strokeWeight && this.raw.event.detail.strokeWeight._attributes && this.raw.event.detail.strokeWeight._attributes.value) {
+                feat.properties['stroke-width'] = Number(this.raw.event.detail.strokeWeight._attributes.value);
+            }
+
+            if (this.raw.event.detail.strokeStyle && this.raw.event.detail.strokeStyle._attributes && this.raw.event.detail.strokeStyle._attributes.value) {
+                feat.properties['stroke-style'] = this.raw.event.detail.strokeStyle._attributes.value;
+            }
+
+            if (coordinates[0][0] === coordinates[coordinates.length -1][0] && coordinates[0][1] === coordinates[coordinates.length -1][1]) {
+                feat.geometry = {
+                    type: 'Polygon',
+                    coordinates: [coordinates]
+                }
+
+                if (this.raw.event.detail.fillColor && this.raw.event.detail.fillColor._attributes && this.raw.event.detail.fillColor._attributes.value) {
+                    const fill = new Color(Number(this.raw.event.detail.fillColor._attributes.value));
+                    feat.properties['fill-opacity'] = fill.as_opacity();
+                    feat.properties['fill'] = fill.as_hex();
+                }
+            } else {
+                feat.geometry = {
+                    type: 'LineString',
+                    coordinates
+                }
+            }
+        }
+        return feat;
     }
 
     to_xml(): string {

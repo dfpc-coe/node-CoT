@@ -10,6 +10,11 @@
 
 ## Version History
 
+### v4.4.0
+
+- :rocket: Support `Polygon` & `LineString` `to_geojson()`
+- :bug: Fix previously unused Packed colour => opacity
+
 ### v4.3.0
 
 - :bug: Fix Opacity default to a non-zero value

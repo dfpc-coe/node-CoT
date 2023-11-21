@@ -10,7 +10,7 @@ test('Reversal Tests', async (t) => {
         const fixture: Feature = JSON.parse(String(await fs.readFile(path.join(path.parse(fileURLToPath(import.meta.url)).dir, 'fixtures/', fixturename))));
         const geo = CoT.from_geojson(fixture)
         const output = geo.to_geojson();
-        t.deepEquals(fixture, output, fixturename);
+        t.deepEquals(output, fixture, fixturename);
     }
 
     t.end();
