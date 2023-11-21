@@ -247,7 +247,7 @@ export default class CoT {
         }
 
 
-        if (this.raw.event._attributes.type === 'u-d-f' && Array.isArray(this.raw.event.detail.link)) {
+        if (['u-d-f', 'u-d-r'].includes(this.raw.event._attributes.type) && Array.isArray(this.raw.event.detail.link)) {
             const coordinates = [];
 
             for (const l of this.raw.event.detail.link) {

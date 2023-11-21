@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v4.4.1
+
+- :rocket: `u-d-r` type can also be a polygon
+
 ### v4.4.0
 
 - :rocket: Support `Polygon` & `LineString` `to_geojson()`
