@@ -1,5 +1,5 @@
 import xmljs from 'xml-js';
-import { Feature, Geometry } from 'geojson';
+import { Feature } from 'geojson';
 import { AllGeoJSON } from "@turf/helpers";
 import Util from './util.js';
 import Color from './color.js';
@@ -268,7 +268,12 @@ export default class CoT {
                 feat.properties['stroke-style'] = this.raw.event.detail.strokeStyle._attributes.value;
             }
 
-            if (coordinates[0][0] === coordinates[coordinates.length -1][0] && coordinates[0][1] === coordinates[coordinates.length -1][1]) {
+            if (this.raw.event._attributes.type === 'u-d-r' || (coordinates[0][0] === coordinates[coordinates.length -1][0] && coordinates[0][1] === coordinates[coordinates.length -1][1])) {
+                if (this.raw.event._attributes.type === 'u-d-r') {
+                    // CoT rectangles are only 4 points - GeoJSON needs to be closed
+                    coordinates.push(coordinates[0])
+                }
+
                 feat.geometry = {
                     type: 'Polygon',
                     coordinates: [coordinates]

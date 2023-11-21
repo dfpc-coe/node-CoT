@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v4.4.2
+
+- :bug: Close `u-d-r` Polygons
+
 ### v4.4.1
 
 - :rocket: `u-d-r` type can also be a polygon
