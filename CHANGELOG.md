@@ -10,6 +10,17 @@
 
 ## Version History
 
+### v4.5.0
+
+- :rocket: Support `center` property and calculate if not present
+- :rocket: Support `flow` property from `_flow-tags_`;
+- :rocket: Support `group` property from `__group`;
+- :rocket: Support `takv` property from `takv`;
+- :rocket: Support `status` property from `status`;
+- :rocket: Support `Droid` property from `uid._attributes.Droid`;
+- :rocket: Support `contact` property from `contact`;
+- :rocket: Support `precisionlocation` property from `precisionlocation`;
+
 ### v4.4.2
 
 - :bug: Close `u-d-r` Polygons

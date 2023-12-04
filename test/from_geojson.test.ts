@@ -70,10 +70,10 @@ test('CoT.from_geojson - Polygon', (t) => {
         ],
         labels_on: { _attributes: { value: 'false' } },
         tog: { _attributes: { enabled: '0' } },
-        strokeColor: { _attributes: { value: '16776960' } },
+        strokeColor: { _attributes: { value: '-2130706688' } },
         strokeWeight: { _attributes: { value: '3' } },
         strokeStyle: { _attributes: { value: 'solid' } },
-        fillColor: { _attributes: { value: '16776960' } },
+        fillColor: { _attributes: { value: '-2130706688' } },
         remarks: { _attributes: {}, _text: '' }
     });
 
@@ -119,7 +119,7 @@ test('CoT.from_geojson - LineString', (t) => {
         ],
         labels_on: { _attributes: { value: 'false' } },
         tog: { _attributes: { enabled: '0' } },
-        strokeColor: { _attributes: { value: '16776960' } },
+        strokeColor: { _attributes: { value: '-2130706688' } },
         strokeWeight: { _attributes: { value: '3' } },
         strokeStyle: { _attributes: { value: 'solid' } },
         remarks: { _attributes: {}, _text: '' }

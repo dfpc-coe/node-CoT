@@ -45,6 +45,108 @@
                 "detail": {
                     "type": "object",
                     "properties": {
+                        "_flow-tags_": {
+                            "type": "object"
+                        },
+                        "__group": {
+                            "type": "object",
+                            "properties": {
+                                "_attributes": {
+                                    "type": "object",
+                                    "properties": {
+                                        "name": {
+                                            "type": "string"
+                                        },
+                                        "role": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "takv": {
+                            "type": "object",
+                            "properties": {
+                                "_attributes": {
+                                    "type": "object",
+                                    "properties": {
+                                        "device": {
+                                            "type": "string"
+                                        },
+                                        "platform": {
+                                            "type": "string"
+                                        },
+                                        "os": {
+                                            "type": "string"
+                                        },
+                                        "version": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "status": {
+                            "type": "object",
+                            "properties": {
+                                "_attributes": {
+                                    "type": "object",
+                                    "properties": {
+                                        "battery": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "uid": {
+                            "type": "object",
+                            "properties": {
+                                "_attributes": {
+                                    "type": "object",
+                                    "properties": {
+                                        "Droid": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "contact": {
+                            "type": "object",
+                            "properties": {
+                                "_attributes": {
+                                    "type": "object",
+                                    "properties": {
+                                        "phone": {
+                                            "type": "string"
+                                        },
+                                        "callsign": {
+                                            "type": "string"
+                                        },
+                                        "endpoint": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
+                        "precisionlocation": {
+                            "type": "object",
+                            "properties": {
+                                "_attributes": {
+                                    "type": "object",
+                                    "properties": {
+                                        "geopointsrc": {
+                                            "type": "string"
+                                        },
+                                        "altsrc": {
+                                            "type": "string"
+                                        }
+                                    }
+                                }
+                            }
+                        },
                         "remarks": {
                             "type": "object",
                             "properties": {

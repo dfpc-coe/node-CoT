@@ -7,8 +7,9 @@ import PointOnFeature from '@turf/point-on-feature';
 import AJV from 'ajv';
 import fs from 'fs';
 
+const schema = JSON.parse(String(fs.readFileSync(new URL('./schema.json', import.meta.url))));
 const ajv = (new AJV({ allErrors: true }))
-    .compile(JSON.parse(String(fs.readFileSync(new URL('./schema.json', import.meta.url)))));
+    .compile(schema);
 
 export interface Attributes {
     version: string,
@@ -106,7 +107,7 @@ export default class CoT {
      *
      * @return {CoT}
      */
-    static from_geojson(feature: Feature) {
+    static from_geojson(feature: Feature): CoT {
         if (feature.type !== 'Feature') throw new Error('Must be GeoJSON Feature');
         if (!feature.properties) throw new Error('Feature must have properties');
 
@@ -127,18 +128,38 @@ export default class CoT {
         if (feature.id) cot.event._attributes.uid = String(feature.id);
         if (feature.properties.callsign && !feature.id) cot.event._attributes.uid = feature.properties.callsign;
 
+        if (feature.properties.droid) {
+            cot.event.detail.uid = { _attributes: { Droid: feature.properties.droid } };
+        }
+
+        if (feature.properties.takv) {
+            cot.event.detail.takv = { _attributes: { ...feature.properties.takv } };
+        }
+
         if (feature.properties.speed && feature.properties.course) {
             cot.event.detail.track = {
                 _attributes: Util.cot_track_attr(feature.properties.course, feature.properties.speed)
             }
         }
 
+        if (feature.properties.group) {
+            cot.event.detail.__group = { _attributes: { ...feature.properties.group } }
+        }
+
+        if (feature.properties.flow) {
+            cot.event.detail['_flow-tags_'] = { _attributes: { ...feature.properties.flow } }
+        }
+
+        if (feature.properties.status) {
+            cot.event.detail.status = { _attributes: { ...feature.properties.status } }
+        }
+
+        if (feature.properties.precisionlocation) {
+            cot.event.detail.precisionlocation = { _attributes: { ...feature.properties.precisionlocation } }
+        }
+
         if (feature.properties.icon) {
-            cot.event.detail.usericon = {
-                _attributes: {
-                    iconsetpath: feature.properties.icon
-                }
-            }
+            cot.event.detail.usericon = { _attributes: { iconsetpath: feature.properties.icon } }
         }
 
         cot.event.detail.remarks = { _attributes: { }, _text: feature.properties.remarks || '' };
@@ -193,9 +214,21 @@ export default class CoT {
             cot.event.detail.labels_on = { _attributes: { value: 'false' } };
             cot.event.detail.tog = { _attributes: { enabled: '0' } };
 
-            const centre = PointOnFeature(feature as AllGeoJSON);
-            cot.event.point._attributes.lon = String(centre.geometry.coordinates[0]);
-            cot.event.point._attributes.lat = String(centre.geometry.coordinates[1]);
+            if (feature.properties.center && Array.isArray(feature.properties.center) && feature.properties.center.length >= 2) {
+                cot.event.point._attributes.lon = String(feature.properties.center[0]);
+                cot.event.point._attributes.lat = String(feature.properties.center[1]);
+
+                if (feature.properties.center.length >= 3) {
+                    cot.event.point._attributes.hae = String(feature.properties.center[2] || '0.0');
+                } else {
+                    cot.event.point._attributes.hae = '0.0';
+                }
+            } else {
+                const centre = PointOnFeature(feature as AllGeoJSON);
+                cot.event.point._attributes.lon = String(centre.geometry.coordinates[0]);
+                cot.event.point._attributes.lat = String(centre.geometry.coordinates[1]);
+                cot.event.point._attributes.hae = '0.0';
+            }
         }
 
         return new CoT(cot);
@@ -215,6 +248,7 @@ export default class CoT {
             type: 'Feature',
             properties: {
                 callsign: raw.event.detail.contact._attributes.callsign || 'UNKNOWN',
+                center: [ Number(raw.event.point._attributes.lon), Number(raw.event.point._attributes.lat), Number(raw.event.point._attributes.hae) ],
                 type: raw.event._attributes.type,
                 how: raw.event._attributes.how,
                 time: raw.event._attributes.time,
@@ -223,15 +257,16 @@ export default class CoT {
             },
             geometry: {
                 type: 'Point',
-                coordinates: [
-                    Number(raw.event.point._attributes.lon),
-                    Number(raw.event.point._attributes.lat),
-                    Number(raw.event.point._attributes.hae)
-                ]
+                coordinates: [ Number(raw.event.point._attributes.lon), Number(raw.event.point._attributes.lat), Number(raw.event.point._attributes.hae) ]
             }
         };
-
+    
         if (!feat.properties) feat.properties = {};
+
+        delete raw.event.detail.contact._attributes.callsign;
+        if (Object.keys(raw.event.detail.contact._attributes).length) {
+            feat.properties.contact = raw.event.detail.contact._attributes;
+        }
 
         if (raw.event.detail.remarks && raw.event.detail.remarks._text) {
             feat.properties.remarks = raw.event.detail.remarks._text;
@@ -246,6 +281,30 @@ export default class CoT {
             feat.properties.icon = raw.event.detail.usericon._attributes.iconsetpath;
         }
 
+
+        if (raw.event.detail.uid && raw.event.detail.uid._attributes && raw.event.detail.uid._attributes.Droid) {
+            feat.properties.droid = raw.event.detail.uid._attributes.Droid;
+        }
+
+        if (raw.event.detail.takv && raw.event.detail.takv._attributes) {
+            feat.properties.takv = raw.event.detail.takv._attributes;
+        }
+
+        if (raw.event.detail.group && raw.event.detail.group._attributes) {
+            feat.properties.group = raw.event.detail.group._attributes;
+        }
+
+        if (raw.event.detail['_flow-tags_'] && raw.event.detail['_flow-tags_']._attributes) {
+            feat.properties.flow = raw.event.detail['_flow-tags_']._attributes;
+        }
+
+        if (raw.event.detail.status && raw.event.detail.status._attributes) {
+            feat.properties.status = raw.event.detail.status._attributes;
+        }
+
+        if (raw.event.detail.precisionlocation && raw.event.detail.precisionlocation._attributes) {
+            feat.properties.precisionlocation = raw.event.detail.precisionlocation._attributes;
+        }
 
         if (['u-d-f', 'u-d-r'].includes(this.raw.event._attributes.type) && Array.isArray(this.raw.event.detail.link)) {
             const coordinates = [];
