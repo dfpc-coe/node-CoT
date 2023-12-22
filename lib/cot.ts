@@ -135,6 +135,9 @@ export default class CoT {
         if (feature.properties.takv) {
             cot.event.detail.takv = { _attributes: { ...feature.properties.takv } };
         }
+        if (feature.properties.contact) {
+            cot.event.detail.contact = { _attributes: { ...feature.properties.contact } };
+        }
 
         if (feature.properties.speed && feature.properties.course) {
             cot.event.detail.track = {
@@ -260,7 +263,7 @@ export default class CoT {
                 coordinates: [ Number(raw.event.point._attributes.lon), Number(raw.event.point._attributes.lat), Number(raw.event.point._attributes.hae) ]
             }
         };
-    
+
         if (!feat.properties) feat.properties = {};
 
         delete raw.event.detail.contact._attributes.callsign;

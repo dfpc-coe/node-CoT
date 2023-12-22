@@ -21,6 +21,10 @@
 - :rocket: Support `contact` property from `contact`;
 - :rocket: Support `precisionlocation` property from `precisionlocation`;
 
+### v4.4.3
+
+- :bug: Fix contact parser in `from_geojson`
+
 ### v4.4.2
 
 - :bug: Close `u-d-r` Polygons
