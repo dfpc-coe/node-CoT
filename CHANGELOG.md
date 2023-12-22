@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v4.5.1
+
+- :bug: Fix contact parser in `from_geojson`
+
 ### v4.5.0
 
 - :rocket: Support `center` property and calculate if not present
@@ -20,10 +24,6 @@
 - :rocket: Support `Droid` property from `uid._attributes.Droid`;
 - :rocket: Support `contact` property from `contact`;
 - :rocket: Support `precisionlocation` property from `precisionlocation`;
-
-### v4.4.3
-
-- :bug: Fix contact parser in `from_geojson`
 
 ### v4.4.2
 
