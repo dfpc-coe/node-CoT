@@ -309,6 +309,10 @@ export default class CoT {
             feat.properties.precisionlocation = raw.event.detail.precisionlocation._attributes;
         }
 
+        if (raw.event.detail.__group && raw.event.detail.__group._attributes) {
+            feat.properties.group = raw.event.detail.__group._attributes;
+        }
+
         if (['u-d-f', 'u-d-r'].includes(this.raw.event._attributes.type) && Array.isArray(this.raw.event.detail.link)) {
             const coordinates = [];
 

@@ -60,6 +60,10 @@ test('Decode iTAK COT message', (t) => {
               "phone": "7204258729",
               "endpoint": "*:-1:stcp"
             },
+            group: {
+                name: 'Yellow',
+                role: 'Team Member'
+            },
             precisionlocation: {
               "geopointsrc": "GPS",
               "altsrc": "???"

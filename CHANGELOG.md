@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v4.6.0
+
+- :rocket: Decode `__group` to `.properties.group`
+
 ### v4.5.1
 
 - :bug: Fix contact parser in `from_geojson`
