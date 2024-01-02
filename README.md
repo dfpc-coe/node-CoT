@@ -18,7 +18,29 @@ To install `node-cot` with npm run
 npm install @tak-ps/node-cot
 ```
 
-## GeoJSON Spec
+## CoT Spec
+
+The CoT spec appears to be very informally developed by a rough internal concensus
+by large TAK Clients within the TPC (TAK Product Center). The following is a current
+understanding of the spec primarily developed through reverse engineering TAK clients
+
+```
+<event version uid type how time start stale/>
+```
+
+### Event Attributes
+
+| Name          | Description | Example |
+| ------------- | ----------- | ------- |
+| `version`     | CoT Version, currently `2.0` | `version="2.0"` |
+| `uid`         | Globally unique name for this information on this event | `uid="any-unique-string-123"` |
+| `type`        | Hierarchically organized hint about event type | `type="a-f-G-E"' |
+| `time`        | The time at which the event was generated | `time="2023-07-18T15:25:09.00Z"` |
+| `how`         | Gives a hint about how the coordinates were generated | `how=""`
+| `start`       | | |
+| `stale`       | | |
+
+## CoT GeoJSON Spec
 
 One of the primary use-cases of this library is to make serialization and deserialiation from
 more commmon geospatial formats a breeze. This section will walk through CoT options that are
@@ -37,7 +59,7 @@ The following are the most important/relevant properties
 
 | Property              | Description |
 | --------------------- | ----------- |
-| `.id`                 | Used as the CoT uid - If ommitted a UUID is generated |
+| `.id`                 | Used as the CoT uid - If omitted a UUID is generated |
 | `.properties.type`    | CoT type - note this will be overridden if geometry is not a Point |
 | `.properties.how`     | CoT how |
 | `.properties.time`    | Time at which CoT was created |
@@ -88,7 +110,17 @@ cot.raw; // JSON XML Representation
 
 The following list is a very incomplete list of "special" CoT types and behaviors
 
-| CoT Type | Notes |
-| -------- | ----- |
-| `u-d-f`  | LineString or Polygon |
-| `u-d-r`  | 4 Cornered Rectangle |
+| CoT Type          | Notes |
+| ----------------- | ----- |
+| `u-d-f`           | LineString or Polygon |
+| `u-d-r`           | 4 Cornered Rectangle |
+| `b-a-o-tbl`       | 911 Alert |
+| `b-a-o-can`       | Cancel
+| `b-a-g`           | GeoFenceBreach
+| `b-a-o-pan`       | RingTheBell
+| `b-a-o-opn`       | TroopsInContact
+| `b-t-f`           | Chat
+| `b-t-f-d`         | Chat delivery receipt
+| `b-t-f-r`         | Chat read receipt
+| `b-t-f-p`         | Chat pending receipt
+| `b-t-f-s`         | Chat delivery failure
