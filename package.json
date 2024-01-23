@@ -10,7 +10,7 @@
         "test": "ts-node-test test/",
         "lint": "eslint *.ts lib/*.ts",
         "doc": "typedoc index.ts",
-        "build": "typescript-json-schema ./lib/types.ts JSONCoT > ./lib/schema.json && tsc --build",
+        "build": "typescript-json-schema --required --out ./lib/schema.json ./lib/types.ts JSONCoT && tsc --build",
         "pretest": "npm run lint"
     },
     "dependencies": {

@@ -28,12 +28,24 @@
                             "type": "string"
                         }
                     },
+                    "required": [
+                        "chatroom",
+                        "groupOwner",
+                        "id",
+                        "messageId",
+                        "parent",
+                        "senderCallsign"
+                    ],
                     "type": "object"
                 },
                 "chatgrp": {
                     "$ref": "#/definitions/GenericAttributes"
                 }
             },
+            "required": [
+                "_attributes",
+                "chatgrp"
+            ],
             "type": "object"
         },
         "Contact": {
@@ -53,9 +65,15 @@
                             "type": "string"
                         }
                     },
+                    "required": [
+                        "callsign"
+                    ],
                     "type": "object"
                 }
             },
+            "required": [
+                "_attributes"
+            ],
             "type": "object"
         },
         "Detail": {
@@ -154,6 +172,12 @@
                     "type": "string"
                 }
             },
+            "required": [
+                "how",
+                "type",
+                "uid",
+                "version"
+            ],
             "type": "object"
         },
         "FlowTags": {
@@ -171,6 +195,9 @@
                     "type": "object"
                 }
             },
+            "required": [
+                "_attributes"
+            ],
             "type": "object"
         },
         "Group": {
@@ -187,9 +214,16 @@
                             "type": "string"
                         }
                     },
+                    "required": [
+                        "name",
+                        "role"
+                    ],
                     "type": "object"
                 }
             },
+            "required": [
+                "_attributes"
+            ],
             "type": "object"
         },
         "Point": {
@@ -233,9 +267,19 @@
                             ]
                         }
                     },
+                    "required": [
+                        "ce",
+                        "hae",
+                        "lat",
+                        "le",
+                        "lon"
+                    ],
                     "type": "object"
                 }
             },
+            "required": [
+                "_attributes"
+            ],
             "type": "object"
         },
         "PrecisionLocation": {
@@ -255,6 +299,9 @@
                     "type": "object"
                 }
             },
+            "required": [
+                "_attributes"
+            ],
             "type": "object"
         },
         "Remarks": {
@@ -280,6 +327,10 @@
                     "type": "string"
                 }
             },
+            "required": [
+                "_attributes",
+                "_text"
+            ],
             "type": "object"
         },
         "Status": {
@@ -293,9 +344,15 @@
                             "type": "string"
                         }
                     },
+                    "required": [
+                        "battery"
+                    ],
                     "type": "object"
                 }
             },
+            "required": [
+                "_attributes"
+            ],
             "type": "object"
         },
         "TakVersion": {
@@ -321,6 +378,9 @@
                     "type": "object"
                 }
             },
+            "required": [
+                "_attributes"
+            ],
             "type": "object"
         },
         "Track": {
@@ -329,6 +389,9 @@
                     "$ref": "#/definitions/TrackAttributes"
                 }
             },
+            "required": [
+                "_attributes"
+            ],
             "type": "object"
         },
         "TrackAttributes": {
@@ -368,9 +431,15 @@
                             "type": "string"
                         }
                     },
+                    "required": [
+                        "Droid"
+                    ],
                     "type": "object"
                 }
             },
+            "required": [
+                "_attributes"
+            ],
             "type": "object"
         },
         "UserIcon": {
@@ -384,9 +453,15 @@
                             "type": "string"
                         }
                     },
+                    "required": [
+                        "iconsetpath"
+                    ],
                     "type": "object"
                 }
             },
+            "required": [
+                "_attributes"
+            ],
             "type": "object"
         }
     },
@@ -404,9 +479,17 @@
                     "$ref": "#/definitions/Point"
                 }
             },
+            "required": [
+                "_attributes",
+                "detail",
+                "point"
+            ],
             "type": "object"
         }
     },
+    "required": [
+        "event"
+    ],
     "type": "object"
 }
 
