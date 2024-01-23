@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v5.0.4
+
+- :bug: Optional `_flow-tags_._attributes`
+
 ### v5.0.3
 
 - :bug: `remarks._text` is optional

@@ -51,6 +51,9 @@ export interface TakVersion {
 }
 
 export interface FlowTags {
+    _attributes?: {
+        [k: string]: string
+    }
     [k: string]: string;
 }
 
