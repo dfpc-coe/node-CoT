@@ -23,13 +23,17 @@ test('CoT.from_geojson - Point', (t) => {
         _attributes: { lat: '2.2', lon: '1.1', hae: '0.0', ce: '9999999.0', le: '9999999.0' }
     });
 
-    t.ok(geo.raw.event.detail['_flow-tags_']);
-    delete geo.raw.event.detail['_flow-tags_'];
+    if (!geo.raw.event.detail || !geo.raw.event.detail.remarks) {
+        t.fail('No Detail Section')
+    } else {
+        t.ok(geo.raw.event.detail['_flow-tags_']);
+        delete geo.raw.event.detail['_flow-tags_'];
 
-    t.deepEquals(geo.raw.event.detail, {
-        contact: { _attributes: { callsign: 'UNKNOWN' } },
-        remarks: { _attributes: {}, _text: '' }
-    });
+        t.deepEquals(geo.raw.event.detail, {
+            contact: { _attributes: { callsign: 'UNKNOWN' } },
+            remarks: { _attributes: {}, _text: '' }
+        });
+    }
 
     t.end();
 });
@@ -62,26 +66,30 @@ test('CoT.from_geojson - Polygon', (t) => {
         _attributes: { lat: '39.065', lon: '-108.54599999999999', hae: '0.0', ce: '9999999.0', le: '9999999.0' }
     });
 
-    t.ok(geo.raw.event.detail['_flow-tags_']);
-    delete geo.raw.event.detail['_flow-tags_'];
+    if (!geo.raw.event.detail || !geo.raw.event.detail.remarks) {
+        t.fail('No Detail Section')
+    } else {
+        t.ok(geo.raw.event.detail['_flow-tags_']);
+        delete geo.raw.event.detail['_flow-tags_'];
 
-    t.deepEquals(geo.raw.event.detail, {
-        contact: { _attributes: { callsign: 'UNKNOWN' } },
-        link: [
-            { _attributes: { point: '39.098,-108.587' } },
-            { _attributes: { point: '39.032,-108.587' } },
-            { _attributes: { point: '39.032,-108.505' } },
-            { _attributes: { point: '39.098,-108.505' } },
-            { _attributes: { point: '39.098,-108.587' } },
-        ],
-        labels_on: { _attributes: { value: 'false' } },
-        tog: { _attributes: { enabled: '0' } },
-        strokeColor: { _attributes: { value: '-2130706688' } },
-        strokeWeight: { _attributes: { value: '3' } },
-        strokeStyle: { _attributes: { value: 'solid' } },
-        fillColor: { _attributes: { value: '-2130706688' } },
-        remarks: { _attributes: {}, _text: '' }
-    });
+        t.deepEquals(geo.raw.event.detail, {
+            contact: { _attributes: { callsign: 'UNKNOWN' } },
+            link: [
+                { _attributes: { point: '39.098,-108.587' } },
+                { _attributes: { point: '39.032,-108.587' } },
+                { _attributes: { point: '39.032,-108.505' } },
+                { _attributes: { point: '39.098,-108.505' } },
+                { _attributes: { point: '39.098,-108.587' } },
+            ],
+            labels_on: { _attributes: { value: 'false' } },
+            tog: { _attributes: { enabled: '0' } },
+            strokeColor: { _attributes: { value: '-2130706688' } },
+            strokeWeight: { _attributes: { value: '3' } },
+            strokeStyle: { _attributes: { value: 'solid' } },
+            fillColor: { _attributes: { value: '-2130706688' } },
+            remarks: { _attributes: {}, _text: '' }
+        });
+    }
 
     t.end();
 });
@@ -114,25 +122,29 @@ test('CoT.from_geojson - LineString', (t) => {
         _attributes: { lat: '39.098', lon: '-108.505', hae: '0.0', ce: '9999999.0', le: '9999999.0' }
     });
 
-    t.ok(geo.raw.event.detail['_flow-tags_']);
-    delete geo.raw.event.detail['_flow-tags_'];
+    if (!geo.raw.event.detail || !geo.raw.event.detail.remarks) {
+        t.fail('No Detail Section')
+    } else {
+        t.ok(geo.raw.event.detail['_flow-tags_']);
+        delete geo.raw.event.detail['_flow-tags_'];
 
-    t.deepEquals(geo.raw.event.detail, {
-        contact: { _attributes: { callsign: 'UNKNOWN' } },
-        link: [
-            { _attributes: { point: '39.098,-108.587' } },
-            { _attributes: { point: '39.032,-108.587' } },
-            { _attributes: { point: '39.032,-108.505' } },
-            { _attributes: { point: '39.098,-108.505' } },
-            { _attributes: { point: '39.098,-108.587' } }
-        ],
-        labels_on: { _attributes: { value: 'false' } },
-        tog: { _attributes: { enabled: '0' } },
-        strokeColor: { _attributes: { value: '-2130706688' } },
-        strokeWeight: { _attributes: { value: '3' } },
-        strokeStyle: { _attributes: { value: 'solid' } },
-        remarks: { _attributes: {}, _text: '' }
-    });
+        t.deepEquals(geo.raw.event.detail, {
+            contact: { _attributes: { callsign: 'UNKNOWN' } },
+            link: [
+                { _attributes: { point: '39.098,-108.587' } },
+                { _attributes: { point: '39.032,-108.587' } },
+                { _attributes: { point: '39.032,-108.505' } },
+                { _attributes: { point: '39.098,-108.505' } },
+                { _attributes: { point: '39.098,-108.587' } }
+            ],
+            labels_on: { _attributes: { value: 'false' } },
+            tog: { _attributes: { enabled: '0' } },
+            strokeColor: { _attributes: { value: '-2130706688' } },
+            strokeWeight: { _attributes: { value: '3' } },
+            strokeStyle: { _attributes: { value: 'solid' } },
+            remarks: { _attributes: {}, _text: '' }
+        });
+    }
 
     t.end();
 });
@@ -206,13 +218,17 @@ test('CoT.from_geojson - Icon', (t) => {
         }
     });
 
-    t.ok(geo.raw.event.detail['_flow-tags_']);
-    delete geo.raw.event.detail['_flow-tags_'];
+    if (!geo.raw.event.detail || !geo.raw.event.detail.remarks) {
+        t.fail('No Detail Section')
+    } else {
+        t.ok(geo.raw.event.detail['_flow-tags_']);
+        delete geo.raw.event.detail['_flow-tags_'];
 
-    t.deepEquals(geo.raw.event.detail, {
-        contact: { _attributes: { callsign: 'UNKNOWN' } },
-        usericon: { _attributes: { iconsetpath: '66f14976-4b62-4023-8edb-d8d2ebeaa336/Public Safety Air/EMS_ROTOR.png' } }, remarks: { _attributes: {}, _text: '' }
-    });
+        t.deepEquals(geo.raw.event.detail, {
+            contact: { _attributes: { callsign: 'UNKNOWN' } },
+            usericon: { _attributes: { iconsetpath: '66f14976-4b62-4023-8edb-d8d2ebeaa336/Public Safety Air/EMS_ROTOR.png' } }, remarks: { _attributes: {}, _text: '' }
+        });
+    }
 
     t.end();
 });
@@ -254,7 +270,7 @@ test('CoT.from_geojson - Height Above Earth', (t) => {
 });
 
 test('CoT.from_geojson - Course & Speed', (t) => {
-    t.deepEquals(CoT.from_geojson({
+    const cot = CoT.from_geojson({
         type: 'Feature',
         properties: {
             course: 260,
@@ -264,18 +280,24 @@ test('CoT.from_geojson - Course & Speed', (t) => {
             type: 'Point',
             coordinates: [1.1, 2.2]
         }
-    }).raw.event.detail.track, {
-        _attributes: {
-            'course': '260',
-            'speed': '120'
-        }
-    }, 'track');
+    });
+
+    if (!cot.raw.event.detail || !cot.raw.event.detail.remarks) {
+        t.fail('No Detail Section')
+    } else {
+        t.deepEquals(cot.raw.event.detail.track, {
+            _attributes: {
+                'course': '260',
+                'speed': '120'
+            }
+        }, 'track');
+    }
 
     t.end();
 });
 
 test('CoT.from_geojson - Remarks', (t) => {
-    t.deepEquals(CoT.from_geojson({
+    const cot = CoT.from_geojson({
         type: 'Feature',
         properties: {
             course: 260,
@@ -286,10 +308,16 @@ test('CoT.from_geojson - Remarks', (t) => {
             type: 'Point',
             coordinates: [1.1, 2.2]
         }
-    }).raw.event.detail.remarks, {
-        _attributes: {},
-        _text: 'Test'
-    }, 'track');
+    })
+    
+    if (!cot.raw.event.detail || !cot.raw.event.detail.remarks) {
+        t.fail('No Detail Section')
+    } else {
+        t.deepEquals(cot.raw.event.detail.remarks, {
+            _attributes: {},
+            _text: 'Test'
+        }, 'track');
+    }
 
     t.end();
 });

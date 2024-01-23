@@ -11,8 +11,8 @@ test('FlowTags - Basic', (t) => {
         message: 'Direct Message Test'
     });
 
-    if (!cot.raw.event.detail['_flow-tags_']) {
-        t.fail();
+    if (!cot.raw.event.detail || !cot.raw.event.detail['_flow-tags_']) {
+        t.fail('No Detail Section')
     } else {
         t.equals(typeof cot.raw.event.detail['_flow-tags_'][`NodeCoT-${pkg.version}`], 'string');
     }

@@ -43,6 +43,7 @@ export default class CoT {
         ajv(this.raw);
         if (ajv.errors) throw new Error(`${ajv.errors[0].message} (${ajv.errors[0].instancePath})`);
 
+        if (!this.raw.event.detail) this.raw.event.detail = {};
         if (!this.raw.event.detail['_flow-tags_']) this.raw.event.detail['_flow-tags_'] = {};
         this.raw.event.detail['_flow-tags_'][`NodeCoT-${pkg.version}`] = new Date().toISOString()
     }
@@ -74,6 +75,7 @@ export default class CoT {
 
         if (feature.id) cot.event._attributes.uid = String(feature.id);
         if (feature.properties.callsign && !feature.id) cot.event._attributes.uid = feature.properties.callsign;
+        if (!cot.event.detail) cot.event.detail = {};
 
         if (feature.properties.droid) {
             cot.event.detail.uid = { _attributes: { Droid: feature.properties.droid } };
@@ -82,6 +84,7 @@ export default class CoT {
         if (feature.properties.takv) {
             cot.event.detail.takv = { _attributes: { ...feature.properties.takv } };
         }
+
         if (feature.properties.contact) {
             cot.event.detail.contact = { _attributes: { ...feature.properties.contact } };
         }
@@ -188,10 +191,10 @@ export default class CoT {
      * Return a GeoJSON Feature from an XML CoT message
      */
     to_geojson(): Feature {
-        const raw = JSON.parse(JSON.stringify(this.raw));
+        const raw: JSONCoT = JSON.parse(JSON.stringify(this.raw));
         if (!raw.event.detail) raw.event.detail = {};
-        if (!raw.event.detail.contact) raw.event.detail.contact = {};
-        if (!raw.event.detail.contact._attributes) raw.event.detail.contact._attributes = {};
+        if (!raw.event.detail.contact) raw.event.detail.contact = { _attributes: { callsign: 'UNKNOWN' } };
+        if (!raw.event.detail.contact._attributes) raw.event.detail.contact._attributes = { callsign: 'UNKNOWN' };
 
         const feat: Feature = {
             id: raw.event._attributes.uid,
@@ -213,9 +216,10 @@ export default class CoT {
 
         if (!feat.properties) feat.properties = {};
 
-        delete raw.event.detail.contact._attributes.callsign;
-        if (Object.keys(raw.event.detail.contact._attributes).length) {
-            feat.properties.contact = raw.event.detail.contact._attributes;
+        const contact = JSON.parse(JSON.stringify(raw.event.detail.contact._attributes));
+        delete contact.callsign;
+        if (Object.keys(contact).length) {
+            feat.properties.contact = contact;
         }
 
         if (raw.event.detail.remarks && raw.event.detail.remarks._text) {
@@ -240,8 +244,8 @@ export default class CoT {
             feat.properties.takv = raw.event.detail.takv._attributes;
         }
 
-        if (raw.event.detail.group && raw.event.detail.group._attributes) {
-            feat.properties.group = raw.event.detail.group._attributes;
+        if (raw.event.detail.__group && raw.event.detail.__group._attributes) {
+            feat.properties.group = raw.event.detail.__group._attributes;
         }
 
         if (raw.event.detail['_flow-tags_'] && raw.event.detail['_flow-tags_']._attributes) {
@@ -260,29 +264,29 @@ export default class CoT {
             feat.properties.group = raw.event.detail.__group._attributes;
         }
 
-        if (['u-d-f', 'u-d-r'].includes(this.raw.event._attributes.type) && Array.isArray(this.raw.event.detail.link)) {
+        if (['u-d-f', 'u-d-r'].includes(raw.event._attributes.type) && Array.isArray(raw.event.detail.link)) {
             const coordinates = [];
 
-            for (const l of this.raw.event.detail.link) {
+            for (const l of raw.event.detail.link) {
                 coordinates.push(l._attributes.point.split(',').map((p: string) => { return Number(p.trim()) }).splice(0, 2).reverse());
             }
 
-            if (this.raw.event.detail.strokeColor && this.raw.event.detail.strokeColor._attributes && this.raw.event.detail.strokeColor._attributes.value) {
-                const stroke = new Color(Number(this.raw.event.detail.strokeColor._attributes.value));
+            if (raw.event.detail.strokeColor && raw.event.detail.strokeColor._attributes && raw.event.detail.strokeColor._attributes.value) {
+                const stroke = new Color(Number(raw.event.detail.strokeColor._attributes.value));
                 feat.properties.stroke = stroke.as_hex();
                 feat.properties['stroke-opacity'] = stroke.as_opacity();
             }
 
-            if (this.raw.event.detail.strokeWeight && this.raw.event.detail.strokeWeight._attributes && this.raw.event.detail.strokeWeight._attributes.value) {
-                feat.properties['stroke-width'] = Number(this.raw.event.detail.strokeWeight._attributes.value);
+            if (raw.event.detail.strokeWeight && raw.event.detail.strokeWeight._attributes && raw.event.detail.strokeWeight._attributes.value) {
+                feat.properties['stroke-width'] = Number(raw.event.detail.strokeWeight._attributes.value);
             }
 
-            if (this.raw.event.detail.strokeStyle && this.raw.event.detail.strokeStyle._attributes && this.raw.event.detail.strokeStyle._attributes.value) {
-                feat.properties['stroke-style'] = this.raw.event.detail.strokeStyle._attributes.value;
+            if (raw.event.detail.strokeStyle && raw.event.detail.strokeStyle._attributes && raw.event.detail.strokeStyle._attributes.value) {
+                feat.properties['stroke-style'] = raw.event.detail.strokeStyle._attributes.value;
             }
 
-            if (this.raw.event._attributes.type === 'u-d-r' || (coordinates[0][0] === coordinates[coordinates.length -1][0] && coordinates[0][1] === coordinates[coordinates.length -1][1])) {
-                if (this.raw.event._attributes.type === 'u-d-r') {
+            if (raw.event._attributes.type === 'u-d-r' || (coordinates[0][0] === coordinates[coordinates.length -1][0] && coordinates[0][1] === coordinates[coordinates.length -1][1])) {
+                if (raw.event._attributes.type === 'u-d-r') {
                     // CoT rectangles are only 4 points - GeoJSON needs to be closed
                     coordinates.push(coordinates[0])
                 }
@@ -292,8 +296,8 @@ export default class CoT {
                     coordinates: [coordinates]
                 }
 
-                if (this.raw.event.detail.fillColor && this.raw.event.detail.fillColor._attributes && this.raw.event.detail.fillColor._attributes.value) {
-                    const fill = new Color(Number(this.raw.event.detail.fillColor._attributes.value));
+                if (raw.event.detail.fillColor && raw.event.detail.fillColor._attributes && raw.event.detail.fillColor._attributes.value) {
+                    const fill = new Color(Number(raw.event.detail.fillColor._attributes.value));
                     feat.properties['fill-opacity'] = fill.as_opacity();
                     feat.properties['fill'] = fill.as_hex();
                 }
