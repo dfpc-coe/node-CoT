@@ -1,16 +1,17 @@
 import test from 'tape';
-import CoT from '../index.js';
+import { DirectChat } from '../index.js';
 
-test('CoT.is_chat', (t) => {
-    let cot = CoT.from_geojson({
-        type: 'Feature',
-        properties: {
-
+test('DirectChat', (t) => {
+    let cot = new DirectChat({
+        to: {
+            uid: '123456',
+            callsign: 'Alpha Operator'
         },
-        geometry: {
-            type: 'Point',
-            coordinates: [0,0]
-        }
+        from: {
+            uid: '654321',
+            callsign: 'Bravo Operator'
+        },
+        message: 'Direct Message Test'
     });
 
     t.ok(cot.is_chat());
