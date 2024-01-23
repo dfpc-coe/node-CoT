@@ -92,7 +92,7 @@ export interface Remarks {
         time?: string;
         [k: string]: string | undefined;
     }
-    _text: string;
+    _text?: string;
 }
 
 export interface PrecisionLocation {

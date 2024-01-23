@@ -327,9 +327,6 @@
                     "type": "string"
                 }
             },
-            "required": [
-                "_text"
-            ],
             "type": "object"
         },
         "Status": {

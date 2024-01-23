@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v5.0.3
+
+- :bug: `remarks._text` is optional
+
 ### v5.0.2
 
 - :bug: `remarks._attributes` is optional
