@@ -23,6 +23,9 @@ test('CoT.from_geojson - Point', (t) => {
         _attributes: { lat: '2.2', lon: '1.1', hae: '0.0', ce: '9999999.0', le: '9999999.0' }
     });
 
+    t.ok(geo.raw.event.detail['_flow-tags_']);
+    delete geo.raw.event.detail['_flow-tags_'];
+
     t.deepEquals(geo.raw.event.detail, {
         contact: { _attributes: { callsign: 'UNKNOWN' } },
         remarks: { _attributes: {}, _text: '' }
@@ -58,6 +61,9 @@ test('CoT.from_geojson - Polygon', (t) => {
     t.deepEquals(geo.raw.event.point, {
         _attributes: { lat: '39.065', lon: '-108.54599999999999', hae: '0.0', ce: '9999999.0', le: '9999999.0' }
     });
+
+    t.ok(geo.raw.event.detail['_flow-tags_']);
+    delete geo.raw.event.detail['_flow-tags_'];
 
     t.deepEquals(geo.raw.event.detail, {
         contact: { _attributes: { callsign: 'UNKNOWN' } },
@@ -107,6 +113,9 @@ test('CoT.from_geojson - LineString', (t) => {
     t.deepEquals(geo.raw.event.point, {
         _attributes: { lat: '39.098', lon: '-108.505', hae: '0.0', ce: '9999999.0', le: '9999999.0' }
     });
+
+    t.ok(geo.raw.event.detail['_flow-tags_']);
+    delete geo.raw.event.detail['_flow-tags_'];
 
     t.deepEquals(geo.raw.event.detail, {
         contact: { _attributes: { callsign: 'UNKNOWN' } },
@@ -196,6 +205,9 @@ test('CoT.from_geojson - Icon', (t) => {
             coordinates: [1.1, 2.2]
         }
     });
+
+    t.ok(geo.raw.event.detail['_flow-tags_']);
+    delete geo.raw.event.detail['_flow-tags_'];
 
     t.deepEquals(geo.raw.event.detail, {
         contact: { _attributes: { callsign: 'UNKNOWN' } },

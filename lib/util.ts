@@ -1,10 +1,10 @@
 import { randomUUID } from 'crypto'
 import type {
-    Attributes,
+    EventAttributes,
     TrackAttributes,
     Detail,
     Point
-} from './cot.js';
+} from './types.js';
 
 /**
  * Helper functions for generating CoT data
@@ -26,7 +26,7 @@ export default class Util {
         time?: Date | string | null,
         start?: Date | string | null,
         stale?: Date | string | number | null
-    ): Attributes {
+    ): EventAttributes {
         if (!type) throw new Error('type param required');
         if (!how) throw new Error('how param required');
 

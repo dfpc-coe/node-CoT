@@ -4,74 +4,18 @@ import { AllGeoJSON } from "@turf/helpers";
 import Util from './util.js';
 import Color from './color.js';
 import PointOnFeature from '@turf/point-on-feature';
+import JSONCoT from './types.js'
 import AJV from 'ajv';
 import fs from 'fs';
 
 const schema = JSON.parse(String(fs.readFileSync(new URL('./schema.json', import.meta.url))));
-const ajv = (new AJV({ allErrors: true }))
+const pkg = JSON.parse(String(fs.readFileSync(new URL('../package.json', import.meta.url))));
+
+const ajv = (new AJV({
+    allErrors: true,
+    allowUnionTypes: true
+}))
     .compile(schema);
-
-export interface Attributes {
-    version: string,
-    uid: string;
-    type: string;
-    how: string;
-    [k: string]: string;
-}
-
-export interface GenericAttributes {
-    _attributes: {
-        [k: string]: string;
-    }
-}
-
-export interface Track {
-    _attributes: TrackAttributes;
-}
-
-export interface TrackAttributes {
-    speed: string,
-    course: string,
-    [k: string]: string
-}
-
-export interface Detail {
-    contact?: GenericAttributes,
-    tog?: GenericAttributes,
-    strokeColor?: GenericAttributes,
-    strokeWeight?: GenericAttributes,
-    strokeStyle?: GenericAttributes,
-    labels_on?: GenericAttributes,
-    fillColor?: GenericAttributes,
-    link?: GenericAttributes[],
-    usericon?: GenericAttributes,
-    track?: Track,
-    TakControl?: {
-        TakServerVersionInfo?: GenericAttributes
-    },
-    [k: string]: unknown
-}
-
-export interface Point {
-    _attributes: {
-        lat: string | number;
-        lon: string | number;
-        hae: string | number;
-        ce: string | number;
-        le: string | number;
-        [k: string]: string | number
-    }
-}
-
-export interface JSONCoT {
-    event: {
-        _attributes: Attributes,
-        detail: Detail,
-        point: Point,
-        [k: string]: unknown
-    },
-    [k: string]: unknown
-}
 
 /**
  * Convert to and from an XML CoT message
@@ -98,6 +42,9 @@ export default class CoT {
 
         ajv(this.raw);
         if (ajv.errors) throw new Error(`${ajv.errors[0].message} (${ajv.errors[0].instancePath})`);
+
+        if (!this.raw.event.detail['_flow-tags_']) this.raw.event.detail['_flow-tags_'] = {};
+        this.raw.event.detail['_flow-tags_'][`NodeCoT-${pkg.version}`] = new Date().toISOString()
     }
 
     /**
@@ -375,6 +322,15 @@ export default class CoT {
                 point: Util.cot_point()
             }
         });
+    }
+
+    /**
+     * Determines if the CoT message represents a Chat Message
+     *
+     * @return {boolean}
+     */
+    is_chat(): boolean {
+        return !!(this.raw.event.detail && this.raw.event.detail.__chat);
     }
 
     /**

@@ -10,6 +10,34 @@
 
 ## Version History
 
+### v5.0.5
+
+- :bug: Object Defs
+
+### v5.0.4
+
+- :bug: Optional `_flow-tags_._attributes`
+
+### v5.0.3
+
+- :bug: `remarks._text` is optional
+
+### v5.0.2
+
+- :bug: `remarks._attributes` is optional
+
+### v5.0.1
+
+- :bug: Add `package.json` in `dist/`
+
+### v5.0.0
+
+- :tada: `schema.json` is now automatically generated from Type Defs
+- :tada: Add Chat interface for easily creating Direct Messages
+- :rocket: Add Flow Tag when parsed by NodeCoT
+- :arrow_up: Update Typescript
+- :white_check_mark: Add Chat & Flow tests
+
 ### v4.6.0
 
 - :rocket: Decode `__group` to `.properties.group`

@@ -1,7 +1,7 @@
 {
     "name": "@tak-ps/node-cot",
     "type": "module",
-    "version": "4.6.0",
+    "version": "5.0.5",
     "description": "Lightweight JavaScript library for parsing and manipulating TAK messages",
     "author": "Nick Ingalls <nick@ingalls.ca>",
     "main": "dist/index.js",
@@ -10,7 +10,7 @@
         "test": "ts-node-test test/",
         "lint": "eslint *.ts lib/*.ts",
         "doc": "typedoc index.ts",
-        "build": "tsc --build",
+        "build": "typescript-json-schema --required --out ./lib/schema.json ./lib/types.ts JSONCoT && tsc --build && cp package.json dist/",
         "pretest": "npm run lint"
     },
     "dependencies": {
@@ -34,7 +34,8 @@
         "ts-node": "^10.9.1",
         "ts-node-test": "^0.4.0",
         "typedoc": "^0.25.0",
-        "typescript": "^5.0.0"
+        "typescript": "^5.0.0",
+        "typescript-json-schema": "^0.62.0"
     },
     "repository": {
         "type": "git",
