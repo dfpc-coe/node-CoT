@@ -38,6 +38,8 @@ export interface TrackAttributes {
 export interface Detail {
     contact?: GenericAttributes,
     tog?: GenericAttributes,
+    __group?: GenericAttributes,
+    __chat?: GenericAttributes,
     strokeColor?: GenericAttributes,
     strokeWeight?: GenericAttributes,
     strokeStyle?: GenericAttributes,
@@ -387,7 +389,7 @@ export default class CoT {
      * @return {boolean}
      */
     is_chat(): boolean {
-        return !!this.raw.event.detail && this.raw.event.detail.__chat;
+        return !!(this.raw.event.detail && this.raw.event.detail.__chat);
     }
 
     /**

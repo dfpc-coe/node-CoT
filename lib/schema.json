@@ -76,19 +76,18 @@
                                 },
                                 "chatgrp": {
                                     "type": "object",
-                                        "properties": {
-                                            "_attributes": {
-                                                "type": "object",
-                                                "properties": {
-                                                    "uid0": {
-                                                        "type": "string"
-                                                    },
-                                                    "uid1": {
-                                                        "type": "string"
-                                                    },
-                                                    "id": {
-                                                        "type": "string"
-                                                    }
+                                    "properties": {
+                                        "_attributes": {
+                                            "type": "object",
+                                            "properties": {
+                                                "uid0": {
+                                                    "type": "string"
+                                                },
+                                                "uid1": {
+                                                    "type": "string"
+                                                },
+                                                "id": {
+                                                    "type": "string"
                                                 }
                                             }
                                         }
