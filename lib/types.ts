@@ -54,7 +54,7 @@ export interface FlowTags {
     _attributes?: {
         [k: string]: string
     }
-    [k: string]: string;
+    [k: string]: string | undefined | object;
 }
 
 export interface Group {

@@ -182,7 +182,24 @@
         },
         "FlowTags": {
             "additionalProperties": {
-                "type": "string"
+                "anyOf": [
+                    {
+                        "additionalProperties": true,
+                        "properties": {},
+                        "type": "object"
+                    },
+                    {
+                        "type": "string"
+                    }
+                ]
+            },
+            "properties": {
+                "_attributes": {
+                    "additionalProperties": {
+                        "type": "string"
+                    },
+                    "type": "object"
+                }
             },
             "type": "object"
         },

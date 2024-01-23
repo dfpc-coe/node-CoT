@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v5.0.5
+
+- :bug: Object Defs
+
 ### v5.0.4
 
 - :bug: Optional `_flow-tags_._attributes`
