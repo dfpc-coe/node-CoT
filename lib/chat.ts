@@ -49,6 +49,8 @@ export class DirectChat extends CoT {
             }
         }
 
+        cot.event._attributes.uid = `GeoChat.${chat.from.uid}.${chat.to.uid}.${randomUUID()}`;
+
         cot.event.detail.link = {
             _attributes: {
                 uid: chat.from.uid,

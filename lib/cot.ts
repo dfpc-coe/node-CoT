@@ -11,7 +11,10 @@ import fs from 'fs';
 const schema = JSON.parse(String(fs.readFileSync(new URL('./schema.json', import.meta.url))));
 const pkg = JSON.parse(String(fs.readFileSync(new URL('../package.json', import.meta.url))));
 
-const ajv = (new AJV({ allErrors: true }))
+const ajv = (new AJV({
+    allErrors: true,
+    allowUnionTypes: true
+}))
     .compile(schema);
 
 /**

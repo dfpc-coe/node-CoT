@@ -10,6 +10,14 @@
 
 ## Version History
 
+### v5.0.0
+
+- :tada: `schema.json` is now automatically generated from Type Defs
+- :tada: Add Chat interface for easily creating Direct Messages
+- :rocket: Add Flow Tag when parsed by NodeCoT
+- :arrow_up: Update Typescript
+- :white_check_mark: Add Chat & Flow tests
+
 ### v4.6.0
 
 - :rocket: Decode `__group` to `.properties.group`
