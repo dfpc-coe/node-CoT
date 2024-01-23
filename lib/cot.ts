@@ -149,6 +149,10 @@ export default class CoT {
             cot.event.detail.__group = { _attributes: { ...feature.properties.group } }
         }
 
+        if (feature.properties.chat) {
+            cot.event.detail.__chat = { _attributes: { ...feature.properties.chat } }
+        }
+
         if (feature.properties.flow) {
             cot.event.detail['_flow-tags_'] = { _attributes: { ...feature.properties.flow } }
         }
@@ -375,6 +379,15 @@ export default class CoT {
                 point: Util.cot_point()
             }
         });
+    }
+
+    /**
+     * Determines if the CoT message represents a Chat Message
+     *
+     * @return {boolean}
+     */
+    is_chat(): boolean {
+        return !!this.raw.event.detail && this.raw.event.detail.__chat;
     }
 
     /**

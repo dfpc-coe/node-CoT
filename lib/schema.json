@@ -48,6 +48,54 @@
                         "_flow-tags_": {
                             "type": "object"
                         },
+                        "__chat": {
+                            "type": "object",
+                            "properties": {
+                                "_attributes": {
+                                    "type": "object",
+                                    "properties": {
+                                        "parent": {
+                                            "type": "string"
+                                        },
+                                        "groupOwner": {
+                                            "type": "string"
+                                        },
+                                        "messageId": {
+                                            "type": "string"
+                                        },
+                                        "chatroom": {
+                                            "type": "string"
+                                        },
+                                        "id": {
+                                            "type": "string"
+                                        },
+                                        "senderCallsign": {
+                                            "type": "string"
+                                        }
+                                    }
+                                },
+                                "chatgrp": {
+                                    "type": "object",
+                                        "properties": {
+                                            "_attributes": {
+                                                "type": "object",
+                                                "properties": {
+                                                    "uid0": {
+                                                        "type": "string"
+                                                    },
+                                                    "uid1": {
+                                                        "type": "string"
+                                                    },
+                                                    "id": {
+                                                        "type": "string"
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        },
                         "__group": {
                             "type": "object",
                             "properties": {
