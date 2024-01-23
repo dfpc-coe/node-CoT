@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v5.0.1
+
+- :bug: Add `package.json` in `dist/`
+
 ### v5.0.0
 
 - :tada: `schema.json` is now automatically generated from Type Defs
