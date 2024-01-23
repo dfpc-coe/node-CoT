@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v5.1.0
+
+- :rocket: Add `chat` property to GeoJSON output
+
 ### v5.0.6
 
 - :bug: Detail is optional in Tak/Pongs
