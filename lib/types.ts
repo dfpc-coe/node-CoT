@@ -86,7 +86,7 @@ export interface Contact {
 }
 
 export interface Remarks {
-    _attributes: {
+    _attributes?: {
         source?: string;
         to?: string;
         time?: string;

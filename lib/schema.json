@@ -328,7 +328,6 @@
                 }
             },
             "required": [
-                "_attributes",
                 "_text"
             ],
             "type": "object"

@@ -34,7 +34,7 @@ test('DirectChat - Basic', (t) => {
         cot.raw.event.detail.__chat._attributes.messageId = '123';
     }
 
-    if (!cot.raw.event.detail.remarks) {
+    if (!cot.raw.event.detail.remarks || !cot.raw.event.detail.remarks._attributes) {
         t.fail()
     } else {
         t.equals(typeof cot.raw.event.detail.remarks._attributes.time, 'string');
