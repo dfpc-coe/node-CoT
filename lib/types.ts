@@ -58,7 +58,7 @@ export interface FlowTags {
 }
 
 export interface Group {
-    _attributes: {
+    _attributes?: {
         name: string;
         role: string;
         [k: string]: string;

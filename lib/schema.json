@@ -238,9 +238,6 @@
                     "type": "object"
                 }
             },
-            "required": [
-                "_attributes"
-            ],
             "type": "object"
         },
         "Point": {

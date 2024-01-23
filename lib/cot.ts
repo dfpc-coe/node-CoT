@@ -226,6 +226,13 @@ export default class CoT {
             feat.properties.remarks = raw.event.detail.remarks._text;
         }
 
+        if (raw.event.detail.__chat) {
+            feat.properties.chat = {
+                ...raw.event.detail.__chat._attributes,
+                chatgrp: raw.event.detail.__chat.chatgrp
+            }
+        }
+
         if (raw.event.detail.track && raw.event.detail.track._attributes) {
             if (raw.event.detail.track._attributes.course) feat.properties.course = Number(raw.event.detail.track._attributes.course);
             if (raw.event.detail.track._attributes.course) feat.properties.speed = Number(raw.event.detail.track._attributes.speed);
