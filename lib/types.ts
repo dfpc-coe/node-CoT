@@ -152,7 +152,7 @@ export interface Point {
 export default interface JSONCoT {
     event: {
         _attributes: EventAttributes,
-        detail: Detail,
+        detail?: Detail,
         point: Point,
         [k: string]: unknown
     },

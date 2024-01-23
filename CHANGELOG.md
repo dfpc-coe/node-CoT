@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v5.0.6
+
+- :bug: Detail is optional in Tak/Pongs
+
 ### v5.0.5
 
 - :bug: Object Defs
