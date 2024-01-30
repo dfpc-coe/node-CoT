@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v5.1.1
+
+- :bug: Make Chat vars optional
+
 ### v5.1.0
 
 - :rocket: Add `chat` property to GeoJSON output

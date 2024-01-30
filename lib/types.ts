@@ -18,13 +18,13 @@ export interface Track {
 
 export interface Chat {
     _attributes: {
-        parent: string;
-        groupOwner: string;
-        messageId: string;
+        parent?: string;
+        groupOwner?: string;
+        messageId?: string;
         chatroom: string;
         id: string;
         senderCallsign: string;
-        [k: string]: string;
+        [k: string]: string | undefined;
     }
 
     chatgrp: GenericAttributes
