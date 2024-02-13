@@ -93,12 +93,12 @@ export interface Marti {
         [k: string]: string | undefined;
     }
 
-    dest: MartiDest | MartiDest[]
+    dest?: MartiDest | MartiDest[]
 }
 
 export interface MartiDest {
     _attributes: {
-        uid: string;
+        uid?: string;
         mission?: string;
         callsign?: string;
     }

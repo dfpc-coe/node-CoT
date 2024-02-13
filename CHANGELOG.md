@@ -10,9 +10,13 @@
 
 ## Version History
 
+### v5.3.0
+
+- :rocket: Add full reversal support for Marti/Dest tags
+
 ### v5.2.0
 
-- :rocket: Add basic support for Mart/Dest tags in schema
+- :rocket: Add basic support for Marti/Dest tags in schema
 
 ### v5.1.1
 

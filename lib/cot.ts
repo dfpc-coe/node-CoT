@@ -81,6 +81,16 @@ export default class CoT {
             cot.event.detail.uid = { _attributes: { Droid: feature.properties.droid } };
         }
 
+        if (feature.properties.dest) {
+            const dest = !Array.isArray(feature.properties.dest) ? [ feature.properties.dest ] : feature.properties.dest;
+
+            cot.event.detail.marti = {
+                dest: dest.map((dest: object) => {
+                    return { _attributes: { ...dest } };
+                })
+            }
+        }
+
         if (feature.properties.takv) {
             cot.event.detail.takv = { _attributes: { ...feature.properties.takv } };
         }
@@ -236,6 +246,16 @@ export default class CoT {
         if (raw.event.detail.track && raw.event.detail.track._attributes) {
             if (raw.event.detail.track._attributes.course) feat.properties.course = Number(raw.event.detail.track._attributes.course);
             if (raw.event.detail.track._attributes.course) feat.properties.speed = Number(raw.event.detail.track._attributes.speed);
+        }
+
+        if (raw.event.detail.marti && raw.event.detail.marti.dest) {
+            if (!Array.isArray(raw.event.detail.marti.dest)) raw.event.detail.marti.dest = [raw.event.detail.marti.dest];
+
+            const dest = raw.event.detail.marti.dest.map((d) => {
+                return { ...d._attributes };
+            });
+
+            feat.properties.dest = dest.length === 1 ? dest[0] : dest
         }
 
         if (raw.event.detail.usericon && raw.event.detail.usericon._attributes && raw.event.detail.usericon._attributes.iconsetpath) {

@@ -262,9 +262,6 @@
                     ]
                 }
             },
-            "required": [
-                "dest"
-            ],
             "type": "object"
         },
         "MartiDest": {
@@ -281,9 +278,6 @@
                             "type": "string"
                         }
                     },
-                    "required": [
-                        "uid"
-                    ],
                     "type": "object"
                 }
             },
