@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v5.2.0
+
+- :rocket: Add basic support for Mart/Dest tags in schema
+
 ### v5.1.1
 
 - :bug: Make Chat vars optional

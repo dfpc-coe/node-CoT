@@ -115,6 +115,9 @@
                         }
                     ]
                 },
+                "marti": {
+                    "$ref": "#/definitions/Marti"
+                },
                 "precisionlocation": {
                     "$ref": "#/definitions/PrecisionLocation"
                 },
@@ -235,6 +238,58 @@
                     "type": "object"
                 }
             },
+            "type": "object"
+        },
+        "Marti": {
+            "properties": {
+                "_attributes": {
+                    "additionalProperties": {
+                        "type": "string"
+                    },
+                    "type": "object"
+                },
+                "dest": {
+                    "anyOf": [
+                        {
+                            "$ref": "#/definitions/MartiDest"
+                        },
+                        {
+                            "items": {
+                                "$ref": "#/definitions/MartiDest"
+                            },
+                            "type": "array"
+                        }
+                    ]
+                }
+            },
+            "required": [
+                "dest"
+            ],
+            "type": "object"
+        },
+        "MartiDest": {
+            "properties": {
+                "_attributes": {
+                    "properties": {
+                        "callsign": {
+                            "type": "string"
+                        },
+                        "mission": {
+                            "type": "string"
+                        },
+                        "uid": {
+                            "type": "string"
+                        }
+                    },
+                    "required": [
+                        "uid"
+                    ],
+                    "type": "object"
+                }
+            },
+            "required": [
+                "_attributes"
+            ],
             "type": "object"
         },
         "Point": {

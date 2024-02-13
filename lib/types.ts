@@ -88,6 +88,22 @@ export interface Contact {
     }
 }
 
+export interface Marti {
+    _attributes?: {
+        [k: string]: string | undefined;
+    }
+
+    dest: MartiDest | MartiDest[]
+}
+
+export interface MartiDest {
+    _attributes: {
+        uid: string;
+        mission?: string;
+        callsign?: string;
+    }
+}
+
 export interface Remarks {
     _attributes?: {
         source?: string;
@@ -132,6 +148,7 @@ export interface Detail {
     usericon?: UserIcon;
     track?: Track;
     takv?: TakVersion;
+    marti?: Marti;
     TakControl?: {
         TakServerVersionInfo?: GenericAttributes
     };
