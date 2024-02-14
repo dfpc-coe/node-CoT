@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v5.3.1
+
+- :arrow_up: Update Core Deps
+
 ### v5.3.0
 
 - :rocket: Add full reversal support for Marti/Dest tags
