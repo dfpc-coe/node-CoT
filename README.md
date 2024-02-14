@@ -115,12 +115,13 @@ The following list is a very incomplete list of "special" CoT types and behavior
 | `u-d-f`           | LineString or Polygon |
 | `u-d-r`           | 4 Cornered Rectangle |
 | `b-a-o-tbl`       | 911 Alert |
-| `b-a-o-can`       | Cancel
-| `b-a-g`           | GeoFenceBreach
-| `b-a-o-pan`       | RingTheBell
-| `b-a-o-opn`       | TroopsInContact
-| `b-t-f`           | Chat
-| `b-t-f-d`         | Chat delivery receipt
-| `b-t-f-r`         | Chat read receipt
-| `b-t-f-p`         | Chat pending receipt
-| `b-t-f-s`         | Chat delivery failure
+| `b-a-o-can`       | Cancel |
+| `b-a-g`           | GeoFenceBreach |
+| `b-a-o-pan`       | RingTheBell |
+| `b-a-o-opn`       | TroopsInContact |
+| `b-t-f`           | Chat |
+| `b-t-f-d`         | Chat delivery receipt |
+| `b-t-f-r`         | Chat read receipt |
+| `b-t-f-p`         | Chat pending receipt |
+| `b-t-f-s`         | Chat delivery failure |
+| `t-x-m-c-l`       | Mission Change Notification |
