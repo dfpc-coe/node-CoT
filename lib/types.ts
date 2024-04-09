@@ -67,7 +67,6 @@ export interface Group {
 
 export interface Status {
     _attributes: {
-        battery: string;
         [k: string]: string;
     }
 }

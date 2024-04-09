@@ -395,14 +395,6 @@
                     "additionalProperties": {
                         "type": "string"
                     },
-                    "properties": {
-                        "battery": {
-                            "type": "string"
-                        }
-                    },
-                    "required": [
-                        "battery"
-                    ],
                     "type": "object"
                 }
             },
