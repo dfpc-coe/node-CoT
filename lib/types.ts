@@ -139,6 +139,7 @@ export interface Detail {
     remarks?: Remarks;
     precisionlocation?: PrecisionLocation;
     strokeColor?: GenericAttributes;
+    archived?: GenericAttributes;
     strokeWeight?: GenericAttributes;
     strokeStyle?: GenericAttributes;
     labels_on?: GenericAttributes;

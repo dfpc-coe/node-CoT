@@ -46,6 +46,9 @@ export default class CoT {
         if (!this.raw.event.detail) this.raw.event.detail = {};
         if (!this.raw.event.detail['_flow-tags_']) this.raw.event.detail['_flow-tags_'] = {};
         this.raw.event.detail['_flow-tags_'][`NodeCoT-${pkg.version}`] = new Date().toISOString()
+
+        if (this.raw.event.detail.archived && Object.keys(this.raw.event.detail.archived).length === 0) this.raw.event.archived = { _attributes: {} };
+
     }
 
     /**
@@ -79,6 +82,10 @@ export default class CoT {
 
         if (feature.properties.droid) {
             cot.event.detail.uid = { _attributes: { Droid: feature.properties.droid } };
+        }
+
+        if (feature.properties.archived) {
+            cot.event.detail.archived = { _attributes: { } };
         }
 
         if (feature.properties.dest) {
@@ -234,6 +241,10 @@ export default class CoT {
 
         if (raw.event.detail.remarks && raw.event.detail.remarks._text) {
             feat.properties.remarks = raw.event.detail.remarks._text;
+        }
+
+        if (raw.event.detail.archived) {
+            feat.properties.archived = true;
         }
 
         if (raw.event.detail.__chat) {

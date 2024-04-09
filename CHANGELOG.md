@@ -10,6 +10,11 @@
 
 ## Version History
 
+### v5.4.0
+
+- :tada: Include suppport for `archived` tag
+- :arrow_up: Update Core Deps
+
 ### v5.3.1
 
 - :arrow_up: Update Core Deps

@@ -86,7 +86,8 @@ These are less common properties that can be used:
 
 | Property                          | Description |
 | --------------------------------- | ----------- |
-| `.properties.icon`                | Custom Icon Path (string) |
+| `.properties.icon`                | String: Custom Icon Path (string) |
+| `.properties.archived`            | Boolean: TAK Clients will ignore the stale value and retain the feature |
 
 ## Usage Examples
 

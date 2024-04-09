@@ -93,6 +93,9 @@
                 "_flow-tags_": {
                     "$ref": "#/definitions/FlowTags"
                 },
+                "archived": {
+                    "$ref": "#/definitions/GenericAttributes"
+                },
                 "contact": {
                     "$ref": "#/definitions/Contact"
                 },
