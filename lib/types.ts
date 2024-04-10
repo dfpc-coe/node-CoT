@@ -83,6 +83,18 @@ export const Group = Type.Object({
     }))
 })
 
+export const FileShare = Type.Object({
+    _attributes: Type.Object({
+        filename: Type.String(),
+        name: Type.String(),
+        senderCallsign: Type.String(),
+        senderUid: Type.String(),
+        senderUrl: Type.String(),
+        sha256: Type.String(),
+        sizeInBytes: Type.Integer()
+    })
+})
+
 export const Status = Type.Object({
     _attributes: Type.Object({
         battery: Type.Optional(Type.String()),
@@ -147,6 +159,7 @@ export const Detail = Type.Object({
     '_flow-tags_': Type.Optional(FlowTags),
     uid: Type.Optional(Uid),
     status: Type.Optional(Status),
+    fileshare: Type.Optional(FileShare),
     remarks: Type.Optional(Remarks),
     precisionlocation: Type.Optional(PrecisionLocation),
     strokeColor: Type.Optional(GenericAttributes),

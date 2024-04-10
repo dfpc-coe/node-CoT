@@ -110,6 +110,10 @@ export default class CoT {
             cot.event.detail.contact = { _attributes: { ...feature.properties.contact } };
         }
 
+        if (feature.properties.fileshare) {
+            cot.event.detail.fileshare = { _attributes: { ...feature.properties.fileshare } };
+        }
+
         if (feature.properties.speed && feature.properties.course) {
             cot.event.detail.track = {
                 _attributes: Util.cot_track_attr(feature.properties.course, feature.properties.speed)
@@ -245,6 +249,10 @@ export default class CoT {
 
         if (raw.event.detail.remarks && raw.event.detail.remarks._text) {
             feat.properties.remarks = raw.event.detail.remarks._text;
+        }
+
+        if (raw.event.detail.fileshare) {
+            feat.properties.fileshare = raw.event.detail.fileshare._attributes;
         }
 
         if (raw.event.detail.archived) {

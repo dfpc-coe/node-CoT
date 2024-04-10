@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v5.6.0
+
+- :tada: Add support for `fileshare` COT 
+
 ### v5.5.1
 
 - :tada: Add TAK Server Version Attributes
