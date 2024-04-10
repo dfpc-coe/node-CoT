@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v5.7.1
+
+- :bug: Add missing file
+
 ### v5.7.0
 
 - :tada: Build FileShare helper class
