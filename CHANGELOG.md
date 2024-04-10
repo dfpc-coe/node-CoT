@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v5.5.0
+
+- :tada: Migrate to TypeBox based schema for stricter types and to avoid JSONSchema compilation step
+
 ### v5.4.0
 
 - :tada: Include suppport for `archived` tag
