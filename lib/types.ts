@@ -83,6 +83,7 @@ export const Group = Type.Object({
     }))
 })
 
+import { randomUUID } from 'node:crypto';
 export const FileShareAttributes = Type.Object({
     filename: Type.String(),
     name: Type.String(),
