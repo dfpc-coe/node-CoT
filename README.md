@@ -2,11 +2,12 @@
 
 <p align=center>Javascript Cursor-On-Target Library</p>
 
-Lightweight JavaScript library for parsing and manipulating TAK messages, primarily Cursor-on-Target (COT)
+Lightweight JavaScript library for parsing and manipulating TAK related messages, primarily [Cursor-on-Target (COT)](https://git.tak.gov/standards/takcot)
 
 ## About
 
-tak.js converts between TAK message protocols and a Javascript object/JSON format. This makes it easy to read and write TAK messages in a Node.js application.
+`node-tak` converts between TAK message protocols and a Javascript object/JSON format.
+It also can bidirectionally convert CoT messages into a GeoJSON format
 
 ## Installation
 
