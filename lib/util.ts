@@ -1,5 +1,6 @@
 import { randomUUID } from 'crypto'
-import type {
+import { Static } from '@sinclair/typebox';
+import {
     EventAttributes,
     TrackAttributes,
     Detail,
@@ -26,7 +27,7 @@ export default class Util {
         time?: Date | string | null,
         start?: Date | string | null,
         stale?: Date | string | number | null
-    ): EventAttributes {
+    ): Static<typeof EventAttributes> {
         if (!type) throw new Error('type param required');
         if (!how) throw new Error('how param required');
 
@@ -44,7 +45,7 @@ export default class Util {
      *
      * @param [callsign=UNKNOWN] Display Callsign
      */
-    static cot_event_detail(callsign = 'UNKNOWN'): Detail {
+    static cot_event_detail(callsign = 'UNKNOWN'): Static<typeof Detail> {
         return {
             contact: {
                 _attributes: { callsign }
@@ -58,7 +59,7 @@ export default class Util {
      * @param [course] Speed in degrees from north
      * @param [speed=0] Speed in m/s
      */
-    static cot_track_attr(course: number, speed = 0): TrackAttributes {
+    static cot_track_attr(course: number, speed = 0): Static<typeof TrackAttributes> {
         return {
             course: String(course || 0),
             speed: String(speed || 0)
@@ -82,7 +83,7 @@ export default class Util {
     /**
      * Generate Null Island CoT point object
      */
-    static cot_point(): Point {
+    static cot_point(): Static<typeof Point> {
         return {
             '_attributes': {
                 'lat': '0.000000',
