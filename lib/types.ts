@@ -27,6 +27,12 @@ export const LinkAttributes = Type.Object({
     })
 })
 
+export const ServerVersionAttributes = Type.Object({
+    _attributes: Type.Optional(Type.Object({
+        serverVersion: Type.Optional(Type.String())
+    }))
+})
+
 export const GenericAttributes = Type.Object({
     _attributes: Type.Optional(Type.Object({
         value: Type.Optional(Type.String())
@@ -155,7 +161,7 @@ export const Detail = Type.Object({
     takv: Type.Optional(TakVersion),
     marti: Type.Optional(Marti),
     TakControl: Type.Optional(Type.Object({
-        TakServerVersionInfo: Type.Optional(GenericAttributes)
+        TakServerVersionInfo: Type.Optional(ServerVersionAttributes)
     }))
 })
 

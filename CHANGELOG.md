@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v5.5.1
+
+- :tada: Add TAK Server Version Attributes
+
 ### v5.5.0
 
 - :tada: Migrate to TypeBox based schema for stricter types and to avoid JSONSchema compilation step
