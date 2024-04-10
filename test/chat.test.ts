@@ -26,8 +26,11 @@ test('DirectChat - Basic', (t) => {
         delete cot.raw.event.detail['_flow-tags_'];
 
         t.equals(typeof cot.raw.event._attributes.time, 'string');
+        cot.raw.event._attributes.time = '2024-04-01'
         t.equals(typeof cot.raw.event._attributes.start, 'string');
+        cot.raw.event._attributes.start = '2024-04-01'
         t.equals(typeof cot.raw.event._attributes.stale, 'string');
+        cot.raw.event._attributes.stale = '2024-04-01'
 
         if (!cot.raw.event.detail.__chat) {
             t.fail('No Detail Section')
@@ -50,6 +53,10 @@ test('DirectChat - Basic', (t) => {
                     version: '2.0',
                     type: 'b-t-f',
                     how: 'h-g-i-g-o',
+
+                    time: '2024-04-01',
+                    stale: '2024-04-01',
+                    start: '2024-04-01'
                 },
                 point: {
                     _attributes: { lat: '0.000000', lon: '0.000000', hae: '0.0', ce: '9999999.0', le: '9999999.0' }
