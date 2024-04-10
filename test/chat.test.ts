@@ -25,10 +25,9 @@ test('DirectChat - Basic', (t) => {
         t.ok(cot.raw.event.detail['_flow-tags_']);
         delete cot.raw.event.detail['_flow-tags_'];
 
-        for (const i of ['time', 'start', 'stale']) {
-            t.equals(typeof cot.raw.event._attributes[i], 'string');
-            delete cot.raw.event._attributes[i];
-        }
+        t.equals(typeof cot.raw.event._attributes.time, 'string');
+        t.equals(typeof cot.raw.event._attributes.start, 'string');
+        t.equals(typeof cot.raw.event._attributes.stale, 'string');
 
         if (!cot.raw.event.detail.__chat) {
             t.fail('No Detail Section')

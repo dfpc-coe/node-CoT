@@ -4,11 +4,33 @@ export const EventAttributes = Type.Object({
     version: Type.String(),
     uid: Type.String(),
     type: Type.String(),
-    how: Type.String()
+    how: Type.String(),
+
+    time: Type.String(),
+    stale: Type.String(),
+    start: Type.String(),
 });
 
+export const TogAttributes = Type.Object({
+    _attributes: Type.Optional(Type.Object({
+        enabled: Type.Optional(Type.String())
+    }))
+})
+
+export const LinkAttributes = Type.Object({
+    _attributes: Type.Object({
+        point: Type.Optional(Type.String()),
+
+        uid: Type.Optional(Type.String()),
+        type: Type.Optional(Type.String()),
+        relation: Type.Optional(Type.String()),
+    })
+})
+
 export const GenericAttributes = Type.Object({
-    _attributes: Type.Optional(Type.Object({}))
+    _attributes: Type.Optional(Type.Object({
+        value: Type.Optional(Type.String())
+    }))
 })
 
 export const TrackAttributes = Type.Object({
@@ -34,7 +56,7 @@ export const Chat = Type.Object({
         id: Type.String(),
         senderCallsign: Type.String()
     }),
-    chatgrp: GenericAttributes
+    chatgrp: Type.Any()
 })
 
 export const TakVersion = Type.Object({
@@ -46,9 +68,7 @@ export const TakVersion = Type.Object({
     })
 })
 
-export const FlowTags = Type.Object({
-    _attributes: Type.Optional(Type.Object({}))
-})
+export const FlowTags = Type.Any();
 
 export const Group = Type.Object({
     _attributes: Type.Optional(Type.Object({
@@ -115,7 +135,7 @@ export const UserIcon = Type.Object({
 
 export const Detail = Type.Object({
     contact: Type.Optional(Contact),
-    tog: Type.Optional(GenericAttributes),
+    tog: Type.Optional(TogAttributes),
     '__group': Type.Optional(Group),
     '__chat': Type.Optional(Chat),
     '_flow-tags_': Type.Optional(FlowTags),
@@ -129,7 +149,7 @@ export const Detail = Type.Object({
     strokeStyle: Type.Optional(GenericAttributes),
     labels_on: Type.Optional(GenericAttributes),
     fillColor: Type.Optional(GenericAttributes),
-    link: Type.Optional(Type.Union([GenericAttributes, Type.Array(GenericAttributes)])),
+    link: Type.Optional(Type.Union([LinkAttributes, Type.Array(LinkAttributes)])),
     usericon: Type.Optional(UserIcon),
     track: Type.Optional(Track),
     takv: Type.Optional(TakVersion),

@@ -47,7 +47,7 @@ export default class CoT {
         if (!this.raw.event.detail['_flow-tags_']) this.raw.event.detail['_flow-tags_'] = {};
         this.raw.event.detail['_flow-tags_'][`NodeCoT-${pkg.version}`] = new Date().toISOString()
 
-        if (this.raw.event.detail.archived && Object.keys(this.raw.event.detail.archived).length === 0) this.raw.event.archived = { _attributes: {} };
+        if (this.raw.event.detail.archived && Object.keys(this.raw.event.detail.archived).length === 0) this.raw.event.detail.archived = { _attributes: {} };
 
     }
 
@@ -92,7 +92,11 @@ export default class CoT {
             const dest = !Array.isArray(feature.properties.dest) ? [ feature.properties.dest ] : feature.properties.dest;
 
             cot.event.detail.marti = {
-                dest: dest.map((dest: Static<typeof MartiDest>) => {
+                dest: dest.map((dest: {
+                    uid?: string;
+                    mission?: string;
+                    callsign?: string;
+                }) => {
                     return { _attributes: { ...dest } };
                 })
             }
@@ -306,6 +310,7 @@ export default class CoT {
             const coordinates = [];
 
             for (const l of raw.event.detail.link) {
+                if (!l._attributes.point) continue;
                 coordinates.push(l._attributes.point.split(',').map((p: string) => { return Number(p.trim()) }).splice(0, 2).reverse());
             }
 
