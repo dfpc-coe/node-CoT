@@ -83,16 +83,18 @@ export const Group = Type.Object({
     }))
 })
 
+export const FileShareAttributes = Type.Object({
+    filename: Type.String(),
+    name: Type.String(),
+    senderCallsign: Type.String(),
+    senderUid: Type.String(),
+    senderUrl: Type.String(),
+    sha256: Type.String(),
+    sizeInBytes: Type.Integer()
+})
+
 export const FileShare = Type.Object({
-    _attributes: Type.Object({
-        filename: Type.String(),
-        name: Type.String(),
-        senderCallsign: Type.String(),
-        senderUid: Type.String(),
-        senderUrl: Type.String(),
-        sha256: Type.String(),
-        sizeInBytes: Type.Integer()
-    })
+    _attributes: FileShareAttributes
 })
 
 export const Status = Type.Object({

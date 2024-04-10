@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v5.7.0
+
+- :tada: Build FileShare helper class
+
 ### v5.6.0
 
 - :tada: Add support for `fileshare` COT 
