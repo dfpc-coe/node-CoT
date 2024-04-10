@@ -2,11 +2,12 @@
 
 <p align=center>Javascript Cursor-On-Target Library</p>
 
-Lightweight JavaScript library for parsing and manipulating TAK messages, primarily Cursor-on-Target (COT)
+Lightweight JavaScript library for parsing and manipulating TAK related messages, primarily [Cursor-on-Target (COT)](https://git.tak.gov/standards/takcot)
 
 ## About
 
-tak.js converts between TAK message protocols and a Javascript object/JSON format. This makes it easy to read and write TAK messages in a Node.js application.
+`node-tak` converts between TAK message protocols and a Javascript object/JSON format.
+It also can bidirectionally convert CoT messages into a GeoJSON format
 
 ## Installation
 
@@ -35,10 +36,10 @@ understanding of the spec primarily developed through reverse engineering TAK cl
 | `version`     | CoT Version, currently `2.0` | `version="2.0"` |
 | `uid`         | Globally unique name for this information on this event | `uid="any-unique-string-123"` |
 | `type`        | Hierarchically organized hint about event type | `type="a-f-G-E"' |
-| `time`        | The time at which the event was generated | `time="2023-07-18T15:25:09.00Z"` |
 | `how`         | Gives a hint about how the coordinates were generated | `how=""`
-| `start`       | | |
-| `stale`       | | |
+| `time`        | The time at which the event was generated | `time="2023-07-18T15:25:09.00Z"` |
+| `start`       | The time at which the event starts or is relevant | `start="2023-07-18T15:25:09.00Z"` |
+| `stale`       | The time at which the event ends or is not relevant | `stale="2023-07-18T15:25:09.00Z"` |
 
 ## CoT GeoJSON Spec
 

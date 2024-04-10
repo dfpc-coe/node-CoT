@@ -1,177 +1,178 @@
-export interface EventAttributes {
-    version: string,
-    uid: string;
-    type: string;
-    how: string;
-    [k: string]: string;
-}
+import { Type } from '@sinclair/typebox';
 
-export interface GenericAttributes {
-    _attributes: {
-        [k: string]: string;
-    }
-}
+export const EventAttributes = Type.Object({
+    version: Type.String(),
+    uid: Type.String(),
+    type: Type.String(),
+    how: Type.String(),
 
-export interface Track {
-    _attributes: TrackAttributes;
-}
+    time: Type.String(),
+    stale: Type.String(),
+    start: Type.String(),
+});
 
-export interface Chat {
-    _attributes: {
-        parent?: string;
-        groupOwner?: string;
-        messageId?: string;
-        chatroom: string;
-        id: string;
-        senderCallsign: string;
-        [k: string]: string | undefined;
-    }
+export const TogAttributes = Type.Object({
+    _attributes: Type.Optional(Type.Object({
+        enabled: Type.Optional(Type.String())
+    }))
+})
 
-    chatgrp: GenericAttributes
-}
+export const LinkAttributes = Type.Object({
+    _attributes: Type.Object({
+        point: Type.Optional(Type.String()),
 
-export interface TrackAttributes {
-    speed?: string,
-    course?: string,
-    slope?: string;
-    eCourse?: string;
-    eSpeed?: string;
-    eSlope?: string
-    [k: string]: string | undefined
-}
+        uid: Type.Optional(Type.String()),
+        type: Type.Optional(Type.String()),
+        relation: Type.Optional(Type.String()),
+    })
+})
 
-export interface TakVersion {
-    _attributes: {
-        device?: string;
-        platform?: string;
-        os?: string;
-        version?: string;
-        [k: string]: string | undefined
-    }
-}
+export const GenericAttributes = Type.Object({
+    _attributes: Type.Optional(Type.Object({
+        value: Type.Optional(Type.String())
+    }))
+})
 
-export interface FlowTags {
-    _attributes?: {
-        [k: string]: string
-    }
-    [k: string]: string | undefined | object;
-}
+export const TrackAttributes = Type.Object({
+    speed: Type.Optional(Type.String()),
+    course: Type.Optional(Type.String()),
+    slope: Type.Optional(Type.String()),
+    eCourse: Type.Optional(Type.String()),
+    eSpeed: Type.Optional(Type.String()),
+    eSlope: Type.Optional(Type.String())
+});
 
-export interface Group {
-    _attributes?: {
-        name: string;
-        role: string;
-        [k: string]: string;
-    }
-}
 
-export interface Status {
-    _attributes: {
-        [k: string]: string;
-    }
-}
+export const Track = Type.Object({
+    _attributes: TrackAttributes
+})
 
-export interface Uid {
-    _attributes: {
-        Droid: string;
-        [k: string]: string;
-    }
-}
+export const Chat = Type.Object({
+    _attributes: Type.Object({
+        parent: Type.Optional(Type.String()),
+        groupOwner: Type.Optional(Type.String()),
+        messageId: Type.Optional(Type.String()),
+        chatroom: Type.String(),
+        id: Type.String(),
+        senderCallsign: Type.String()
+    }),
+    chatgrp: Type.Any()
+})
 
-export interface Contact {
-    _attributes: {
-        phone?: string;
-        callsign: string;
-        endpoint?: string;
-        [k: string]: string | undefined;
-    }
-}
+export const TakVersion = Type.Object({
+    _attributes: Type.Object({
+        device: Type.Optional(Type.String()),
+        platform: Type.Optional(Type.String()),
+        os: Type.Optional(Type.String()),
+        version: Type.Optional(Type.String())
+    })
+})
 
-export interface Marti {
-    _attributes?: {
-        [k: string]: string | undefined;
-    }
+export const FlowTags = Type.Any();
 
-    dest?: MartiDest | MartiDest[]
-}
+export const Group = Type.Object({
+    _attributes: Type.Optional(Type.Object({
+        name: Type.String(),
+        role: Type.String()
+    }))
+})
 
-export interface MartiDest {
-    _attributes: {
-        uid?: string;
-        mission?: string;
-        callsign?: string;
-    }
-}
+export const Status = Type.Object({
+    _attributes: Type.Object({
+        battery: Type.Optional(Type.String()),
+        readiness: Type.Optional(Type.String())
+    })
+})
 
-export interface Remarks {
-    _attributes?: {
-        source?: string;
-        to?: string;
-        time?: string;
-        [k: string]: string | undefined;
-    }
-    _text?: string;
-}
+export const Uid = Type.Object({
+    _attributes: Type.Object({
+        Droid: Type.String()
+    })
+})
 
-export interface PrecisionLocation {
-    _attributes: {
-        geopointsrc?: string;
-        altsrc?: string;
-        [k: string]: string | undefined;
-    }
-}
+export const Contact = Type.Object({
+    _attributes: Type.Object({
+        phone: Type.Optional(Type.String()),
+        callsign: Type.String(),
+        endpoint: Type.Optional(Type.String())
+    })
+})
 
-export interface UserIcon {
-    _attributes: {
-        iconsetpath: string;
-        [k: string]: string;
-    }
-}
+export const MartiDest = Type.Object({
+    _attributes: Type.Object({
+        uid: Type.Optional(Type.String()),
+        mission: Type.Optional(Type.String()),
+        callsign: Type.Optional(Type.String())
+    })
+})
 
-export interface Detail {
-    contact?: Contact;
-    tog?: GenericAttributes;
-    '__group'?: Group;
-    '__chat'?: Chat;
-    '_flow-tags_'?: FlowTags;
-    uid?: Uid;
-    status?: Status;
-    remarks?: Remarks;
-    precisionlocation?: PrecisionLocation;
-    strokeColor?: GenericAttributes;
-    archived?: GenericAttributes;
-    strokeWeight?: GenericAttributes;
-    strokeStyle?: GenericAttributes;
-    labels_on?: GenericAttributes;
-    fillColor?: GenericAttributes;
-    link?: GenericAttributes | GenericAttributes[];
-    usericon?: UserIcon;
-    track?: Track;
-    takv?: TakVersion;
-    marti?: Marti;
-    TakControl?: {
-        TakServerVersionInfo?: GenericAttributes
-    };
-    [k: string]: unknown;
-}
+export const Marti = Type.Object({
+    _attributes: Type.Optional(Type.Object({})),
+    dest: Type.Optional(Type.Union([MartiDest, Type.Array(MartiDest)]))
+});
 
-export interface Point {
-    _attributes: {
-        lat: string | number;
-        lon: string | number;
-        hae: string | number;
-        ce: string | number;
-        le: string | number;
-        [k: string]: string | number
-    }
-}
+export const Remarks = Type.Object({
+    _attributes: Type.Optional(Type.Object({
+        source: Type.Optional(Type.String()),
+        to: Type.Optional(Type.String()),
+        time: Type.Optional(Type.String())
+    })),
+    _text: Type.Optional(Type.String())
+})
 
-export default interface JSONCoT {
-    event: {
+export const PrecisionLocation = Type.Object({
+    _attributes: Type.Object({
+        geopointsrc: Type.Optional(Type.String()),
+        altsrc: Type.Optional(Type.String())
+    })
+})
+
+export const UserIcon = Type.Object({
+    _attributes: Type.Object({
+        iconsetpath: Type.String()
+    })
+})
+
+export const Detail = Type.Object({
+    contact: Type.Optional(Contact),
+    tog: Type.Optional(TogAttributes),
+    '__group': Type.Optional(Group),
+    '__chat': Type.Optional(Chat),
+    '_flow-tags_': Type.Optional(FlowTags),
+    uid: Type.Optional(Uid),
+    status: Type.Optional(Status),
+    remarks: Type.Optional(Remarks),
+    precisionlocation: Type.Optional(PrecisionLocation),
+    strokeColor: Type.Optional(GenericAttributes),
+    archived: Type.Optional(GenericAttributes),
+    strokeWeight: Type.Optional(GenericAttributes),
+    strokeStyle: Type.Optional(GenericAttributes),
+    labels_on: Type.Optional(GenericAttributes),
+    fillColor: Type.Optional(GenericAttributes),
+    link: Type.Optional(Type.Union([LinkAttributes, Type.Array(LinkAttributes)])),
+    usericon: Type.Optional(UserIcon),
+    track: Type.Optional(Track),
+    takv: Type.Optional(TakVersion),
+    marti: Type.Optional(Marti),
+    TakControl: Type.Optional(Type.Object({
+        TakServerVersionInfo: Type.Optional(GenericAttributes)
+    }))
+})
+
+export const Point = Type.Object({
+    _attributes: Type.Object({
+        lat: Type.Union([Type.String(), Type.Number()]),
+        lon: Type.Union([Type.String(), Type.Number()]),
+        hae: Type.Union([Type.String(), Type.Number()]),
+        ce: Type.Union([Type.String(), Type.Number()]),
+        le: Type.Union([Type.String(), Type.Number()]),
+    })
+})
+
+export default Type.Object({
+    event: Type.Object({
         _attributes: EventAttributes,
-        detail?: Detail,
+        detail: Type.Optional(Detail),
         point: Point,
-        [k: string]: unknown
-    },
-    [k: string]: unknown
-}
+    }),
+})

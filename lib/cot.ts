@@ -1,21 +1,21 @@
 import xmljs from 'xml-js';
+import { Static } from '@sinclair/typebox';
 import { Feature } from 'geojson';
 import { AllGeoJSON } from "@turf/helpers";
 import Util from './util.js';
 import Color from './color.js';
 import PointOnFeature from '@turf/point-on-feature';
-import JSONCoT from './types.js'
+import JSONCoT, { MartiDest } from './types.js'
 import AJV from 'ajv';
 import fs from 'fs';
 
-const schema = JSON.parse(String(fs.readFileSync(new URL('./schema.json', import.meta.url))));
 const pkg = JSON.parse(String(fs.readFileSync(new URL('../package.json', import.meta.url))));
 
 const ajv = (new AJV({
     allErrors: true,
     allowUnionTypes: true
 }))
-    .compile(schema);
+    .compile(JSONCoT);
 
 /**
  * Convert to and from an XML CoT message
@@ -26,19 +26,19 @@ const ajv = (new AJV({
  * @prop raw Raw XML-JS representation of CoT
  */
 export default class CoT {
-    raw: JSONCoT;
+    raw: Static<typeof JSONCoT>;
 
-    constructor(cot: Buffer | JSONCoT | string) {
+    constructor(cot: Buffer | Static<typeof JSONCoT> | string) {
         if (typeof cot === 'string' || cot instanceof Buffer) {
             if (cot instanceof Buffer) cot = String(cot);
 
             const raw = xmljs.xml2js(cot, { compact: true });
-            this.raw = raw as JSONCoT;
+            this.raw = raw as Static<typeof JSONCoT>;
         } else {
             this.raw = cot;
         }
 
-        if (!this.raw.event._attributes.uid) this.raw.event._attributes.uuid = Util.cot_uuid();
+        if (!this.raw.event._attributes.uid) this.raw.event._attributes.uid = Util.cot_uuid();
 
         ajv(this.raw);
         if (ajv.errors) throw new Error(`${ajv.errors[0].message} (${ajv.errors[0].instancePath})`);
@@ -47,7 +47,7 @@ export default class CoT {
         if (!this.raw.event.detail['_flow-tags_']) this.raw.event.detail['_flow-tags_'] = {};
         this.raw.event.detail['_flow-tags_'][`NodeCoT-${pkg.version}`] = new Date().toISOString()
 
-        if (this.raw.event.detail.archived && Object.keys(this.raw.event.detail.archived).length === 0) this.raw.event.archived = { _attributes: {} };
+        if (this.raw.event.detail.archived && Object.keys(this.raw.event.detail.archived).length === 0) this.raw.event.detail.archived = { _attributes: {} };
 
     }
 
@@ -62,7 +62,7 @@ export default class CoT {
         if (feature.type !== 'Feature') throw new Error('Must be GeoJSON Feature');
         if (!feature.properties) throw new Error('Feature must have properties');
 
-        const cot: JSONCoT = {
+        const cot: Static<typeof JSONCoT> = {
             event: {
                 _attributes: Util.cot_event_attr(
                     feature.properties.type || 'a-f-G',
@@ -92,7 +92,11 @@ export default class CoT {
             const dest = !Array.isArray(feature.properties.dest) ? [ feature.properties.dest ] : feature.properties.dest;
 
             cot.event.detail.marti = {
-                dest: dest.map((dest: object) => {
+                dest: dest.map((dest: {
+                    uid?: string;
+                    mission?: string;
+                    callsign?: string;
+                }) => {
                     return { _attributes: { ...dest } };
                 })
             }
@@ -208,7 +212,7 @@ export default class CoT {
      * Return a GeoJSON Feature from an XML CoT message
      */
     to_geojson(): Feature {
-        const raw: JSONCoT = JSON.parse(JSON.stringify(this.raw));
+        const raw: Static<typeof JSONCoT> = JSON.parse(JSON.stringify(this.raw));
         if (!raw.event.detail) raw.event.detail = {};
         if (!raw.event.detail.contact) raw.event.detail.contact = { _attributes: { callsign: 'UNKNOWN' } };
         if (!raw.event.detail.contact._attributes) raw.event.detail.contact._attributes = { callsign: 'UNKNOWN' };
@@ -262,7 +266,7 @@ export default class CoT {
         if (raw.event.detail.marti && raw.event.detail.marti.dest) {
             if (!Array.isArray(raw.event.detail.marti.dest)) raw.event.detail.marti.dest = [raw.event.detail.marti.dest];
 
-            const dest = raw.event.detail.marti.dest.map((d) => {
+            const dest = raw.event.detail.marti.dest.map((d: Static<typeof MartiDest>) => {
                 return { ...d._attributes };
             });
 
@@ -306,6 +310,7 @@ export default class CoT {
             const coordinates = [];
 
             for (const l of raw.event.detail.link) {
+                if (!l._attributes.point) continue;
                 coordinates.push(l._attributes.point.split(',').map((p: string) => { return Number(p.trim()) }).splice(0, 2).reverse());
             }
 

@@ -1,6 +1,7 @@
 import Util from './util.js'
 import CoT from './cot.js';
 import JSONCoT from './types.js';
+import { Static } from '@sinclair/typebox';
 import { randomUUID } from 'node:crypto';
 
 export type DirectChatMember = {
@@ -23,7 +24,7 @@ export type DirectChatInput = {
 
 export class DirectChat extends CoT {
     constructor(chat: DirectChatInput) {
-        const cot: JSONCoT = {
+        const cot: Static<typeof JSONCoT> = {
             event: {
                 _attributes: Util.cot_event_attr('b-t-f', 'h-g-i-g-o'),
                 point: Util.cot_point(),

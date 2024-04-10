@@ -10,10 +10,11 @@
         "test": "ts-node-test test/",
         "lint": "eslint *.ts lib/*.ts",
         "doc": "typedoc index.ts",
-        "build": "typescript-json-schema --required --out ./lib/schema.json ./lib/types.ts JSONCoT && tsc --build && cp package.json dist/",
+        "build": "tsc --build && cp package.json dist/",
         "pretest": "npm run lint"
     },
     "dependencies": {
+        "@sinclair/typebox": "^0.32.20",
         "@turf/helpers": "^6.5.0",
         "@turf/point-on-feature": "^6.5.0",
         "@types/color": "^3.0.3",
@@ -34,8 +35,7 @@
         "ts-node": "^10.9.1",
         "ts-node-test": "^0.4.0",
         "typedoc": "^0.25.0",
-        "typescript": "^5.0.0",
-        "typescript-json-schema": "^0.62.0"
+        "typescript": "^5.0.0"
     },
     "repository": {
         "type": "git",
