@@ -13,6 +13,9 @@
 ### v6.0.0
 
 - :tada: Add `metadata` section in GeoJSON feature for custom props
+- :rocket: Add `addDest` function for easily adding dest to an existing COT
+- :rocket: Add `isDiff` function for comparing two COTs
+- :data: Add DataPackage builder
 
 ### v5.7.1
 
@@ -24,7 +27,7 @@
 
 ### v5.6.0
 
-- :tada: Add support for `fileshare` COT 
+- :tada: Add support for `fileshare` COT
 
 ### v5.5.1
 
