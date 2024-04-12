@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v6.0.0
+
+- :tada: Add `metadata` section in GeoJSON feature for custom props
+
 ### v5.7.1
 
 - :bug: Add missing file

@@ -83,7 +83,6 @@ export const Group = Type.Object({
     }))
 })
 
-import { randomUUID } from 'node:crypto';
 export const FileShareAttributes = Type.Object({
     filename: Type.String(),
     name: Type.String(),
@@ -119,12 +118,14 @@ export const Contact = Type.Object({
     })
 })
 
+export const MartiDestAttributes = Type.Object({
+    uid: Type.Optional(Type.String()),
+    mission: Type.Optional(Type.String()),
+    callsign: Type.Optional(Type.String())
+})
+
 export const MartiDest = Type.Object({
-    _attributes: Type.Object({
-        uid: Type.Optional(Type.String()),
-        mission: Type.Optional(Type.String()),
-        callsign: Type.Optional(Type.String())
-    })
+    _attributes: MartiDestAttributes
 })
 
 export const Marti = Type.Object({

@@ -1,3 +1,4 @@
+import { diff } from 'json-diff-ts';
 import xmljs from 'xml-js';
 import { Static } from '@sinclair/typebox';
 import { Feature } from 'geojson';
@@ -5,7 +6,7 @@ import { AllGeoJSON } from "@turf/helpers";
 import Util from './util.js';
 import Color from './color.js';
 import PointOnFeature from '@turf/point-on-feature';
-import JSONCoT, { MartiDest } from './types.js'
+import JSONCoT, { MartiDest, MartiDestAttributes } from './types.js'
 import AJV from 'ajv';
 import fs from 'fs';
 
@@ -27,6 +28,10 @@ const ajv = (new AJV({
  */
 export default class CoT {
     raw: Static<typeof JSONCoT>;
+    // Key/Value JSON Records - not currently support by TPC Clients
+    // but used for styling/dynamic overrides and hopefully eventually
+    // merged into the CoT spec
+    metadata: Record<string, string>;
 
     constructor(cot: Buffer | Static<typeof JSONCoT> | string) {
         if (typeof cot === 'string' || cot instanceof Buffer) {
@@ -37,6 +42,8 @@ export default class CoT {
         } else {
             this.raw = cot;
         }
+
+        this.metadata = {};
 
         if (!this.raw.event._attributes.uid) this.raw.event._attributes.uid = Util.cot_uuid();
 
@@ -49,6 +56,63 @@ export default class CoT {
 
         if (this.raw.event.detail.archived && Object.keys(this.raw.event.detail.archived).length === 0) this.raw.event.detail.archived = { _attributes: {} };
 
+    }
+
+    /**
+     * Detect difference between CoT messages
+     * Note: This diffs based on GeoJSON Representation of message
+     *       So if unknown properties are present they will be excluded from the diff
+     */
+    isDiff(
+        cot: CoT,
+        opts: {
+            diffMetadata: boolean;
+            diffStaleStartTime: boolean;
+        } = {
+            diffMetadata: false,
+            diffStaleStartTime: false
+        }
+    ): boolean {
+        const a = this.to_geojson();
+        const b = cot.to_geojson();
+
+        if (!a.properties) a.properties = {};
+        if (!b.properties) b.properties = {};
+
+        if (!opts.diffMetadata) {
+            delete a.properties.metadata;
+            delete b.properties.metadata;
+        }
+
+        if (!opts.diffStaleStartTime) {
+            delete a.properties.time;
+            delete a.properties.stale;
+            delete a.properties.start;
+            delete b.properties.time;
+            delete b.properties.stale;
+            delete b.properties.start;
+        }
+
+        const diffs = diff(a, b);
+
+        return diffs.length > 0;
+    }
+
+    /**
+     * Add a given Dest tag to a CoT
+     */
+    addDest(dest: Static<typeof MartiDestAttributes>): void {
+        if (!this.raw.event.detail) this.raw.event.detail = {};
+        if (!this.raw.event.detail.marti) this.raw.event.detail.marti = {};
+        if (this.raw.event.detail.marti.dest && !Array.isArray(this.raw.event.detail.marti.dest)) {
+            this.raw.event.detail.marti.dest = [this.raw.event.detail.marti.dest]
+        } else if (!this.raw.event.detail.marti.dest) {
+            this.raw.event.detail.marti.dest = [];
+        }
+
+        this.raw.event.detail.marti.dest.push({
+            _attributes: dest
+        });
     }
 
     /**
@@ -209,7 +273,13 @@ export default class CoT {
             }
         }
 
-        return new CoT(cot);
+        const newcot = new CoT(cot);
+
+        if (feature.properties.metadata) {
+            newcot.metadata = feature.properties.metadata
+        }
+
+        return newcot;
     }
 
     /**
