@@ -429,6 +429,9 @@ export default class CoT {
                 }
             }
         }
+
+        feat.properties.metadata = this.metadata;
+
         return feat;
     }
 

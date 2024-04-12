@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v6.1.0
+
+- :rocket: Add reversal of `metadata` property in `to_geojson()`
+
 ### v6.0.0
 
 - :tada: Add `metadata` section in GeoJSON feature for custom props

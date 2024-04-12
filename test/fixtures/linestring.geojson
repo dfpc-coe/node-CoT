@@ -12,7 +12,8 @@
         "stroke": "#FFFFFF",
         "stroke-opacity": 128,
         "stroke-width": 3,
-        "stroke-style": "solid"
+        "stroke-style": "solid",
+        "metadata": {}
     },
     "geometry": {
         "type": "LineString",

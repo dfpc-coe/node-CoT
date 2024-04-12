@@ -5,17 +5,14 @@
         "type": "a-f-G",
         "how": "m-g",
         "callsign": "BasicTest",
-        "center": [ 1.1, 2.2, 0 ],
+        "center": [ 1.1, 2.2, 1234 ],
         "time": "2023-08-04T15:17:43.649Z",
         "start": "2023-08-04T15:17:43.649Z",
         "stale": "2023-08-04T15:17:43.649Z",
-        "remarks": "test-remarks",
-        "course": 260,
-        "speed": 120,
         "metadata": {}
     },
     "geometry": {
         "type": "Point",
-        "coordinates": [1.1, 2.2, 0]
+        "coordinates": [1.1, 2.2, 1234]
     }
 }

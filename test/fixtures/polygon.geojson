@@ -14,7 +14,8 @@
         "stroke-width": 3,
         "stroke-style": "solid",
         "fill-opacity": 128,
-        "fill": "#000000"
+        "fill": "#000000",
+        "metadata": {}
     },
     "geometry": {
         "type": "Polygon",
