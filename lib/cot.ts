@@ -104,15 +104,17 @@ export default class CoT {
     addDest(dest: Static<typeof MartiDestAttributes>): void {
         if (!this.raw.event.detail) this.raw.event.detail = {};
         if (!this.raw.event.detail.marti) this.raw.event.detail.marti = {};
+
+        let destArr: Array<Static<typeof MartiDest>> = [];
         if (this.raw.event.detail.marti.dest && !Array.isArray(this.raw.event.detail.marti.dest)) {
-            this.raw.event.detail.marti.dest = [this.raw.event.detail.marti.dest]
-        } else if (!this.raw.event.detail.marti.dest) {
-            this.raw.event.detail.marti.dest = [];
+            destArr = [this.raw.event.detail.marti.dest]
+        } else if (this.raw.event.detail.marti.dest) {
+            destArr = this.raw.event.detail.marti.dest;
         }
 
-        this.raw.event.detail.marti.dest.push({
-            _attributes: dest
-        });
+        destArr.push({ _attributes: dest });
+
+        this.raw.event.detail.marti.dest = destArr;
     }
 
     /**

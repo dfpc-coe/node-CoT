@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v6.2.1
+
+- :bug: Cleaner `addDest` TS code
+
 ### v6.2.0
 
 - :arrow_up: Switch to ESLint Flat Config
