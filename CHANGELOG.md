@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v6.2.0
+
+- :arrow_up: Switch to ESLint Flat Config
+
 ### v6.1.0
 
 - :rocket: Add reversal of `metadata` property in `to_geojson()`

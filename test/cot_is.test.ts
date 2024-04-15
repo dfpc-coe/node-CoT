@@ -418,7 +418,7 @@ test('CoT.is_subsurface', (t) => {
 });
 
 test('CoT.is_uav', (t) => {
-    let cot = CoT.from_geojson({
+    const cot = CoT.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-f-A-M-F-Q-r'

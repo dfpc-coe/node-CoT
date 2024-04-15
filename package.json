@@ -8,7 +8,7 @@
     "types": "index.ts",
     "scripts": {
         "test": "ts-node-test test/",
-        "lint": "eslint *.ts lib/*.ts",
+        "lint": "eslint *.ts lib/*.ts test/*.ts",
         "doc": "typedoc index.ts",
         "build": "tsc --build && cp package.json dist/",
         "pretest": "npm run lint"
@@ -29,11 +29,9 @@
     },
     "devDependencies": {
         "@types/node": "^20.0.0",
+        "typescript-eslint": "^7.6.0",
         "@types/tape": "^5.6.0",
-        "@typescript-eslint/eslint-plugin": "^7.0.0",
-        "@typescript-eslint/parser": "^7.0.0",
         "eslint": "^8.35.0",
-        "eslint-plugin-node": "^11.1.0",
         "tape": "^5.6.1",
         "ts-node": "^10.9.1",
         "ts-node-test": "^0.4.0",
