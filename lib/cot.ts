@@ -108,7 +108,7 @@ export default class CoT {
         let destArr: Array<Static<typeof MartiDest>> = [];
         if (this.raw.event.detail.marti.dest && !Array.isArray(this.raw.event.detail.marti.dest)) {
             destArr = [this.raw.event.detail.marti.dest]
-        } else if (this.raw.event.detail.marti.dest) {
+        } else if (this.raw.event.detail.marti.dest && Array.isArray(this.raw.event.detail.marti.dest)) {
             destArr = this.raw.event.detail.marti.dest;
         }
 

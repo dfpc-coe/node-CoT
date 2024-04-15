@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v6.2.2
+
+- :bug: Explicit array check to keep tsc happy
+
 ### v6.2.1
 
 - :bug: Cleaner `addDest` TS code
