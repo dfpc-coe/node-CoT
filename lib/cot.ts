@@ -65,12 +65,10 @@ export default class CoT {
      */
     isDiff(
         cot: CoT,
-        opts: {
-            diffMetadata: boolean;
-            diffStaleStartTime: boolean;
-        } = {
+        opts = {
             diffMetadata: false,
-            diffStaleStartTime: false
+            diffStaleStartTime: false,
+            diffFlow: false
         }
     ): boolean {
         const a = this.to_geojson();
@@ -82,6 +80,11 @@ export default class CoT {
         if (!opts.diffMetadata) {
             delete a.properties.metadata;
             delete b.properties.metadata;
+        }
+
+        if (!opts.diffFlow) {
+            delete a.properties.flow;
+            delete b.properties.flow;
         }
 
         if (!opts.diffStaleStartTime) {

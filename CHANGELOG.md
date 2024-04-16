@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v6.4.0
+
+- :rocket: Add ability to ignore `flow` section in diff
+
 ### v6.3.3
 
 - :white_check_mark: Update GH Release action
