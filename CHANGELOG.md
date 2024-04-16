@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v6.3.2
+
+- :white_check_mark: Update GH Release action
+
 ### v6.3.1
 
 - :white_check_mark: Update iTAK CoT tests
