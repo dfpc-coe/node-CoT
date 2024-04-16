@@ -68,6 +68,7 @@ test('Decode iTAK COT message', (t) => {
                   "phone": "7204258729",
                   "endpoint": "*:-1:stcp"
                 },
+                metadata: {},
                 group: {
                     name: 'Yellow',
                     role: 'Team Member'

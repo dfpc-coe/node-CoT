@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v6.3.1
+
+- :white_check_mark: Update iTAK CoT tests
+
 ### v6.3.0
 
 - :white_check_mark: Add basic unit tests for diff mode
