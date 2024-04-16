@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v6.3.0
+
+- :white_check_mark: Add basic unit tests for diff mode
+
 ### v6.2.2
 
 - :bug: Explicit array check to keep tsc happy
