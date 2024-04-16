@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v6.5.0
+
+- :rocket: Add ability to ignore `dest` section in diff
+
 ### v6.4.0
 
 - :rocket: Add ability to ignore `flow` section in diff

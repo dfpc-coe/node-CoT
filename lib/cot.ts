@@ -68,6 +68,7 @@ export default class CoT {
         opts = {
             diffMetadata: false,
             diffStaleStartTime: false,
+            diffDest: false,
             diffFlow: false
         }
     ): boolean {
@@ -76,6 +77,11 @@ export default class CoT {
 
         if (!a.properties) a.properties = {};
         if (!b.properties) b.properties = {};
+
+        if (!opts.diffDest) {
+            delete a.properties.dest;
+            delete b.properties.dest;
+        }
 
         if (!opts.diffMetadata) {
             delete a.properties.metadata;
