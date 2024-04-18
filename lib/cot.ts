@@ -14,6 +14,7 @@ const pkg = JSON.parse(String(fs.readFileSync(new URL('../package.json', import.
 
 const ajv = (new AJV({
     allErrors: true,
+    coerceTypes: true,
     allowUnionTypes: true
 }))
     .compile(JSONCoT);

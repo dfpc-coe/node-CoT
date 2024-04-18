@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v6.6.0
+
+- :rocket: Allow type coercion as all XML attrs are in strings by default
+
 ### v6.5.0
 
 - :rocket: Add ability to ignore `dest` section in diff
