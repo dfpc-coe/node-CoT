@@ -83,6 +83,16 @@ export const Group = Type.Object({
     }))
 })
 
+export const ACKRequestAttributes = Type.Object({
+    uid: Type.String(),
+    ackrequested: Type.Boolean(),
+    tag: Type.String()
+})
+
+export const ACKRequest = Type.Object({
+    _attributes: ACKRequestAttributes
+})
+
 export const FileShareAttributes = Type.Object({
     filename: Type.String(),
     name: Type.String(),
@@ -164,6 +174,7 @@ export const Detail = Type.Object({
     uid: Type.Optional(Uid),
     status: Type.Optional(Status),
     fileshare: Type.Optional(FileShare),
+    ackrequest: Type.Optional(ACKRequest),
     remarks: Type.Optional(Remarks),
     precisionlocation: Type.Optional(PrecisionLocation),
     strokeColor: Type.Optional(GenericAttributes),

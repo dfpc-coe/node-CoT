@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v6.7.0
+
+- :rocket: Add schema support for `ackrequest`
+
 ### v6.6.0
 
 - :rocket: Allow type coercion as all XML attrs are in strings by default
