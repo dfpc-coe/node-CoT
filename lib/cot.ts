@@ -369,6 +369,8 @@ export default class CoT {
             if (!Array.isArray(raw.event.detail.link)) raw.event.detail.link = [raw.event.detail.link];
             feat.properties.links = raw.event.detail.link.filter((link) => {
                 return !!link._attributes.url
+            }).map((link) => {
+                return link._attributes;
             });
 
             if (!feat.properties.links.length) delete feat.properties.links;

@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v6.9.1
+
+- :bug: Only pass in _attributes in GeoJSONified Links
+
 ### v6.9.0
 
 - :rocket: Add BiDirectional parsing of Feature Links
