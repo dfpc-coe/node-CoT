@@ -179,6 +179,15 @@ export default class CoT {
             cot.event.detail.archived = { _attributes: { } };
         }
 
+        if (feature.properties.links) {
+            if (!cot.event.detail.link) cot.event.detail.link = [];
+            else if (!Array.isArray(cot.event.detail.link)) cot.event.detail.link = [cot.event.detail.link];
+
+            cot.event.detail.link.push(...feature.properties.links.map((link: Static<typeof LinkAttributes>) => {
+                return { _attributes: link };
+            }))
+        }
+
         if (feature.properties.dest) {
             const dest = !Array.isArray(feature.properties.dest) ? [ feature.properties.dest ] : feature.properties.dest;
 
@@ -258,7 +267,9 @@ export default class CoT {
             if (feature.geometry.type === 'LineString') {
                 cot.event._attributes.type = 'u-d-f';
 
-                cot.event.detail.link = [];
+                if (!cot.event.detail.link) cot.event.detail.link = [];
+                else if (!Array.isArray(cot.event.detail.link)) cot.event.detail.link = [cot.event.detail.link]
+
                 for (const coord of feature.geometry.coordinates) {
                     cot.event.detail.link.push({
                         _attributes: { point: `${coord[1]},${coord[0]}` }
@@ -267,8 +278,10 @@ export default class CoT {
             } else if (feature.geometry.type === 'Polygon') {
                 cot.event._attributes.type = 'u-d-f';
 
+                if (!cot.event.detail.link) cot.event.detail.link = [];
+                else if (!Array.isArray(cot.event.detail.link)) cot.event.detail.link = [cot.event.detail.link]
+
                 // Inner rings are not yet supported
-                cot.event.detail.link = [];
                 for (const coord of feature.geometry.coordinates[0]) {
                     cot.event.detail.link.push({
                         _attributes: { point: `${coord[1]},${coord[0]}` }
@@ -350,6 +363,15 @@ export default class CoT {
 
         if (raw.event.detail.fileshare) {
             feat.properties.fileshare = raw.event.detail.fileshare._attributes;
+        }
+
+        if (raw.event.detail.link) {
+            if (!Array.isArray(raw.event.detail.link)) raw.event.detail.link = [raw.event.detail.link];
+            feat.properties.links = raw.event.detail.link.filter((link) => {
+                return !!link._attributes.url
+            });
+
+            if (!feat.properties.links.length) delete feat.properties.links;
         }
 
         if (raw.event.detail.archived) {

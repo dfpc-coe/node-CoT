@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v6.9.0
+
+- :rocket: Add BiDirectional parsing of Feature Links
+
 ### v6.8.0
 
 - :rocket: Add support for URL Links
