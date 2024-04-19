@@ -18,13 +18,22 @@ export const TogAttributes = Type.Object({
 })
 
 export const LinkAttributes = Type.Object({
-    _attributes: Type.Object({
-        point: Type.Optional(Type.String()),
+    // Polygon/LineString
+    type: Type.Optional(Type.String()),
+    point: Type.Optional(Type.String()),
 
-        uid: Type.Optional(Type.String()),
-        type: Type.Optional(Type.String()),
-        relation: Type.Optional(Type.String()),
-    })
+    // URL Style Links
+    url: Type.Optional(Type.String()),
+    mime: Type.Optional(Type.String()),
+    remarks: Type.Optional(Type.String()),
+
+    // Common to all Link Types
+    uid: Type.Optional(Type.String()),
+    relation: Type.Optional(Type.String()),
+})
+
+export const Link = Type.Object({
+    _attributes: LinkAttributes
 })
 
 export const ServerVersionAttributes = Type.Object({
@@ -183,7 +192,7 @@ export const Detail = Type.Object({
     strokeStyle: Type.Optional(GenericAttributes),
     labels_on: Type.Optional(GenericAttributes),
     fillColor: Type.Optional(GenericAttributes),
-    link: Type.Optional(Type.Union([LinkAttributes, Type.Array(LinkAttributes)])),
+    link: Type.Optional(Type.Union([Link, Type.Array(Link)])),
     usericon: Type.Optional(UserIcon),
     track: Type.Optional(Track),
     takv: Type.Optional(TakVersion),

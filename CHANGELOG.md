@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v6.8.0
+
+- :rocket: Add support for URL Links
+
 ### v6.7.0
 
 - :rocket: Add schema support for `ackrequest`

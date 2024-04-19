@@ -6,7 +6,7 @@ import { AllGeoJSON } from "@turf/helpers";
 import Util from './util.js';
 import Color from './color.js';
 import PointOnFeature from '@turf/point-on-feature';
-import JSONCoT, { MartiDest, MartiDestAttributes } from './types.js'
+import JSONCoT, { MartiDest, MartiDestAttributes, Link, LinkAttributes } from './types.js'
 import AJV from 'ajv';
 import fs from 'fs';
 
@@ -125,6 +125,21 @@ export default class CoT {
         destArr.push({ _attributes: dest });
 
         this.raw.event.detail.marti.dest = destArr;
+    }
+
+    addLink(link: Static<typeof LinkAttributes>): void {
+        if (!this.raw.event.detail) this.raw.event.detail = {};
+
+        let linkArr: Array<Static<typeof Link>> = [];
+        if (this.raw.event.detail.link && !Array.isArray(this.raw.event.detail.link)) {
+            linkArr = [this.raw.event.detail.link]
+        } else if (this.raw.event.detail.link && Array.isArray(this.raw.event.detail.link)) {
+            linkArr = this.raw.event.detail.link;
+        }
+
+        linkArr.push({ _attributes: link });
+
+        this.raw.event.detail.link = linkArr;
     }
 
     /**
