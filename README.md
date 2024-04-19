@@ -6,8 +6,8 @@ Lightweight JavaScript library for parsing and manipulating TAK related messages
 
 ## About
 
-`node-tak` converts between TAK message protocols and a Javascript object/JSON format.
-It also can bidirectionally convert CoT messages into a GeoJSON format
+`node-cot` converts between TAK message protocols and a Javascript object/JSON format.
+It also can bidirectionally convert CoT messages into [GeoJSON](https://geojson.org/)
 
 ## Installation
 
@@ -21,8 +21,8 @@ npm install @tak-ps/node-cot
 
 ## CoT Spec
 
-The CoT spec appears to be very informally developed by a rough internal concensus
-by large TAK Clients within the TPC (TAK Product Center). The following is a current
+The CoT Spec is very informally developed by rough internal concensus
+of large TAK Clients within the TPC (TAK Product Center). The following is a current
 understanding of the spec primarily developed through reverse engineering TAK clients
 
 ```
@@ -89,6 +89,8 @@ These are less common properties that can be used:
 | --------------------------------- | ----------- |
 | `.properties.icon`                | String: Custom Icon Path (string) |
 | `.properties.archived`            | Boolean: TAK Clients will ignore the stale value and retain the feature |
+| `.properties.dest`                | Marti API Instructions for sending CoTs to a specific location |
+| `.properties.fileshare`           | Push Data Packages via CoT |
 
 ## Usage Examples
 
@@ -127,3 +129,4 @@ The following list is a very incomplete list of "special" CoT types and behavior
 | `b-t-f-p`         | Chat pending receipt |
 | `b-t-f-s`         | Chat delivery failure |
 | `t-x-m-c-l`       | Mission Change Notification |
+| `t-x-m-i`         | Mission Invite Notification |
