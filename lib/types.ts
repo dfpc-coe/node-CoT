@@ -4,7 +4,7 @@ export const EventAttributes = Type.Object({
     version: Type.String(),
     uid: Type.String(),
     type: Type.String(),
-    how: Type.String(),
+    how: Type.Optional(Type.String()),
 
     time: Type.String(),
     stale: Type.String(),
@@ -57,9 +57,35 @@ export const TrackAttributes = Type.Object({
     eSlope: Type.Optional(Type.String())
 });
 
-
 export const Track = Type.Object({
     _attributes: TrackAttributes
+})
+
+export const SensorAttributes = Type.Object({
+    elevation: Type.Optional(Type.String()),
+    vfov: Type.Optional(Type.String()),
+    fov: Type.Optional(Type.String()),
+    type: Type.Optional(Type.String()),
+    version: Type.Optional(Type.String()),
+    north: Type.Optional(Type.String()),
+    roll: Type.Optional(Type.String()),
+    range: Type.Optional(Type.String()),
+    azimuth: Type.Optional(Type.String()),
+    model: Type.Optional(Type.String())
+});
+
+export const Sensor = Type.Object({
+    _attributes: SensorAttributes
+})
+
+export const VideoAttributes = Type.Object({
+    sensor: Type.Optional(Type.String()),
+    spi: Type.Optional(Type.String()),
+    url: Type.Optional(Type.String())
+});
+
+export const Video = Type.Object({
+    _attributes: VideoAttributes
 })
 
 export const Chat = Type.Object({
@@ -179,6 +205,7 @@ export const Detail = Type.Object({
     tog: Type.Optional(TogAttributes),
     '__group': Type.Optional(Group),
     '__chat': Type.Optional(Chat),
+    '__video': Type.Optional(Video),
     '_flow-tags_': Type.Optional(FlowTags),
     uid: Type.Optional(Uid),
     status: Type.Optional(Status),
@@ -195,6 +222,7 @@ export const Detail = Type.Object({
     link: Type.Optional(Type.Union([Link, Type.Array(Link)])),
     usericon: Type.Optional(UserIcon),
     track: Type.Optional(Track),
+    sensor: Type.Optional(Sensor),
     takv: Type.Optional(TakVersion),
     marti: Type.Optional(Marti),
     TakControl: Type.Optional(Type.Object({

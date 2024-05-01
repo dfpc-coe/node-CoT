@@ -206,6 +206,14 @@ export default class CoT {
             cot.event.detail.takv = { _attributes: { ...feature.properties.takv } };
         }
 
+        if (feature.properties.sensor) {
+            cot.event.detail.sensor = { _attributes: { ...feature.properties.sensor } };
+        }
+
+        if (feature.properties.video) {
+            cot.event.detail.__video = { _attributes: { ...feature.properties.video } };
+        }
+
         if (feature.properties.contact) {
             cot.event.detail.contact = { _attributes: { ...feature.properties.contact } };
         }
@@ -214,9 +222,9 @@ export default class CoT {
             cot.event.detail.fileshare = { _attributes: { ...feature.properties.fileshare } };
         }
 
-        if (feature.properties.speed && feature.properties.course) {
+        if (feature.properties.course !== undefined || feature.properties.speed !== undefined || feature.properties.slope !== undefined) {
             cot.event.detail.track = {
-                _attributes: Util.cot_track_attr(feature.properties.course, feature.properties.speed)
+                _attributes: Util.cot_track_attr(feature.properties.course, feature.properties.speed, feature.properties.slope)
             }
         }
 
@@ -338,7 +346,7 @@ export default class CoT {
                 callsign: raw.event.detail.contact._attributes.callsign || 'UNKNOWN',
                 center: [ Number(raw.event.point._attributes.lon), Number(raw.event.point._attributes.lat), Number(raw.event.point._attributes.hae) ],
                 type: raw.event._attributes.type,
-                how: raw.event._attributes.how,
+                how: raw.event._attributes.how || '',
                 time: raw.event._attributes.time,
                 start: raw.event._attributes.start,
                 stale: raw.event._attributes.stale,
@@ -365,6 +373,14 @@ export default class CoT {
             feat.properties.fileshare = raw.event.detail.fileshare._attributes;
         }
 
+        if (raw.event.detail.sensor) {
+            feat.properties.sensor = raw.event.detail.sensor._attributes;
+        }
+
+        if (raw.event.detail.__video) {
+            feat.properties.video = raw.event.detail.__video._attributes;
+        }
+
         if (raw.event.detail.link) {
             if (!Array.isArray(raw.event.detail.link)) raw.event.detail.link = [raw.event.detail.link];
             feat.properties.links = raw.event.detail.link.filter((link) => {
@@ -389,6 +405,7 @@ export default class CoT {
 
         if (raw.event.detail.track && raw.event.detail.track._attributes) {
             if (raw.event.detail.track._attributes.course) feat.properties.course = Number(raw.event.detail.track._attributes.course);
+            if (raw.event.detail.track._attributes.slope) feat.properties.slope = Number(raw.event.detail.track._attributes.slope);
             if (raw.event.detail.track._attributes.course) feat.properties.speed = Number(raw.event.detail.track._attributes.speed);
         }
 

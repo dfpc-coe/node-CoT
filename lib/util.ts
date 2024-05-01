@@ -59,11 +59,14 @@ export default class Util {
      * @param [course] Speed in degrees from north
      * @param [speed=0] Speed in m/s
      */
-    static cot_track_attr(course: number, speed = 0): Static<typeof TrackAttributes> {
-        return {
-            course: String(course || 0),
-            speed: String(speed || 0)
-        };
+    static cot_track_attr(course?: number, speed?: number, slope?: number): Static<typeof TrackAttributes> {
+        const attr: Static<typeof TrackAttributes> = {};
+ 
+        if (course) attr.course = String(course);
+        if (speed) attr.speed = String(speed);
+        if (slope) attr.slope = String(slope);
+
+        return attr;
     }
 
     /**

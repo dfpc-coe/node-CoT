@@ -10,6 +10,12 @@
 
 ## Version History
 
+### v6.10.0
+
+- :tada: :arrow_up: Add basic support for UAS generated CoTs
+- :tada: Add `video` parsing
+- :tada: Add `sensor` parsing
+
 ### v6.9.1
 
 - :bug: Only pass in _attributes in GeoJSONified Links
