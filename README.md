@@ -112,21 +112,55 @@ cot.raw; // JSON XML Representation
 
 ## Known Special CoT Types
 
-The following list is a very incomplete list of "special" CoT types and behaviors
+<p align='center'><strong>Geometry</strong></p>
 
 | CoT Type          | Notes |
 | ----------------- | ----- |
 | `u-d-f`           | LineString or Polygon |
 | `u-d-r`           | 4 Cornered Rectangle |
+| `u-d-p`           | Point |
+
+<p align='center'><strong>Notification/Alerts</strong></p>
+
+| CoT Type          | Notes |
+| ----------------- | ----- |
+| `b-a`             | Alert |
 | `b-a-o-tbl`       | 911 Alert |
-| `b-a-o-can`       | Cancel |
-| `b-a-g`           | GeoFenceBreach |
+| `b-a-o-can`       | Cancel Alert |
+| `b-a-g`           | GeoFence Breach |
 | `b-a-o-pan`       | RingTheBell |
 | `b-a-o-opn`       | TroopsInContact |
+| `b-r-f-h-c`       | Casevac |
+
+<p align='center'><strong>Chat</strong></p>
+
+| CoT Type          | Notes |
+| ----------------- | ----- |
 | `b-t-f`           | Chat |
 | `b-t-f-d`         | Chat delivery receipt |
 | `b-t-f-r`         | Chat read receipt |
 | `b-t-f-p`         | Chat pending receipt |
 | `b-t-f-s`         | Chat delivery failure |
-| `t-x-m-c-l`       | Mission Change Notification |
+
+<p align='center'><strong>Mission Sync</strong></p>
+
+| CoT Type          | Notes |
+| ----------------- | ----- |
+| `t-x-m`           | Mission |
+| `t-x-m-n`         | Mission Created |
+| `t-x-m-d`         | Mission Deleted |
 | `t-x-m-i`         | Mission Invite Notification |
+| `t-x-m-c`         | Mission Change |
+| `t-x-m-c-l`       | Mission Change: Log |
+| `t-x-m-c-e`       | Mission Change: External |
+| `t-x-m-c-m`       | Mission Change: Metadata |
+| `t-x-m-c-k`       | Mission Change: Keywords |
+
+<p align='center'><strong>Special</strong></p>
+
+| CoT Type          | Notes |
+| ----------------- | ----- |
+| `b-i-v`           | Bits/Imagery/Video |
+| `b-i-r-r`         | Remote Resource |
+| `b-f-t-r`         | File Transfer Request |
+| `b-i-x-i`         | QuickPic |
