@@ -58,7 +58,7 @@ export const TrackAttributes = Type.Object({
 });
 
 export const Track = Type.Object({
-    _attributes: TrackAttributes
+    _attributes: Type.Optional(TrackAttributes)
 })
 
 export const SensorAttributes = Type.Object({

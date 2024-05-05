@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v6.11.0
+
+- :rocket: `Track._attributes` is now optional
+
 ### v6.10.0
 
 - :tada: :arrow_up: Add basic support for UAS generated CoTs
