@@ -100,22 +100,26 @@ export const Chat = Type.Object({
     chatgrp: Type.Any()
 })
 
+export const TakVersionAttributes = Type.Object({
+    device: Type.Optional(Type.String()),
+    platform: Type.Optional(Type.String()),
+    os: Type.Optional(Type.String()),
+    version: Type.Optional(Type.String())
+})
+
 export const TakVersion = Type.Object({
-    _attributes: Type.Object({
-        device: Type.Optional(Type.String()),
-        platform: Type.Optional(Type.String()),
-        os: Type.Optional(Type.String()),
-        version: Type.Optional(Type.String())
-    })
+    _attributes: TakVersionAttributes
 })
 
 export const FlowTags = Type.Any();
 
+export const GroupAttributes = Type.Object({
+    name: Type.String(),
+    role: Type.String()
+})
+
 export const Group = Type.Object({
-    _attributes: Type.Optional(Type.Object({
-        name: Type.String(),
-        role: Type.String()
-    }))
+    _attributes: Type.Optional(GroupAttributes)
 })
 
 export const ACKRequestAttributes = Type.Object({
@@ -142,11 +146,14 @@ export const FileShare = Type.Object({
     _attributes: FileShareAttributes
 })
 
+
+export const StatusAttributes = Type.Object({
+    battery: Type.Optional(Type.String()),
+    readiness: Type.Optional(Type.String())
+})
+
 export const Status = Type.Object({
-    _attributes: Type.Object({
-        battery: Type.Optional(Type.String()),
-        readiness: Type.Optional(Type.String())
-    })
+    _attributes: StatusAttributes
 })
 
 export const Uid = Type.Object({
@@ -187,11 +194,13 @@ export const Remarks = Type.Object({
     _text: Type.Optional(Type.String())
 })
 
+export const PrecisionLocationAttributes = Type.Object({
+    geopointsrc: Type.Optional(Type.String()),
+    altsrc: Type.Optional(Type.String())
+})
+
 export const PrecisionLocation = Type.Object({
-    _attributes: Type.Object({
-        geopointsrc: Type.Optional(Type.String()),
-        altsrc: Type.Optional(Type.String())
-    })
+    _attributes: PrecisionLocationAttributes
 })
 
 export const UserIcon = Type.Object({

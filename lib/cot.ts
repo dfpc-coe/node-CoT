@@ -1,7 +1,7 @@
 import { diff } from 'json-diff-ts';
 import xmljs from 'xml-js';
 import { Static } from '@sinclair/typebox';
-import { Feature } from 'geojson';
+import Feature from './feature.js';
 import { AllGeoJSON } from "@turf/helpers";
 import Util from './util.js';
 import Color from './color.js';
@@ -12,12 +12,19 @@ import fs from 'fs';
 
 const pkg = JSON.parse(String(fs.readFileSync(new URL('../package.json', import.meta.url))));
 
-const ajv = (new AJV({
+const checkXML = (new AJV({
     allErrors: true,
     coerceTypes: true,
     allowUnionTypes: true
 }))
     .compile(JSONCoT);
+
+const checkFeat = (new AJV({
+    allErrors: true,
+    coerceTypes: true,
+    allowUnionTypes: true
+}))
+    .compile(Feature);
 
 /**
  * Convert to and from an XML CoT message
@@ -48,8 +55,8 @@ export default class CoT {
 
         if (!this.raw.event._attributes.uid) this.raw.event._attributes.uid = Util.cot_uuid();
 
-        ajv(this.raw);
-        if (ajv.errors) throw new Error(`${ajv.errors[0].message} (${ajv.errors[0].instancePath})`);
+        checkXML(this.raw);
+        if (checkXML.errors) throw new Error(`${checkXML.errors[0].message} (${checkXML.errors[0].instancePath})`);
 
         if (!this.raw.event.detail) this.raw.event.detail = {};
         if (!this.raw.event.detail['_flow-tags_']) this.raw.event.detail['_flow-tags_'] = {};
@@ -149,9 +156,9 @@ export default class CoT {
      *
      * @return {CoT}
      */
-    static from_geojson(feature: Feature): CoT {
-        if (feature.type !== 'Feature') throw new Error('Must be GeoJSON Feature');
-        if (!feature.properties) throw new Error('Feature must have properties');
+    static from_geojson(feature: Static<typeof Feature>): CoT {
+        checkFeat(feature);
+        if (checkFeat.errors) throw new Error(`${checkFeat.errors[0].message} (${checkFeat.errors[0].instancePath})`);
 
         const cot: Static<typeof JSONCoT> = {
             event: {
@@ -333,13 +340,13 @@ export default class CoT {
     /**
      * Return a GeoJSON Feature from an XML CoT message
      */
-    to_geojson(): Feature {
+    to_geojson(): Static<typeof Feature> {
         const raw: Static<typeof JSONCoT> = JSON.parse(JSON.stringify(this.raw));
         if (!raw.event.detail) raw.event.detail = {};
         if (!raw.event.detail.contact) raw.event.detail.contact = { _attributes: { callsign: 'UNKNOWN' } };
         if (!raw.event.detail.contact._attributes) raw.event.detail.contact._attributes = { callsign: 'UNKNOWN' };
 
-        const feat: Feature = {
+        const feat: Static<typeof Feature> = {
             id: raw.event._attributes.uid,
             type: 'Feature',
             properties: {
@@ -356,8 +363,6 @@ export default class CoT {
                 coordinates: [ Number(raw.event.point._attributes.lon), Number(raw.event.point._attributes.lat), Number(raw.event.point._attributes.hae) ]
             }
         };
-
-        if (!feat.properties) feat.properties = {};
 
         const contact = JSON.parse(JSON.stringify(raw.event.detail.contact._attributes));
         delete contact.callsign;
@@ -446,10 +451,6 @@ export default class CoT {
 
         if (raw.event.detail.precisionlocation && raw.event.detail.precisionlocation._attributes) {
             feat.properties.precisionlocation = raw.event.detail.precisionlocation._attributes;
-        }
-
-        if (raw.event.detail.__group && raw.event.detail.__group._attributes) {
-            feat.properties.group = raw.event.detail.__group._attributes;
         }
 
         if (['u-d-f', 'u-d-r'].includes(raw.event._attributes.type) && Array.isArray(raw.event.detail.link)) {

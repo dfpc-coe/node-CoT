@@ -19,7 +19,6 @@
         "@turf/point-on-feature": "^6.5.0",
         "@types/archiver": "^6.0.2",
         "@types/color": "^3.0.3",
-        "@types/geojson": "^7946.0.10",
         "ajv": "^8.12.0",
         "archiver": "^7.0.1",
         "color": "^4.2.3",

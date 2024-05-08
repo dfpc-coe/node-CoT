@@ -12,7 +12,7 @@ export default class Color {
     b: number;
     a: number;
 
-    constructor(color: number | number[]) {
+    constructor(color: string | number | number[]) {
         if (!isNaN(Number(color))) {
             color = Number(color);
 
