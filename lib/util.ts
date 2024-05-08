@@ -118,7 +118,7 @@ export default class Util {
     } {
         const now = Date.now();
 
-        if (!stale) {
+        if (stale === undefined || stale === null) {
             return {
                 time: (new Date(time || now)).toISOString(),
                 start: (new Date(start || now)).toISOString(),

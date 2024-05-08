@@ -154,7 +154,7 @@ test('CoT.from_geojson - Start', (t) => {
         type: 'Feature',
         properties: {
             // 1hr in the future
-            start: new Date(+new Date() + 60 * 60 * 1000)
+            start: new Date(+new Date() + 60 * 60 * 1000).toISOString()
         },
         geometry: {
             type: 'Point',
@@ -182,7 +182,7 @@ test('CoT.from_geojson - Start/Stale', (t) => {
         type: 'Feature',
         properties: {
             // 1hr in the future
-            start: new Date(+new Date() + 60 * 60 * 1000),
+            start: new Date(+new Date() + 60 * 60 * 1000).toISOString(),
             stale: 60 * 1000
         },
         geometry: {

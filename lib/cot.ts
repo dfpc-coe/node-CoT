@@ -1,7 +1,7 @@
 import { diff } from 'json-diff-ts';
 import xmljs from 'xml-js';
 import { Static } from '@sinclair/typebox';
-import Feature from './feature.js';
+import Feature, { InputFeature } from './feature.js';
 import { AllGeoJSON } from "@turf/helpers";
 import Util from './util.js';
 import Color from './color.js';
@@ -24,7 +24,7 @@ const checkFeat = (new AJV({
     coerceTypes: true,
     allowUnionTypes: true
 }))
-    .compile(Feature);
+    .compile(InputFeature);
 
 /**
  * Convert to and from an XML CoT message
@@ -39,7 +39,7 @@ export default class CoT {
     // Key/Value JSON Records - not currently support by TPC Clients
     // but used for styling/dynamic overrides and hopefully eventually
     // merged into the CoT spec
-    metadata: Record<string, string>;
+    metadata: Record<string, unknown>;
 
     constructor(cot: Buffer | Static<typeof JSONCoT> | string) {
         if (typeof cot === 'string' || cot instanceof Buffer) {
@@ -80,11 +80,8 @@ export default class CoT {
             diffFlow: false
         }
     ): boolean {
-        const a = this.to_geojson();
-        const b = cot.to_geojson();
-
-        if (!a.properties) a.properties = {};
-        if (!b.properties) b.properties = {};
+        const a = this.to_geojson() as Static<typeof InputFeature>;
+        const b = cot.to_geojson() as Static<typeof InputFeature>;
 
         if (!opts.diffDest) {
             delete a.properties.dest;
@@ -156,7 +153,7 @@ export default class CoT {
      *
      * @return {CoT}
      */
-    static from_geojson(feature: Static<typeof Feature>): CoT {
+    static from_geojson(feature: Static<typeof InputFeature>): CoT {
         checkFeat(feature);
         if (checkFeat.errors) throw new Error(`${checkFeat.errors[0].message} (${checkFeat.errors[0].instancePath})`);
 
@@ -199,11 +196,7 @@ export default class CoT {
             const dest = !Array.isArray(feature.properties.dest) ? [ feature.properties.dest ] : feature.properties.dest;
 
             cot.event.detail.marti = {
-                dest: dest.map((dest: {
-                    uid?: string;
-                    mission?: string;
-                    callsign?: string;
-                }) => {
+                dest: dest.map((dest) => {
                     return { _attributes: { ...dest } };
                 })
             }
@@ -222,7 +215,12 @@ export default class CoT {
         }
 
         if (feature.properties.contact) {
-            cot.event.detail.contact = { _attributes: { ...feature.properties.contact } };
+            cot.event.detail.contact = {
+                _attributes: {
+                    callsign: feature.properties.callsign || 'UNKNOWN',
+                    ...feature.properties.contact
+                }
+            };
         }
 
         if (feature.properties.fileshare) {
@@ -417,7 +415,7 @@ export default class CoT {
         if (raw.event.detail.marti && raw.event.detail.marti.dest) {
             if (!Array.isArray(raw.event.detail.marti.dest)) raw.event.detail.marti.dest = [raw.event.detail.marti.dest];
 
-            const dest = raw.event.detail.marti.dest.map((d: Static<typeof MartiDest>) => {
+            const dest: Array<Static<typeof MartiDestAttributes>> = raw.event.detail.marti.dest.map((d: Static<typeof MartiDest>) => {
                 return { ...d._attributes };
             });
 

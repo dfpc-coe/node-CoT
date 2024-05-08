@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v7.0.0
+
+- :tada: Use more strictly defined Feature types
+
 ### v6.11.0
 
 - :rocket: `Track._attributes` is now optional
