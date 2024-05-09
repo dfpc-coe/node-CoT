@@ -142,7 +142,7 @@ export const MultiPolygon = Type.Object({
     coordinates: Type.Array(Type.Array(Type.Array(Position)))
 })
 
-export default Type.Object({
+export const Feature = Type.Object({
     id: Type.String(),
     type: Type.Const('Feature'),
     properties: Properties,

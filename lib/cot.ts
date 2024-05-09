@@ -1,7 +1,7 @@
 import { diff } from 'json-diff-ts';
 import xmljs from 'xml-js';
 import { Static } from '@sinclair/typebox';
-import Feature, { InputFeature } from './feature.js';
+import { Feature, InputFeature } from './feature.js';
 import { AllGeoJSON } from "@turf/helpers";
 import Util from './util.js';
 import Color from './color.js';

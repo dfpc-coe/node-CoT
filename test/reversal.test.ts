@@ -1,5 +1,5 @@
 import { Static } from '@sinclair/typebox';
-import Feature from '../lib/feature.js';
+import { Feature } from '../lib/feature.js';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import test from 'tape';

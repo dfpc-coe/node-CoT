@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v7.0.1
+
+- :bug: Ensure `Feature` is accessible outside of library by using named
+
 ### v7.0.0
 
 - :tada: Use more strictly defined Feature types
