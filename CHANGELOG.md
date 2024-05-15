@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v7.1.0
+
+- :rocket: Distribute ATAK CoT Proto files with node-cot
+
 ### v7.0.1
 
 - :bug: Ensure `Feature` is accessible outside of library by using named
