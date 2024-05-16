@@ -1,3 +1,4 @@
+import protobuf from 'protobufjs';
 import { diff } from 'json-diff-ts';
 import xmljs from 'xml-js';
 import { Static } from '@sinclair/typebox';
@@ -9,6 +10,8 @@ import PointOnFeature from '@turf/point-on-feature';
 import JSONCoT, { MartiDest, MartiDestAttributes, Link, LinkAttributes } from './types.js'
 import AJV from 'ajv';
 import fs from 'fs';
+
+const RootMessage = await protobuf.load(new URL('./proto/cotevent.proto', import.meta.url).pathname);
 
 const pkg = JSON.parse(String(fs.readFileSync(new URL('../package.json', import.meta.url))));
 
@@ -147,7 +150,7 @@ export default class CoT {
     }
 
     /**
-     * Return an CoT Message
+     * Return an CoT Message given a GeoJSON Feature
      *
      * @param {Object} feature GeoJSON Point Feature
      *
@@ -336,6 +339,96 @@ export default class CoT {
     }
 
     /**
+     * Return an ATAK Compliant Protobuf
+     */
+    to_proto(version = 1): Uint8Array {
+        if (version < 1 || version > 1) throw new Error(`Unsupported Proto Version: ${version}`);
+        const ProtoMessage = RootMessage.lookupType(`atakmap.commoncommo.protobuf.v${version}.CotEvent`)
+
+        const detail = this.raw.event.detail;
+
+        const msg: any = {
+            ...this.raw.event._attributes,
+            sendTime: new Date(this.raw.event._attributes.time).getTime(),
+            startTime: new Date(this.raw.event._attributes.start).getTime(),
+            staleTime: new Date(this.raw.event._attributes.stale).getTime(),
+            ...this.raw.event.point._attributes,
+            detail: {
+                xmlDetail: ''
+            }
+        };
+
+        for (const key in detail) {
+            if(['contact', 'group', 'precisionlocation', 'status', 'takv', 'track'].includes(key)) {
+                msg.detail.contact = detail[key]._attributes;
+                delete detail[key]
+            }
+        }
+
+        msg.detail.xmlDetail = xmljs.js2xml({
+            ...detail,
+            metadata: this.metadata
+        }, { compact: true });
+
+        return ProtoMessage.encode(msg).finish();
+    }
+
+    /**
+     * Parse an ATAK compliant Protobuf to a JS Object
+     */
+    static from_proto(raw: Uint8Array, version = 1): CoT {
+        const ProtoMessage = RootMessage.lookupType(`atakmap.commoncommo.protobuf.v${version}.CotEvent`)
+
+        // TODO Type this
+        const msg: any = ProtoMessage.decode(raw);
+
+        const detail: Record<any, any> = {};
+        let metadata: Record<string, unknown> = {};
+        for (const key in msg.detail) {
+            if (key === 'xmlDetail') {
+                const parsed: any = xmljs.xml2js(`<detail>${msg.detail.xmlDetail}</detail>`, { compact: true });
+                Object.assign(detail, parsed.detail);
+
+                if (detail.metadata) {
+                    for (const key in detail.metadata) {
+                        metadata[key] = detail.metadata[key]._text;
+                    }
+                    delete detail.metadata;
+                }
+            } else if (['contact', 'group', 'precisionlocation', 'status', 'takv', 'track'].includes(key)) {
+                detail[key] = { _attributes: msg.detail[key] };
+            }
+        }
+
+        const cot = new CoT({
+            event: {
+                _attributes: {
+                    version: '2.0',
+                    uid: msg.uid, type: msg.type, how: msg.how,
+                    qos: msg.qos, opex: msg.opex, access: msg.access,
+                    time: new Date(msg.sendTime.toNumber()).toISOString(),
+                    start: new Date(msg.startTime.toNumber()).toISOString(),
+                    stale: new Date(msg.staleTime.toNumber()).toISOString(),
+                },
+                detail,
+                point: {
+                    _attributes: {
+                        lat: msg.lat,
+                        lon: msg.lon,
+                        hae: msg.hae,
+                        le: msg.le,
+                        ce: msg.ce,
+                    },
+                }
+            }
+        });
+
+        cot.metadata = metadata;
+
+        return cot;
+    }
+
+    /**
      * Return a GeoJSON Feature from an XML CoT message
      */
     to_geojson(): Static<typeof Feature> {
@@ -374,6 +467,9 @@ export default class CoT {
 
         if (raw.event.detail.fileshare) {
             feat.properties.fileshare = raw.event.detail.fileshare._attributes;
+            if (feat.properties.fileshare && typeof feat.properties.fileshare.sizeInBytes === 'string') {
+                feat.properties.fileshare.sizeInBytes = parseInt(feat.properties.fileshare.sizeInBytes)
+            }
         }
 
         if (raw.event.detail.sensor) {
@@ -386,13 +482,14 @@ export default class CoT {
 
         if (raw.event.detail.link) {
             if (!Array.isArray(raw.event.detail.link)) raw.event.detail.link = [raw.event.detail.link];
-            feat.properties.links = raw.event.detail.link.filter((link) => {
+
+            feat.properties.links = raw.event.detail.link.filter((link: Static<typeof Link>) => {
                 return !!link._attributes.url
-            }).map((link) => {
+            }).map((link: Static<typeof Link>): Static<typeof LinkAttributes> => {
                 return link._attributes;
             });
 
-            if (!feat.properties.links.length) delete feat.properties.links;
+            if (!feat.properties.links || !feat.properties.links.length) delete feat.properties.links;
         }
 
         if (raw.event.detail.archived) {

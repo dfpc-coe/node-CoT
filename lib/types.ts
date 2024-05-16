@@ -6,6 +6,10 @@ export const EventAttributes = Type.Object({
     type: Type.String(),
     how: Type.Optional(Type.String()),
 
+    access: Type.Optional(Type.String()),
+    qos: Type.Optional(Type.String()),
+    opex: Type.Optional(Type.String()),
+
     time: Type.String(),
     stale: Type.String(),
     start: Type.String(),
@@ -35,6 +39,12 @@ export const LinkAttributes = Type.Object({
 export const Link = Type.Object({
     _attributes: LinkAttributes
 })
+
+export const ProtocolSupportAttributes = Type.Object({
+    _attributes: Type.Optional(Type.Object({
+        version: Type.Optional(Type.String())
+    }))
+});
 
 export const ServerVersionAttributes = Type.Object({
     _attributes: Type.Optional(Type.Object({
@@ -235,6 +245,7 @@ export const Detail = Type.Object({
     takv: Type.Optional(TakVersion),
     marti: Type.Optional(Marti),
     TakControl: Type.Optional(Type.Object({
+        TakProtocolSupport: Type.Optional(ProtocolSupportAttributes),
         TakServerVersionInfo: Type.Optional(ServerVersionAttributes)
     }))
 })
@@ -252,7 +263,7 @@ export const Point = Type.Object({
 export default Type.Object({
     event: Type.Object({
         _attributes: EventAttributes,
-        detail: Type.Optional(Detail),
+        detail: Type.Optional(Type.Index(Detail, Type.KeyOf(Detail))),
         point: Point,
     }),
 })
