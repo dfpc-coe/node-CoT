@@ -23,7 +23,7 @@
         "archiver": "^7.0.1",
         "color": "^4.2.3",
         "json-diff-ts": "^4.0.1",
-        "protobufjs": "^7.1.2",
+        "protobufjs": "^7.3.0",
         "xml-js": "^1.6.11"
     },
     "devDependencies": {
