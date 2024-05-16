@@ -360,7 +360,7 @@ export default class CoT {
 
         for (const key in detail) {
             if(['contact', 'group', 'precisionlocation', 'status', 'takv', 'track'].includes(key)) {
-                msg.detail.contact = detail[key]._attributes;
+                msg.detail[key] = detail[key]._attributes;
                 delete detail[key]
             }
         }
@@ -383,7 +383,7 @@ export default class CoT {
         const msg: any = ProtoMessage.decode(raw);
 
         const detail: Record<any, any> = {};
-        let metadata: Record<string, unknown> = {};
+        const metadata: Record<string, unknown> = {};
         for (const key in msg.detail) {
             if (key === 'xmlDetail') {
                 const parsed: any = xmljs.xml2js(`<detail>${msg.detail.xmlDetail}</detail>`, { compact: true });
