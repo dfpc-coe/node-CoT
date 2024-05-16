@@ -12,6 +12,11 @@
 
 ### v7.1.0
 
+- :tada: Preliminary support for V1 Protobuf encoded CoT messages
+- :white_check_mark: Round trip to/from proto tests mirring the to/from geojson tests
+
+### v7.1.0
+
 - :rocket: Distribute ATAK CoT Proto files with node-cot
 
 ### v7.0.1
