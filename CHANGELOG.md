@@ -10,10 +10,11 @@
 
 ## Version History
 
-### v7.1.0
+### v7.2.0
 
 - :tada: Preliminary support for V1 Protobuf encoded CoT messages
 - :white_check_mark: Round trip to/from proto tests mirring the to/from geojson tests
+- :arrow_up: Update to latest deps
 
 ### v7.1.0
 
