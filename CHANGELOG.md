@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v7.2.1
+
+- :bug: Ensure Proto Directory is copied to dist
+
 ### v7.2.0
 
 - :tada: Preliminary support for V1 Protobuf encoded CoT messages

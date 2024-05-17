@@ -10,7 +10,7 @@
         "test": "ts-node-test test/",
         "lint": "eslint *.ts lib/*.ts test/*.ts",
         "doc": "typedoc index.ts",
-        "build": "tsc --build && cp package.json dist/",
+        "build": "tsc --build && cp package.json dist/ && mkdir -p ./dist/proto/ && cp lib/proto/* ./dist/proto/",
         "pretest": "npm run lint"
     },
     "dependencies": {
