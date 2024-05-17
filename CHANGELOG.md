@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v7.2.2
+
+- :bug: Ensure Proto Directory is copied to dist/lib/proto
+
 ### v7.2.1
 
 - :bug: Ensure Proto Directory is copied to dist
