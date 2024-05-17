@@ -1,4 +1,5 @@
 import protobuf from 'protobufjs';
+import Err from '@openaddresses/batch-error';
 import { diff } from 'json-diff-ts';
 import xmljs from 'xml-js';
 import { Static } from '@sinclair/typebox';
@@ -59,7 +60,7 @@ export default class CoT {
         if (!this.raw.event._attributes.uid) this.raw.event._attributes.uid = Util.cot_uuid();
 
         checkXML(this.raw);
-        if (checkXML.errors) throw new Error(`${checkXML.errors[0].message} (${checkXML.errors[0].instancePath})`);
+        if (checkXML.errors) throw new Err(400, null, `${checkXML.errors[0].message} (${checkXML.errors[0].instancePath})`);
 
         if (!this.raw.event.detail) this.raw.event.detail = {};
         if (!this.raw.event.detail['_flow-tags_']) this.raw.event.detail['_flow-tags_'] = {};
@@ -158,7 +159,7 @@ export default class CoT {
      */
     static from_geojson(feature: Static<typeof InputFeature>): CoT {
         checkFeat(feature);
-        if (checkFeat.errors) throw new Error(`${checkFeat.errors[0].message} (${checkFeat.errors[0].instancePath})`);
+        if (checkFeat.errors) throw new Err(400, null, `${checkFeat.errors[0].message} (${checkFeat.errors[0].instancePath})`);
 
         const cot: Static<typeof JSONCoT> = {
             event: {
@@ -258,8 +259,8 @@ export default class CoT {
 
         cot.event.detail.remarks = { _attributes: { }, _text: feature.properties.remarks || '' };
 
-        if (!feature.geometry) throw new Error('Must have Geometry');
-        if (!['Point', 'Polygon', 'LineString'].includes(feature.geometry.type)) throw new Error('Unsupported Geometry Type');
+        if (!feature.geometry) throw new Err(400, null, 'Must have Geometry');
+        if (!['Point', 'Polygon', 'LineString'].includes(feature.geometry.type)) throw new Err(400, null, 'Unsupported Geometry Type');
 
         if (feature.geometry.type === 'Point') {
             cot.event.point._attributes.lon = String(feature.geometry.coordinates[0]);
@@ -342,7 +343,7 @@ export default class CoT {
      * Return an ATAK Compliant Protobuf
      */
     to_proto(version = 1): Uint8Array {
-        if (version < 1 || version > 1) throw new Error(`Unsupported Proto Version: ${version}`);
+        if (version < 1 || version > 1) throw new Err(400, null, `Unsupported Proto Version: ${version}`);
         const ProtoMessage = RootMessage.lookupType(`atakmap.commoncommo.protobuf.v${version}.CotEvent`)
 
         const detail = this.raw.event.detail;
