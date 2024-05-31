@@ -12,7 +12,7 @@
 
 ### v8.0.0
 
-- :rocket: Relax speed/course/slope to allow floats
+- :tada: *BREAKING* Full Bi-Directional Parsing of DataPackages
 
 ### v7.3.0
 

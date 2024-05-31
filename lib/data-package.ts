@@ -105,6 +105,9 @@ export class DataPackage {
         return xml;
     }
 
+    /**
+     * Return a DataPackage version of an unparsed Data Package Zip
+     */
     static async parse(input: string): Promise<DataPackage> {
         const pkg = new DataPackage();
 
@@ -170,6 +173,9 @@ export class DataPackage {
         return cots;
     }
 
+    /**
+     * Add a CoT marker to the Package
+     */
     async addCoT(cot: CoT, opts: {
         ignore: boolean
     } = {
@@ -189,11 +195,19 @@ export class DataPackage {
         await fsp.writeFile(`${this.path}/raw/${cot.raw.event._attributes.uid}/${cot.raw.event._attributes.uid}.cot`, cot.to_xml())
     }
 
+    /**
+     * Destory the underlying FS resources and prevent further mutation
+     */
     async destroy(): Promise<void> {
         await rimraf(this.path);
         this.destroyed = true;
     }
 
+    /**
+     * Compile the DataPackage into a TAK compatible ZIP File
+     * Note this function can be called multiple times and does not
+     * affect the ability of the class to continue building a Package
+     */
     async finalize(): Promise<string> {
         if (this.destroyed) throw new Err(400, null, 'Attempt to access Data Package after it has been destoryed');
 
