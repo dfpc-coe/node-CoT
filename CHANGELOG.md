@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v8.0.1
+
+- :bug: Include `@openaddresses/batch-error`
+
 ### v8.0.0
 
 - :tada: *BREAKING* Full Bi-Directional Parsing of DataPackages
