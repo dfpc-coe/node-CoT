@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v8.0.0
+
+- :rocket: Relax speed/course/slope to allow floats
+
 ### v7.3.0
 
 - :rocket: Relax speed/course/slope to allow floats
