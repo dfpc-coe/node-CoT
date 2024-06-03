@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v8.1.0
+
+- :rocket: Add ability to set Ephemeral or Permanent package type
+
 ### v8.0.1
 
 - :bug: Include `@openaddresses/batch-error`

@@ -78,6 +78,22 @@ export class DataPackage {
     }
 
     /**
+     * The Package should be imported and then removed
+     */
+    setEphemeral() {
+        this.settings.onReceiveImport = true;
+        this.settings.onReceiveDelete = true;
+    }
+
+    /**
+     * The Package should be imported and the package retained
+     */
+    setPermanent() {
+        this.settings.onReceiveImport = true;
+        this.settings.onReceiveDelete = false;
+    }
+
+    /**
      * Return a string version of the Manifest document
      */
     manifest(): string {
@@ -189,9 +205,7 @@ export class DataPackage {
         }
 
         this.#addContent(`${cot.raw.event._attributes.uid}/${cot.raw.event._attributes.uid}.cot`, cot.raw.event._attributes.uid, name, opts.ignore);
-
         await fsp.mkdir(`${this.path}/raw/${cot.raw.event._attributes.uid}/`, { recursive: true });
-
         await fsp.writeFile(`${this.path}/raw/${cot.raw.event._attributes.uid}/${cot.raw.event._attributes.uid}.cot`, cot.to_xml())
     }
 
