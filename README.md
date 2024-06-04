@@ -23,7 +23,7 @@ npm install @tak-ps/node-cot
 
 ### Cursor-On-Target
 
-```
+```js
 import CoT from '@tak-ps/node-cot';
 
 const cot = new CoT(`
