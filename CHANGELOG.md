@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v8.2.0
+
+- :white_check_mark: Add tests for ensuring newlines are retained in remarks
+
 ### v8.1.0
 
 - :rocket: Add ability to set Ephemeral or Permanent package type
