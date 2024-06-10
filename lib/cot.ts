@@ -383,7 +383,7 @@ export default class CoT {
         // TODO Type this
         const msg: any = ProtoMessage.decode(raw);
 
-        const detail: Record<any, any> = {};
+        const detail: Record<string, any> = {};
         const metadata: Record<string, unknown> = {};
         for (const key in msg.detail) {
             if (key === 'xmlDetail') {

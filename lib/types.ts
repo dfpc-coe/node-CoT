@@ -182,8 +182,11 @@ export const Contact = Type.Object({
 
 export const MartiDestAttributes = Type.Object({
     uid: Type.Optional(Type.String()),
+    callsign: Type.Optional(Type.String()),
+
     mission: Type.Optional(Type.String()),
-    callsign: Type.Optional(Type.String())
+    after: Type.Optional(Type.String()),
+    path: Type.Optional(Type.String())
 })
 
 export const MartiDest = Type.Object({
