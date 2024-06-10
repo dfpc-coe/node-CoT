@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v8.3.0
+
+- :rocket`: Add Schema support for `path` and `after` when using `<dest/>` with Mission Sync API Ref: https://wiki.tak.gov/display/VBM/Mission+Layers
+
 ### v8.2.0
 
 - :white_check_mark: Add tests for ensuring newlines are retained in remarks
