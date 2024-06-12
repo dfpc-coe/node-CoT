@@ -52,6 +52,12 @@ export const ServerVersionAttributes = Type.Object({
     }))
 })
 
+export const ColorAttributes = Type.Object({
+    _attributes: Type.Optional(Type.Object({
+        argb: Type.Optional(Type.String())
+    }))
+})
+
 export const GenericAttributes = Type.Object({
     _attributes: Type.Optional(Type.Object({
         value: Type.Optional(Type.String())
@@ -235,8 +241,9 @@ export const Detail = Type.Object({
     ackrequest: Type.Optional(ACKRequest),
     remarks: Type.Optional(Remarks),
     precisionlocation: Type.Optional(PrecisionLocation),
+    color: Type.Optional(ColorAttributes),
     strokeColor: Type.Optional(GenericAttributes),
-    archived: Type.Optional(GenericAttributes),
+    archive: Type.Optional(GenericAttributes),
     strokeWeight: Type.Optional(GenericAttributes),
     strokeStyle: Type.Optional(GenericAttributes),
     labels_on: Type.Optional(GenericAttributes),

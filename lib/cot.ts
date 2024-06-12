@@ -259,13 +259,23 @@ export default class CoT {
 
         cot.event.detail.remarks = { _attributes: { }, _text: feature.properties.remarks || '' };
 
-        if (!feature.geometry) throw new Err(400, null, 'Must have Geometry');
-        if (!['Point', 'Polygon', 'LineString'].includes(feature.geometry.type)) throw new Err(400, null, 'Unsupported Geometry Type');
+        if (!feature.geometry) {
+            throw new Err(400, null, 'Must have Geometry');
+        } else if (!['Point', 'Polygon', 'LineString'].includes(feature.geometry.type)) {
+            throw new Err(400, null, 'Unsupported Geometry Type');
+        }
 
         if (feature.geometry.type === 'Point') {
             cot.event.point._attributes.lon = String(feature.geometry.coordinates[0]);
             cot.event.point._attributes.lat = String(feature.geometry.coordinates[1]);
             cot.event.point._attributes.hae = String(feature.geometry.coordinates[2] || '0.0');
+
+
+            if (feature.properties.color) {
+                const color = new Color(feature.properties.color || -1761607936);
+                color.a = feature.properties['opacity'] || 128;
+                cot.event.detail.color = { _attributes: { argb: String(color.as_32bit()) } };
+            }
         } else if (['Polygon', 'LineString'].includes(feature.geometry.type)) {
             const stroke = new Color(feature.properties.stroke || -1761607936);
             stroke.a = feature.properties['stroke-opacity'] || 128;
@@ -569,6 +579,12 @@ export default class CoT {
 
             if (raw.event.detail.strokeStyle && raw.event.detail.strokeStyle._attributes && raw.event.detail.strokeStyle._attributes.value) {
                 feat.properties['stroke-style'] = raw.event.detail.strokeStyle._attributes.value;
+            }
+
+            if (raw.event.detail.color && raw.event.detail.color._attributes && raw.event.detail.color._attributes.argb) {
+                const color = new Color(Number(raw.event.detail.strokeColor._attributes.value));
+                feat.properties.color = color.as_hex();
+                feat.properties.opacity = color.as_opacity();
             }
 
             if (raw.event._attributes.type === 'u-d-r' || (coordinates[0][0] === coordinates[coordinates.length -1][0] && coordinates[0][1] === coordinates[coordinates.length -1][1])) {

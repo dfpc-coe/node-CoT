@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v8.4.0
+
+- :rocket`: Add `color` detail properties in encoding/decoding and types
+
 ### v8.3.0
 
 - :rocket`: Add Schema support for `path` and `after` when using `<dest/>` with Mission Sync API Ref: https://wiki.tak.gov/display/VBM/Mission+Layers
