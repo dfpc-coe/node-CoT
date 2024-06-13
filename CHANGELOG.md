@@ -10,13 +10,18 @@
 
 ## Version History
 
+### v8.5.0
+
+- :bug: Fix colour encoding to XML
+- :white_check_mark: Add Reversal Tests for Color
+
 ### v8.4.0
 
-- :rocket`: Add `color` detail properties in encoding/decoding and types
+- :rocket: Add `color` detail properties in encoding/decoding and types
 
 ### v8.3.0
 
-- :rocket`: Add Schema support for `path` and `after` when using `<dest/>` with Mission Sync API Ref: https://wiki.tak.gov/display/VBM/Mission+Layers
+- :rocket: Add Schema support for `path` and `after` when using `<dest/>` with Mission Sync API Ref: https://wiki.tak.gov/display/VBM/Mission+Layers
 
 ### v8.2.0
 
