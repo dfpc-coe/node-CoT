@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v8.5.1
+
+- :rocket: Use Simple Style Spec where possible `color` => `marker-color` and `opacity` => `marker-opacity`
+
 ### v8.5.0
 
 - :bug: Fix colour encoding to XML

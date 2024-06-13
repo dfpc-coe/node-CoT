@@ -271,9 +271,9 @@ export default class CoT {
             cot.event.point._attributes.hae = String(feature.geometry.coordinates[2] || '0.0');
 
 
-            if (feature.properties.color) {
-                const color = new Color(feature.properties.color || -1761607936);
-                color.a = feature.properties['opacity'] || 128;
+            if (feature.properties['marker-color']) {
+                const color = new Color(feature.properties['marker-color'] || -1761607936);
+                color.a = feature.properties['marker-opacity'] || 128;
                 cot.event.detail.color = { _attributes: { argb: String(color.as_32bit()) } };
             }
         } else if (['Polygon', 'LineString'].includes(feature.geometry.type)) {
@@ -607,8 +607,8 @@ export default class CoT {
 
         if (raw.event.detail.color && raw.event.detail.color._attributes && raw.event.detail.color._attributes.argb) {
             const color = new Color(Number(raw.event.detail.color._attributes.argb));
-            feat.properties.color = color.as_hex();
-            feat.properties.opacity = color.as_opacity();
+            feat.properties['marker-color'] = color.as_hex();
+            feat.properties['marker-opacity'] = color.as_opacity();
         }
 
         feat.properties.metadata = this.metadata;
