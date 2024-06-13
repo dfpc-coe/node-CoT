@@ -581,12 +581,6 @@ export default class CoT {
                 feat.properties['stroke-style'] = raw.event.detail.strokeStyle._attributes.value;
             }
 
-            if (raw.event.detail.color && raw.event.detail.color._attributes && raw.event.detail.color._attributes.argb) {
-                const color = new Color(Number(raw.event.detail.strokeColor._attributes.value));
-                feat.properties.color = color.as_hex();
-                feat.properties.opacity = color.as_opacity();
-            }
-
             if (raw.event._attributes.type === 'u-d-r' || (coordinates[0][0] === coordinates[coordinates.length -1][0] && coordinates[0][1] === coordinates[coordinates.length -1][1])) {
                 if (raw.event._attributes.type === 'u-d-r') {
                     // CoT rectangles are only 4 points - GeoJSON needs to be closed
@@ -609,6 +603,12 @@ export default class CoT {
                     coordinates
                 }
             }
+        }
+
+        if (raw.event.detail.color && raw.event.detail.color._attributes && raw.event.detail.color._attributes.argb) {
+            const color = new Color(Number(raw.event.detail.color._attributes.argb));
+            feat.properties.color = color.as_hex();
+            feat.properties.opacity = color.as_opacity();
         }
 
         feat.properties.metadata = this.metadata;
