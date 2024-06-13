@@ -96,6 +96,8 @@ Styles can also be applied to features using the following
 
 | Property                          | Description |
 | --------------------------------- | ----------- |
+| `.properties.marker-color`        | Point |
+| `.properties.marker-opacity`      | Point |
 | `.properties.stroke`              | Polygon/LineString |
 | `.properties.stroke-opacity`      | Polygon/LineString: Int from 0-256 |
 | `.properties.stroke-width`        | Polygon/LineString |
