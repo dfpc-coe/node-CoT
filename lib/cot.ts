@@ -273,12 +273,12 @@ export default class CoT {
 
             if (feature.properties['marker-color']) {
                 const color = new Color(feature.properties['marker-color'] || -1761607936);
-                color.a = feature.properties['marker-opacity'] || 128;
+                color.a = feature.properties['marker-opacity'] !== undefined ? feature.properties['marker-opacity'] * 255 : 128;
                 cot.event.detail.color = { _attributes: { argb: String(color.as_32bit()) } };
             }
         } else if (['Polygon', 'LineString'].includes(feature.geometry.type)) {
             const stroke = new Color(feature.properties.stroke || -1761607936);
-            stroke.a = feature.properties['stroke-opacity'] || 128;
+            stroke.a = feature.properties['stroke-opacity'] !== undefined ? feature.properties['stroke-opacity'] * 255 : 128;
             cot.event.detail.strokeColor = { _attributes: { value: String(stroke.as_32bit()) } };
 
             if (!feature.properties['stroke-width']) feature.properties['stroke-width'] = 3;
@@ -316,7 +316,7 @@ export default class CoT {
                 }
 
                 const fill = new Color(feature.properties.fill || -1761607936);
-                fill.a = feature.properties['fill-opacity'] || 128;
+                fill.a = feature.properties['fill-opacity'] !== undefined ? feature.properties['fill-opacity'] * 255 : 128;
                 cot.event.detail.fillColor = { _attributes: { value: String(fill.as_32bit()) } };
             }
 
@@ -570,7 +570,7 @@ export default class CoT {
             if (raw.event.detail.strokeColor && raw.event.detail.strokeColor._attributes && raw.event.detail.strokeColor._attributes.value) {
                 const stroke = new Color(Number(raw.event.detail.strokeColor._attributes.value));
                 feat.properties.stroke = stroke.as_hex();
-                feat.properties['stroke-opacity'] = stroke.as_opacity();
+                feat.properties['stroke-opacity'] = stroke.as_opacity() / 255;
             }
 
             if (raw.event.detail.strokeWeight && raw.event.detail.strokeWeight._attributes && raw.event.detail.strokeWeight._attributes.value) {
@@ -594,7 +594,7 @@ export default class CoT {
 
                 if (raw.event.detail.fillColor && raw.event.detail.fillColor._attributes && raw.event.detail.fillColor._attributes.value) {
                     const fill = new Color(Number(raw.event.detail.fillColor._attributes.value));
-                    feat.properties['fill-opacity'] = fill.as_opacity();
+                    feat.properties['fill-opacity'] = fill.as_opacity() / 255;
                     feat.properties['fill'] = fill.as_hex();
                 }
             } else {
@@ -608,7 +608,7 @@ export default class CoT {
         if (raw.event.detail.color && raw.event.detail.color._attributes && raw.event.detail.color._attributes.argb) {
             const color = new Color(Number(raw.event.detail.color._attributes.argb));
             feat.properties['marker-color'] = color.as_hex();
-            feat.properties['marker-opacity'] = color.as_opacity();
+            feat.properties['marker-opacity'] = color.as_opacity() / 255;
         }
 
         feat.properties.metadata = this.metadata;

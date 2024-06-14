@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v9.0.0
+
+- :rocket: Use opacity values between `0-1` instead of TAK style values `0-255` for better interop with external data
+
 ### v8.5.2
 
 - :arrow_up: Update Core Deps

@@ -10,10 +10,10 @@
         "stale": "2023-08-04T15:17:43.649Z",
         "center": [-108.44547861831613,39.080930442851155,0],
         "stroke": "#FFFFFF",
-        "stroke-opacity": 128,
+        "stroke-opacity": 0.4,
         "stroke-width": 3,
         "stroke-style": "solid",
-        "fill-opacity": 128,
+        "fill-opacity": 0.4,
         "fill": "#000000",
         "metadata": {}
     },

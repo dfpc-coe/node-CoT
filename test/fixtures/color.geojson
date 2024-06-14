@@ -7,7 +7,7 @@
         "callsign": "Blue Colour",
         "center": [ 1.1, 2.2, 0 ],
         "marker-color": "#0000FF",
-        "marker-opacity": 128,
+        "marker-opacity": 0.4,
         "time": "2023-08-04T15:17:43.649Z",
         "start": "2023-08-04T15:17:43.649Z",
         "stale": "2023-08-04T15:17:43.649Z",
