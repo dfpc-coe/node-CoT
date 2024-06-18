@@ -150,17 +150,18 @@ These are less common properties that can be used:
 
 <p align='center'><strong>Mission Sync</strong></p>
 
-| CoT Type          | Notes |
-| ----------------- | ----- |
-| `t-x-m`           | Mission |
-| `t-x-m-n`         | Mission Created |
-| `t-x-m-d`         | Mission Deleted |
-| `t-x-m-i`         | Mission Invite Notification |
-| `t-x-m-c`         | Mission Change |
-| `t-x-m-c-l`       | Mission Change: Log |
-| `t-x-m-c-e`       | Mission Change: External |
-| `t-x-m-c-m`       | Mission Change: Metadata |
-| `t-x-m-c-k`       | Mission Change: Keywords |
+| CoT Type          | Notes                         |
+| ----------------- | ----------------------------- |
+| `t-x-m`           | Mission                       |
+| `t-x-m-n`         | Mission Created               |
+| `t-x-m-d`         | Mission Deleted               |
+| `t-x-m-i`         | Mission Invite Notification   |
+| `t-x-m-c`         | Mission Change                |
+| `t-x-m-c-h`       | Mission Change: Layer         |
+| `t-x-m-c-l`       | Mission Change: Log           |
+| `t-x-m-c-e`       | Mission Change: External      |
+| `t-x-m-c-m`       | Mission Change: Metadata      |
+| `t-x-m-c-k`       | Mission Change: Keywords      |
 
 <p align='center'><strong>Special</strong></p>
 

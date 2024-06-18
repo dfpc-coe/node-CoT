@@ -64,6 +64,10 @@ export const GenericAttributes = Type.Object({
     }))
 })
 
+export const GenericText = Type.Object({
+    _text: Type.String()
+})
+
 export const TrackAttributes = Type.Object({
     speed: Type.Optional(Type.String()),
     course: Type.Optional(Type.String()),
@@ -75,6 +79,25 @@ export const TrackAttributes = Type.Object({
 
 export const Track = Type.Object({
     _attributes: Type.Optional(TrackAttributes)
+})
+
+export const MissionAttributes = Type.Object({
+    type: Type.Optional(Type.String()),
+    tool: Type.Optional(Type.String()),
+    name: Type.Optional(Type.String()),
+    authorUid: Type.Optional(Type.String()),
+});
+
+export const MissionLayer = Type.Object({
+    name: Type.Optional(GenericText),
+    parentUid: Type.Optional(GenericText),
+    type: Type.Optional(GenericText),
+    uid: Type.Optional(GenericText),
+})
+
+export const Mission = Type.Object({
+    _attributes: Type.Optional(MissionAttributes),
+    missionLayer: MissionLayer
 })
 
 export const SensorAttributes = Type.Object({
@@ -248,6 +271,7 @@ export const Detail = Type.Object({
     strokeStyle: Type.Optional(GenericAttributes),
     labels_on: Type.Optional(GenericAttributes),
     fillColor: Type.Optional(GenericAttributes),
+    mission: Type.Optional(Mission),
     link: Type.Optional(Type.Union([Link, Type.Array(Link)])),
     usericon: Type.Optional(UserIcon),
     track: Type.Optional(Track),
