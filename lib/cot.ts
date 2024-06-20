@@ -3,7 +3,7 @@ import Err from '@openaddresses/batch-error';
 import { diff } from 'json-diff-ts';
 import xmljs from 'xml-js';
 import { Static } from '@sinclair/typebox';
-import { Feature, InputFeature } from './feature.js';
+import { Feature, InputFeature, FeaturePropertyMission, FeaturePropertyMissionLayer } from './feature.js';
 import { AllGeoJSON } from "@turf/helpers";
 import Util from './util.js';
 import Color from './color.js';
@@ -255,6 +255,37 @@ export default class CoT {
 
         if (feature.properties.icon) {
             cot.event.detail.usericon = { _attributes: { iconsetpath: feature.properties.icon } }
+        }
+
+        if (feature.properties.mission) {
+            cot.event.detail.mission = {
+                _attributes: {
+                    type: feature.properties.mission.type,
+                    tool: feature.properties.mission.tool,
+                    name: feature.properties.mission.name,
+                    authorUid: feature.properties.mission.authorUid,
+                }
+            }
+
+            if (feature.properties.mission.missionLayer) {
+                cot.event.detail.mission.missionLayer = {};
+
+                if (feature.properties.mission.missionLayer.name) {
+                    cot.event.detail.mission.missionLayer.name = { _text: feature.properties.mission.missionLayer.name };
+                }
+
+                if (feature.properties.mission.missionLayer.parentUid) {
+                    cot.event.detail.mission.missionLayer.parentUid = { _text: feature.properties.mission.missionLayer.parentUid };
+                }
+
+                if (feature.properties.mission.missionLayer.type) {
+                    cot.event.detail.mission.missionLayer.type = { _text: feature.properties.mission.missionLayer.type };
+                }
+
+                if (feature.properties.mission.missionLayer.uid) {
+                    cot.event.detail.mission.missionLayer.uid = { _text: feature.properties.mission.missionLayer.uid };
+                }
+            }
         }
 
         cot.event.detail.remarks = { _attributes: { }, _text: feature.properties.remarks || '' };
@@ -553,6 +584,33 @@ export default class CoT {
 
         if (raw.event.detail.status && raw.event.detail.status._attributes) {
             feat.properties.status = raw.event.detail.status._attributes;
+        }
+
+        if (raw.event.detail.mission && raw.event.detail.mission._attributes) {
+            const mission: Static<typeof FeaturePropertyMission> = {
+                ...raw.event.detail.mission._attributes
+            };
+
+            if (raw.event.detail.mission && raw.event.detail.mission.missionLayer) {
+                const missionLayer: Static<typeof FeaturePropertyMissionLayer> = {};
+
+                if (raw.event.detail.mission.missionLayer.name && raw.event.detail.mission.missionLayer.name._text) {
+                    missionLayer.name = raw.event.detail.mission.missionLayer.name._text;
+                }
+                if (raw.event.detail.mission.missionLayer.parentUid && raw.event.detail.mission.missionLayer.parentUid._text) {
+                    missionLayer.parentUid = raw.event.detail.mission.missionLayer.parentUid._text;
+                }
+                if (raw.event.detail.mission.missionLayer.type && raw.event.detail.mission.missionLayer.type._text) {
+                    missionLayer.type = raw.event.detail.mission.missionLayer.type._text;
+                }
+                if (raw.event.detail.mission.missionLayer.uid && raw.event.detail.mission.missionLayer.uid._text) {
+                    missionLayer.uid = raw.event.detail.mission.missionLayer.uid._text;
+                }
+
+                mission.missionLayer = missionLayer;
+            }
+
+            feat.properties.mission = mission;
         }
 
         if (raw.event.detail.precisionlocation && raw.event.detail.precisionlocation._attributes) {

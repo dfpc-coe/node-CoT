@@ -16,6 +16,22 @@ export const Position = Type.Array(Type.Number(), {
     minItems: 2,
     maxItems: 3
 })
+
+export const FeaturePropertyMissionLayer = Type.Object({
+    name: Type.Optional(Type.String()),
+    parentUid: Type.Optional(Type.String()),
+    type: Type.Optional(Type.String()),
+    uid: Type.Optional(Type.String()),
+})
+
+export const FeaturePropertyMission = Type.Object({
+    type: Type.Optional(Type.String()),
+    tool: Type.Optional(Type.String()),
+    name: Type.Optional(Type.String()),
+    authorUid: Type.Optional(Type.String()),
+    missionLayer: Type.Optional(FeaturePropertyMissionLayer)
+});
+
 export const InputProperties = Type.Object({
     callsign: Type.Optional(Type.String({ default: 'UNKNOWN' })),
     type: Type.Optional(Type.String({ default: 'a-f-g' })),
@@ -42,18 +58,7 @@ export const InputProperties = Type.Object({
         endpoint: Type.Optional(Type.String())
     })),
     remarks: Type.Optional(Type.String()),
-    mission: Type.Optional(Type.Object({
-        type: Type.Optional(Type.String()),
-        tool: Type.Optional(Type.String()),
-        name: Type.Optional(Type.String()),
-        authorUid: Type.Optional(Type.String()),
-        missionLayer: Type.Optional(Type.Object({
-            name: Type.Optional(Type.String()),
-            parentUid: Type.Optional(Type.String()),
-            type: Type.Optional(Type.String()),
-            uid: Type.Optional(Type.String()),
-        }))
-    })),
+    mission: Type.Optional(FeaturePropertyMission),
     fileshare: Type.Optional(FileShareAttributes),
     sensor: Type.Optional(SensorAttributes),
     video: Type.Optional(VideoAttributes),
@@ -104,18 +109,7 @@ export const Properties = Type.Object({
         endpoint: Type.Optional(Type.String())
     })),
     remarks: Type.Optional(Type.String()),
-    mission: Type.Optional(Type.Object({
-        type: Type.Optional(Type.String()),
-        tool: Type.Optional(Type.String()),
-        name: Type.Optional(Type.String()),
-        authorUid: Type.Optional(Type.String()),
-        missionLayer: Type.Optional(Type.Object({
-            name: Type.Optional(Type.String()),
-            parentUid: Type.Optional(Type.String()),
-            type: Type.Optional(Type.String()),
-            uid: Type.Optional(Type.String()),
-        }))
-    })),
+    mission: Type.Optional(FeaturePropertyMission),
     fileshare: Type.Optional(FileShareAttributes),
     sensor: Type.Optional(SensorAttributes),
     video: Type.Optional(VideoAttributes),

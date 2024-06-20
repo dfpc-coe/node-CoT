@@ -97,7 +97,7 @@ export const MissionLayer = Type.Object({
 
 export const Mission = Type.Object({
     _attributes: Type.Optional(MissionAttributes),
-    missionLayer: MissionLayer
+    missionLayer: Type.Optional(MissionLayer),
 })
 
 export const SensorAttributes = Type.Object({

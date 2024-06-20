@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v9.1.0
+
+- :rocket: Add support for `mission` & `missionLayer` Tags
+
 ### v9.0.0
 
 - :rocket: Use opacity values between `0-1` instead of TAK style values `0-255` for better interop with external data
