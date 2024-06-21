@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v9.3.0
+
+- :rocket: Add support for `geofence` property
+
 ### v9.2.0
 
 - :white_check_mark: Add missionLayer test

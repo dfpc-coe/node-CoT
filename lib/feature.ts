@@ -1,6 +1,7 @@
 import { Type } from '@sinclair/typebox';
 import {
     GroupAttributes,
+    GeofenceAttributes,
     StatusAttributes,
     PrecisionLocationAttributes,
     MartiDestAttributes,
@@ -53,6 +54,7 @@ export const InputProperties = Type.Object({
     'fill-opacity': Type.Optional(Type.Number({ minimum: 0, maximum: 1 })),
     metadata: Type.Optional(Type.Record(Type.String(), Type.Unknown())),
     archived: Type.Optional(Type.Boolean()),
+    geofence: Type.Optional(GeofenceAttributes),
     contact: Type.Optional(Type.Object({
         phone: Type.Optional(Type.String()),
         endpoint: Type.Optional(Type.String())
@@ -104,6 +106,7 @@ export const Properties = Type.Object({
     'fill-opacity': Type.Optional(Type.Number({ minimum: 0, maximum: 1 })),
     metadata: Type.Optional(Type.Record(Type.String(), Type.Unknown())),
     archived: Type.Optional(Type.Boolean()),
+    geofence: Type.Optional(GeofenceAttributes),
     contact: Type.Optional(Type.Object({
         phone: Type.Optional(Type.String()),
         endpoint: Type.Optional(Type.String())

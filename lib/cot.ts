@@ -211,6 +211,10 @@ export default class CoT {
             cot.event.detail.takv = { _attributes: { ...feature.properties.takv } };
         }
 
+        if (feature.properties.geofence) {
+            cot.event.detail.__geofence = { _attributes: { ...feature.properties.geofence } };
+        }
+
         if (feature.properties.sensor) {
             cot.event.detail.sensor = { _attributes: { ...feature.properties.sensor } };
         }
@@ -521,6 +525,10 @@ export default class CoT {
 
         if (raw.event.detail.__video) {
             feat.properties.video = raw.event.detail.__video._attributes;
+        }
+
+        if (raw.event.detail.__geofence) {
+            feat.properties.geofence = raw.event.detail.__geofence._attributes;
         }
 
         if (raw.event.detail.link) {

@@ -127,6 +127,20 @@ export const Video = Type.Object({
     _attributes: VideoAttributes
 })
 
+export const GeofenceAttributes = Type.Object({
+    elevationMonitored: Type.Optional(Type.Boolean()),
+    minElevation: Type.Optional(Type.String()),
+    maxElevation: Type.Optional(Type.String()),
+    monitor: Type.Optional(Type.String()),
+    trigger: Type.Optional(Type.String()),
+    tracking: Type.Optional(Type.String()),
+    boundingSphere: Type.Optional(Type.Number()),
+});
+
+export const Geofence = Type.Object({
+    _attributes: GeofenceAttributes
+})
+
 export const Chat = Type.Object({
     _attributes: Type.Object({
         parent: Type.Optional(Type.String()),
@@ -257,6 +271,7 @@ export const Detail = Type.Object({
     '__group': Type.Optional(Group),
     '__chat': Type.Optional(Chat),
     '__video': Type.Optional(Video),
+    '__geofence': Type.Optional(Geofence),
     '_flow-tags_': Type.Optional(FlowTags),
     uid: Type.Optional(Uid),
     status: Type.Optional(Status),
