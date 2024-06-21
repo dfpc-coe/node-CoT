@@ -10,6 +10,11 @@
 
 ## Version History
 
+### v9.2.0
+
+- :white_check_mark: Add missionLayer test
+- :rocket: Add `DEBUG_COTS` debug output
+
 ### v9.1.0
 
 - :rocket: Add support for `mission` & `missionLayer` Tags

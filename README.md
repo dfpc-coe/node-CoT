@@ -40,6 +40,17 @@ cot.to_xml();       // Output String XML Representation
 cot.raw; // JSON XML Representation
 ```
 
+### Debugging
+
+If the Environment Variable `DEBUG_COTS` is truthy
+ie:
+
+```
+export DEBUG_COTS=1
+```
+
+Then the raw JSONified XML will be printed on each constructor invocation.
+
 ## CoT Spec
 
 The CoT Spec is very informally developed by rough internal concensus

@@ -59,6 +59,8 @@ export default class CoT {
 
         if (!this.raw.event._attributes.uid) this.raw.event._attributes.uid = Util.cot_uuid();
 
+        if (process.env.DEBUG_COTS) console.log(JSON.stringify(this.raw))
+
         checkXML(this.raw);
         if (checkXML.errors) throw new Err(400, null, `${checkXML.errors[0].message} (${checkXML.errors[0].instancePath})`);
 
@@ -67,7 +69,6 @@ export default class CoT {
         this.raw.event.detail['_flow-tags_'][`NodeCoT-${pkg.version}`] = new Date().toISOString()
 
         if (this.raw.event.detail.archived && Object.keys(this.raw.event.detail.archived).length === 0) this.raw.event.detail.archived = { _attributes: {} };
-
     }
 
     /**
