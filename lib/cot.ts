@@ -731,7 +731,19 @@ export default class CoT {
                 }
             }
 
-            // TODO Shape:Polyline also has fillColor/color - if both this and top level exist, what to do?
+            if (raw.event.detail.shape.polyline._attributes && raw.event.detail.shape.polyline._attributes) {
+                if (raw.event.detail.shape.polyline._attributes.fillColor) {
+                    const fill = new Color(Number(raw.event.detail.shape.polyline._attributes.fillColor));
+                    feat.properties['fill-opacity'] = fill.as_opacity() / 255;
+                    feat.properties['fill'] = fill.as_hex();
+                }
+
+                if (raw.event.detail.shape.polyline._attributes.color) {
+                    const stroke = new Color(Number(raw.event.detail.shape.polyline._attributes.color));
+                    feat.properties.stroke = stroke.as_hex();
+                    feat.properties['stroke-opacity'] = stroke.as_opacity() / 255;
+                }
+            }
         }
 
         if (raw.event.detail.color && raw.event.detail.color._attributes && raw.event.detail.color._attributes.argb) {
