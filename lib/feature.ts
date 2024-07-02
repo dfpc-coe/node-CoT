@@ -1,6 +1,7 @@
 import { Type } from '@sinclair/typebox';
 import {
     GroupAttributes,
+    ShapeEllipseAttributes,
     GeofenceAttributes,
     StatusAttributes,
     PrecisionLocationAttributes,
@@ -59,6 +60,9 @@ export const InputProperties = Type.Object({
         phone: Type.Optional(Type.String()),
         endpoint: Type.Optional(Type.String())
     })),
+    shape: Type.Optional(Type.Object({
+        ellipse: Type.Optional(ShapeEllipseAttributes)
+    })),
     remarks: Type.Optional(Type.String()),
     mission: Type.Optional(FeaturePropertyMission),
     fileshare: Type.Optional(FileShareAttributes),
@@ -110,6 +114,9 @@ export const Properties = Type.Object({
     contact: Type.Optional(Type.Object({
         phone: Type.Optional(Type.String()),
         endpoint: Type.Optional(Type.String())
+    })),
+    shape: Type.Optional(Type.Object({
+        ellipse: Type.Optional(ShapeEllipseAttributes)
     })),
     remarks: Type.Optional(Type.String()),
     mission: Type.Optional(FeaturePropertyMission),

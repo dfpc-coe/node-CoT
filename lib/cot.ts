@@ -3,11 +3,12 @@ import Err from '@openaddresses/batch-error';
 import { diff } from 'json-diff-ts';
 import xmljs from 'xml-js';
 import { Static } from '@sinclair/typebox';
-import { Feature, InputFeature, FeaturePropertyMission, FeaturePropertyMissionLayer } from './feature.js';
+import { Feature, Polygon, InputFeature, FeaturePropertyMission, FeaturePropertyMissionLayer } from './feature.js';
 import { AllGeoJSON } from "@turf/helpers";
+import PointOnFeature from '@turf/point-on-feature';
+import Ellipse from '@turf/ellipse';
 import Util from './util.js';
 import Color from './color.js';
-import PointOnFeature from '@turf/point-on-feature';
 import JSONCoT, { MartiDest, MartiDestAttributes, Link, LinkAttributes } from './types.js'
 import AJV from 'ajv';
 import fs from 'fs';
@@ -311,6 +312,21 @@ export default class CoT {
                 const color = new Color(feature.properties['marker-color'] || -1761607936);
                 color.a = feature.properties['marker-opacity'] !== undefined ? feature.properties['marker-opacity'] * 255 : 128;
                 cot.event.detail.color = { _attributes: { argb: String(color.as_32bit()) } };
+            }
+        } else if (feature.geometry.type === 'Polygon' && feature.properties.type === 'u-d-c-c') {
+            if (!feature.properties.shape || !feature.properties.shape.ellipse) {
+                throw new Err(400, null, 'u-d-c-c (Circle) must define a feature.properties.shape.ellipse property')
+            }
+            cot.event.detail.shape = { ellipse: { _attributes: feature.properties.shape.ellipse } }
+
+            if (feature.properties.center) {
+                cot.event.point._attributes.lon = String(feature.properties.center[0]);
+                cot.event.point._attributes.lat = String(feature.properties.center[1]);
+            } else {
+                const centre = PointOnFeature(feature as AllGeoJSON);
+                cot.event.point._attributes.lon = String(centre.geometry.coordinates[0]);
+                cot.event.point._attributes.lat = String(centre.geometry.coordinates[1]);
+                cot.event.point._attributes.hae = '0.0';
             }
         } else if (['Polygon', 'LineString'].includes(feature.geometry.type)) {
             const stroke = new Color(feature.properties.stroke || -1761607936);
@@ -670,6 +686,24 @@ export default class CoT {
                     coordinates
                 }
             }
+        } else if (raw.event._attributes.type.startsWith('u-d-c-c')) {
+            const ellipse = {
+                major: Number(raw.event.detail.shape.ellipse._attributes.major),
+                minor: Number(raw.event.detail.shape.ellipse._attributes.minor),
+                angle: Number(raw.event.detail.shape.ellipse._attributes.angle)
+            }
+
+            feat.geometry = Ellipse(
+                feat.geometry.coordinates as number[],
+                Number(ellipse.major) / 1000,
+                Number(ellipse.minor) / 1000,
+                {
+                    angle: ellipse.angle
+                }
+            ).geometry as Static<typeof Polygon>;
+
+            feat.properties.shape = {};
+            feat.properties.shape.ellipse = ellipse;
         } else if (raw.event._attributes.type.startsWith('b-m-p-s-p-i')) {
             // TODO: Currently the "shape" tag is only parsed here - asking ARA for clarification if it is a general use tag
             if (raw.event.detail.shape && raw.event.detail.shape.polyline && raw.event.detail.shape.polyline.vertex) {
