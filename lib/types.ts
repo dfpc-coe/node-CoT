@@ -150,7 +150,7 @@ export const Video = Type.Object({
 })
 
 export const GeofenceAttributes = Type.Object({
-    elevationMonitored: Type.Optional(Type.Boolean()),
+    elevationMonitored: Type.Optional(Type.String()),
     minElevation: Type.Optional(Type.String()),
     maxElevation: Type.Optional(Type.String()),
     monitor: Type.Optional(Type.String()),
