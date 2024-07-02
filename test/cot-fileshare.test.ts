@@ -64,6 +64,11 @@ test('Decode MultiMissionAircraft CoTs', (t) => {
                 time: '2024-07-02T17:13:20Z',
                 start: '2024-07-02T17:13:19Z',
                 stale: '2024-07-02T17:13:29Z',
+                ackrequest: {                                                                                                                                                
+                    "uid": "814d0d4a-3339-4fd2-8e09-0556444112f3",                     
+                    "ackrequested": "true",                                                                                                                                  
+                    "tag": "20240615_144641.jpg"                                                                                                                             
+                },
                 fileshare: {
                     "filename": "20240615_144641.jpg.zip",
                     "senderUrl": "https://18.254.242.65:8443/Marti/sync/content?hash=c18e00d123057a8e33107e91ab02f999ecc6f849aed2a41b84e237ff36106a4e",

@@ -1,6 +1,7 @@
 import { Type } from '@sinclair/typebox';
 import {
     GroupAttributes,
+    ACKRequestAttributes,
     ShapeEllipseAttributes,
     GeofenceAttributes,
     StatusAttributes,
@@ -66,6 +67,7 @@ export const InputProperties = Type.Object({
     remarks: Type.Optional(Type.String()),
     mission: Type.Optional(FeaturePropertyMission),
     fileshare: Type.Optional(FileShareAttributes),
+    ackrequest: Type.Optional(ACKRequestAttributes),
     sensor: Type.Optional(SensorAttributes),
     video: Type.Optional(VideoAttributes),
     links: Type.Optional(Type.Array(LinkAttributes)),
@@ -121,6 +123,7 @@ export const Properties = Type.Object({
     remarks: Type.Optional(Type.String()),
     mission: Type.Optional(FeaturePropertyMission),
     fileshare: Type.Optional(FileShareAttributes),
+    ackrequest: Type.Optional(ACKRequestAttributes),
     sensor: Type.Optional(SensorAttributes),
     video: Type.Optional(VideoAttributes),
     links: Type.Optional(Type.Array(LinkAttributes)),

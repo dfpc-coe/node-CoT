@@ -224,6 +224,10 @@ export default class CoT {
             cot.event.detail.sensor = { _attributes: { ...feature.properties.sensor } };
         }
 
+        if (feature.properties.ackrequest) {
+            cot.event.detail.ackrequest = { _attributes: { ...feature.properties.ackrequest } };
+        }
+
         if (feature.properties.video) {
             cot.event.detail.__video = { _attributes: { ...feature.properties.video } };
         }
@@ -549,6 +553,10 @@ export default class CoT {
 
         if (raw.event.detail.__geofence) {
             feat.properties.geofence = raw.event.detail.__geofence._attributes;
+        }
+
+        if (raw.event.detail.ackrequest) {
+            feat.properties.ackrequest = raw.event.detail.ackrequest._attributes;
         }
 
         if (raw.event.detail.link) {
