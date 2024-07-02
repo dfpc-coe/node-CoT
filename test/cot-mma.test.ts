@@ -90,13 +90,14 @@ test('Decode MultiMissionAircraft CoTs', (t) => {
                 },
             },
             geometry: {
-                type: 'LineString',
-                coordinates: [
+                type: 'Polygon',
+                coordinates: [ [
                     [ -108.328368, 40.059445 ],
                     [ -108.314776, 40.061846 ],
                     [ -108.315566, 40.075499 ],
-                    [ -108.330782, 40.071252 ]
-                ]
+                    [ -108.330782, 40.071252 ],
+                    [ -108.328368, 40.059445 ],
+                ] ]
             }
         }, cot.to_geojson());
     }

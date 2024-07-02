@@ -94,9 +94,14 @@ export const VertexAttribute = Type.Object({
 
 export const ShapePolyLine = Type.Object({
     _attributes: Type.Optional(ShapePolyLineAttributes),
-    vertex: Type.Array(Type.Object({
-        _attributes: VertexAttribute
-    }))
+    vertex: Type.Union([
+        Type.Object({
+            _attributes: VertexAttribute
+        }),
+        Type.Array(Type.Object({
+            _attributes: VertexAttribute
+        }))
+    ])
 })
 
 export const ShapeEllipseAttributes = Type.Object({
