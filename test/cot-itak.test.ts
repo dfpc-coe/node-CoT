@@ -12,7 +12,7 @@ test('Decode iTAK COT message', (t) => {
         t.ok(cot.raw.event.detail['_flow-tags_']);
         delete cot.raw.event.detail['_flow-tags_'];
 
-        t.deepEquals(cot.raw, {
+        t.deepEquals({
             'event': {
                 '_attributes': {
                     'version': '2.0',
@@ -48,9 +48,9 @@ test('Decode iTAK COT message', (t) => {
                     track: { _attributes: { speed: '0.00000000', course: '137.23542786' } } 
                 }
             }
-        });
+        }, cot.raw);
 
-        t.deepEquals(cot.to_geojson(), {
+        t.deepEquals({
             id: 'C94B9215-9BD4-4DBE-BDE1-83625F09153F',
             type: 'Feature',
             properties: {
@@ -92,7 +92,7 @@ test('Decode iTAK COT message', (t) => {
                 type: 'Point',
                 coordinates: [ -107.72376567, 41.52309645, 1681.23725821 ] 
             }
-        });
+        }, cot.to_geojson());
     }
 
     t.end();

@@ -81,6 +81,28 @@ export const Track = Type.Object({
     _attributes: Type.Optional(TrackAttributes)
 })
 
+export const StrokePolyLineAttributes = Type.Object({
+    closed: Type.Optional(Type.Boolean()),
+    fillColor: Type.Optional(Type.String()),
+    color: Type.Optional(Type.String()),
+})
+
+export const VertexAttribute = Type.Object({
+    lat: Type.Number(),
+    lon: Type.Number(),
+})
+
+export const StrokePolyLine = Type.Object({
+    _attributes: Type.Optional(StrokePolyLineAttributes),
+    vertex: Type.Array(Type.Object({
+        _attributes: VertexAttribute
+    }))
+})
+
+export const Stroke = Type.Object({
+    polyline: Type.Optional(StrokePolyLine),
+})
+
 export const MissionAttributes = Type.Object({
     type: Type.Optional(Type.String()),
     tool: Type.Optional(Type.String()),
@@ -128,7 +150,7 @@ export const Video = Type.Object({
 })
 
 export const GeofenceAttributes = Type.Object({
-    elevationMonitored: Type.Optional(Type.Boolean()),
+    elevationMonitored: Type.Optional(Type.String()),
     minElevation: Type.Optional(Type.String()),
     maxElevation: Type.Optional(Type.String()),
     monitor: Type.Optional(Type.String()),
@@ -287,6 +309,7 @@ export const Detail = Type.Object({
     labels_on: Type.Optional(GenericAttributes),
     fillColor: Type.Optional(GenericAttributes),
     mission: Type.Optional(Mission),
+    stroke: Type.Optional(Stroke),
     link: Type.Optional(Type.Union([Link, Type.Array(Link)])),
     usericon: Type.Optional(UserIcon),
     track: Type.Optional(Track),

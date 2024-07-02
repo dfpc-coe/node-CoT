@@ -670,6 +670,21 @@ export default class CoT {
                     coordinates
                 }
             }
+        } else if (raw.event._attributes.type.startsWith('b-m-p-s-p-i')) {
+            // TODO: Currently the "shape" tag is only parsed here - asking ARA for clarification if it is a general use tag
+            if (raw.event.detail.shape && raw.event.detail.shape.polyline && raw.event.detail.shape.polyline.vertex) {
+                const coordinates = [];
+                for (const v of raw.event.detail.shape.polyline.vertex) {
+                    coordinates.push([Number(v._attributes.lon), Number(v._attributes.lat)]);
+                }
+
+                feat.geometry = {
+                    type: 'LineString',
+                    coordinates
+                }
+            }
+
+            // TODO Shape:Polyline also has fillColor/color - if both this and top level exist, what to do?
         }
 
         if (raw.event.detail.color && raw.event.detail.color._attributes && raw.event.detail.color._attributes.argb) {
