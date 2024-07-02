@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v9.8.0
+
+- :rocket: Hoise Polyline Styles to top level geojson style
+
 ### v9.7.0
 
 - :rocket: support closing polylines and point polylines
