@@ -6,12 +6,16 @@ import { Static } from '@sinclair/typebox';
 import { Feature, Polygon, InputFeature, FeaturePropertyMission, FeaturePropertyMissionLayer } from './feature.js';
 import { AllGeoJSON } from "@turf/helpers";
 import PointOnFeature from '@turf/point-on-feature';
+import Truncate from '@turf/truncate';
 import Ellipse from '@turf/ellipse';
 import Util from './util.js';
 import Color from './color.js';
 import JSONCoT, { MartiDest, MartiDestAttributes, Link, LinkAttributes } from './types.js'
 import AJV from 'ajv';
 import fs from 'fs';
+
+// GeoJSON Geospatial ops will truncate to the below
+const COORDINATE_PRECISION = 6;
 
 const RootMessage = await protobuf.load(new URL('./proto/cotevent.proto', import.meta.url).pathname);
 
@@ -693,14 +697,17 @@ export default class CoT {
                 angle: Number(raw.event.detail.shape.ellipse._attributes.angle)
             }
 
-            feat.geometry = Ellipse(
+            feat.geometry = Truncate(Ellipse(
                 feat.geometry.coordinates as number[],
                 Number(ellipse.major) / 1000,
                 Number(ellipse.minor) / 1000,
                 {
                     angle: ellipse.angle
                 }
-            ).geometry as Static<typeof Polygon>;
+            ), {
+                precision: COORDINATE_PRECISION,
+                mutate: true
+            }).geometry as Static<typeof Polygon>;
 
             feat.properties.shape = {};
             feat.properties.shape.ellipse = ellipse;

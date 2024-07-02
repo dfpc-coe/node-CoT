@@ -19,6 +19,7 @@
         "@turf/ellipse": "^7.0.0",
         "@turf/helpers": "^7.0.0",
         "@turf/point-on-feature": "^7.0.0",
+        "@turf/truncate": "^7.0.0",
         "@types/archiver": "^6.0.2",
         "@types/color": "^3.0.3",
         "@types/geojson": "^7946.0.14",
