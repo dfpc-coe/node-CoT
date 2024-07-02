@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v9.5.0
+
+- :rocket: Add support for Circles
+
 ### v9.4.0
 
 - :rocket: Add support for Targeting
