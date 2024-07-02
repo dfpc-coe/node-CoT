@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v9.7.0
+
+- :rocket: support closing polylines and point polylines
+
 ### v9.6.0
 
 - :rocket: Add truncation to Ellipse outputs (including circle)

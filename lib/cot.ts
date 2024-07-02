@@ -715,13 +715,19 @@ export default class CoT {
             // TODO: Currently the "shape" tag is only parsed here - asking ARA for clarification if it is a general use tag
             if (raw.event.detail.shape && raw.event.detail.shape.polyline && raw.event.detail.shape.polyline.vertex) {
                 const coordinates = [];
-                for (const v of raw.event.detail.shape.polyline.vertex) {
+
+                const vertices = Array.isArray(raw.event.detail.shape.polyline.vertex) ? raw.event.detail.shape.polyline.vertex : [raw.event.detail.shape.polyline.vertex];
+                for (const v of vertices) {
                     coordinates.push([Number(v._attributes.lon), Number(v._attributes.lat)]);
                 }
 
-                feat.geometry = {
-                    type: 'LineString',
-                    coordinates
+                if (coordinates.length === 1) {
+                    feat.geometry = { type: 'Point', coordinates: coordinates[0] }
+                } else if (raw.event.detail.shape.polyline._attributes && raw.event.detail.shape.polyline._attributes.closed === 'true') {
+                    coordinates.push(coordinates[0]);
+                    feat.geometry = { type: 'Polygon', coordinates: [coordinates] }
+                } else {
+                    feat.geometry = { type: 'LineString', coordinates }
                 }
             }
 
