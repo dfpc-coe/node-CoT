@@ -689,6 +689,8 @@ export default class CoT {
                     coordinates
                 }
             }
+
+            // TODO Shape:Polyline also has fillColor/color - if both this and top level exist, what to do?
         }
 
         feat.properties.metadata = this.metadata;
