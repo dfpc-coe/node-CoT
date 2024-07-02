@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v9.9.0
+
+- :rocket: Surface `ackrequest` in GeoJSON
+
 ### v9.8.0
 
 - :rocket: Hoise Polyline Styles to top level geojson style
