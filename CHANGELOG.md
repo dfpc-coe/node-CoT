@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v9.4.0
+
+- :rocket: Add support for Targeting
+
 ### v9.3.0
 
 - :rocket: Add support for `geofence` property
