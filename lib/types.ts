@@ -83,13 +83,13 @@ export const Track = Type.Object({
 
 export const StrokePolyLineAttributes = Type.Object({
     closed: Type.Optional(Type.Boolean()),
-    fillColor: Type.Optional(Type.Integer()),
-    color: Type.Optional(Type.Integer()),
+    fillColor: Type.Optional(Type.String()),
+    color: Type.Optional(Type.String()),
 })
 
 export const VertexAttribute = Type.Object({
-    lat: Type.Optional(Type.Number()),
-    lon: Type.Optional(Type.Number()),
+    lat: Type.Number(),
+    lon: Type.Number(),
 })
 
 export const StrokePolyLine = Type.Object({
