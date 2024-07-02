@@ -81,6 +81,28 @@ export const Track = Type.Object({
     _attributes: Type.Optional(TrackAttributes)
 })
 
+export const StrokePolyLineAttributes = Type.Object({
+    closed: Type.Optional(Type.Boolean()),
+    fillColor: Type.Optional(Type.Integer()),
+    color: Type.Optional(Type.Integer()),
+})
+
+export const VertexAttribute = Type.Object({
+    lat: Type.Optional(Type.Number()),
+    lon: Type.Optional(Type.Number()),
+})
+
+export const StrokePolyLine = Type.Object({
+    _attributes: Type.Optional(StrokePolyLineAttributes),
+    vertex: Type.Array(Type.Object({
+        _attributes: VertexAttribute
+    }))
+})
+
+export const Stroke = Type.Object({
+    polyline: Type.Optional(StrokePolyLine),
+})
+
 export const MissionAttributes = Type.Object({
     type: Type.Optional(Type.String()),
     tool: Type.Optional(Type.String()),
@@ -287,6 +309,7 @@ export const Detail = Type.Object({
     labels_on: Type.Optional(GenericAttributes),
     fillColor: Type.Optional(GenericAttributes),
     mission: Type.Optional(Mission),
+    stroke: Type.Optional(Stroke),
     link: Type.Optional(Type.Union([Link, Type.Array(Link)])),
     usericon: Type.Optional(UserIcon),
     track: Type.Optional(Track),
