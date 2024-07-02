@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v9.6.0
+
+- :rocket: Add truncation to Ellipse outputs (including circle)
+
 ### v9.5.0
 
 - :rocket: Add support for Circles
