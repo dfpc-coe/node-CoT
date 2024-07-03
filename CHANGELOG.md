@@ -10,6 +10,12 @@
 
 ## Version History
 
+### v10.0.0
+
+- :rocket: Move `Feature` and `Types` out of root for cleaner docs
+- :rocket: Add `attachments` suppport for GeoJSON
+- :rocket: Add `attachment_list` suppport for CoTs
+
 ### v9.10.0
 
 - :rocket: Support QuickPic File Relations
