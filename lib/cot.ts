@@ -123,6 +123,13 @@ export default class CoT {
     }
 
     /**
+     * Return the UID of the CoT
+     */
+    uid(): string {
+        return this.raw.event._attributes.uid;
+    }
+
+    /**
      * Add a given Dest tag to a CoT
      */
     addDest(dest: Static<typeof MartiDestAttributes>): void {

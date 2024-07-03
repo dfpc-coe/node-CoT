@@ -190,6 +190,35 @@ export class DataPackage {
     }
 
     /**
+     * Return attachments that are associated in the Manifest with a given CoT
+     * Note: this does not return files that are not associated with a CoT
+     */
+    async attachments(opts = { respectIgnore: true }): Promise<Map<string, Static<typeof ManifestContent>>> {
+        const cots: Map<string, CoT> = new Map();
+        for (const cot of await this.cots(opts)) {
+            cots.set(cot.uid(), cot);
+        }
+
+        const attachments: Map<string, Static<typeof ManifestContent>> = new Map();
+
+        for (const content of this.contents) {
+            if (path.parse(content._attributes.zipEntry).ext === '.cot') continue;
+            if (opts.respectIgnore && content._attributes.ignore) continue;
+
+            const params = Array.isArray(content.Parameter) ? content.Parameter : [content.Parameter];
+
+            for (const param of params) {
+                if (param._attributes.name === 'uid' && cots.has(param._attributes.value)) {
+                    attachments.set(param._attributes.value, content);
+                    break;
+                }
+            }
+        }
+
+        return attachments;
+    }
+
+    /**
      * Add a CoT marker to the Package
      */
     async addCoT(cot: CoT, opts: {
