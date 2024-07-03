@@ -161,7 +161,7 @@ export class DataPackage {
     }
 
     #addContent(zipEntry: string, uid: string, name: string, ignore = false): void {
-        if (this.destroyed) throw new Err(400, null, 'Attempt to access Data Package after it has been destoryed');
+        if (this.destroyed) throw new Err(400, null, 'Attempt to access Data Package after it has been destroyed');
         this.contents.push({
             _attributes: { ignore: ignore, zipEntry },
             Parameter: [{
@@ -176,7 +176,7 @@ export class DataPackage {
      * Return CoT objects for all CoT type features in the Data Package
      */
     async cots(opts = { respectIgnore: true }): Promise<Array<CoT>> {
-        if (this.destroyed) throw new Err(400, null, 'Attempt to access Data Package after it has been destoryed');
+        if (this.destroyed) throw new Err(400, null, 'Attempt to access Data Package after it has been destroyed');
 
         const cots: CoT[] = [];
         for (const content of this.contents) {
@@ -197,7 +197,7 @@ export class DataPackage {
     } = {
         ignore: false
     }): Promise<void> {
-        if (this.destroyed) throw new Err(400, null, 'Attempt to access Data Package after it has been destoryed');
+        if (this.destroyed) throw new Err(400, null, 'Attempt to access Data Package after it has been destroyed');
 
         let name = 'Unknown';
         if (cot.raw.event.detail && cot.raw.event.detail.contact) {
@@ -223,7 +223,7 @@ export class DataPackage {
      * affect the ability of the class to continue building a Package
      */
     async finalize(): Promise<string> {
-        if (this.destroyed) throw new Err(400, null, 'Attempt to access Data Package after it has been destoryed');
+        if (this.destroyed) throw new Err(400, null, 'Attempt to access Data Package after it has been destroyed');
 
         await fsp.mkdir(this.path + '/raw/MANIFEST', { recursive: true });
         await fsp.writeFile(this.path + '/raw/MANIFEST/manifest.xml', this.manifest());
