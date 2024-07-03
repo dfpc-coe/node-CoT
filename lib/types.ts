@@ -1,10 +1,18 @@
 import { Type } from '@sinclair/typebox';
 
 export const EventAttributes = Type.Object({
-    version: Type.String(),
-    uid: Type.String(),
-    type: Type.String(),
-    how: Type.Optional(Type.String()),
+    version: Type.String({
+        description: 'The CoT message version - typically 2'
+    }),
+    uid: Type.String({
+        description: 'The Unique ID for the CoT - using the same UID will replace an existing CoT'
+    }),
+    type: Type.String({
+        description: 'The CoT type - for "things" on the ground will start with a- for digital things b- etc'
+    }),
+    how: Type.Optional(Type.String({
+        description: 'An optional hint as to how the CoT was generated'
+    })),
 
     access: Type.Optional(Type.String()),
     qos: Type.Optional(Type.String()),
@@ -283,6 +291,16 @@ export const Marti = Type.Object({
     dest: Type.Optional(Type.Union([MartiDest, Type.Array(MartiDest)]))
 });
 
+export const AttachmentAttributes = Type.Object({
+    hashes: Type.String({
+        description: 'A JSON Stringified array of Content Hashes that exist on the TAK Server'
+    })
+});
+
+export const Attachment = Type.Object({
+    _attributes: AttachmentAttributes,
+});
+
 export const Remarks = Type.Object({
     _attributes: Type.Optional(Type.Object({
         source: Type.Optional(Type.String()),
@@ -336,6 +354,7 @@ export const Detail = Type.Object({
     sensor: Type.Optional(Sensor),
     takv: Type.Optional(TakVersion),
     marti: Type.Optional(Marti),
+    attachment_list: Type.Optional(Attachment),
     TakControl: Type.Optional(Type.Object({
         TakProtocolSupport: Type.Optional(ProtocolSupportAttributes),
         TakServerVersionInfo: Type.Optional(ServerVersionAttributes)

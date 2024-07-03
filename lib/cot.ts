@@ -239,6 +239,10 @@ export default class CoT {
             cot.event.detail.__video = { _attributes: { ...feature.properties.video } };
         }
 
+        if (feature.properties.attachments) {
+            cot.event.detail.attachment_list = { _attributes: { hashes: JSON.stringify(feature.properties.attachments) } };
+        }
+
         if (feature.properties.contact) {
             cot.event.detail.contact = {
                 _attributes: {
@@ -564,6 +568,10 @@ export default class CoT {
 
         if (raw.event.detail.ackrequest) {
             feat.properties.ackrequest = raw.event.detail.ackrequest._attributes;
+        }
+
+        if (raw.event.detail.attachment_list) {
+            feat.properties.attachments = JSON.parse(raw.event.detail.attachment_list._attributes.hashes);
         }
 
         if (raw.event.detail.link) {
