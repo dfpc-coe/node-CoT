@@ -34,6 +34,10 @@ export const LinkAttributes = Type.Object({
     // Common to all Link Types
     uid: Type.Optional(Type.String()),
     relation: Type.Optional(Type.String()),
+
+    // Seen on QuickPics
+    production_time: Type.Optional(Type.String()),
+    parent_callsign: Type.Optional(Type.String())
 })
 
 export const Link = Type.Object({

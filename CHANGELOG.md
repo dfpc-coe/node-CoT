@@ -10,6 +10,12 @@
 
 ## Version History
 
+### v9.10.0
+
+- :rocket: Support QuickPic File Relations
+- :bug: Fix type in DataPackage Error
+- :rocket: Add additional `<link\>` attrs
+
 ### v9.9.0
 
 - :rocket: Surface `ackrequest` in GeoJSON
