@@ -163,6 +163,11 @@ export class DataPackage {
 
     #addContent(zipEntry: string, uid: string, name: string, ignore = false): void {
         if (this.destroyed) throw new Err(400, null, 'Attempt to access Data Package after it has been destroyed');
+
+        // TODO: Seen in the wild but not currently implemented here:
+        // <Parameter name="contentType" value="KML"/>
+        // <Parameter name="visible" value="false"/>
+
         this.contents.push({
             _attributes: { ignore: ignore, zipEntry },
             Parameter: [{
