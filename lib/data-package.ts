@@ -3,6 +3,7 @@ import { Static, Type } from '@sinclair/typebox'
 import Err from '@openaddresses/batch-error';
 import archiver from 'archiver';
 import StreamZip from 'node-stream-zip'
+import { Readable } from 'node:stream';
 import { randomUUID } from 'node:crypto';
 import CoT from './cot.js';
 import xmljs from 'xml-js';
@@ -216,6 +217,39 @@ export class DataPackage {
         }
 
         return attachments;
+    }
+
+    /**
+     * Get any file from a Package
+     */
+    async getFile(path: string): Promise<Readable> {
+        if (this.destroyed) throw new Err(400, null, 'Attempt to access Data Package after it has been destroyed');
+
+        try {
+            await fsp.access(`${this.path}/raw/${path}`)
+        } catch (err) {
+            throw new Err(400, err instanceof Error ? err : new Error(String(err)), 'Could not access file in Data Package');
+        }
+
+        return fs.createReadStream(`${this.path}/raw/${path}`)
+    }
+
+    /**
+     * Add any file to a Package
+     */
+    async addFile(file: Readable, opts: {
+        uid?: string;
+        name: string;
+        ignore?: boolean;
+    }): Promise<void> {
+        if (this.destroyed) throw new Err(400, null, 'Attempt to access Data Package after it has been destroyed');
+        if (!opts.ignore) opts.ignore = false;
+
+        const uid = opts.uid ?? randomUUID();
+
+        this.#addContent(`${uid}/${opts.name}`, uid, opts.name, opts.ignore);
+        await fsp.mkdir(`${this.path}/raw/${uid}/`, { recursive: true });
+        await fsp.writeFile(`${this.path}/raw/${uid}/${opts.name}`, file)
     }
 
     /**
