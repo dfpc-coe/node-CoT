@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v10.1.0
+
+- :rocket: Add `addFile` `getFile` Endpoints
+
 ### v10.0.0
 
 - :rocket: Move `Feature` and `Types` out of root for cleaner docs
