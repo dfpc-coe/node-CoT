@@ -29,7 +29,7 @@
         "json-diff-ts": "^4.0.1",
         "node-stream-zip": "^1.15.0",
         "protobufjs": "^7.3.0",
-        "rimraf": "^5.0.7",
+        "rimraf": "^6.0.0",
         "xml-js": "^1.6.11"
     },
     "devDependencies": {

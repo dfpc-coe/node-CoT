@@ -1,3 +1,5 @@
+import { createHash } from 'node:crypto';
+import { pipeline } from 'stream/promises';
 import { rimraf } from 'rimraf'
 import { Static, Type } from '@sinclair/typebox'
 import Err from '@openaddresses/batch-error';
@@ -121,6 +123,18 @@ export class DataPackage {
 
         return xml;
     }
+
+    /**
+     * When DataPackages are uploaded to TAK Server they generally use an EUD
+     * calculated Hash
+     */
+    static async hash(path: string): Promise<string> {
+        const input = fs.createReadStream(path);
+        const hash = createHash('sha256');
+        await pipeline(input, hash);
+        return hash.digest('hex');
+    }
+
 
     /**
      * Return a DataPackage version of an unparsed Data Package Zip

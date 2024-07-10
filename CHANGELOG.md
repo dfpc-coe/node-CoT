@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v10.2.0
+
+- :rocket: Add `DataPackage.hash` fn
+
 ### v10.1.0
 
 - :rocket: Add `addFile` `getFile` Endpoints
