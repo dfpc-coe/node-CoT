@@ -27,12 +27,30 @@ export const FeaturePropertyMissionLayer = Type.Object({
     uid: Type.Optional(Type.String()),
 })
 
+export const FeaturePropertyMissionChange = Type.Object({
+    contentUid: Type.String(),
+    creatorUid: Type.String(),
+    isFederatedChange: Type.String(),
+    missionName: Type.String(),
+    timestamp: Type.String(),
+    type: Type.String(),
+    details: Type.Object({
+        type: Type.String(),
+        callsign: Type.String(),
+        color: Type.String(),
+        lat: Type.String(),
+        lon: Type.String()
+    })
+})
+
 export const FeaturePropertyMission = Type.Object({
     type: Type.Optional(Type.String()),
     tool: Type.Optional(Type.String()),
+    guid: Type.Optional(Type.String()),
     name: Type.Optional(Type.String()),
     authorUid: Type.Optional(Type.String()),
-    missionLayer: Type.Optional(FeaturePropertyMissionLayer)
+    missionLayer: Type.Optional(FeaturePropertyMissionLayer),
+    missionChanges: Type.Optional(Type.Array(FeaturePropertyMissionChange))
 });
 
 export const InputProperties = Type.Object({

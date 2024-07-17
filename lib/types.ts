@@ -171,7 +171,7 @@ export const MissionChange = Type.Object({
 })
 
 export const MissionChanges = Type.Object({
-    MissionChange: Type.Union(Type.Array(MissionChange), MissionChange)
+    MissionChange: Type.Union([Type.Array(MissionChange), MissionChange])
 })
 
 export const Mission = Type.Object({

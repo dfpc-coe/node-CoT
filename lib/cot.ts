@@ -3,14 +3,21 @@ import Err from '@openaddresses/batch-error';
 import { diff } from 'json-diff-ts';
 import xmljs from 'xml-js';
 import { Static } from '@sinclair/typebox';
-import { Feature, Polygon, InputFeature, FeaturePropertyMission, FeaturePropertyMissionLayer } from './feature.js';
+import {
+    Feature,
+    Polygon,
+    InputFeature,
+    FeaturePropertyMission,
+    FeaturePropertyMissionLayer,
+    FeaturePropertyMissionChange
+} from './feature.js';
 import { AllGeoJSON } from "@turf/helpers";
 import PointOnFeature from '@turf/point-on-feature';
 import Truncate from '@turf/truncate';
 import Ellipse from '@turf/ellipse';
 import Util from './util.js';
 import Color from './color.js';
-import JSONCoT, { MartiDest, MartiDestAttributes, Link, LinkAttributes } from './types.js'
+import JSONCoT, { MartiDest, MartiDestAttributes, Link, LinkAttributes, MissionChange } from './types.js'
 import AJV from 'ajv';
 import fs from 'fs';
 
@@ -643,6 +650,30 @@ export default class CoT {
             const mission: Static<typeof FeaturePropertyMission> = {
                 ...raw.event.detail.mission._attributes
             };
+
+            if (raw.event.detail.mission && raw.event.detail.mission.MissionChanges) {
+                const changes =
+                    Array.isArray(raw.event.detail.mission.MissionChanges)
+                        ? raw.event.detail.mission.MissionChanges
+                        : [ raw.event.detail.mission.MissionChanges ]
+
+                mission.missionChanges = []
+                for (const change of changes) {
+                    mission.missionChanges.push({
+                        contentUid: change.MissionChange.contentUid._text,
+                        creatorUid: change.MissionChange.creatorUid._text,
+                        isFederatedChange: change.MissionChange.isFederatedChange._text,
+                        missionName: change.MissionChange.missionName._text,
+                        timestamp: change.MissionChange.timestamp._text,
+                        type: change.MissionChange.type._text,
+                        details: {
+                            ...change.MissionChange.details._attributes,
+                            ...change.MissionChange.details.location._attributes
+                        }
+                    })
+                }
+            }
+
 
             if (raw.event.detail.mission && raw.event.detail.mission.missionLayer) {
                 const missionLayer: Static<typeof FeaturePropertyMissionLayer> = {};

@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v10.3.0
+
+- :rocket: Add `MissionChange` parsing
+
 ### v10.2.0
 
 - :rocket: Add `DataPackage.hash` fn
