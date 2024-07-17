@@ -135,6 +135,7 @@ export const MissionAttributes = Type.Object({
     type: Type.Optional(Type.String()),
     tool: Type.Optional(Type.String()),
     name: Type.Optional(Type.String()),
+    guid: Type.Optional(Type.String()),
     authorUid: Type.Optional(Type.String()),
 });
 
@@ -145,9 +146,38 @@ export const MissionLayer = Type.Object({
     uid: Type.Optional(GenericText),
 })
 
+export const MissionChangeDetails = Type.Object({
+    _attributes: Type.Object({
+        type: Type.String(),
+        callsign: Type.String(),
+        color: Type.String()
+    }),
+    location: Type.Object({
+        _attributes: Type.Object({
+            lat: Type.String(),
+            lon: Type.String()
+        })
+    })
+})
+
+export const MissionChange = Type.Object({
+    contentUid: GenericText,
+    creatorUid: GenericText,
+    isFederatedChange: GenericText,
+    missionName: GenericText,
+    timestamp: GenericText,
+    type: GenericText,
+    details: MissionChangeDetails
+})
+
+export const MissionChanges = Type.Object({
+    MissionChange: Type.Union(Type.Array(MissionChange), MissionChange)
+})
+
 export const Mission = Type.Object({
     _attributes: Type.Optional(MissionAttributes),
     missionLayer: Type.Optional(MissionLayer),
+    MissionChanges: Type.Optional(MissionChanges),
 })
 
 export const SensorAttributes = Type.Object({

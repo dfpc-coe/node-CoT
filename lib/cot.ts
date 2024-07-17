@@ -286,6 +286,7 @@ export default class CoT {
             cot.event.detail.mission = {
                 _attributes: {
                     type: feature.properties.mission.type,
+                    guid: feature.properties.mission.guid,
                     tool: feature.properties.mission.tool,
                     name: feature.properties.mission.name,
                     authorUid: feature.properties.mission.authorUid,
@@ -795,6 +796,15 @@ export default class CoT {
                 point: Util.cot_point()
             }
         });
+    }
+
+    /**
+     * Determines if the CoT message represents a Tasking Message
+     *
+     * @return {boolean}
+     */
+    is_tasking(): boolean {
+        return !!this.raw.event._attributes.type.match(/^t-/)
     }
 
     /**
