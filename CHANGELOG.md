@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v10.4.0
+
+- :rocket: Merge attachments defined in DataPackage manifest with those defined via CoT `attachment_list` property
+
 ### v10.3.0
 
 - :rocket: Add `MissionChange` parsing
