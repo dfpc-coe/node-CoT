@@ -1,6 +1,6 @@
 import { randomUUID } from 'crypto'
 import { Static } from '@sinclair/typebox';
-import {
+import type {
     EventAttributes,
     TrackAttributes,
     Detail,

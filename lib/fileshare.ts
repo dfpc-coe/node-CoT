@@ -1,6 +1,6 @@
 import Util from './util.js'
 import CoT from './cot.js';
-import JSONCoT, { FileShareAttributes } from './types.js';
+import type JSONCoT, { FileShareAttributes } from './types.js';
 import { Static } from '@sinclair/typebox';
 
 export class FileShare extends CoT {
