@@ -6,11 +6,12 @@ import { Static } from '@sinclair/typebox';
 import type {
     Feature,
     Polygon,
-    InputFeature,
     FeaturePropertyMission,
     FeaturePropertyMissionLayer,
 } from './feature.js';
-
+import {
+    InputFeature,
+} from './feature.js';
 import { AllGeoJSON } from "@turf/helpers";
 import PointOnFeature from '@turf/point-on-feature';
 import Truncate from '@turf/truncate';
