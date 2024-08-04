@@ -3,13 +3,14 @@ import Err from '@openaddresses/batch-error';
 import { diff } from 'json-diff-ts';
 import xmljs from 'xml-js';
 import { Static } from '@sinclair/typebox';
-import {
+import type {
     Feature,
     Polygon,
-    InputFeature,
     FeaturePropertyMission,
     FeaturePropertyMissionLayer,
-    FeaturePropertyMissionChange
+} from './feature.js';
+import {
+    InputFeature,
 } from './feature.js';
 import { AllGeoJSON } from "@turf/helpers";
 import PointOnFeature from '@turf/point-on-feature';
@@ -17,7 +18,8 @@ import Truncate from '@turf/truncate';
 import Ellipse from '@turf/ellipse';
 import Util from './util.js';
 import Color from './color.js';
-import JSONCoT, { MartiDest, MartiDestAttributes, Link, LinkAttributes, MissionChange } from './types.js'
+import JSONCoT from './types.js'
+import type { MartiDest, MartiDestAttributes, Link, LinkAttributes } from './types.js'
 import AJV from 'ajv';
 import fs from 'fs';
 

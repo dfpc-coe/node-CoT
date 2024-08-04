@@ -194,32 +194,61 @@ export class DataPackage {
 
     /**
      * Return CoT objects for all CoT type features in the Data Package
+     *
+     * CoTs have their `attachment_list` field populated if parseAttachments is set to true.
+     *   While this field is populated automatically by some ATAK actions such as QuickPic
+         other attachment actions do not automatically populate this field other than the link
+         provided between a CoT and it's attachment in the MANIFEST file
      */
-    async cots(opts = { respectIgnore: true }): Promise<Array<CoT>> {
+    async cots(opts = {
+        respectIgnore: true,
+        parseAttachments: true
+    }): Promise<Array<CoT>> {
         if (this.destroyed) throw new Err(400, null, 'Attempt to access Data Package after it has been destroyed');
+
+        const cotsMap: Map<string, CoT> = new Map();
 
         const cots: CoT[] = [];
         for (const content of this.contents) {
             if (path.parse(content._attributes.zipEntry).ext !== '.cot') continue;
             if (opts.respectIgnore && content._attributes.ignore) continue;
 
-            cots.push(new CoT(await fsp.readFile(this.path + '/raw/' + content._attributes.zipEntry)));
+            const cot = new CoT(await fsp.readFile(this.path + '/raw/' + content._attributes.zipEntry));
+
+            cotsMap.set(cot.uid(), cot);
+
+            cots.push(cot);
+        }
+
+        if (opts.parseAttachments) {
+            const attachments = this.#attachments(cotsMap, {
+                respectIgnore: opts.respectIgnore
+            });
+
+            for (const cot of cots) {
+                const attaches = attachments.get(cot.uid());
+                if (!attaches) continue;
+
+                for (const attach of attaches) {
+                    if (!cot.raw.event.detail.attachment_list) {
+                        cot.raw.event.detail.attachment_list = [];
+                    }
+
+                    // Until told otherwise the FileHash appears to always be the directory name
+                    const hash = path.parse(attach._attributes.zipEntry).dir;
+
+                    if (!cot.raw.event.detail.attachment_list.includes(hash)) {
+                        cot.raw.event.detail.attachment_list.push(hash)
+                    }
+                }
+            }
         }
 
         return cots;
     }
 
-    /**
-     * Return attachments that are associated in the Manifest with a given CoT
-     * Note: this does not return files that are not associated with a CoT
-     */
-    async attachments(opts = { respectIgnore: true }): Promise<Map<string, Static<typeof ManifestContent>>> {
-        const cots: Map<string, CoT> = new Map();
-        for (const cot of await this.cots(opts)) {
-            cots.set(cot.uid(), cot);
-        }
-
-        const attachments: Map<string, Static<typeof ManifestContent>> = new Map();
+    #attachments(cots: Map<string, CoT>, opts = { respectIgnore: true }): Map<string, Array<Static<typeof ManifestContent>>> {
+        const attachments: Map<string, Array<Static<typeof ManifestContent>>> = new Map();
 
         for (const content of this.contents) {
             if (path.parse(content._attributes.zipEntry).ext === '.cot') continue;
@@ -229,13 +258,34 @@ export class DataPackage {
 
             for (const param of params) {
                 if (param._attributes.name === 'uid' && cots.has(param._attributes.value)) {
-                    attachments.set(param._attributes.value, content);
+                    const existing = attachments.get(param._attributes.value);
+                    if (existing) {
+                        existing.push(content);
+                    } else {
+                        attachments.set(param._attributes.value, [content]);
+                    }
                     break;
                 }
             }
         }
 
         return attachments;
+    }
+
+    /**
+     * Return attachments that are associated in the Manifest with a given CoT
+     * Note: this does not return files that are not associated with a CoT
+     */
+    async attachments(opts = { respectIgnore: true }): Promise<Map<string, Array<Static<typeof ManifestContent>>>> {
+        const cots: Map<string, CoT> = new Map();
+        for (const cot of await this.cots({
+            respectIgnore: opts.respectIgnore,
+            parseAttachments: false
+        })) {
+            cots.set(cot.uid(), cot);
+        }
+
+        return this.#attachments(cots, opts);
     }
 
     /**
