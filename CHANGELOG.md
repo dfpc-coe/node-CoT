@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v10.6.0 - 2024-08-05
+
+- :tada: Initial release of the CotTypes manager/parser
+
 ### v10.5.0
 
 - :bug: Fix an instance of `a-f-g` cot type to `a-f-G`
