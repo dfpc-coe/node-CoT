@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v10.6.2 - 2024-08-05
+
+- :bug: Fix bug in DataPackage attachment hash calculation
+
 ### v10.6.1 - 2024-08-05
 
 - :bug: Fix bug in DataPackage attachment hash calculation
