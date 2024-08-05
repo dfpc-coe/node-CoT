@@ -243,7 +243,7 @@ export class DataPackage {
                     }
 
                     // Until told otherwise the FileHash appears to always be the directory name
-                    const hash = path.parse(attach._attributes.zipEntry).dir;
+                    const hash = await DataPackage.hash(this.path + '/raw/' + attach._attributes.zipEntry);
 
                     if (!cot.raw.event.detail.attachment_list._attributes.hashes.includes(hash)) {
                         cot.raw.event.detail.attachment_list._attributes.hashes.push(hash)
