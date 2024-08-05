@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v10.8.0 - 2024-08-05
+
+- :tada: Expose a tmp dir aware version of the hash code
+
 ### v10.7.0 - 2024-08-05
 
 - :bug: Hash should be `sha256sum` and not UID in MANIFEST

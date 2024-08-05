@@ -135,6 +135,14 @@ export class DataPackage {
         return hash.digest('hex');
     }
 
+    /**
+     * When DataPackages are uploaded to TAK Server they generally use an EUD
+     * calculated Hash
+     */
+    async hash(entry: string): Promise<string> {
+        return await DataPackage.hash(this.path + '/raw/' + entry);
+    }
+
 
     /**
      * Return a DataPackage version of an unparsed Data Package Zip
@@ -243,7 +251,7 @@ export class DataPackage {
                     }
 
                     // Until told otherwise the FileHash appears to always be the directory name
-                    const hash = await DataPackage.hash(this.path + '/raw/' + attach._attributes.zipEntry);
+                    const hash = await this.hash(attach._attributes.zipEntry);
 
                     if (!cot.raw.event.detail.attachment_list._attributes.hashes.includes(hash)) {
                         cot.raw.event.detail.attachment_list._attributes.hashes.push(hash)
