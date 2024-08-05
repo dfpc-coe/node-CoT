@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v10.7.0 - 2024-08-05
+
+- :bug: Hash should be `sha256sum` and not UID in MANIFEST
+
 ### v10.6.2 - 2024-08-05
 
 - :bug: Fix bug in DataPackage attachment hash calculation
