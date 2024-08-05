@@ -231,7 +231,10 @@ test(`DataPackage CoT Parsing: AttachmentInManifest.zip`, async (t) => {
 
     t.equal(cots.length, 1);
 
-    t.deepEquals(cots[0].raw.event.detail.attachment_list, [ '6988443373b26e519cfd1096665b8eaa' ]);
+    t.deepEquals(
+        cots[0].raw.event.detail.attachment_list, 
+        { _attributes: { hashes: '["6988443373b26e519cfd1096665b8eaa"]' } }
+    )
 
     const attachments = await pkg.attachments();
 
