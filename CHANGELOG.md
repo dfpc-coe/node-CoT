@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v10.5.0
+
+- :bug: Fix an instance of `a-f-g` cot type to `a-f-G`
+
 ### v10.4.0
 
 - :rocket: Merge attachments defined in DataPackage manifest with those defined via CoT `attachment_list` property

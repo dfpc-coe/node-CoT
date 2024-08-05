@@ -55,7 +55,7 @@ export const FeaturePropertyMission = Type.Object({
 
 export const InputProperties = Type.Object({
     callsign: Type.Optional(Type.String({ default: 'UNKNOWN' })),
-    type: Type.Optional(Type.String({ default: 'a-f-g' })),
+    type: Type.Optional(Type.String({ default: 'a-f-G' })),
     how: Type.Optional(Type.String()),
     time: Type.Optional(Type.Union([Type.String()])),
     start: Type.Optional(Type.Union([Type.String()])),
@@ -112,7 +112,7 @@ export const InputProperties = Type.Object({
 
 export const Properties = Type.Object({
     callsign: Type.String({ default: 'UNKNOWN' }),
-    type: Type.String({ default: 'a-f-g' }),
+    type: Type.String({ default: 'a-f-G' }),
     how: Type.String(),
     time: Type.String(),
     start: Type.String(),
