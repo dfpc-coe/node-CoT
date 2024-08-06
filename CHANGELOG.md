@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v10.9.0 - 2024-08-06
+
+- :rocket: Extend the `DataPackage.addFile` method to allow specifying the file is an attachment
+
 ### v10.8.0 - 2024-08-05
 
 - :tada: Expose a tmp dir aware version of the hash code

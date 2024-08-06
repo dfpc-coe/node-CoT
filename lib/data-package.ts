@@ -325,18 +325,26 @@ export class DataPackage {
 
     /**
      * Add any file to a Package
+     *
+     * @param file - Input ReadableStream of File at attach
+     * @param opts - Options
+     * @param opts.uid - Optional UID for the File, a UUID will be generated if not supplied
+     * @param opts.name - Filename for the file
+     * @param opts.ignore - Should the file be ignore, defaults to false
+     * @param opts.attachment - Should the file be associated as an attachment to a CoT. If so this should contain the UID of the CoT
      */
     async addFile(file: Readable, opts: {
         uid?: string;
         name: string;
         ignore?: boolean;
+        attachment?: string;
     }): Promise<void> {
         if (this.destroyed) throw new Err(400, null, 'Attempt to access Data Package after it has been destroyed');
         if (!opts.ignore) opts.ignore = false;
 
         const uid = opts.uid ?? randomUUID();
 
-        this.#addContent(`${uid}/${opts.name}`, uid, opts.name, opts.ignore);
+        this.#addContent(`${opts.attachment || uid}/${opts.name}`, uid, opts.name, opts.ignore);
         await fsp.mkdir(`${this.path}/raw/${uid}/`, { recursive: true });
         await fsp.writeFile(`${this.path}/raw/${uid}/${opts.name}`, file)
     }
