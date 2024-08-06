@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v10.9.1 - 2024-08-06
+
+- :bug: Swap path and UID
+
 ### v10.9.0 - 2024-08-06
 
 - :rocket: Extend the `DataPackage.addFile` method to allow specifying the file is an attachment
