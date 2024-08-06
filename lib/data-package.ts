@@ -344,7 +344,7 @@ export class DataPackage {
 
         const uid = opts.uid ?? randomUUID();
 
-        this.#addContent(`${uid}/${opts.name}`, attachment || uid, opts.name, opts.ignore);
+        this.#addContent(`${uid}/${opts.name}`, opts.attachment || uid, opts.name, opts.ignore);
         await fsp.mkdir(`${this.path}/raw/${uid}/`, { recursive: true });
         await fsp.writeFile(`${this.path}/raw/${uid}/${opts.name}`, file)
     }
