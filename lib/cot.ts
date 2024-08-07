@@ -788,7 +788,7 @@ export default class CoT {
                 }
             }
 
-            if (raw.event.detail.shape.polyline._attributes && raw.event.detail.shape.polyline._attributes) {
+            if (raw.event.detail.shape && raw.event.detail.shape.polyline._attributes && raw.event.detail.shape.polyline._attributes) {
                 if (raw.event.detail.shape.polyline._attributes.fillColor) {
                     const fill = new Color(Number(raw.event.detail.shape.polyline._attributes.fillColor));
                     feat.properties['fill-opacity'] = fill.as_opacity() / 255;

@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v10.9.2 - 2024-08-07
+
+- :bug: Fix polyline parsing error
+
 ### v10.9.1 - 2024-08-06
 
 - :bug: Swap path and UID
