@@ -197,24 +197,22 @@ export const MultiPolygon = Type.Object({
     coordinates: Type.Array(Type.Array(Type.Array(Position)))
 })
 
+export const Geometry = Type.Union([
+    Point,
+    LineString,
+    Polygon
+]);
+
 export const Feature = Type.Object({
     id: Type.String(),
     type: Type.Const('Feature'),
     properties: Properties,
-    geometry: Type.Union([
-        Point,
-        LineString,
-        Polygon
-    ])
+    geometry: Geometry
 })
 
 export const InputFeature = Type.Object({
     id: Type.Optional(Type.String()),
     type: Type.Const('Feature'),
     properties: InputProperties,
-    geometry: Type.Union([
-        Point,
-        LineString,
-        Polygon
-    ])
+    geometry: Geometry
 })

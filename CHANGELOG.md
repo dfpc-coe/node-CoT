@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v10.9.4 - 2024-08-07
+
+- :rocket: Seperate out Geometry type into unique type def
+
 ### v10.9.3 - 2024-08-07
 
 - :rocket: Enforce `import type` vs `import`
