@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v10.9.5 - 2024-08-07
+
+- :arrow_up: Update batch-error
+
 ### v10.9.4 - 2024-08-07
 
 - :rocket: Seperate out Geometry type into unique type def
