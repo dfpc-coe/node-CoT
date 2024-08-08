@@ -2,7 +2,7 @@ import protobuf from 'protobufjs';
 import Err from '@openaddresses/batch-error';
 import { diff } from 'json-diff-ts';
 import xmljs from 'xml-js';
-import { Static } from '@sinclair/typebox';
+import type { Static } from '@sinclair/typebox';
 import type {
     Feature,
     Polygon,
@@ -12,7 +12,7 @@ import type {
 import {
     InputFeature,
 } from './feature.js';
-import { AllGeoJSON } from "@turf/helpers";
+import type { AllGeoJSON } from "@turf/helpers";
 import PointOnFeature from '@turf/point-on-feature';
 import Truncate from '@turf/truncate';
 import Ellipse from '@turf/ellipse';

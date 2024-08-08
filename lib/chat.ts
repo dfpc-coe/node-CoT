@@ -1,7 +1,7 @@
 import Util from './util.js'
 import CoT from './cot.js';
 import type JSONCoT from './types.js';
-import { Static } from '@sinclair/typebox';
+import type { Static } from '@sinclair/typebox';
 import { randomUUID } from 'node:crypto';
 
 export type DirectChatMember = {

@@ -1,4 +1,4 @@
-import { Static } from '@sinclair/typebox';
+import type { Static } from '@sinclair/typebox';
 import type { Feature } from '../lib/feature.js';
 import fs from 'node:fs/promises';
 import path from 'node:path';

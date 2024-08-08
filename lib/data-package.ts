@@ -1,7 +1,8 @@
 import { createHash } from 'node:crypto';
 import { pipeline } from 'stream/promises';
 import { rimraf } from 'rimraf'
-import { Static, Type } from '@sinclair/typebox'
+import type { Static } from '@sinclair/typebox'
+import { Type } from '@sinclair/typebox'
 import Err from '@openaddresses/batch-error';
 import archiver from 'archiver';
 import StreamZip from 'node-stream-zip'

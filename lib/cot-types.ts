@@ -1,7 +1,8 @@
 import Err from '@openaddresses/batch-error';
 import fsp from 'node:fs/promises';
 import xmljs from 'xml-js';
-import { Static, Type } from '@sinclair/typebox'
+import type { Static } from '@sinclair/typebox';
+import { Type } from '@sinclair/typebox'
 import AJV from 'ajv';
 
 export const TypeFormat_COT = Type.Object({

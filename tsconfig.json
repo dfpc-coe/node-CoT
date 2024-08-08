@@ -11,6 +11,7 @@
         "noImplicitAny": true,
         "moduleResolution": "node",
         "resolveJsonModule": true,
+        "verbatimModuleSyntax": true,
         "sourceMap": true,
         "outDir": "dist",
         "baseUrl": ".",
