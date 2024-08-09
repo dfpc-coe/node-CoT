@@ -4,13 +4,19 @@
     "version": "10.9.5",
     "description": "Lightweight JavaScript library for parsing and manipulating TAK messages",
     "author": "Nick Ingalls <nick@ingalls.ca>",
-    "main": "dist/index.js",
+    "main": "dist/esm/index.js",
     "types": "index.ts",
+    "exports": {
+        "require": "dist/cjs/index.js",
+        "import": "./disat/esm/index.js"
+    },
     "scripts": {
         "test": "ts-node-test test/",
         "lint": "eslint *.ts lib/ test/",
         "doc": "typedoc index.ts",
-        "build": "tsc --build && cp package.json dist/ && cp ./lib/*.xml ./dist/lib/ &&  mkdir -p ./dist/lib/proto/ && cp lib/proto/* ./dist/lib/proto/",
+        "build": "npm run build:esm && npm run build:cjs",
+        "build:esm": "tsc --build && cp package.json dist/esm/ && cp ./lib/*.xml ./dist/esm/lib/ &&  mkdir -p ./dist/esm/lib/proto/ && cp lib/proto/* ./dist/esm/lib/proto/",
+        "build:cjs": "tsup index.ts --format cjs,esm",
         "pretest": "npm run lint"
     },
     "dependencies": {
@@ -39,6 +45,7 @@
         "tape": "^5.6.1",
         "ts-node": "^10.9.1",
         "ts-node-test": "^0.4.0",
+        "tsup": "^8.2.4",
         "typedoc": "^0.26.0",
         "typescript": "^5.5.0",
         "typescript-eslint": "^8.0.0"

@@ -13,7 +13,7 @@
         "resolveJsonModule": true,
         "verbatimModuleSyntax": true,
         "sourceMap": true,
-        "outDir": "dist",
+        "outDir": "dist/esm/",
         "baseUrl": ".",
         "paths": {
             "*": [

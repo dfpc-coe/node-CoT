@@ -1,3 +1,5 @@
+import { dirname } from "node:path";
+import { fileURLToPath } from "node:url";
 import protobuf from 'protobufjs';
 import Err from '@openaddresses/batch-error';
 import { diff } from 'json-diff-ts';
@@ -26,9 +28,17 @@ import fs from 'fs';
 // GeoJSON Geospatial ops will truncate to the below
 const COORDINATE_PRECISION = 6;
 
-const RootMessage = await protobuf.load(new URL('./proto/cotevent.proto', import.meta.url).pathname);
 
-const pkg = JSON.parse(String(fs.readFileSync(new URL('../package.json', import.meta.url))));
+let dir;
+try {
+    dir = __dirname;
+} catch (e) {
+    dir = dirname(fileURLToPath(import.meta.url));
+}
+
+const RootMessage = await protobuf.load(new URL('./proto/cotevent.proto', `file://${dir}/`).pathname);
+
+const pkg = JSON.parse(String(fs.readFileSync(new URL('../package.json', `file://${dir}/`))));
 
 const checkXML = (new AJV({
     allErrors: true,
