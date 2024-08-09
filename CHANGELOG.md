@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v10.10.1 - 2024-08-08
+
+- :bug: Fix deploy on branch
+
 ### v10.10.0 - 2024-08-08
 
 - :bug: Fix default export in COTTypes
