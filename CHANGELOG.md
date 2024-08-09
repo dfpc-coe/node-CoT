@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v10.10.0 - 2024-08-08
+
+- :bug: Fix default export in COTTypes
+
 ### v10.9.5 - 2024-08-07
 
 - :arrow_up: Update batch-error

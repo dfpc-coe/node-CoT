@@ -58,7 +58,7 @@ const checkTypes = (new AJV({
 }))
     .compile(TypeFormat);
 
-export class CoTTypes {
+export default class CoTTypes {
     cots: Map<string, Static<typeof TypeFormat_COT>>
     weapons: Map<string, Static<typeof TypeFormat_Weapon>>
     relations: Map<string, Static<typeof TypeFormat_Relation>>
