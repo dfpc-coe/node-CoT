@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v10.11.0 - 2024-08-08
+
+- :white_check_mark: Fixing type test
+
 ### v10.10.1 - 2024-08-08
 
 - :bug: Fix deploy on branch
