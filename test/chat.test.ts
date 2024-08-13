@@ -33,14 +33,14 @@ test('DirectChat - Basic', (t) => {
         cot.raw.event._attributes.stale = '2024-04-01'
 
         if (!cot.raw.event.detail.__chat) {
-            t.fail('No Detail Section')
+            t.fail('No Chat Section')
         } else {
             t.equals(typeof cot.raw.event.detail.__chat._attributes.messageId, 'string');
             cot.raw.event.detail.__chat._attributes.messageId = '123';
         }
 
         if (!cot.raw.event.detail.remarks || !cot.raw.event.detail.remarks._attributes) {
-            t.fail('No Detail Section')
+            t.fail('No Remarks Section')
         } else {
             t.equals(typeof cot.raw.event.detail.remarks._attributes.time, 'string');
             cot.raw.event.detail.remarks._attributes.time = '123';

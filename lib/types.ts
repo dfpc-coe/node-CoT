@@ -355,6 +355,8 @@ export const UserIcon = Type.Object({
     })
 })
 
+export const ForceDelete = Type.Object({})
+
 export const Detail = Type.Object({
     contact: Type.Optional(Contact),
     tog: Type.Optional(TogAttributes),
@@ -362,6 +364,7 @@ export const Detail = Type.Object({
     '__chat': Type.Optional(Chat),
     '__video': Type.Optional(Video),
     '__geofence': Type.Optional(Geofence),
+    '__forcedelete': Type.Optional(ForceDelete),
     '_flow-tags_': Type.Optional(FlowTags),
     uid: Type.Optional(Uid),
     status: Type.Optional(Status),
