@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v10.12.1 - 2024-08-12
+
+- :white_check_mark: Add validation tests to ensure validation takes place
+
 ### v10.12.0 - 2024-08-12
 
 - :data: Add `ForceDelete` helper class
