@@ -23,5 +23,7 @@ export class ForceDelete extends CoT {
         };
 
         super(cot)
+
+        this.uid(uid);
     }
 }

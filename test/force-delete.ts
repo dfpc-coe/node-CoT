@@ -17,13 +17,10 @@ test('ForceDelete - Basic', (t) => {
         t.equals(typeof cot.raw.event._attributes.stale, 'string');
         cot.raw.event._attributes.stale = '2024-04-01'
 
-        t.equals(typeof cot.raw.event._attributes.uid, 'string');
-        cot.raw.event._attributes.uid = 'any-uid'
-
         t.deepEquals(cot.raw, {
             event: {
                 _attributes: {
-                    uid: 'any-uid',
+                    uid: 'delete-uid',
                     version: '2.0',
                     type: 't-x-d-d',
                     how: 'm-g',

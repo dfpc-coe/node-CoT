@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v10.12.2 - 2024-08-12
+
+- :bug: MissionSync required uid to be the same for `t-x-d-d`
+
 ### v10.12.1 - 2024-08-12
 
 - :white_check_mark: Add validation tests to ensure validation takes place

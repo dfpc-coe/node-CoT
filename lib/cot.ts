@@ -132,9 +132,10 @@ export default class CoT {
     }
 
     /**
-     * Return the UID of the CoT
+     * Returns or sets the UID of the CoT
      */
-    uid(): string {
+    uid(uid?: string): string {
+        if (uid) this.raw.event._attributes.uid = uid;
         return this.raw.event._attributes.uid;
     }
 
