@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v10.12.0 - 2024-08-12
+
+- :data: Add `ForceDelete` helper class
+
 ### v10.11.0 - 2024-08-08
 
 - :white_check_mark: Fixing type test
