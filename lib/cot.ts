@@ -441,24 +441,26 @@ export default class CoT {
         const detail = this.raw.event.detail;
 
         const msg: any = {
-            ...this.raw.event._attributes,
-            sendTime: new Date(this.raw.event._attributes.time).getTime(),
-            startTime: new Date(this.raw.event._attributes.start).getTime(),
-            staleTime: new Date(this.raw.event._attributes.stale).getTime(),
-            ...this.raw.event.point._attributes,
-            detail: {
-                xmlDetail: ''
+            cotEvent: {
+                ...this.raw.event._attributes,
+                sendTime: new Date(this.raw.event._attributes.time).getTime(),
+                startTime: new Date(this.raw.event._attributes.start).getTime(),
+                staleTime: new Date(this.raw.event._attributes.stale).getTime(),
+                ...this.raw.event.point._attributes,
+                detail: {
+                    xmlDetail: ''
+                }
             }
         };
 
         for (const key in detail) {
             if(['contact', 'group', 'precisionlocation', 'status', 'takv', 'track'].includes(key)) {
-                msg.detail[key] = detail[key]._attributes;
+                msg.cotEvent.detail[key] = detail[key]._attributes;
                 delete detail[key]
             }
         }
 
-        msg.detail.xmlDetail = xmljs.js2xml({
+        msg.cotEvent.detail.xmlDetail = xmljs.js2xml({
             ...detail,
             metadata: this.metadata
         }, { compact: true });
