@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v11.0.0 - 2024-08-14
+
+- :rocket: Require the top level TAKMessage Protobuf in `from_proto` Fn
+
 ### v10.12.2 - 2024-08-12
 
 - :bug: MissionSync required uid to be the same for `t-x-d-d`
