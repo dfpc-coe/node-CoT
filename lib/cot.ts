@@ -436,7 +436,7 @@ export default class CoT {
      */
     to_proto(version = 1): Uint8Array {
         if (version < 1 || version > 1) throw new Err(400, null, `Unsupported Proto Version: ${version}`);
-        const ProtoMessage = RootMessage.lookupType(`atakmap.commoncommo.protobuf.v${version}.CotEvent`)
+        const ProtoMessage = RootMessage.lookupType(`atakmap.commoncommo.protobuf.v${version}.TakMessage`)
 
         const detail = this.raw.event.detail;
 
@@ -470,16 +470,18 @@ export default class CoT {
      * Parse an ATAK compliant Protobuf to a JS Object
      */
     static from_proto(raw: Uint8Array, version = 1): CoT {
-        const ProtoMessage = RootMessage.lookupType(`atakmap.commoncommo.protobuf.v${version}.CotEvent`)
+        const ProtoMessage = RootMessage.lookupType(`atakmap.commoncommo.protobuf.v${version}.TakMessage`)
 
         // TODO Type this
         const msg: any = ProtoMessage.decode(raw);
 
+        if (!msg.cotEvent) throw new Err(400, null, 'No cotEvent Data');
+
         const detail: Record<string, any> = {};
         const metadata: Record<string, unknown> = {};
-        for (const key in msg.detail) {
+        for (const key in msg.cotEvent.detail) {
             if (key === 'xmlDetail') {
-                const parsed: any = xmljs.xml2js(`<detail>${msg.detail.xmlDetail}</detail>`, { compact: true });
+                const parsed: any = xmljs.xml2js(`<detail>${msg.cotEvent.detail.xmlDetail}</detail>`, { compact: true });
                 Object.assign(detail, parsed.detail);
 
                 if (detail.metadata) {
@@ -489,7 +491,7 @@ export default class CoT {
                     delete detail.metadata;
                 }
             } else if (['contact', 'group', 'precisionlocation', 'status', 'takv', 'track'].includes(key)) {
-                detail[key] = { _attributes: msg.detail[key] };
+                detail[key] = { _attributes: msg.cotEvent.detail[key] };
             }
         }
 
@@ -497,20 +499,20 @@ export default class CoT {
             event: {
                 _attributes: {
                     version: '2.0',
-                    uid: msg.uid, type: msg.type, how: msg.how,
-                    qos: msg.qos, opex: msg.opex, access: msg.access,
-                    time: new Date(msg.sendTime.toNumber()).toISOString(),
-                    start: new Date(msg.startTime.toNumber()).toISOString(),
-                    stale: new Date(msg.staleTime.toNumber()).toISOString(),
+                    uid: msg.cotEvent.uid, type: msg.cotEvent.type, how: msg.cotEvent.how,
+                    qos: msg.cotEvent.qos, opex: msg.cotEvent.opex, access: msg.cotEvent.access,
+                    time: new Date(msg.cotEvent.sendTime.toNumber()).toISOString(),
+                    start: new Date(msg.cotEvent.startTime.toNumber()).toISOString(),
+                    stale: new Date(msg.cotEvent.staleTime.toNumber()).toISOString(),
                 },
                 detail,
                 point: {
                     _attributes: {
-                        lat: msg.lat,
-                        lon: msg.lon,
-                        hae: msg.hae,
-                        le: msg.le,
-                        ce: msg.ce,
+                        lat: msg.cotEvent.lat,
+                        lon: msg.cotEvent.lon,
+                        hae: msg.cotEvent.hae,
+                        le: msg.cotEvent.le,
+                        ce: msg.cotEvent.ce,
                     },
                 }
             }
