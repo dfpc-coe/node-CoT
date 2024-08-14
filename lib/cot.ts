@@ -26,7 +26,7 @@ import fs from 'fs';
 // GeoJSON Geospatial ops will truncate to the below
 const COORDINATE_PRECISION = 6;
 
-const RootMessage = await protobuf.load(new URL('./proto/cotevent.proto', import.meta.url).pathname);
+const RootMessage = await protobuf.load(new URL('./proto/takmessage.proto', import.meta.url).pathname);
 
 const pkg = JSON.parse(String(fs.readFileSync(new URL('../package.json', import.meta.url))));
 
