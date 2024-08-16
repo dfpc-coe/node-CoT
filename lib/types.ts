@@ -152,12 +152,12 @@ export const MissionChangeDetails = Type.Object({
         callsign: Type.String(),
         color: Type.String()
     }),
-    location: Type.Object({
+    location: Type.Optional(Type.Object({
         _attributes: Type.Object({
             lat: Type.String(),
             lon: Type.String()
         })
-    })
+    }))
 })
 
 export const MissionChange = Type.Object({

@@ -675,7 +675,9 @@ export default class CoT {
                         type: change.MissionChange.type._text,
                         details: {
                             ...change.MissionChange.details._attributes,
-                            ...change.MissionChange.details.location._attributes
+                            ...change.MissionChange.details.location
+                                ? change.MissionChange.details.location._attributes
+                                : {}
                         }
                     })
                 }
