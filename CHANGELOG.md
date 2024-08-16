@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v11.1.0 - 2024-08-16
+
+- :bug: Tasking messages don't have location field in MissionChange entry
+
 ### v11.0.0 - 2024-08-14
 
 - :rocket: Require the top level TAKMessage Protobuf in `from_proto` Fn
