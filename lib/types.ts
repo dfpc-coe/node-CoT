@@ -18,9 +18,15 @@ export const EventAttributes = Type.Object({
     qos: Type.Optional(Type.String()),
     opex: Type.Optional(Type.String()),
 
-    time: Type.String(),
-    stale: Type.String(),
-    start: Type.String(),
+    time: Type.String({
+        description: 'Time at which the CoT was generated'
+    }),
+    stale: Type.String({
+        description: 'Time at which the CoT is no longer current'
+    }),
+    start: Type.String({
+        description: 'Time at which the CoT starts'
+    }),
 });
 
 export const TogAttributes = Type.Object({
@@ -331,6 +337,54 @@ export const Attachment = Type.Object({
     _attributes: AttachmentAttributes,
 });
 
+export const RangeAttributes = Type.Object({
+    value: Type.String()
+});
+
+export const Range = Type.Object({
+    _attributes: RangeAttributes,
+});
+
+export const RangeUnitsAttributes = Type.Object({
+    value: Type.String()
+});
+
+export const RangeUnits = Type.Object({
+    _attributes: RangeUnitsAttributes,
+});
+
+export const BearingAttributes = Type.Object({
+    value: Type.String()
+});
+
+export const Bearing = Type.Object({
+    _attributes: BearingAttributes,
+});
+
+export const BearingUnitsAttributes = Type.Object({
+    value: Type.String()
+});
+
+export const BearingUnits = Type.Object({
+    _attributes: BearingUnitsAttributes,
+});
+
+export const InclinationAttributes = Type.Object({
+    value: Type.String()
+});
+
+export const Inclination = Type.Object({
+    _attributes: InclinationAttributes,
+});
+
+export const NorthRefAttributes = Type.Object({
+    value: Type.String()
+});
+
+export const NorthRef = Type.Object({
+    _attributes: NorthRefAttributes,
+});
+
 export const Remarks = Type.Object({
     _attributes: Type.Optional(Type.Object({
         source: Type.Optional(Type.String()),
@@ -388,6 +442,15 @@ export const Detail = Type.Object({
     takv: Type.Optional(TakVersion),
     marti: Type.Optional(Marti),
     attachment_list: Type.Optional(Attachment),
+
+    // Range & Bearing
+    range: Type.Optional(Range),
+    rangeUnits: Type.Optional(RangeUnits),
+    bearing: Type.Optional(Bearing),
+    bearingUnits: Type.Optional(BearingUnits),
+    inclination: Type.Optional(Inclination),
+    northRef: Type.Optional(NorthRef),
+
     TakControl: Type.Optional(Type.Object({
         TakProtocolSupport: Type.Optional(ProtocolSupportAttributes),
         TakServerVersionInfo: Type.Optional(ServerVersionAttributes)
