@@ -10,6 +10,10 @@
 
 ## Version History
 
+### v11.2.0 - 2024-09-03
+
+- :rocket: Add basic typed support for Range & Bearing Values
+
 ### v11.1.0 - 2024-08-16
 
 - :bug: Tasking messages don't have location field in MissionChange entry
