@@ -12,6 +12,8 @@
 
 ### Pending Fixed
 
+### v12.0.0 - 2024-09-05
+
 - :rocket: Add `object` type support to COT Constructor definition
 - :bug: Removal of `Type.Index` on `event` in JSONCOT type definition to fix AJV Coerce Types
 - :bug: Removal surfaced `archive` inconsistencies
