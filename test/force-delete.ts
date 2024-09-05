@@ -33,7 +33,7 @@ test('ForceDelete - Basic', (t) => {
                     _attributes: { lat: '0.000000', lon: '0.000000', hae: '0.0', ce: '9999999.0', le: '9999999.0' }
                 },
                 detail: {
-                    __forceddelete: {},
+                    __forcedelete: {},
                     link: {
                         _attributes: {
                             uid: 'delete-uid',

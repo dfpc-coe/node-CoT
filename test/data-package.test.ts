@@ -142,7 +142,7 @@ test(`DataPackage CoT Parsing: QuickPic.zip`, async (t) => {
             Parameter: { _attributes: { name: 'uid', value: '3b758d3c-5b7a-4fba-a0dc-bbde18e895b5' } }
         }, {
             _attributes: { ignore: false, zipEntry: 'e63e920689815c961ec9d873c83f08a6/20240702_144514.jpg' },
-            Parameter: { _attributes: { name: 'uid', value: '3b758d3c-5b7a-4fba-a0dc-bbde18e895b5' } } 
+            Parameter: { _attributes: { name: 'uid', value: '3b758d3c-5b7a-4fba-a0dc-bbde18e895b5' } }
         }
     ]);
 
@@ -187,7 +187,7 @@ test(`DataPackage CoT Parsing: addFile,getFile`, async (t) => {
 
     const buff = await stream2buffer(await pkg.getFile('123/package.json'));
 
-    t.equals(JSON.parse(buff.toString()).name, '@tak-ps/node-cot'); 
+    t.equals(JSON.parse(buff.toString()).name, '@tak-ps/node-cot');
 
     const cots = await pkg.cots();
 
@@ -223,7 +223,7 @@ test(`DataPackage CoT Parsing: AttachmentInManifest.zip`, async (t) => {
             Parameter: { _attributes: { name: 'uid', value: 'c7f90966-f048-41fd-8951-70cd9a380cd2' } }
         }, {
             _attributes: { ignore: false, zipEntry: '6988443373b26e519cfd1096665b8eaa/1000001544.jpg' },
-            Parameter: { _attributes: { name: 'uid', value: 'c7f90966-f048-41fd-8951-70cd9a380cd2' } } 
+            Parameter: { _attributes: { name: 'uid', value: 'c7f90966-f048-41fd-8951-70cd9a380cd2' } }
         }
     ]);
 
@@ -231,8 +231,10 @@ test(`DataPackage CoT Parsing: AttachmentInManifest.zip`, async (t) => {
 
     t.equal(cots.length, 1);
 
+    if (!cots[0].raw.event.detail) throw new Error('Detail field not set');
+
     t.deepEquals(
-        cots[0].raw.event.detail.attachment_list, 
+        cots[0].raw.event.detail.attachment_list,
         { _attributes: { hashes: '["3adefc8c1935166d3e501844549776c6fc21cc6d72f371fdda23788e6ec7181d"]' } }
     )
 

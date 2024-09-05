@@ -129,7 +129,7 @@ export const ShapeEllipseAttributes = Type.Object({
 })
 
 export const ShapeEllipse = Type.Object({
-    _attributes: Type.Optional(ShapeEllipseAttributes),
+    _attributes: ShapeEllipseAttributes,
 })
 
 export const Shape = Type.Object({
@@ -155,8 +155,8 @@ export const MissionLayer = Type.Object({
 export const MissionChangeDetails = Type.Object({
     _attributes: Type.Object({
         type: Type.String(),
-        callsign: Type.String(),
-        color: Type.String()
+        callsign: Type.Optional(Type.String()),
+        color: Type.Optional(Type.String())
     }),
     location: Type.Optional(Type.Object({
         _attributes: Type.Object({
@@ -177,7 +177,7 @@ export const MissionChange = Type.Object({
 })
 
 export const MissionChanges = Type.Object({
-    MissionChange: Type.Union([Type.Array(MissionChange), MissionChange])
+    MissionChange: Type.Union([MissionChange, Type.Array(MissionChange)])
 })
 
 export const Mission = Type.Object({
@@ -304,6 +304,7 @@ export const Uid = Type.Object({
 export const Contact = Type.Object({
     _attributes: Type.Object({
         phone: Type.Optional(Type.String()),
+        name: Type.Optional(Type.String()),
         callsign: Type.String(),
         endpoint: Type.Optional(Type.String())
     })
@@ -428,7 +429,7 @@ export const Detail = Type.Object({
     precisionlocation: Type.Optional(PrecisionLocation),
     color: Type.Optional(ColorAttributes),
     strokeColor: Type.Optional(GenericAttributes),
-    archive: Type.Optional(GenericAttributes),
+    archive: Type.Optional(Type.Union([GenericAttributes, Type.Array(GenericAttributes)])),
     strokeWeight: Type.Optional(GenericAttributes),
     strokeStyle: Type.Optional(GenericAttributes),
     labels_on: Type.Optional(GenericAttributes),
@@ -470,7 +471,7 @@ export const Point = Type.Object({
 export default Type.Object({
     event: Type.Object({
         _attributes: EventAttributes,
-        detail: Type.Optional(Type.Index(Detail, Type.KeyOf(Detail))),
+        detail: Type.Optional(Detail),
         point: Point,
     }),
 })

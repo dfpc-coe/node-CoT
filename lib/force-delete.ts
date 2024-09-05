@@ -17,7 +17,7 @@ export class ForceDelete extends CoT {
                             relation: 'none'
                         }
                     },
-                    __forceddelete: {}
+                    __forcedelete: {}
                 }
             }
         };

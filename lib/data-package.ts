@@ -235,32 +235,31 @@ export class DataPackage {
             });
 
             for (const cot of cots) {
+                if (!cot.raw.event.detail) {
+                    cot.raw.event.detail = {};
+                }
+
                 const attaches = attachments.get(cot.uid());
                 if (!attaches) continue;
 
                 for (const attach of attaches) {
                     if (!cot.raw.event.detail.attachment_list) {
                         cot.raw.event.detail.attachment_list = {
-                            _attributes: {
-                                hashes: []
-                            }
+                            _attributes: { hashes: '[]' }
                         };
-                    } else {
-                        cot.raw.event.detail.attachment_list._attributes.hashes = JSON.parse(
-                            cot.raw.event.detail.attachment_list._attributes.hashes
-                        );
                     }
+
+                    const hashes: string[] = JSON.parse(cot.raw.event.detail.attachment_list._attributes.hashes)
 
                     // Until told otherwise the FileHash appears to always be the directory name
                     const hash = await this.hash(attach._attributes.zipEntry);
 
-                    if (!cot.raw.event.detail.attachment_list._attributes.hashes.includes(hash)) {
-                        cot.raw.event.detail.attachment_list._attributes.hashes.push(hash)
+                    if (!hashes.includes(hash)) {
+                        hashes.push(hash)
                     }
 
-                    cot.raw.event.detail.attachment_list._attributes.hashes = JSON.stringify(
-                        cot.raw.event.detail.attachment_list._attributes.hashes
-                    );
+                    cot.raw.event.detail.attachment_list._attributes.hashes = JSON.stringify(hashes);
+
                 }
             }
         }

@@ -18,7 +18,7 @@ import Truncate from '@turf/truncate';
 import Ellipse from '@turf/ellipse';
 import Util from './util.js';
 import Color from './color.js';
-import JSONCoT from './types.js'
+import JSONCoT, { Detail } from './types.js'
 import type { MartiDest, MartiDestAttributes, Link, LinkAttributes } from './types.js'
 import AJV from 'ajv';
 import fs from 'fs';
@@ -59,14 +59,14 @@ export default class CoT {
     // merged into the CoT spec
     metadata: Record<string, unknown>;
 
-    constructor(cot: Buffer | Static<typeof JSONCoT> | string) {
+    constructor(cot: Buffer | Static<typeof JSONCoT> | object | string) {
         if (typeof cot === 'string' || cot instanceof Buffer) {
             if (cot instanceof Buffer) cot = String(cot);
 
             const raw = xmljs.xml2js(cot, { compact: true });
             this.raw = raw as Static<typeof JSONCoT>;
         } else {
-            this.raw = cot;
+            this.raw = cot as Static<typeof JSONCoT>;
         }
 
         this.metadata = {};
@@ -82,7 +82,9 @@ export default class CoT {
         if (!this.raw.event.detail['_flow-tags_']) this.raw.event.detail['_flow-tags_'] = {};
         this.raw.event.detail['_flow-tags_'][`NodeCoT-${pkg.version}`] = new Date().toISOString()
 
-        if (this.raw.event.detail.archived && Object.keys(this.raw.event.detail.archived).length === 0) this.raw.event.detail.archived = { _attributes: {} };
+        if (this.raw.event.detail.archive && Object.keys(this.raw.event.detail.archive).length === 0) {
+            this.raw.event.detail.archive = { _attributes: {} };
+        }
     }
 
     /**
@@ -207,7 +209,7 @@ export default class CoT {
         }
 
         if (feature.properties.archived) {
-            cot.event.detail.archived = { _attributes: { } };
+            cot.event.detail.archive = { _attributes: { } };
         }
 
         if (feature.properties.links) {
@@ -438,7 +440,7 @@ export default class CoT {
         if (version < 1 || version > 1) throw new Err(400, null, `Unsupported Proto Version: ${version}`);
         const ProtoMessage = RootMessage.lookupType(`atakmap.commoncommo.protobuf.v${version}.TakMessage`)
 
-        const detail = this.raw.event.detail;
+        const detail = this.raw.event.detail || {};
 
         const msg: any = {
             cotEvent: {
@@ -453,7 +455,8 @@ export default class CoT {
             }
         };
 
-        for (const key in detail) {
+        let key: keyof Static<typeof Detail>;
+        for (key in detail) {
             if(['contact', 'group', 'precisionlocation', 'status', 'takv', 'track'].includes(key)) {
                 msg.cotEvent.detail[key] = detail[key]._attributes;
                 delete detail[key]
@@ -493,7 +496,9 @@ export default class CoT {
                     delete detail.metadata;
                 }
             } else if (['contact', 'group', 'precisionlocation', 'status', 'takv', 'track'].includes(key)) {
-                detail[key] = { _attributes: msg.cotEvent.detail[key] };
+                if (msg.cotEvent.detail[key]) {
+                    detail[key] = { _attributes: msg.cotEvent.detail[key] };
+                }
             }
         }
 
@@ -601,7 +606,7 @@ export default class CoT {
             if (!feat.properties.links || !feat.properties.links.length) delete feat.properties.links;
         }
 
-        if (raw.event.detail.archived) {
+        if (raw.event.detail.archive) {
             feat.properties.archived = true;
         }
 
@@ -755,6 +760,12 @@ export default class CoT {
                 }
             }
         } else if (raw.event._attributes.type.startsWith('u-d-c-c')) {
+            if (!raw.event.detail.shape) throw new Err(400, null, 'u-d-c-c (Circle) must define shape value')
+            if (
+                !raw.event.detail.shape.ellipse
+                || !raw.event.detail.shape.ellipse._attributes
+            ) throw new Err(400, null, 'u-d-c-c (Circle) must define ellipse shape value')
+
             const ellipse = {
                 major: Number(raw.event.detail.shape.ellipse._attributes.major),
                 minor: Number(raw.event.detail.shape.ellipse._attributes.minor),
@@ -787,7 +798,7 @@ export default class CoT {
 
                 if (coordinates.length === 1) {
                     feat.geometry = { type: 'Point', coordinates: coordinates[0] }
-                } else if (raw.event.detail.shape.polyline._attributes && raw.event.detail.shape.polyline._attributes.closed === 'true') {
+                } else if (raw.event.detail.shape.polyline._attributes && raw.event.detail.shape.polyline._attributes.closed === true) {
                     coordinates.push(coordinates[0]);
                     feat.geometry = { type: 'Polygon', coordinates: [coordinates] }
                 } else {
@@ -795,7 +806,12 @@ export default class CoT {
                 }
             }
 
-            if (raw.event.detail.shape && raw.event.detail.shape.polyline._attributes && raw.event.detail.shape.polyline._attributes) {
+            if (
+                raw.event.detail.shape
+                && raw.event.detail.shape.polyline
+                && raw.event.detail.shape.polyline._attributes
+                && raw.event.detail.shape.polyline._attributes
+            ) {
                 if (raw.event.detail.shape.polyline._attributes.fillColor) {
                     const fill = new Color(Number(raw.event.detail.shape.polyline._attributes.fillColor));
                     feat.properties['fill-opacity'] = fill.as_opacity() / 255;
