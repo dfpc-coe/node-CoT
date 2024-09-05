@@ -52,15 +52,15 @@ test('Decode MultiMissionAircraft CoTs', (t) => {
                     "shape":{
                         "polyline":{
                             "_attributes":{
-                                "closed":"true",
+                                "closed":true,
                                 "fillColor":"0",
                                 "color":"-1"
                             },
                             "vertex":[
-                                {"_attributes":{"lat":"40.059445","lon":"-108.328368"}},
-                                {"_attributes":{"lat":"40.061846","lon":"-108.314776"}},
-                                {"_attributes":{"lat":"40.075499","lon":"-108.315566"}},
-                                {"_attributes":{"lat":"40.071252","lon":"-108.330782"}}
+                                {"_attributes":{"lat":40.059445,"lon":-108.328368}},
+                                {"_attributes":{"lat":40.061846,"lon":-108.314776}},
+                                {"_attributes":{"lat":40.075499,"lon":-108.315566}},
+                                {"_attributes":{"lat":40.071252,"lon":-108.330782}}
                             ]
                         }
                     },

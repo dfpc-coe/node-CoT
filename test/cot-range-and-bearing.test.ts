@@ -78,6 +78,7 @@ test('Decode Range & Bearing', (t) => {
             id: 'ebbf42a7-ea71-43a1-baf6-e259c3d115bf',
             type: 'Feature',
             properties: {
+                archived: true,
                 callsign: 'R&B 1',
                 center: [ -108.7395013, 39.0981196, 0 ],
                 type: 'u-rb-a',

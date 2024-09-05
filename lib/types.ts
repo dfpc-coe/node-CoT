@@ -429,7 +429,7 @@ export const Detail = Type.Object({
     precisionlocation: Type.Optional(PrecisionLocation),
     color: Type.Optional(ColorAttributes),
     strokeColor: Type.Optional(GenericAttributes),
-    archive: Type.Optional(GenericAttributes),
+    archive: Type.Optional(Type.Union([GenericAttributes, Type.Array(GenericAttributes)])),
     strokeWeight: Type.Optional(GenericAttributes),
     strokeStyle: Type.Optional(GenericAttributes),
     labels_on: Type.Optional(GenericAttributes),
