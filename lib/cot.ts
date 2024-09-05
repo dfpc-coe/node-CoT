@@ -78,10 +78,6 @@ export default class CoT {
         checkXML(this.raw);
         if (checkXML.errors) throw new Err(400, null, `${checkXML.errors[0].message} (${checkXML.errors[0].instancePath})`);
 
-        console.error(JSONCoT.properties.event.properties.detail)
-        // @ts-expect-error ignore for now
-        console.error(this.raw.event.detail.shape.polyline.vertex);
-
         if (!this.raw.event.detail) this.raw.event.detail = {};
         if (!this.raw.event.detail['_flow-tags_']) this.raw.event.detail['_flow-tags_'] = {};
         this.raw.event.detail['_flow-tags_'][`NodeCoT-${pkg.version}`] = new Date().toISOString()

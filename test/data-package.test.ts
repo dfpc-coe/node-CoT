@@ -231,6 +231,8 @@ test(`DataPackage CoT Parsing: AttachmentInManifest.zip`, async (t) => {
 
     t.equal(cots.length, 1);
 
+    if (!cots[0].raw.event.detail) throw new Error('Detail field not set');
+
     t.deepEquals(
         cots[0].raw.event.detail.attachment_list,
         { _attributes: { hashes: '["3adefc8c1935166d3e501844549776c6fc21cc6d72f371fdda23788e6ec7181d"]' } }
