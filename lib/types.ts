@@ -155,8 +155,8 @@ export const MissionLayer = Type.Object({
 export const MissionChangeDetails = Type.Object({
     _attributes: Type.Object({
         type: Type.String(),
-        callsign: Type.String(),
-        color: Type.String()
+        callsign: Type.Optional(Type.String()),
+        color: Type.Optional(Type.String())
     }),
     location: Type.Optional(Type.Object({
         _attributes: Type.Object({
@@ -177,7 +177,7 @@ export const MissionChange = Type.Object({
 })
 
 export const MissionChanges = Type.Object({
-    MissionChange: Type.Union([Type.Array(MissionChange), MissionChange])
+    MissionChange: Type.Union([MissionChange, Type.Array(MissionChange)])
 })
 
 export const Mission = Type.Object({
