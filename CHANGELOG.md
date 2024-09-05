@@ -10,6 +10,13 @@
 
 ## Version History
 
+### Pending Fixed
+
+- :rocket: Add `object` type support to COT Constructor definition
+- :bug: Removal of `Type.Index` on `event` in JSONCOT type definition to fix AJV Coerce Types
+- :bug: Removal surfaced `archive` inconsistencies
+- :bug: Removal surfaced `__forcedelete` inconsistencies
+
 ### v11.2.0 - 2024-09-03
 
 - :rocket: Add basic typed support for Range & Bearing Values

@@ -129,7 +129,7 @@ export const ShapeEllipseAttributes = Type.Object({
 })
 
 export const ShapeEllipse = Type.Object({
-    _attributes: Type.Optional(ShapeEllipseAttributes),
+    _attributes: ShapeEllipseAttributes,
 })
 
 export const Shape = Type.Object({
@@ -304,6 +304,7 @@ export const Uid = Type.Object({
 export const Contact = Type.Object({
     _attributes: Type.Object({
         phone: Type.Optional(Type.String()),
+        name: Type.Optional(Type.String()),
         callsign: Type.String(),
         endpoint: Type.Optional(Type.String())
     })
@@ -470,7 +471,7 @@ export const Point = Type.Object({
 export default Type.Object({
     event: Type.Object({
         _attributes: EventAttributes,
-        detail: Type.Optional(Type.Index(Detail, Type.KeyOf(Detail))),
+        detail: Type.Optional(Detail),
         point: Point,
     }),
 })
