@@ -58,6 +58,46 @@ export const Link = Type.Object({
     _attributes: LinkAttributes
 })
 
+// Ref: https://git.tak.gov/standards/takcot/-/blob/master/xsd/Route.xsd
+export const LinkAttrRouteFil = Type.Enum({
+    Infil: 'Infil',
+    Exfil: 'Exfil'
+});
+
+export const LinkAttrRouteMethod = Type.Enum({
+    Driving: 'Driving',
+    Walking: 'Walking',
+    Flying: 'Flying',
+    Swimming: 'Swimming',
+    Watercraft: 'Watercraft'
+});
+
+export const LinkAttrRouteType = Type.Enum({
+    Primary: 'Primary',
+    Secondary: 'Secondary',
+});
+
+export const LinkAttrRouteOrder = Type.Enum({
+    Ascending: 'Ascending Check Points',
+    Descending: 'Descending Check Points',
+});
+
+export const LinkAttrAttributes = Type.Object({
+    planningmethod: Type.Optional(LinkAttrRouteFil),
+    color: Type.Optional(Type.Integer()),
+    method: LinkAttrRouteMethod,
+    prefix: Type.String(),
+    stroke: Type.Optional(Type.String()),
+    type: Type.Optional(Type.String()),
+    routetype: LinkAttrRouteType,
+    direction: Type.Optional(LinkAttrRouteFil),
+    order: LinkAttrRouteOrder
+})
+
+export const LinkAttr = Type.Object({
+    _attributes: LinkAttrAttributes
+})
+
 export const ProtocolSupportAttributes = Type.Object({
     _attributes: Type.Optional(Type.Object({
         version: Type.Optional(Type.String())
@@ -436,7 +476,10 @@ export const Detail = Type.Object({
     fillColor: Type.Optional(GenericAttributes),
     mission: Type.Optional(Mission),
     shape: Type.Optional(Shape),
+
     link: Type.Optional(Type.Union([Link, Type.Array(Link)])),
+    link_attr: Type.Optional(LinkAttr),
+
     usericon: Type.Optional(UserIcon),
     track: Type.Optional(Track),
     sensor: Type.Optional(Sensor),

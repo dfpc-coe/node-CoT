@@ -715,7 +715,7 @@ export default class CoT {
             feat.properties.precisionlocation = raw.event.detail.precisionlocation._attributes;
         }
 
-        if (['u-d-f', 'u-d-r'].includes(raw.event._attributes.type) && Array.isArray(raw.event.detail.link)) {
+        if (['u-d-f', 'u-d-r', 'b-m-r'].includes(raw.event._attributes.type) && Array.isArray(raw.event.detail.link)) {
             const coordinates = [];
 
             for (const l of raw.event.detail.link) {

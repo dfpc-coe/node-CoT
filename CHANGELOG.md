@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.1.0 - 2024-09-09
+
+- :rocket: Add preliminary support for TAK Routes => GeoJSON LineStrings
+
 ### v12.0.0 - 2024-09-05
 
 - :rocket: Add `object` type support to COT Constructor definition
