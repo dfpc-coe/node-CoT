@@ -9,6 +9,7 @@
         "esModuleInterop": true,
         "target": "es2022",
         "lib": ["es2022", "dom"],
+        "skipLibCheck": true,
         "noImplicitAny": true,
         "moduleResolution": "node",
         "resolveJsonModule": true,
