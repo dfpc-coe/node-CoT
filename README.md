@@ -182,3 +182,6 @@ These are less common properties that can be used:
 | `b-i-r-r`         | Remote Resource |
 | `b-f-t-r`         | File Transfer Request |
 | `b-i-x-i`         | QuickPic |
+| `b-m-r`           | Route |
+| `b-m-p-c`         | Route Control Point |
+| `b-m-p-w`         | Route Way Point |
