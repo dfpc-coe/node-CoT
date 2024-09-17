@@ -1,13 +1,18 @@
 <h1 align=center>Node-CoT</h1>
 
-<p align=center>Javascript Cursor-On-Target Library</p>
+<p align=center>Typescript/Javascript Cursor-On-Target Library</p>
 
-Lightweight JavaScript library for parsing and manipulating TAK related messages, primarily [Cursor-on-Target (COT)](https://git.tak.gov/standards/takcot)
+Lightweight Typescript library for parsing and manipulating TAK related messages, primarily [Cursor-on-Target (COT)](https://git.tak.gov/standards/takcot)
 
 ## About
 
-`node-cot` converts between TAK message protocols and a Javascript object/JSON format.
+`node-cot` converts between TAK message protocols (XML & Protobuf) and a Javascript object/JSON format.
 It also can bidirectionally convert CoT messages into [GeoJSON](https://geojson.org/)
+
+It also support creating and parsing the following TAK Data Types
+
+- Data Packages (CoTs, Attachments, etc)
+- Basemap XML Documents
 
 ## Installation
 
