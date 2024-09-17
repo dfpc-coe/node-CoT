@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.2.0 - 2024-09-17
+
+- :tada: Add support for parsing Basemap XML Documents
+
 ### v12.1.0 - 2024-09-09
 
 - :rocket: Add preliminary support for TAK Routes => GeoJSON LineStrings
