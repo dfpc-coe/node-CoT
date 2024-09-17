@@ -1,4 +1,3 @@
-import type { Static } from '@sinclair/typebox';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import test from 'tape';
