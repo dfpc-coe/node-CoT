@@ -5,7 +5,7 @@ import type {
     TrackAttributes,
     Detail,
     Point
-} from './types.js';
+} from '../types/types.js';
 
 /**
  * Helper functions for generating CoT data

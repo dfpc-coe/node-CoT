@@ -1,5 +1,5 @@
 import test from 'tape';
-import Util from '../lib/util.js';
+import Util from '../lib/utils/util.js';
 
 test('Util.cot_date - default', (t) => {
     const res = Util.cot_date();

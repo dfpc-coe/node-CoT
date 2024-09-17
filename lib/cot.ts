@@ -8,18 +8,18 @@ import type {
     Polygon,
     FeaturePropertyMission,
     FeaturePropertyMissionLayer,
-} from './feature.js';
+} from './types/feature.js';
 import {
     InputFeature,
-} from './feature.js';
+} from './types/feature.js';
 import type { AllGeoJSON } from "@turf/helpers";
 import PointOnFeature from '@turf/point-on-feature';
 import Truncate from '@turf/truncate';
 import Ellipse from '@turf/ellipse';
-import Util from './util.js';
-import Color from './color.js';
-import JSONCoT, { Detail } from './types.js'
-import type { MartiDest, MartiDestAttributes, Link, LinkAttributes } from './types.js'
+import Util from './utils/util.js';
+import Color from './utils/color.js';
+import JSONCoT, { Detail } from './types/types.js'
+import type { MartiDest, MartiDestAttributes, Link, LinkAttributes } from './types/types.js'
 import AJV from 'ajv';
 import fs from 'fs';
 
