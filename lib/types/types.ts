@@ -250,7 +250,7 @@ export const VideoAttributes = Type.Object({
 });
 
 export const Video = Type.Object({
-    _attributes: VideoAttributes
+    _attributes: Type.Optional(VideoAttributes)
 })
 
 export const GeofenceAttributes = Type.Object({

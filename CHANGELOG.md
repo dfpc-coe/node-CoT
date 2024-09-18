@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.3.0 - 2024-09-18
+
+- :bug: Support parsing CoTs with empty/non-populated video tag
+
 ### v12.2.0 - 2024-09-17
 
 - :tada: Add support for parsing Basemap XML Documents

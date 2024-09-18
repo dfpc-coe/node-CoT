@@ -578,7 +578,7 @@ export default class CoT {
             feat.properties.sensor = raw.event.detail.sensor._attributes;
         }
 
-        if (raw.event.detail.__video) {
+        if (raw.event.detail.__video && raw.event.detail.__video._attributes) {
             feat.properties.video = raw.event.detail.__video._attributes;
         }
 
