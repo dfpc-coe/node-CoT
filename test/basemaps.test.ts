@@ -9,7 +9,7 @@ for (const fixturename of await fs.readdir(new URL('./basemaps/', import.meta.ur
         const fixture = String(await fs.readFile(path.join(path.parse(fileURLToPath(import.meta.url)).dir, 'basemaps/', fixturename)));
         const container = await Basemap.parse(fixture);
 
-        t.ok(container.basemap.customMapSource.name._text.length)
+        t.ok(container.raw.customMapSource.name._text.length)
 
         t.end();
     });
