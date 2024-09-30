@@ -12,6 +12,11 @@
 
 ### Pending Fixed
 
+### v12.4.0 - 2024-09-30
+
+- :rocket: Use internal XMLDocument class as base for Iconset/Basemap
+- :tada: Add initial Iconset Types
+
 ### v12.3.0 - 2024-09-18
 
 - :bug: Support parsing CoTs with empty/non-populated video tag
