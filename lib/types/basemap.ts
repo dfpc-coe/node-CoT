@@ -14,7 +14,9 @@ export const BasemapMapSource = Type.Object({
         _text: Type.String()
     }),
     tileUpdate: Type.Optional(Type.Object({
-        _text: Type.String()
+        _text: Type.String({
+            default: 'None'
+        })
     })),
     url: Type.Optional(Type.Object({
         _text: Type.String()

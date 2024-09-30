@@ -1,10 +1,6 @@
 import Err from '@openaddresses/batch-error';
 import type { ValidateFunction } from 'ajv';
-import type { TSchema, Static } from '@sinclair/typebox';
-import { Type } from '@sinclair/typebox';
 import xmljs from 'xml-js';
-
-const Unknown = Type.Unknown();
 
 /**
  * Core XML Document support used for XML fortatted DataPackages documents
@@ -17,7 +13,7 @@ export default class XMLDocument<T> {
         this.raw = raw;
     }
 
-    static check<U>(input: string, check: ValidateFunction<{ [x: string]: {}; }>): U {
+    static check<U>(input: string, check: ValidateFunction<unknown>): U {
         const xml = xmljs.xml2js(input, { compact: true })
 
         check(xml);

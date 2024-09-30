@@ -1,8 +1,6 @@
 import XMLDocument from '../xml-document.js';
 import type { Static } from '@sinclair/typebox'
-import Err from '@openaddresses/batch-error';
 import BasemapSchema from '../types/basemap.js';
-import xmljs from 'xml-js';
 import AJV from 'ajv';
 
 const checkBasemap = (new AJV({
