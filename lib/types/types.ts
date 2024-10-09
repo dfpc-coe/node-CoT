@@ -227,15 +227,16 @@ export const Mission = Type.Object({
 })
 
 export const SensorAttributes = Type.Object({
-    elevation: Type.Optional(Type.String()),
-    vfov: Type.Optional(Type.String()),
-    fov: Type.Optional(Type.String()),
+    elevation: Type.Optional(Type.Number()),
+    vfov: Type.Optional(Type.Number()),
+    fov: Type.Optional(Type.Number()),
+    roll: Type.Optional(Type.Number()),
+    range: Type.Optional(Type.Number()),
+    azimuth: Type.Optional(Type.Number()),
+    north: Type.Optional(Type.Number()),
+
     type: Type.Optional(Type.String()),
     version: Type.Optional(Type.String()),
-    north: Type.Optional(Type.String()),
-    roll: Type.Optional(Type.String()),
-    range: Type.Optional(Type.String()),
-    azimuth: Type.Optional(Type.String()),
     model: Type.Optional(Type.String())
 });
 
