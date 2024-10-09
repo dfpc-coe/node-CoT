@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.5.0 - 2024-10-09
+
+- :rocket: Use Numerics for Sensor Attributes
+
 ### v12.4.0 - 2024-09-30
 
 - :rocket: Use internal XMLDocument class as base for Iconset/Basemap
