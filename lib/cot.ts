@@ -495,7 +495,11 @@ export default class CoT {
                     }
                     delete detail.metadata;
                 }
-            } else if (['contact', 'group', 'precisionlocation', 'status', 'takv', 'track'].includes(key)) {
+            } else if (key === 'group') {
+                if (msg.cotEvent.detail[key]) {
+                    detail.__group = { _attributes: msg.cotEvent.detail[key] };
+                }
+            } else if (['contact', 'precisionlocation', 'status', 'takv', 'track'].includes(key)) {
                 if (msg.cotEvent.detail[key]) {
                     detail[key] = { _attributes: msg.cotEvent.detail[key] };
                 }
