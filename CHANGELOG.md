@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.5.1 - 2024-10-09
+
+- :rocket: Add Types Export
+
 ### v12.5.0 - 2024-10-09
 
 - :rocket: Use Numerics for Sensor Attributes

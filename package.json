@@ -6,6 +6,10 @@
     "author": "Nick Ingalls <nick@ingalls.ca>",
     "main": "dist/index.js",
     "types": "index.ts",
+    "exports": {
+        ".": "dist/index.js",
+        "./types/": "dist/lib/types/"
+    },
     "scripts": {
         "test": "ts-node-test test/",
         "lint": "eslint *.ts lib/ test/",
