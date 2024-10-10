@@ -12,6 +12,11 @@
 
 ### Pending Fixed
 
+### v12.5.2 - 2024-10-10
+
+- :bug: Resolver was having trouble with export path
+- :bug: Group parsing wasn't adding `__` prefix from proto => CoT
+
 ### v12.5.1 - 2024-10-09
 
 - :rocket: Add Types Export
