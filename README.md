@@ -142,6 +142,13 @@ These are less common properties that can be used:
 | `u-d-r`           | 4 Cornered Rectangle |
 | `u-d-p`           | Point |
 
+<p align='center'><strong>Internal</strong></p>
+
+| CoT Type          | Notes |
+| ----------------- | ----- |
+| `t-x-c-t`         | TAK Server Ping Request |
+| `t-x-c-t-r`       | TAK Server Pong Response |
+
 <p align='center'><strong>Notification/Alerts</strong></p>
 
 | CoT Type          | Notes |
