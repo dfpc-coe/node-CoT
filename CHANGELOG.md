@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.6.0 - 2024-10-15
+
+- :rocket: Allow 0 length polylines to allow for removal from ATAK
+
 ### v12.5.2 - 2024-10-10
 
 - :bug: Resolver was having trouble with export path

@@ -104,3 +104,42 @@ test('Decode MissionChange CoTs - #2', (t) => {
 
     t.end();
 });
+
+test('Decode MissionChange Logs', (t) => {
+    const cot = new CoT({"event":{"_attributes":{"how":"h-g-i-g-o","type":"t-x-m-c-l","version":"2.0","uid":"e77c55da-c5d2-4200-bbc9-9967b3f30b5b","start":"2024-10-14T15:33:04Z","time":"2024-10-14T15:33:04Z","stale":"2024-10-14T15:33:24Z"},"point":{"_attributes":{"ce":"9999999","le":"9999999","hae":"0","lat":"0","lon":"0"}},"detail":{"mission":{"_attributes":{"type":"CHANGE","tool":"public","name":"manual test","guid":"ae2e9ec4-2762-4664-8660-1ef824bde9bc","authorUid":"ANDROID-0ca41830e11d2ef3"}}}}});
+
+    if (!cot.raw.event.detail) {
+        t.fail('No Detail Section')
+    } else {
+        t.ok(cot.raw.event.detail['_flow-tags_']);
+        delete cot.raw.event.detail['_flow-tags_'];
+
+        t.deepEquals({
+            id: 'e77c55da-c5d2-4200-bbc9-9967b3f30b5b',
+            type: 'Feature',
+            properties: {
+                callsign: 'UNKNOWN',
+                center: [ 0, 0, 0 ],
+                type: 't-x-m-c-l',
+                how: 'h-g-i-g-o',
+                time: '2024-10-14T15:33:04Z',
+                start: '2024-10-14T15:33:04Z',
+                stale: '2024-10-14T15:33:24Z',
+                mission: {
+                    type: 'CHANGE',
+                    tool: 'public',
+                    name: 'manual test',
+                    guid: 'ae2e9ec4-2762-4664-8660-1ef824bde9bc',
+                    authorUid: 'ANDROID-0ca41830e11d2ef3',
+                },
+                metadata: {}
+            },
+            geometry: {
+                type: 'Point',
+                coordinates: [ 0, 0, 0 ]
+            }
+        }, cot.to_geojson());
+    }
+
+    t.end();
+});
