@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.7.0 - 2024-10-16
+
+- :rocket: Add `DataPackage.files()` Fn for getting non-attachment files
+
 ### v12.6.0 - 2024-10-15
 
 - :rocket: Allow 0 length polylines to allow for removal from ATAK
