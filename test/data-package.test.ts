@@ -21,8 +21,13 @@ test(`DataPackage CoT Parsing: CameraCOTs.zip`, async (t) => {
     ]);
 
     const cots = await pkg.cots();
-
     t.equal(cots.length, 1);
+
+    const attachments = await pkg.attachments();
+    t.equals(attachments.size, 0)
+
+    const files = await pkg.files();
+    t.equals(files.size, 0)
 
     await pkg.destroy();
 
@@ -66,8 +71,13 @@ test(`DataPackage CoT Writing`, async (t) => {
     ]);
 
     const cots = await pkg_parse.cots();
-
     t.equal(cots.length, 1);
+
+    const attachments = await pkg.attachments();
+    t.equals(attachments.size, 0)
+
+    const files = await pkg.files();
+    t.equals(files.size, 0)
 
     await pkg.destroy();
     await pkg_parse.destroy();
@@ -112,8 +122,13 @@ test(`DataPackage CoT Writing`, async (t) => {
     ]);
 
     const cots = await pkg_parse.cots();
-
     t.equal(cots.length, 1);
+
+    const attachments = await pkg.attachments();
+    t.equals(attachments.size, 0)
+
+    const files = await pkg.files();
+    t.equals(files.size, 0)
 
     await pkg.destroy();
     await pkg_parse.destroy();
@@ -147,12 +162,13 @@ test(`DataPackage CoT Parsing: QuickPic.zip`, async (t) => {
     ]);
 
     const cots = await pkg.cots();
-
     t.equal(cots.length, 1);
 
     const attachments = await pkg.attachments();
-
     t.equals(attachments.size, 1)
+
+    const files = await pkg.files();
+    t.equals(files.size, 0)
 
     t.deepEquals(attachments.get('3b758d3c-5b7a-4fba-a0dc-bbde18e895b5'), [{
         _attributes: { ignore: false, zipEntry: 'e63e920689815c961ec9d873c83f08a6/20240702_144514.jpg' },
@@ -205,7 +221,7 @@ test(`DataPackage CoT Parsing: addFile,getFile`, async (t) => {
 test(`DataPackage CoT Parsing: AttachmentInManifest.zip`, async (t) => {
     const pkg = await DataPackage.parse(new URL('./packages/AttachmentInManifest.zip', import.meta.url).pathname);
 
-    t.equals(await DataPackage.hash(new URL('./packages/QuickPic.zip', import.meta.url).pathname), 'bd13db0f18ccb423833cc21c0678e0224dd15ff504c1f16c43aff03e216b82a7');
+    t.equals(await DataPackage.hash(new URL('./packages/AttachmentInManifest.zip', import.meta.url).pathname), '3a2c1c147f7c96d86ca27c1d8bd1f45cf1f8418c28c35935284fb2c9e38a5424');
 
     t.equals(pkg.version, '2');
     t.ok(pkg.path);
@@ -239,13 +255,58 @@ test(`DataPackage CoT Parsing: AttachmentInManifest.zip`, async (t) => {
     )
 
     const attachments = await pkg.attachments();
-
     t.equals(attachments.size, 1)
+
+
+    const files = await pkg.files();
+    t.equals(files.size, 0)
 
     t.deepEquals(attachments.get('c7f90966-f048-41fd-8951-70cd9a380cd2'), [{
         _attributes: { ignore: false, zipEntry: '6988443373b26e519cfd1096665b8eaa/1000001544.jpg' },
         Parameter: { _attributes: { name: 'uid', value: 'c7f90966-f048-41fd-8951-70cd9a380cd2' } }
     }]);
+
+    await pkg.destroy();
+
+    t.end();
+});
+
+test(`DataPackage File Parsing: COMileposts.zip`, async (t) => {
+    const pkg = await DataPackage.parse(new URL('./packages/COMilePosts.zip', import.meta.url).pathname);
+
+    t.equals(await DataPackage.hash(new URL('./packages/COMilePosts.zip', import.meta.url).pathname), '118e6b6f4cd30c855606879263f6376ca8a6f9b1694dd38ac43868ecfbe46edb');
+
+    t.equals(pkg.version, '2');
+    t.ok(pkg.path);
+    t.deepEquals(pkg.settings, {
+        uid: '62089a51-65d7-4c8c-9830-3bc466cd5683',
+        name: 'CO Mileposts.kmz',
+        onReceiveImport: 'true',
+        onReceiveDelete: 'true'
+    });
+
+    t.deepEquals(pkg.contents, [
+        {
+            _attributes: { ignore: false, zipEntry: '86771c6fd3635ec4d66c3fd9501f23c1/CO Mileposts.kmz' },
+            Parameter: [
+                { _attributes: { name: 'name', value: 'CO Mileposts.kmz' } },
+                { _attributes: { name: 'contentType', value: 'KML' } },
+                { _attributes: { name: 'visible', value: 'false' } }
+            ]
+        }
+    ]);
+
+    const cots = await pkg.cots();
+    t.equal(cots.length, 0);
+
+    const attachments = await pkg.attachments();
+    t.equals(attachments.size, 0)
+
+
+    const files = await pkg.files();
+    t.equals(files.size, 1)
+
+    t.ok(files.has('86771c6fd3635ec4d66c3fd9501f23c1/CO Mileposts.kmz'));
 
     await pkg.destroy();
 
