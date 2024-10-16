@@ -293,8 +293,37 @@ export class DataPackage {
     }
 
     /**
+     * Return a list of files that are NOT attachments or CoT markers
+     * The Set returned has a list of file paths that can be passed to getFile(path)
+     */
+    async files(opts = { respectIgnore: true }): Promise<Set<string>> {
+        const attachments = await this.attachments(opts);
+        const files: Set<string> = new Set();
+
+        const attachment_entries = new Set<string>();
+        for (const entries of attachments.values()) {
+            for (const entry of entries) {
+                attachment_entries.add(entry._attributes.zipEntry)
+            }
+        }
+
+        for (const content of this.contents) {
+            if (path.parse(content._attributes.zipEntry).ext === '.cot') continue;
+            if (opts.respectIgnore && content._attributes.ignore) continue;
+
+            if (attachment_entries.has(content._attributes.zipEntry)) {
+                continue;
+            }
+
+            files.add(content._attributes.zipEntry);
+        }
+
+        return files;
+    }
+
+    /**
      * Return attachments that are associated in the Manifest with a given CoT
-     * Note: this does not return files that are not associated with a CoT
+     * Note: this does not return files that are NOT associated with a CoT
      */
     async attachments(opts = { respectIgnore: true }): Promise<Map<string, Array<Static<typeof ManifestContent>>>> {
         const cots: Map<string, CoT> = new Map();
