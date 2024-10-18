@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.7.1 - 2024-10-16
+
+- :rocket: Remove `exports` from package.json for now Ref: https://github.com/dfpc-coe/node-CoT/issues/47
+
 ### v12.7.0 - 2024-10-16
 
 - :rocket: Add `DataPackage.files()` Fn for getting non-attachment files
