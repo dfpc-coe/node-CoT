@@ -10,6 +10,7 @@ for (const fixturename of await fs.readdir(new URL('./basemaps/', import.meta.ur
         const container = await Basemap.parse(fixture);
 
         t.ok(container.raw.customMapSource.name._text.length)
+        t.ok(container.to_json().name.length);
 
         t.end();
     });
