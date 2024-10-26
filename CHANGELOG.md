@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.9.0 - 2024-10-26
+
+- :bug: MissionChange can have no text in `creatorUid` Tag
+
 ### v12.8.0 - 2024-10-26
 
 - :rocket: Add `.to_json` call for Basemap XML

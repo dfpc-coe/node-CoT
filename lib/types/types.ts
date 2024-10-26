@@ -122,6 +122,10 @@ export const GenericAttributes = Type.Object({
     }))
 })
 
+export const GenericOptionalText = Type.Object({
+    _text: Optional(Type.String())
+})
+
 export const GenericText = Type.Object({
     _text: Type.String()
 })
@@ -208,7 +212,7 @@ export const MissionChangeDetails = Type.Object({
 
 export const MissionChange = Type.Object({
     contentUid: GenericText,
-    creatorUid: GenericText,
+    creatorUid: GenericOptionalText,
     isFederatedChange: GenericText,
     missionName: GenericText,
     timestamp: GenericText,
