@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.8.0 - 2024-10-26
+
+- :rocket: Add `.to_json` call for Basemap XML
+
 ### v12.7.1 - 2024-10-16
 
 - :rocket: Remove `exports` from package.json for now Ref: https://github.com/dfpc-coe/node-CoT/issues/47
