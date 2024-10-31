@@ -12,6 +12,11 @@
 
 ### Pending Fixed
 
+### v12.10.0 - 2024-10-31
+
+- :rocket: Add a ton of new Sensor Attribute keys that were surfaced in CoT mining
+- :data: Add Video Configuration object type
+
 ### v12.9.0 - 2024-10-26
 
 - :bug: MissionChange can have no text in `creatorUid` Tag

@@ -239,6 +239,18 @@ export const SensorAttributes = Type.Object({
     azimuth: Type.Optional(Type.Number()),
     north: Type.Optional(Type.Number()),
 
+    fovBlue: Type.Optional(Type.Number()),
+    fovAlpha: Type.Optional(Type.Number()),
+    fovGreen: Type.Optional(Type.Number()),
+    fovRed: Type.Optional(Type.Number()),
+    strokeWeight: Type.Optional(Type.Number()),
+    strokeColor: Type.Optional(Type.Number()),
+    rangeLines: Type.Optional(Type.Number()),
+    rangeLineStrokeWeight: Type.Optional(Type.Number()),
+    rangeLineStrokeColor: Type.Optional(Type.Number()),
+    displayMagneticReference: Type.Optional(Type.Number()),
+    hideFov: Type.Optional(Type.Boolean()),
+
     type: Type.Optional(Type.String()),
     version: Type.Optional(Type.String()),
     model: Type.Optional(Type.String())
