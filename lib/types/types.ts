@@ -123,7 +123,7 @@ export const GenericAttributes = Type.Object({
 })
 
 export const GenericOptionalText = Type.Object({
-    _text: Optional(Type.String())
+    _text: Type.Optional(Type.String())
 })
 
 export const GenericText = Type.Object({
@@ -254,8 +254,27 @@ export const VideoAttributes = Type.Object({
     url: Type.Optional(Type.String())
 });
 
+export const VideoConnectionEntryAttributes = Type.Object({
+    uid: Type.String(),
+    address: Type.String(),
+    networkTimeout: Type.Optional(Type.Integer()),
+    path: Type.Optional(Type.String()),
+    protocol: Type.Optional(Type.String()),
+    bufferTime: Type.Optional(Type.Integer()),
+    port: Type.Optional(Type.Integer()),
+    roverPort: Type.Optional(Type.Integer()),
+    rtspReliable: Type.Optional(Type.Integer()),
+    ignoreEmbeddedKLV: Type.Optional(Type.Boolean()),
+    alias: Type.Optional(Type.String())
+})
+
+export const VideoConnectionEntry = Type.Object({
+    _attributes: Type.Optional(VideoConnectionEntryAttributes)
+})
+
 export const Video = Type.Object({
-    _attributes: Type.Optional(VideoAttributes)
+    _attributes: Type.Optional(VideoAttributes),
+    ConnectionEntry: Type.Optional(Type.Union([Type.Array(VideoConnectionEntry), VideoConnectionEntry]))
 })
 
 export const GeofenceAttributes = Type.Object({
