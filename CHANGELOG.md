@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.11.0 - 2024-11-01
+
+- :rocket: Allow `string` and `buffer` in `DataPackage.addFile` definition
+
 ### v12.10.0 - 2024-10-31
 
 - :rocket: Add a ton of new Sensor Attribute keys that were surfaced in CoT mining

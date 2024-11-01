@@ -362,7 +362,7 @@ export class DataPackage {
      * @param opts.ignore - Should the file be ignore, defaults to false
      * @param opts.attachment - Should the file be associated as an attachment to a CoT. If so this should contain the UID of the CoT
      */
-    async addFile(file: Readable, opts: {
+    async addFile(file: Readable | Buffer | string, opts: {
         uid?: string;
         name: string;
         ignore?: boolean;
