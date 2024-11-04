@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.12.0 - 2024-11-04
+
+- :rocket: Add full bidirectional support for `ConnectionEntry` fields
+
 ### v12.11.0 - 2024-11-01
 
 - :rocket: Allow `string` and `buffer` in `DataPackage.addFile` definition
