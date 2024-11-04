@@ -1,0 +1,26 @@
+{
+    "id": "123",
+    "type": "Feature",
+    "properties": {
+        "type": "a-f-G",
+        "how": "m-g",
+        "callsign": "BasicTest",
+        "center": [ 1.1, 2.2, 0 ],
+        "time": "2023-08-04T15:17:43.649Z",
+        "start": "2023-08-04T15:17:43.649Z",
+        "stale": "2023-08-04T15:17:43.649Z",
+        "video": {
+            "uid": "123",
+            "url": "rtsp://18.254.132.90:8554/money",
+            "connection": {
+                "uid": "123",
+                "address": "rtsp://18.254.132.90:8554/money"
+            }
+        },
+        "metadata": {}
+    },
+    "geometry": {
+        "type": "Point",
+        "coordinates": [1.1, 2.2, 0]
+    }
+}

@@ -6,6 +6,7 @@ import {
     GeofenceAttributes,
     StatusAttributes,
     PrecisionLocationAttributes,
+    VideoConnectionEntryAttributes,
     MartiDestAttributes,
     TakVersionAttributes,
     FileShareAttributes,
@@ -88,7 +89,12 @@ export const InputProperties = Type.Object({
     attachments: Type.Optional(Type.Array(Type.String())),
     ackrequest: Type.Optional(ACKRequestAttributes),
     sensor: Type.Optional(SensorAttributes),
-    video: Type.Optional(VideoAttributes),
+    video: Type.Optional(Type.Composite([
+        VideoAttributes,
+        Type.Optional(Type.Object({
+            connection: Type.Optional(VideoConnectionEntryAttributes)
+        }))
+    ])),
     links: Type.Optional(Type.Array(LinkAttributes)),
     chat: Type.Optional(Type.Object({
         parent: Type.Optional(Type.String()),
@@ -145,7 +151,12 @@ export const Properties = Type.Object({
     ackrequest: Type.Optional(ACKRequestAttributes),
     attachments: Type.Optional(Type.Array(Type.String())),
     sensor: Type.Optional(SensorAttributes),
-    video: Type.Optional(VideoAttributes),
+    video: Type.Optional(Type.Composite([
+        VideoAttributes,
+        Type.Optional(Type.Object({
+            connection: Type.Optional(VideoConnectionEntryAttributes)
+        }))
+    ])),
     links: Type.Optional(Type.Array(LinkAttributes)),
     chat: Type.Optional(Type.Object({
         parent: Type.Optional(Type.String()),

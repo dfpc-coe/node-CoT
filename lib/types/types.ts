@@ -261,6 +261,7 @@ export const Sensor = Type.Object({
 })
 
 export const VideoAttributes = Type.Object({
+    uid: Type.Optional(Type.String()),
     sensor: Type.Optional(Type.String()),
     spi: Type.Optional(Type.String()),
     url: Type.Optional(Type.String())
@@ -281,12 +282,12 @@ export const VideoConnectionEntryAttributes = Type.Object({
 })
 
 export const VideoConnectionEntry = Type.Object({
-    _attributes: Type.Optional(VideoConnectionEntryAttributes)
+    _attributes: VideoConnectionEntryAttributes
 })
 
 export const Video = Type.Object({
     _attributes: Type.Optional(VideoAttributes),
-    ConnectionEntry: Type.Optional(Type.Union([Type.Array(VideoConnectionEntry), VideoConnectionEntry]))
+    ConnectionEntry: Type.Optional(VideoConnectionEntry)
 })
 
 export const GeofenceAttributes = Type.Object({
