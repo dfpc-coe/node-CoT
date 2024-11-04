@@ -1,3 +1,4 @@
+import crypto from 'node:crypto';
 import protobuf from 'protobufjs';
 import Err from '@openaddresses/batch-error';
 import { diff } from 'json-diff-ts';
@@ -9,6 +10,14 @@ import type {
     FeaturePropertyMission,
     FeaturePropertyMissionLayer,
 } from './types/feature.js';
+import type {
+    MartiDest,
+    MartiDestAttributes,
+    Link,
+    LinkAttributes,
+    VideoAttributes,
+    VideoConnectionEntryAttributes,
+} from './types/types.js'
 import {
     InputFeature,
 } from './types/feature.js';
@@ -19,7 +28,6 @@ import Ellipse from '@turf/ellipse';
 import Util from './utils/util.js';
 import Color from './utils/color.js';
 import JSONCoT, { Detail } from './types/types.js'
-import type { MartiDest, MartiDestAttributes, Link, LinkAttributes } from './types/types.js'
 import AJV from 'ajv';
 import fs from 'fs';
 
@@ -134,6 +142,21 @@ export default class CoT {
     }
 
     /**
+     * Returns or sets the Callsign of the CoT
+     */
+    callsign(callsign?: string): string {
+        if (!this.raw.event.detail) this.raw.event.detail = {};
+
+        if (callsign && !this.raw.event.detail.contact) {
+            this.raw.event.detail.contact = { _attributes: { callsign } };
+        } else if (callsign && this.raw.event.detail.contact) {
+            this.raw.event.detail.contact._attributes.callsign = callsign;
+        }
+
+        return this.raw.event.detail.contact ? this.raw.event.detail.contact._attributes.callsign : 'UNKNOWN';
+    }
+
+    /**
      * Returns or sets the UID of the CoT
      */
     uid(uid?: string): string {
@@ -144,7 +167,7 @@ export default class CoT {
     /**
      * Add a given Dest tag to a CoT
      */
-    addDest(dest: Static<typeof MartiDestAttributes>): void {
+    addDest(dest: Static<typeof MartiDestAttributes>): CoT {
         if (!this.raw.event.detail) this.raw.event.detail = {};
         if (!this.raw.event.detail.marti) this.raw.event.detail.marti = {};
 
@@ -158,9 +181,57 @@ export default class CoT {
         destArr.push({ _attributes: dest });
 
         this.raw.event.detail.marti.dest = destArr;
+
+        return this;
     }
 
-    addLink(link: Static<typeof LinkAttributes>): void {
+    addVideo(
+        video: Static<typeof VideoAttributes>,
+        connection?: Static<typeof VideoConnectionEntryAttributes>
+    ): CoT {
+        if (!this.raw.event.detail) this.raw.event.detail = {};
+        if (this.raw.event.detail.__video) throw new Err(400, null, 'A video stream already exists on this CoT');
+
+        if (!video.url) throw new Err(400, null, 'A Video URL must be provided');
+
+        if (!video.uid && connection && connection.uid) {
+            video.uid = connection.uid
+        } else if (video.uid && connection && !connection.uid) {
+            connection.uid = video.uid;
+        } else if (!video.uid) {
+            video.uid = crypto.randomUUID();
+        }
+
+        this.raw.event.detail.__video = {
+            _attributes: video
+        };
+
+        if (connection) {
+            this.raw.event.detail.__video.ConnectionEntry = {
+                _attributes: connection
+            }
+        } else {
+            this.raw.event.detail.__video.ConnectionEntry = {
+                _attributes: {
+                    uid: video.uid,
+                    networkTimeout: 12000,
+                    path: '',
+                    protocol: 'raw',
+                    bufferTime: -1,
+                    address: video.url,
+                    port: -1,
+                    roverPort: -1,
+                    rtspReliable: 0,
+                    ignoreEmbeddedKLV: false,
+                    alias: this.callsign()
+                }
+            }
+        }
+
+        return this;
+    }
+
+    addLink(link: Static<typeof LinkAttributes>): CoT {
         if (!this.raw.event.detail) this.raw.event.detail = {};
 
         let linkArr: Array<Static<typeof Link>> = [];
@@ -173,264 +244,8 @@ export default class CoT {
         linkArr.push({ _attributes: link });
 
         this.raw.event.detail.link = linkArr;
-    }
 
-    /**
-     * Return an CoT Message given a GeoJSON Feature
-     *
-     * @param {Object} feature GeoJSON Point Feature
-     *
-     * @return {CoT}
-     */
-    static from_geojson(feature: Static<typeof InputFeature>): CoT {
-        checkFeat(feature);
-        if (checkFeat.errors) throw new Err(400, null, `${checkFeat.errors[0].message} (${checkFeat.errors[0].instancePath})`);
-
-        const cot: Static<typeof JSONCoT> = {
-            event: {
-                _attributes: Util.cot_event_attr(
-                    feature.properties.type || 'a-f-G',
-                    feature.properties.how || 'm-g',
-                    feature.properties.time,
-                    feature.properties.start,
-                    feature.properties.stale
-                ),
-                point: Util.cot_point(),
-                detail: Util.cot_event_detail(feature.properties.callsign)
-            }
-        };
-
-        if (feature.id) cot.event._attributes.uid = String(feature.id);
-        if (feature.properties.callsign && !feature.id) cot.event._attributes.uid = feature.properties.callsign;
-        if (!cot.event.detail) cot.event.detail = {};
-
-        if (feature.properties.droid) {
-            cot.event.detail.uid = { _attributes: { Droid: feature.properties.droid } };
-        }
-
-        if (feature.properties.archived) {
-            cot.event.detail.archive = { _attributes: { } };
-        }
-
-        if (feature.properties.links) {
-            if (!cot.event.detail.link) cot.event.detail.link = [];
-            else if (!Array.isArray(cot.event.detail.link)) cot.event.detail.link = [cot.event.detail.link];
-
-            cot.event.detail.link.push(...feature.properties.links.map((link: Static<typeof LinkAttributes>) => {
-                return { _attributes: link };
-            }))
-        }
-
-        if (feature.properties.dest) {
-            const dest = !Array.isArray(feature.properties.dest) ? [ feature.properties.dest ] : feature.properties.dest;
-
-            cot.event.detail.marti = {
-                dest: dest.map((dest) => {
-                    return { _attributes: { ...dest } };
-                })
-            }
-        }
-
-        if (feature.properties.takv) {
-            cot.event.detail.takv = { _attributes: { ...feature.properties.takv } };
-        }
-
-        if (feature.properties.geofence) {
-            cot.event.detail.__geofence = { _attributes: { ...feature.properties.geofence } };
-        }
-
-        if (feature.properties.sensor) {
-            cot.event.detail.sensor = { _attributes: { ...feature.properties.sensor } };
-        }
-
-        if (feature.properties.ackrequest) {
-            cot.event.detail.ackrequest = { _attributes: { ...feature.properties.ackrequest } };
-        }
-
-        if (feature.properties.video) {
-            cot.event.detail.__video = { _attributes: { ...feature.properties.video } };
-        }
-
-        if (feature.properties.attachments) {
-            cot.event.detail.attachment_list = { _attributes: { hashes: JSON.stringify(feature.properties.attachments) } };
-        }
-
-        if (feature.properties.contact) {
-            cot.event.detail.contact = {
-                _attributes: {
-                    callsign: feature.properties.callsign || 'UNKNOWN',
-                    ...feature.properties.contact
-                }
-            };
-        }
-
-        if (feature.properties.fileshare) {
-            cot.event.detail.fileshare = { _attributes: { ...feature.properties.fileshare } };
-        }
-
-        if (feature.properties.course !== undefined || feature.properties.speed !== undefined || feature.properties.slope !== undefined) {
-            cot.event.detail.track = {
-                _attributes: Util.cot_track_attr(feature.properties.course, feature.properties.speed, feature.properties.slope)
-            }
-        }
-
-        if (feature.properties.group) {
-            cot.event.detail.__group = { _attributes: { ...feature.properties.group } }
-        }
-
-        if (feature.properties.flow) {
-            cot.event.detail['_flow-tags_'] = { _attributes: { ...feature.properties.flow } }
-        }
-
-        if (feature.properties.status) {
-            cot.event.detail.status = { _attributes: { ...feature.properties.status } }
-        }
-
-        if (feature.properties.precisionlocation) {
-            cot.event.detail.precisionlocation = { _attributes: { ...feature.properties.precisionlocation } }
-        }
-
-        if (feature.properties.icon) {
-            cot.event.detail.usericon = { _attributes: { iconsetpath: feature.properties.icon } }
-        }
-
-        if (feature.properties.mission) {
-            cot.event.detail.mission = {
-                _attributes: {
-                    type: feature.properties.mission.type,
-                    guid: feature.properties.mission.guid,
-                    tool: feature.properties.mission.tool,
-                    name: feature.properties.mission.name,
-                    authorUid: feature.properties.mission.authorUid,
-                }
-            }
-
-            if (feature.properties.mission.missionLayer) {
-                cot.event.detail.mission.missionLayer = {};
-
-                if (feature.properties.mission.missionLayer.name) {
-                    cot.event.detail.mission.missionLayer.name = { _text: feature.properties.mission.missionLayer.name };
-                }
-
-                if (feature.properties.mission.missionLayer.parentUid) {
-                    cot.event.detail.mission.missionLayer.parentUid = { _text: feature.properties.mission.missionLayer.parentUid };
-                }
-
-                if (feature.properties.mission.missionLayer.type) {
-                    cot.event.detail.mission.missionLayer.type = { _text: feature.properties.mission.missionLayer.type };
-                }
-
-                if (feature.properties.mission.missionLayer.uid) {
-                    cot.event.detail.mission.missionLayer.uid = { _text: feature.properties.mission.missionLayer.uid };
-                }
-            }
-        }
-
-        cot.event.detail.remarks = { _attributes: { }, _text: feature.properties.remarks || '' };
-
-        if (!feature.geometry) {
-            throw new Err(400, null, 'Must have Geometry');
-        } else if (!['Point', 'Polygon', 'LineString'].includes(feature.geometry.type)) {
-            throw new Err(400, null, 'Unsupported Geometry Type');
-        }
-
-        if (feature.geometry.type === 'Point') {
-            cot.event.point._attributes.lon = String(feature.geometry.coordinates[0]);
-            cot.event.point._attributes.lat = String(feature.geometry.coordinates[1]);
-            cot.event.point._attributes.hae = String(feature.geometry.coordinates[2] || '0.0');
-
-
-            if (feature.properties['marker-color']) {
-                const color = new Color(feature.properties['marker-color'] || -1761607936);
-                color.a = feature.properties['marker-opacity'] !== undefined ? feature.properties['marker-opacity'] * 255 : 128;
-                cot.event.detail.color = { _attributes: { argb: String(color.as_32bit()) } };
-            }
-        } else if (feature.geometry.type === 'Polygon' && feature.properties.type === 'u-d-c-c') {
-            if (!feature.properties.shape || !feature.properties.shape.ellipse) {
-                throw new Err(400, null, 'u-d-c-c (Circle) must define a feature.properties.shape.ellipse property')
-            }
-            cot.event.detail.shape = { ellipse: { _attributes: feature.properties.shape.ellipse } }
-
-            if (feature.properties.center) {
-                cot.event.point._attributes.lon = String(feature.properties.center[0]);
-                cot.event.point._attributes.lat = String(feature.properties.center[1]);
-            } else {
-                const centre = PointOnFeature(feature as AllGeoJSON);
-                cot.event.point._attributes.lon = String(centre.geometry.coordinates[0]);
-                cot.event.point._attributes.lat = String(centre.geometry.coordinates[1]);
-                cot.event.point._attributes.hae = '0.0';
-            }
-        } else if (['Polygon', 'LineString'].includes(feature.geometry.type)) {
-            const stroke = new Color(feature.properties.stroke || -1761607936);
-            stroke.a = feature.properties['stroke-opacity'] !== undefined ? feature.properties['stroke-opacity'] * 255 : 128;
-            cot.event.detail.strokeColor = { _attributes: { value: String(stroke.as_32bit()) } };
-
-            if (!feature.properties['stroke-width']) feature.properties['stroke-width'] = 3;
-            cot.event.detail.strokeWeight = { _attributes: {
-                value: String(feature.properties['stroke-width'])
-            } };
-
-            if (!feature.properties['stroke-style']) feature.properties['stroke-style'] = 'solid';
-            cot.event.detail.strokeStyle = { _attributes: {
-                value: feature.properties['stroke-style']
-            } };
-
-            if (feature.geometry.type === 'LineString') {
-                cot.event._attributes.type = 'u-d-f';
-
-                if (!cot.event.detail.link) cot.event.detail.link = [];
-                else if (!Array.isArray(cot.event.detail.link)) cot.event.detail.link = [cot.event.detail.link]
-
-                for (const coord of feature.geometry.coordinates) {
-                    cot.event.detail.link.push({
-                        _attributes: { point: `${coord[1]},${coord[0]}` }
-                    });
-                }
-            } else if (feature.geometry.type === 'Polygon') {
-                cot.event._attributes.type = 'u-d-f';
-
-                if (!cot.event.detail.link) cot.event.detail.link = [];
-                else if (!Array.isArray(cot.event.detail.link)) cot.event.detail.link = [cot.event.detail.link]
-
-                // Inner rings are not yet supported
-                for (const coord of feature.geometry.coordinates[0]) {
-                    cot.event.detail.link.push({
-                        _attributes: { point: `${coord[1]},${coord[0]}` }
-                    });
-                }
-
-                const fill = new Color(feature.properties.fill || -1761607936);
-                fill.a = feature.properties['fill-opacity'] !== undefined ? feature.properties['fill-opacity'] * 255 : 128;
-                cot.event.detail.fillColor = { _attributes: { value: String(fill.as_32bit()) } };
-            }
-
-            cot.event.detail.labels_on = { _attributes: { value: 'false' } };
-            cot.event.detail.tog = { _attributes: { enabled: '0' } };
-
-            if (feature.properties.center && Array.isArray(feature.properties.center) && feature.properties.center.length >= 2) {
-                cot.event.point._attributes.lon = String(feature.properties.center[0]);
-                cot.event.point._attributes.lat = String(feature.properties.center[1]);
-
-                if (feature.properties.center.length >= 3) {
-                    cot.event.point._attributes.hae = String(feature.properties.center[2] || '0.0');
-                } else {
-                    cot.event.point._attributes.hae = '0.0';
-                }
-            } else {
-                const centre = PointOnFeature(feature as AllGeoJSON);
-                cot.event.point._attributes.lon = String(centre.geometry.coordinates[0]);
-                cot.event.point._attributes.lat = String(centre.geometry.coordinates[1]);
-                cot.event.point._attributes.hae = '0.0';
-            }
-        }
-
-        const newcot = new CoT(cot);
-
-        if (feature.properties.metadata) {
-            newcot.metadata = feature.properties.metadata
-        }
-
-        return newcot;
+        return this;
     }
 
     /**
@@ -469,69 +284,6 @@ export default class CoT {
         }, { compact: true });
 
         return ProtoMessage.encode(msg).finish();
-    }
-
-    /**
-     * Parse an ATAK compliant Protobuf to a JS Object
-     */
-    static from_proto(raw: Uint8Array, version = 1): CoT {
-        const ProtoMessage = RootMessage.lookupType(`atakmap.commoncommo.protobuf.v${version}.TakMessage`)
-
-        // TODO Type this
-        const msg: any = ProtoMessage.decode(raw);
-
-        if (!msg.cotEvent) throw new Err(400, null, 'No cotEvent Data');
-
-        const detail: Record<string, any> = {};
-        const metadata: Record<string, unknown> = {};
-        for (const key in msg.cotEvent.detail) {
-            if (key === 'xmlDetail') {
-                const parsed: any = xmljs.xml2js(`<detail>${msg.cotEvent.detail.xmlDetail}</detail>`, { compact: true });
-                Object.assign(detail, parsed.detail);
-
-                if (detail.metadata) {
-                    for (const key in detail.metadata) {
-                        metadata[key] = detail.metadata[key]._text;
-                    }
-                    delete detail.metadata;
-                }
-            } else if (key === 'group') {
-                if (msg.cotEvent.detail[key]) {
-                    detail.__group = { _attributes: msg.cotEvent.detail[key] };
-                }
-            } else if (['contact', 'precisionlocation', 'status', 'takv', 'track'].includes(key)) {
-                if (msg.cotEvent.detail[key]) {
-                    detail[key] = { _attributes: msg.cotEvent.detail[key] };
-                }
-            }
-        }
-
-        const cot = new CoT({
-            event: {
-                _attributes: {
-                    version: '2.0',
-                    uid: msg.cotEvent.uid, type: msg.cotEvent.type, how: msg.cotEvent.how,
-                    qos: msg.cotEvent.qos, opex: msg.cotEvent.opex, access: msg.cotEvent.access,
-                    time: new Date(msg.cotEvent.sendTime.toNumber()).toISOString(),
-                    start: new Date(msg.cotEvent.startTime.toNumber()).toISOString(),
-                    stale: new Date(msg.cotEvent.staleTime.toNumber()).toISOString(),
-                },
-                detail,
-                point: {
-                    _attributes: {
-                        lat: msg.cotEvent.lat,
-                        lon: msg.cotEvent.lon,
-                        hae: msg.cotEvent.hae,
-                        le: msg.cotEvent.le,
-                        ce: msg.cotEvent.ce,
-                    },
-                }
-            }
-        });
-
-        cot.metadata = metadata;
-
-        return cot;
     }
 
     /**
@@ -584,6 +336,10 @@ export default class CoT {
 
         if (raw.event.detail.__video && raw.event.detail.__video._attributes) {
             feat.properties.video = raw.event.detail.__video._attributes;
+
+            if (raw.event.detail.__video.ConnectionEntry) {
+                feat.properties.video.connection = raw.event.detail.__video.ConnectionEntry._attributes;
+            }
         }
 
         if (raw.event.detail.__geofence) {
@@ -846,19 +602,6 @@ export default class CoT {
     }
 
     /**
-     * Return a CoT Message
-     */
-    static ping(): CoT {
-        return new CoT({
-            event: {
-                _attributes: Util.cot_event_attr('t-x-c-t', 'h-g-i-g-o'),
-                detail: {},
-                point: Util.cot_point()
-            }
-        });
-    }
-
-    /**
      * Determines if the CoT message represents a Tasking Message
      *
      * @return {boolean}
@@ -1037,4 +780,353 @@ export default class CoT {
     is_uav(): boolean {
         return !!this.raw.event._attributes.type.match(/^a-f-A-M-F-Q-r/)
     }
+
+    /**
+     * Parse an ATAK compliant Protobuf to a JS Object
+     */
+    static from_proto(raw: Uint8Array, version = 1): CoT {
+        const ProtoMessage = RootMessage.lookupType(`atakmap.commoncommo.protobuf.v${version}.TakMessage`)
+
+        // TODO Type this
+        const msg: any = ProtoMessage.decode(raw);
+
+        if (!msg.cotEvent) throw new Err(400, null, 'No cotEvent Data');
+
+        const detail: Record<string, any> = {};
+        const metadata: Record<string, unknown> = {};
+        for (const key in msg.cotEvent.detail) {
+            if (key === 'xmlDetail') {
+                const parsed: any = xmljs.xml2js(`<detail>${msg.cotEvent.detail.xmlDetail}</detail>`, { compact: true });
+                Object.assign(detail, parsed.detail);
+
+                if (detail.metadata) {
+                    for (const key in detail.metadata) {
+                        metadata[key] = detail.metadata[key]._text;
+                    }
+                    delete detail.metadata;
+                }
+            } else if (key === 'group') {
+                if (msg.cotEvent.detail[key]) {
+                    detail.__group = { _attributes: msg.cotEvent.detail[key] };
+                }
+            } else if (['contact', 'precisionlocation', 'status', 'takv', 'track'].includes(key)) {
+                if (msg.cotEvent.detail[key]) {
+                    detail[key] = { _attributes: msg.cotEvent.detail[key] };
+                }
+            }
+        }
+
+        const cot = new CoT({
+            event: {
+                _attributes: {
+                    version: '2.0',
+                    uid: msg.cotEvent.uid, type: msg.cotEvent.type, how: msg.cotEvent.how,
+                    qos: msg.cotEvent.qos, opex: msg.cotEvent.opex, access: msg.cotEvent.access,
+                    time: new Date(msg.cotEvent.sendTime.toNumber()).toISOString(),
+                    start: new Date(msg.cotEvent.startTime.toNumber()).toISOString(),
+                    stale: new Date(msg.cotEvent.staleTime.toNumber()).toISOString(),
+                },
+                detail,
+                point: {
+                    _attributes: {
+                        lat: msg.cotEvent.lat,
+                        lon: msg.cotEvent.lon,
+                        hae: msg.cotEvent.hae,
+                        le: msg.cotEvent.le,
+                        ce: msg.cotEvent.ce,
+                    },
+                }
+            }
+        });
+
+        cot.metadata = metadata;
+
+        return cot;
+    }
+
+    /**
+     * Return a CoT Message
+     */
+    static ping(): CoT {
+        return new CoT({
+            event: {
+                _attributes: Util.cot_event_attr('t-x-c-t', 'h-g-i-g-o'),
+                detail: {},
+                point: Util.cot_point()
+            }
+        });
+    }
+
+    /**
+     * Return an CoT Message given a GeoJSON Feature
+     *
+     * @param {Object} feature GeoJSON Point Feature
+     *
+     * @return {CoT}
+     */
+    static from_geojson(feature: Static<typeof InputFeature>): CoT {
+        checkFeat(feature);
+        if (checkFeat.errors) throw new Err(400, null, `${checkFeat.errors[0].message} (${checkFeat.errors[0].instancePath})`);
+
+        const cot: Static<typeof JSONCoT> = {
+            event: {
+                _attributes: Util.cot_event_attr(
+                    feature.properties.type || 'a-f-G',
+                    feature.properties.how || 'm-g',
+                    feature.properties.time,
+                    feature.properties.start,
+                    feature.properties.stale
+                ),
+                point: Util.cot_point(),
+                detail: Util.cot_event_detail(feature.properties.callsign)
+            }
+        };
+
+        if (feature.id) cot.event._attributes.uid = String(feature.id);
+        if (feature.properties.callsign && !feature.id) cot.event._attributes.uid = feature.properties.callsign;
+        if (!cot.event.detail) cot.event.detail = {};
+
+        if (feature.properties.droid) {
+            cot.event.detail.uid = { _attributes: { Droid: feature.properties.droid } };
+        }
+
+        if (feature.properties.archived) {
+            cot.event.detail.archive = { _attributes: { } };
+        }
+
+        if (feature.properties.links) {
+            if (!cot.event.detail.link) cot.event.detail.link = [];
+            else if (!Array.isArray(cot.event.detail.link)) cot.event.detail.link = [cot.event.detail.link];
+
+            cot.event.detail.link.push(...feature.properties.links.map((link: Static<typeof LinkAttributes>) => {
+                return { _attributes: link };
+            }))
+        }
+
+        if (feature.properties.dest) {
+            const dest = !Array.isArray(feature.properties.dest) ? [ feature.properties.dest ] : feature.properties.dest;
+
+            cot.event.detail.marti = {
+                dest: dest.map((dest) => {
+                    return { _attributes: { ...dest } };
+                })
+            }
+        }
+
+        if (feature.properties.takv) {
+            cot.event.detail.takv = { _attributes: { ...feature.properties.takv } };
+        }
+
+        if (feature.properties.geofence) {
+            cot.event.detail.__geofence = { _attributes: { ...feature.properties.geofence } };
+        }
+
+        if (feature.properties.sensor) {
+            cot.event.detail.sensor = { _attributes: { ...feature.properties.sensor } };
+        }
+
+        if (feature.properties.ackrequest) {
+            cot.event.detail.ackrequest = { _attributes: { ...feature.properties.ackrequest } };
+        }
+
+        if (feature.properties.video) {
+            if (feature.properties.video.connection) {
+                const video = JSON.parse(JSON.stringify(feature.properties.video));
+
+                const connection = video.connection;
+                delete video.connection;
+
+                cot.event.detail.__video = {
+                    _attributes: { ...video },
+                    ConnectionEntry: {
+                        _attributes: connection
+                    }
+                }
+            } else {
+                cot.event.detail.__video = { _attributes: { ...feature.properties.video } };
+            }
+        }
+
+        if (feature.properties.attachments) {
+            cot.event.detail.attachment_list = { _attributes: { hashes: JSON.stringify(feature.properties.attachments) } };
+        }
+
+        if (feature.properties.contact) {
+            cot.event.detail.contact = {
+                _attributes: {
+                    callsign: feature.properties.callsign || 'UNKNOWN',
+                    ...feature.properties.contact
+                }
+            };
+        }
+
+        if (feature.properties.fileshare) {
+            cot.event.detail.fileshare = { _attributes: { ...feature.properties.fileshare } };
+        }
+
+        if (feature.properties.course !== undefined || feature.properties.speed !== undefined || feature.properties.slope !== undefined) {
+            cot.event.detail.track = {
+                _attributes: Util.cot_track_attr(feature.properties.course, feature.properties.speed, feature.properties.slope)
+            }
+        }
+
+        if (feature.properties.group) {
+            cot.event.detail.__group = { _attributes: { ...feature.properties.group } }
+        }
+
+        if (feature.properties.flow) {
+            cot.event.detail['_flow-tags_'] = { _attributes: { ...feature.properties.flow } }
+        }
+
+        if (feature.properties.status) {
+            cot.event.detail.status = { _attributes: { ...feature.properties.status } }
+        }
+
+        if (feature.properties.precisionlocation) {
+            cot.event.detail.precisionlocation = { _attributes: { ...feature.properties.precisionlocation } }
+        }
+
+        if (feature.properties.icon) {
+            cot.event.detail.usericon = { _attributes: { iconsetpath: feature.properties.icon } }
+        }
+
+        if (feature.properties.mission) {
+            cot.event.detail.mission = {
+                _attributes: {
+                    type: feature.properties.mission.type,
+                    guid: feature.properties.mission.guid,
+                    tool: feature.properties.mission.tool,
+                    name: feature.properties.mission.name,
+                    authorUid: feature.properties.mission.authorUid,
+                }
+            }
+
+            if (feature.properties.mission.missionLayer) {
+                cot.event.detail.mission.missionLayer = {};
+
+                if (feature.properties.mission.missionLayer.name) {
+                    cot.event.detail.mission.missionLayer.name = { _text: feature.properties.mission.missionLayer.name };
+                }
+
+                if (feature.properties.mission.missionLayer.parentUid) {
+                    cot.event.detail.mission.missionLayer.parentUid = { _text: feature.properties.mission.missionLayer.parentUid };
+                }
+
+                if (feature.properties.mission.missionLayer.type) {
+                    cot.event.detail.mission.missionLayer.type = { _text: feature.properties.mission.missionLayer.type };
+                }
+
+                if (feature.properties.mission.missionLayer.uid) {
+                    cot.event.detail.mission.missionLayer.uid = { _text: feature.properties.mission.missionLayer.uid };
+                }
+            }
+        }
+
+        cot.event.detail.remarks = { _attributes: { }, _text: feature.properties.remarks || '' };
+
+        if (!feature.geometry) {
+            throw new Err(400, null, 'Must have Geometry');
+        } else if (!['Point', 'Polygon', 'LineString'].includes(feature.geometry.type)) {
+            throw new Err(400, null, 'Unsupported Geometry Type');
+        }
+
+        if (feature.geometry.type === 'Point') {
+            cot.event.point._attributes.lon = String(feature.geometry.coordinates[0]);
+            cot.event.point._attributes.lat = String(feature.geometry.coordinates[1]);
+            cot.event.point._attributes.hae = String(feature.geometry.coordinates[2] || '0.0');
+
+
+            if (feature.properties['marker-color']) {
+                const color = new Color(feature.properties['marker-color'] || -1761607936);
+                color.a = feature.properties['marker-opacity'] !== undefined ? feature.properties['marker-opacity'] * 255 : 128;
+                cot.event.detail.color = { _attributes: { argb: String(color.as_32bit()) } };
+            }
+        } else if (feature.geometry.type === 'Polygon' && feature.properties.type === 'u-d-c-c') {
+            if (!feature.properties.shape || !feature.properties.shape.ellipse) {
+                throw new Err(400, null, 'u-d-c-c (Circle) must define a feature.properties.shape.ellipse property')
+            }
+            cot.event.detail.shape = { ellipse: { _attributes: feature.properties.shape.ellipse } }
+
+            if (feature.properties.center) {
+                cot.event.point._attributes.lon = String(feature.properties.center[0]);
+                cot.event.point._attributes.lat = String(feature.properties.center[1]);
+            } else {
+                const centre = PointOnFeature(feature as AllGeoJSON);
+                cot.event.point._attributes.lon = String(centre.geometry.coordinates[0]);
+                cot.event.point._attributes.lat = String(centre.geometry.coordinates[1]);
+                cot.event.point._attributes.hae = '0.0';
+            }
+        } else if (['Polygon', 'LineString'].includes(feature.geometry.type)) {
+            const stroke = new Color(feature.properties.stroke || -1761607936);
+            stroke.a = feature.properties['stroke-opacity'] !== undefined ? feature.properties['stroke-opacity'] * 255 : 128;
+            cot.event.detail.strokeColor = { _attributes: { value: String(stroke.as_32bit()) } };
+
+            if (!feature.properties['stroke-width']) feature.properties['stroke-width'] = 3;
+            cot.event.detail.strokeWeight = { _attributes: {
+                value: String(feature.properties['stroke-width'])
+            } };
+
+            if (!feature.properties['stroke-style']) feature.properties['stroke-style'] = 'solid';
+            cot.event.detail.strokeStyle = { _attributes: {
+                value: feature.properties['stroke-style']
+            } };
+
+            if (feature.geometry.type === 'LineString') {
+                cot.event._attributes.type = 'u-d-f';
+
+                if (!cot.event.detail.link) cot.event.detail.link = [];
+                else if (!Array.isArray(cot.event.detail.link)) cot.event.detail.link = [cot.event.detail.link]
+
+                for (const coord of feature.geometry.coordinates) {
+                    cot.event.detail.link.push({
+                        _attributes: { point: `${coord[1]},${coord[0]}` }
+                    });
+                }
+            } else if (feature.geometry.type === 'Polygon') {
+                cot.event._attributes.type = 'u-d-f';
+
+                if (!cot.event.detail.link) cot.event.detail.link = [];
+                else if (!Array.isArray(cot.event.detail.link)) cot.event.detail.link = [cot.event.detail.link]
+
+                // Inner rings are not yet supported
+                for (const coord of feature.geometry.coordinates[0]) {
+                    cot.event.detail.link.push({
+                        _attributes: { point: `${coord[1]},${coord[0]}` }
+                    });
+                }
+
+                const fill = new Color(feature.properties.fill || -1761607936);
+                fill.a = feature.properties['fill-opacity'] !== undefined ? feature.properties['fill-opacity'] * 255 : 128;
+                cot.event.detail.fillColor = { _attributes: { value: String(fill.as_32bit()) } };
+            }
+
+            cot.event.detail.labels_on = { _attributes: { value: 'false' } };
+            cot.event.detail.tog = { _attributes: { enabled: '0' } };
+
+            if (feature.properties.center && Array.isArray(feature.properties.center) && feature.properties.center.length >= 2) {
+                cot.event.point._attributes.lon = String(feature.properties.center[0]);
+                cot.event.point._attributes.lat = String(feature.properties.center[1]);
+
+                if (feature.properties.center.length >= 3) {
+                    cot.event.point._attributes.hae = String(feature.properties.center[2] || '0.0');
+                } else {
+                    cot.event.point._attributes.hae = '0.0';
+                }
+            } else {
+                const centre = PointOnFeature(feature as AllGeoJSON);
+                cot.event.point._attributes.lon = String(centre.geometry.coordinates[0]);
+                cot.event.point._attributes.lat = String(centre.geometry.coordinates[1]);
+                cot.event.point._attributes.hae = '0.0';
+            }
+        }
+
+        const newcot = new CoT(cot);
+
+        if (feature.properties.metadata) {
+            newcot.metadata = feature.properties.metadata
+        }
+
+        return newcot;
+    }
+
 }

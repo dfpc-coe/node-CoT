@@ -11,6 +11,7 @@ for (const fixturename of await fs.readdir(new URL('./fixtures/', import.meta.ur
         const fixture: Static<typeof Feature> = JSON.parse(String(await fs.readFile(path.join(path.parse(fileURLToPath(import.meta.url)).dir, 'fixtures/', fixturename))));
         const geo = CoT.from_geojson(fixture)
         const output = geo.to_geojson();
+
         t.deepEquals(fixture, output, fixturename);
 
         t.end();
