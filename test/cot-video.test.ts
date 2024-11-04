@@ -168,7 +168,23 @@ test('Decode MultiMissionAircraft CoTs', (t) => {
                     rangeLines: 100,
                     fovAlpha: 0.2980392156862745
                 },
-                video: { uid: '05bf6c59-c7ea-465f-8337-da16ddcc82d4', url: 'https://publicstreamer3.cotrip.org/rtplive/123/playlist.m3u8' },
+                video: {
+                    uid: '05bf6c59-c7ea-465f-8337-da16ddcc82d4',
+                    url: 'https://publicstreamer3.cotrip.org/rtplive/123/playlist.m3u8',
+                    connection: {
+                        "networkTimeout": 12000,
+                        "uid": "05bf6c59-c7ea-465f-8337-da16ddcc82d4",
+                        "path": "",
+                        "protocol": "raw",
+                        "bufferTime": -1,
+                        "address": "https://publicstreamer3.cotrip.org/rtplive/123/playlist.m3u8",
+                        "port": -1,
+                        "roverPort": -1,
+                        "rtspReliable": 0,
+                        "ignoreEmbeddedKLV": false,
+                        "alias": "I-25 .8 mi S CO-45"
+                    }
+                },
                 archived: true,
                 status: { readiness: 'true' },
                 precisionlocation: { altsrc: 'DTED2' },
