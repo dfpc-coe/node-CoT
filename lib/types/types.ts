@@ -392,6 +392,7 @@ export const MartiDestAttributes = Type.Object({
     callsign: Type.Optional(Type.String()),
 
     mission: Type.Optional(Type.String()),
+    'mission-guid': Type.Optional(Type.String()),
     after: Type.Optional(Type.String()),
     path: Type.Optional(Type.String())
 })
