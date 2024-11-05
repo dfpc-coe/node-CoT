@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.13.0 - 2024-11-04
+
+- :rocket: Add support for Mission GUID dest tagging
+
 ### v12.12.0 - 2024-11-04
 
 - :rocket: Add full bidirectional support for `ConnectionEntry` fields
