@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.14.0 - 2024-11-11
+
+- :rocket: Allow `Feature.Path: string` on GeoJSON Features
+
 ### v12.13.0 - 2024-11-04
 
 - :rocket: Add support for Mission GUID dest tagging
