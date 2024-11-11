@@ -218,14 +218,14 @@ export const Feature = Type.Object({
     id: Type.String(),
     type: Type.Const('Feature'),
     properties: Properties,
-    path: Type.String({ default: '/' }),
+    path: Type.Optional(Type.String()),
     geometry: Geometry
 })
 
 export const InputFeature = Type.Object({
     id: Type.Optional(Type.String()),
     type: Type.Const('Feature'),
-    path: Type.String({ default: '/' }),
+    path: Type.Optional(Type.String()),
     properties: InputProperties,
     geometry: Geometry
 })
