@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.15.0 - 2024-11-11
+
+- :rocket: Add internally stored `path` value
+
 ### v12.14.0 - 2024-11-11
 
 - :rocket: Allow `Feature.Path: string` on GeoJSON Features
