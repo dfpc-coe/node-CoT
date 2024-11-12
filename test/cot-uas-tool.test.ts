@@ -127,6 +127,7 @@ test('Decode iTAK COT UAS Message', (t) => {
         t.deepEquals(cot.to_geojson(), {
             id: '2983J8B001V013',
             type: 'Feature',
+            path: '/',
             properties: {
                 callsign: 'UNKNOWN',
                 center: [ -108.6, 39.1, 1381.333 ],
@@ -181,6 +182,7 @@ test('Decode iTAK COT UAS Message 2', (t) => {
         t.deepEquals(cot.to_geojson(), {
             id: '1581F5BKB244G00F011K',
             type: 'Feature',
+            path: '/',
             properties: {
                 callsign: 'UAS-Phoenix 2',
                 center: [ 0, 0, -4919.1 ],

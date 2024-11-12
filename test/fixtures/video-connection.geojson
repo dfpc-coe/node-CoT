@@ -1,6 +1,7 @@
 {
     "id": "123",
     "type": "Feature",
+    "path": "/",
     "properties": {
         "type": "a-f-G",
         "how": "m-g",

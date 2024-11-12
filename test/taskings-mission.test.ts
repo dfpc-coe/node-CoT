@@ -13,6 +13,7 @@ test('Decode MissionChange CoTs', (t) => {
         t.deepEquals({
             id: 'f205227b-2e23-40bf-8948-711566116365',
             type: 'Feature',
+            path: '/',
             properties: {
                 callsign: 'UNKNOWN',
                 center: [ 0, 0, 0 ],
@@ -63,6 +64,7 @@ test('Decode MissionChange CoTs - #2', (t) => {
         t.deepEquals({
             id: 'f205227b-2e23-40bf-8948-711566116365',
             type: 'Feature',
+            path: '/',
             properties: {
                 callsign: 'UNKNOWN',
                 center: [ 0, 0, 0 ],
@@ -117,6 +119,7 @@ test('Decode MissionChange Logs', (t) => {
         t.deepEquals({
             id: 'e77c55da-c5d2-4200-bbc9-9967b3f30b5b',
             type: 'Feature',
+            path: '/',
             properties: {
                 callsign: 'UNKNOWN',
                 center: [ 0, 0, 0 ],

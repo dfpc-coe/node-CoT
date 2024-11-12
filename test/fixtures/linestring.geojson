@@ -1,6 +1,7 @@
 {
     "id": "line",
     "type": "Feature",
+    "path": "/",
     "properties": {
         "callsign": "LineString",
         "type": "u-d-f",

@@ -77,6 +77,7 @@ test('Decode Range & Bearing', (t) => {
         t.deepEquals({
             id: 'ebbf42a7-ea71-43a1-baf6-e259c3d115bf',
             type: 'Feature',
+            path: '/',
             properties: {
                 archived: true,
                 callsign: 'R&B 1',

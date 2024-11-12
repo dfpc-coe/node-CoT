@@ -62,10 +62,14 @@ const checkFeat = (new AJV({
  */
 export default class CoT {
     raw: Static<typeof JSONCoT>;
+
     // Key/Value JSON Records - not currently support by TPC Clients
     // but used for styling/dynamic overrides and hopefully eventually
     // merged into the CoT spec
     metadata: Record<string, unknown>;
+
+    // Does the CoT belong to a folder - defaults to "/"
+    path: string;
 
     constructor(cot: Buffer | Static<typeof JSONCoT> | object | string) {
         if (typeof cot === 'string' || cot instanceof Buffer) {
@@ -78,6 +82,7 @@ export default class CoT {
         }
 
         this.metadata = {};
+        this.path = '/';
 
         if (!this.raw.event._attributes.uid) this.raw.event._attributes.uid = Util.cot_uuid();
 
@@ -593,6 +598,7 @@ export default class CoT {
         }
 
         feat.properties.metadata = this.metadata;
+        feat.path = this.path;
 
         return feat;
     }
@@ -1124,6 +1130,10 @@ export default class CoT {
 
         if (feature.properties.metadata) {
             newcot.metadata = feature.properties.metadata
+        }
+
+        if (feature.path) {
+            newcot.path = feature.path
         }
 
         return newcot;
