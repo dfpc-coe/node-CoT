@@ -59,6 +59,7 @@ Speed: 1</remarks><_flow-tags_ TAK-Server-e87a0e02420b44a08f6032bcf1877745="2024
         t.deepEquals(cot.to_geojson(), {
             id: 'layer-35-4707',
             type: 'Feature',
+            path: '/',
             properties: {
                 callsign: '9T20',
                 type: 'a-f-G',

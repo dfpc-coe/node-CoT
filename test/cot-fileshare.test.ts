@@ -56,6 +56,7 @@ test('Decode MultiMissionAircraft CoTs', (t) => {
         t.deepEquals({
             id: 'd60e38c2-6c51-4f69-bff9-c5cbc6b44a76',
             type: 'Feature',
+            path: '/',
             properties: {
                 callsign: 'UNKNOWN',
                 type: 'b-f-t-r',

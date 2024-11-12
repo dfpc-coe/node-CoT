@@ -399,6 +399,7 @@ test('Decode Range & Bearing', (t) => {
         t.deepEquals({
             id: '6da80127-44d4-4bf0-89bd-ecd326afaef1',
             type: 'Feature',
+            path: '/',
             properties: {
                 callsign: 'Walking Alt Route 5',
                 center: [ 0, 0, 9999999 ],

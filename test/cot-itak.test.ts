@@ -53,6 +53,7 @@ test('Decode iTAK COT message', (t) => {
         t.deepEquals({
             id: 'C94B9215-9BD4-4DBE-BDE1-83625F09153F',
             type: 'Feature',
+            path: '/',
             properties: {
                 callsign: 'DFPC-iSchmidt',
                 droid: "DFPC-iSchmidt",

@@ -72,6 +72,7 @@ test('Decode MultiMissionAircraft CoTs', (t) => {
         t.deepEquals({
             id: 'CO-DFPC-WLD27_CO-DFPC-WLD27-SPI',
             type: 'Feature',
+            path: '/',
             properties: {
                 callsign: 'CO-DFPC-WLD27-SPI',
                 type: 'b-m-p-s-p-i',

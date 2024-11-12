@@ -141,6 +141,7 @@ test('Decode MultiMissionAircraft CoTs', (t) => {
         t.deepEquals({
             id: '0ed16b9e-a0c8-480f-8860-284b9afb2b1d',
             type: 'Feature',
+            path: '/',
             properties: {
                 callsign: 'I-25 .8 mi S CO-45',
                 center: [ -104.6282182, 38.2089117, 1455.285 ],

@@ -1,6 +1,7 @@
 {
     "id": "polygon",
     "type": "Feature",
+    "path": "/",
     "properties": {
         "callsign": "Polygon",
         "type": "u-d-f",
