@@ -15,10 +15,11 @@
     },
     "dependencies": {
         "@openaddresses/batch-error": "^2.4.0",
-        "@sinclair/typebox": "^0.33.0",
+        "@sinclair/typebox": "^0.34.0",
         "@turf/ellipse": "^7.0.0",
         "@turf/helpers": "^7.0.0",
         "@turf/point-on-feature": "^7.0.0",
+        "@turf/sector": "^7.1.0",
         "@turf/truncate": "^7.0.0",
         "@types/archiver": "^6.0.2",
         "@types/color": "^4.0.0",
