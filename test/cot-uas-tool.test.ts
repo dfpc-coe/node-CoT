@@ -1,6 +1,70 @@
 import test from 'tape';
 import CoT from '../index.js';
 
+test('Sensor2Polygon', (t) => {
+    const cot = CoT.from_geojson({
+        "id": "298DG19001V0GN",
+        "path": "/",
+        "type": "Feature",
+        "properties": {
+            "callsign": "UAS-CO-DFPC-Schmidt",
+            "center": [
+                -108.04641043504375,
+                39.45429166060765,
+                1748.037
+            ],
+            "type": "a-f-A-M-H-Q",
+            "how": "m-g",
+            "time": "2024-11-21T16:07:08Z",
+            "start": "2024-11-21T16:07:07Z",
+            "stale": "2024-11-21T16:07:11Z",
+            "sensor": {
+                "elevation": 18.5,
+                "vfov": 41.6,
+                "north": 187.9000000954,
+                "roll": 0,
+                "range": 100,
+                "azimuth": 7,
+                "model": "Mavic 2 Enterprise Dual-Visual",
+                "fov": 66.9,
+                "type": "r-e",
+                "version": "0.6"
+            },
+            "video": {
+                "sensor": "UAS-CO-DFPC-Schmidt",
+                "spi": "UAS-CO-DFPC-Schmidt.SPI1",
+                "url": "rtsp://video.cotak.gov:8554/771c9e10-2ecb-4770-b6f2-b9669914d07e?tcp"
+            },
+            "course": 7.9,
+            "slope": 0,
+            "speed": 0,
+            "flow": {
+                "TAK-Server-e87a0e02420b44a08f6032bcf1877745": "2024-11-21T16:07:08Z"
+            },
+            "metadata": {},
+            "remarks": "None",
+            "icon": "a-f-A-M-H-Q"
+        },
+        "geometry": {
+            "type": "Point",
+            "coordinates": [
+                -108.04641043504375,
+                39.45429166060765,
+                1748.037
+            ]
+        }
+    });
+
+    if (!cot.raw.event.detail) {
+        t.fail('No Detail Section')
+    } else {
+        t.deepEquals(cot.sensor(), {
+        });
+    }
+
+    t.end();
+});
+
 test('Decode iTAK COT UAS Message', (t) => {
     const packet = '<event version="2" uid="2983J8B001V013" type="a-f-A-M-H-Q" time="2024-04-24T16:37:38.002Z" start="2024-04-24T16:37:38.002Z" stale="2024-04-24T16:37:41.502Z" > <detail> <_uastool extendedCot="" activeRoute="" > </_uastool> <track course="140.8" slope="0" speed="0" > </track> <sensor elevation="0" vfov="41.6" north="320.8000030518" roll="0" range="300" azimuth="140" model="Mavic 2 Enterprise Dual-Visual" fov="66.9" type="r-e" version="0.6" > </sensor> <spatial> <attitude roll="-0.2" pitch="3.8" yaw="140.8" > </attitude> <spin roll="0" pitch="0.0896860987" yaw="0" > </spin> </spatial> <vehicle goHomeBatteryPercent="15" hal="0" flightTimeRemaining="0" typeTag="_DJI_" batteryRemainingCapacity="2216" isFlying="" flightTime="0" type="DJI" batteryMaxCapacity="3672" voltage="15.71" > </vehicle> <_radio rssi="100" gps="" > </_radio> <waypointCollection> </waypointCollection> <_route sender="ANDROID-c96c2c467371208c" > </_route> <commandedData climbRate="0" > </commandedData> <__video sensor="UAS-CO DFPC Lawrence" spi="UAS-CO DFPC Lawrence.SPI1" url="rtsp://18.254.132.96:8554/money" > </__video> <link uid="ANDROID-c96c2c467371208c" type="a-f-G-U-C" relation="p-p" > </link> <_flow-tags_ TAK-Server-e87a0e02420b44a08f6032bcf1877745="2024-04-24T16:37:38Z" > </_flow-tags_> </detail> <point lat="39.1" lon="-108.6" ce="0" hae="1381.333" le="0" > </point></event>';
 
@@ -157,7 +221,7 @@ test('Decode iTAK COT UAS Message', (t) => {
                 slope: 0,
                 speed: 0,
                 metadata: {}
-            }, 
+            },
             geometry: {
                 type: 'Point',
                 coordinates: [ -108.6, 39.1, 1381.333 ]

@@ -7,6 +7,7 @@ import type { Static } from '@sinclair/typebox';
 import type {
     Feature,
     Polygon,
+    Position,
     FeaturePropertyMission,
     FeaturePropertyMissionLayer,
 } from './types/feature.js';
@@ -16,11 +17,13 @@ import type {
     Link,
     LinkAttributes,
     VideoAttributes,
+    SensorAttributes,
     VideoConnectionEntryAttributes,
 } from './types/types.js'
 import {
     InputFeature,
 } from './types/feature.js';
+import Sensor from './sensor.js';
 import type { AllGeoJSON } from "@turf/helpers";
 import PointOnFeature from '@turf/point-on-feature';
 import Truncate from '@turf/truncate';
@@ -235,6 +238,37 @@ export default class CoT {
 
         return this;
     }
+
+    position(position?: Static<typeof Position>): Static<typeof Position> {
+        if (position) {
+            this.raw.event.point._attributes.lon = String(position[0]);
+            this.raw.event.point._attributes.lat = String(position[1]);
+        }
+
+        return [
+            Number(this.raw.event.point._attributes.lon),
+            Number(this.raw.event.point._attributes.lat)
+        ];
+    }
+
+    sensor(sensor?: Static<typeof SensorAttributes>): Static<typeof Polygon> | null {
+        if (!this.raw.event.detail) this.raw.event.detail = {};
+
+        if (sensor) {
+            this.raw.event.detail.sensor = {
+                _attributes: sensor
+            }
+        }
+
+        if (!this.raw.event.detail.sensor || !this.raw.event.detail.sensor._attributes) {
+            return null;
+        }
+
+        return new Sensor(
+            this.position(),
+            this.raw.event.detail.sensor._attributes
+        ).to_geojson();
+    };
 
     addLink(link: Static<typeof LinkAttributes>): CoT {
         if (!this.raw.event.detail) this.raw.event.detail = {};
