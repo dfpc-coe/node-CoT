@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.16.0 - 2024-11-21
+
+- :tada: Add limited Sensor GeoJSON Parsing - NOTE: it does not respect that sensors are in a 3D space reprojected into 2D so the sensor geojson isn't entirely correct
+
 ### v12.15.0 - 2024-11-11
 
 - :rocket: Add internally stored `path` value
