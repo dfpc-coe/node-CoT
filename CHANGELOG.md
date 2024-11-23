@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.16.1 - 2024-11-23
+
+- :bug: Fix type complaint on CoT being converted to XML when it could be a `Buffer<ArrayBufferLike>`
+
 ### v12.16.0 - 2024-11-21
 
 - :tada: Add limited Sensor GeoJSON Parsing - NOTE: it does not respect that sensors are in a 3D space reprojected into 2D so the sensor geojson isn't entirely correct

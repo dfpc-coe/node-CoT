@@ -76,9 +76,7 @@ export default class CoT {
 
     constructor(cot: Buffer | Static<typeof JSONCoT> | object | string) {
         if (typeof cot === 'string' || cot instanceof Buffer) {
-            if (cot instanceof Buffer) cot = String(cot);
-
-            const raw = xmljs.xml2js(cot, { compact: true });
+            const raw = xmljs.xml2js(String(cot), { compact: true });
             this.raw = raw as Static<typeof JSONCoT>;
         } else {
             this.raw = cot as Static<typeof JSONCoT>;
