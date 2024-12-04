@@ -293,7 +293,7 @@ export default class CoT {
         const ProtoMessage = RootMessage.lookupType(`atakmap.commoncommo.protobuf.v${version}.TakMessage`)
 
         // The spread operator is important to make sure the delete doesn't modify the underlying detail object
-        const detail = { ...this.raw.event.detail } || {};
+        const detail = { ...this.raw.event.detail };
 
         const msg: any = {
             cotEvent: {
