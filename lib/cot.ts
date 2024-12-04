@@ -292,7 +292,8 @@ export default class CoT {
         if (version < 1 || version > 1) throw new Err(400, null, `Unsupported Proto Version: ${version}`);
         const ProtoMessage = RootMessage.lookupType(`atakmap.commoncommo.protobuf.v${version}.TakMessage`)
 
-        const detail = this.raw.event.detail || {};
+        // The spread operator is important to make sure the delete doesn't modify the underlying detail object
+        const detail = { ...this.raw.event.detail };
 
         const msg: any = {
             cotEvent: {
