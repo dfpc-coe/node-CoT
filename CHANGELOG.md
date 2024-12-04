@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.16.2 - 2024-12-04
+
+- :bug: Fix bug where calling `to_proto` twice would fail
+
 ### v12.16.1 - 2024-11-23
 
 - :bug: Fix type complaint on CoT being converted to XML when it could be a `Buffer<ArrayBufferLike>`
