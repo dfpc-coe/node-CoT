@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.17.0 - 2024-12-04
+
+- :arrow_up: Update all core deps
+
 ### v12.16.2 - 2024-12-04
 
 - :bug: Fix bug where calling `to_proto` twice would fail
