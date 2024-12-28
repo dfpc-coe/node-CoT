@@ -86,8 +86,8 @@ export const InputProperties = Type.Object({
     remarks: Type.Optional(Type.String()),
     mission: Type.Optional(FeaturePropertyMission),
     fileshare: Type.Optional(FileShareAttributes),
-    attachments: Type.Optional(Type.Array(Type.String())),
     ackrequest: Type.Optional(ACKRequestAttributes),
+    attachments: Type.Optional(Type.Array(Type.String())),
     sensor: Type.Optional(SensorAttributes),
     video: Type.Optional(Type.Composite([
         VideoAttributes,
