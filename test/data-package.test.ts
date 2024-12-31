@@ -339,9 +339,9 @@ test(`DataPackage File Parsing: Iconset-FalconView.zip (strict: false)`, async (
 
 
     const files = await pkg.files();
-    //t.equals(files.size, 1)
+    t.equals(files.size, 490)
 
-    //t.ok(files.has('86771c6fd3635ec4d66c3fd9501f23c1/CO Mileposts.kmz'));
+    t.ok(files.has('iconset.xml'));
 
     await pkg.destroy();
 
