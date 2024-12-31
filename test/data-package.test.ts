@@ -146,8 +146,8 @@ test(`DataPackage CoT Parsing: QuickPic.zip`, async (t) => {
     t.deepEquals(pkg.settings, {
         uid: '3b758d3c-5b7a-4fba-a0dc-bbde18e895b5',
         name: '20240702_144514.jpg',
-        onReceiveImport: 'true',
-        onReceiveDelete: 'true',
+        onReceiveImport: true,
+        onReceiveDelete: true,
         callsign: 'DFPC Ingalls.2.144535'
     });
 
@@ -221,15 +221,15 @@ test(`DataPackage CoT Parsing: addFile,getFile`, async (t) => {
 test(`DataPackage CoT Parsing: AttachmentInManifest.zip`, async (t) => {
     const pkg = await DataPackage.parse(new URL('./packages/AttachmentInManifest.zip', import.meta.url).pathname);
 
-    t.equals(await DataPackage.hash(new URL('./packages/AttachmentInManifest.zip', import.meta.url).pathname), '3a2c1c147f7c96d86ca27c1d8bd1f45cf1f8418c28c35935284fb2c9e38a5424');
+    t.equals(await DataPackage.hash(new URL('./packages/AttachmentInManifest.zip', import.meta.url).pathname), '313127964ac117dfbe6d64bb8a0832182593348692df3b8f9f9448d9f91c289e');
 
     t.equals(pkg.version, '2');
     t.ok(pkg.path);
     t.deepEquals(pkg.settings, {
         uid: 'c7f90966-f048-41fd-8951-70cd9a380cd2',
         name: '1000001544.jpg',
-        onReceiveImport: 'true',
-        onReceiveDelete: 'true',
+        onReceiveImport: true,
+        onReceiveDelete: true,
         callsign: 'excl 1'
     });
 
@@ -281,8 +281,8 @@ test(`DataPackage File Parsing: COMileposts.zip`, async (t) => {
     t.deepEquals(pkg.settings, {
         uid: '62089a51-65d7-4c8c-9830-3bc466cd5683',
         name: 'CO Mileposts.kmz',
-        onReceiveImport: 'true',
-        onReceiveDelete: 'true'
+        onReceiveImport: true,
+        onReceiveDelete: true
     });
 
     t.deepEquals(pkg.contents, [
@@ -307,6 +307,41 @@ test(`DataPackage File Parsing: COMileposts.zip`, async (t) => {
     t.equals(files.size, 1)
 
     t.ok(files.has('86771c6fd3635ec4d66c3fd9501f23c1/CO Mileposts.kmz'));
+
+    await pkg.destroy();
+
+    t.end();
+});
+
+test(`DataPackage File Parsing: Iconset-FalconView.zip (strict: false)`, async (t) => {
+    const pkg = await DataPackage.parse(new URL('./packages/Iconset-FalconView.zip', import.meta.url).pathname, {
+        strict: false
+    });
+
+    t.equals(await DataPackage.hash(new URL('./packages/Iconset-FalconView.zip', import.meta.url).pathname), '53622c90841d2ef66b3b508412be0ecd33f90f1cd7887295ab0c3a31ee2e7315');
+
+    t.equals(pkg.version, '2');
+    t.ok(pkg.path);
+    t.deepEquals(pkg.settings, {
+        uid: '53622c90841d2ef66b3b508412be0ecd33f90f1cd7887295ab0c3a31ee2e7315',
+        name: 'Iconset-FalconView',
+        onReceiveImport: true,
+        onReceiveDelete: true
+    });
+
+    t.deepEquals(pkg.contents.length, 490);
+
+    const cots = await pkg.cots();
+    t.equal(cots.length, 0);
+
+    const attachments = await pkg.attachments();
+    t.equals(attachments.size, 0)
+
+
+    const files = await pkg.files();
+    //t.equals(files.size, 1)
+
+    //t.ok(files.has('86771c6fd3635ec4d66c3fd9501f23c1/CO Mileposts.kmz'));
 
     await pkg.destroy();
 

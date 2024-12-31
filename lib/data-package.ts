@@ -54,6 +54,11 @@ const checkManifest = (new AJV({
 
 /**
  * Helper class for creating and parsing static Data Packages
+ * @class
+ *
+ * @prop path The local path to the Data Package working directory
+ * @prop destroyed Indcates that the DataPackage has been destroyed and all local files removed
+ * @prop version DataPackage schema version - 2 is most common
  */
 export class DataPackage {
     path: string;
@@ -69,6 +74,10 @@ export class DataPackage {
         [k: string]: boolean | string | undefined;
     }
 
+    /**
+     * @param uid Unique ID of the Data Package
+     * @param name Human Readable name of the DataPackage
+    */
     constructor(uid?: string, name?: string) {
         this.path = os.tmpdir() + '/' + randomUUID();
         this.destroyed = false;
@@ -146,9 +155,19 @@ export class DataPackage {
 
 
     /**
-     * Return a DataPackage version of an unparsed Data Package Zip
+     * Return a DataPackage version of a raw Data Package Zip
+     *
+     * @public
+     * @param input path to zipped DataPackage on disk
+     * @param [opts] Parser Options
+     * @param [opts.strict] By default the DataPackage must contain a manifest file, turning strict mode off will generate a manifest based on the contents of the file
      */
-    static async parse(input: string): Promise<DataPackage> {
+    static async parse(input: string, opts?: {
+        strict?: boolean
+    }): Promise<DataPackage> {
+        if (!opts) opts = {};
+        if (opts.strict === undefined) opts.strict = true;
+
         const pkg = new DataPackage();
 
         const zip = new StreamZip.async({
@@ -158,33 +177,53 @@ export class DataPackage {
 
         const preentries = await zip.entries();
 
-        if (!preentries['MANIFEST/manifest.xml']) throw new Err(400, null, 'No MANIFEST/manifest.xml found in Data Package');
+        if (opts.strict && !preentries['MANIFEST/manifest.xml']) {
+            throw new Err(400, null, 'No MANIFEST/manifest.xml found in Data Package');
+        }
 
         await fsp.mkdir(pkg.path + '/raw', { recursive: true });
         await zip.extract(null, pkg.path + '/raw/');
 
-        const xml = xmljs.xml2js(String(await fsp.readFile(pkg.path + '/raw/MANIFEST/manifest.xml')), { compact: true })
+        if (preentries['MANIFEST/manifest.xml']) {
+            const xml = xmljs.xml2js(String(await fsp.readFile(pkg.path + '/raw/MANIFEST/manifest.xml')), { compact: true })
 
-        checkManifest(xml);
-        if (checkManifest.errors) throw new Err(400, null, `${checkManifest.errors[0].message} (${checkManifest.errors[0].instancePath})`);
-        const manifest = xml as Static<typeof Manifest>;
+            checkManifest(xml);
+            if (checkManifest.errors) throw new Err(400, null, `${checkManifest.errors[0].message} (${checkManifest.errors[0].instancePath})`);
+            const manifest = xml as Static<typeof Manifest>;
 
-        pkg.version = manifest.MissionPackageManifest._attributes.version;
+            pkg.version = manifest.MissionPackageManifest._attributes.version;
 
-        if (Array.isArray(manifest.MissionPackageManifest.Contents.Content)) {
-            pkg.contents = manifest.MissionPackageManifest.Contents.Content;
+            if (Array.isArray(manifest.MissionPackageManifest.Contents.Content)) {
+                pkg.contents = manifest.MissionPackageManifest.Contents.Content;
+            } else {
+                pkg.contents = [ manifest.MissionPackageManifest.Contents.Content ];
+            }
+
+            for (const param of manifest.MissionPackageManifest.Configuration.Parameter) {
+                if (['onReceiveImport', 'onReceiveDelete'].includes(param._attributes.name) && typeof param._attributes.value === 'string') {
+                    pkg.settings[param._attributes.name] = param._attributes.value === 'false' ? false : true;
+                } else {
+                    pkg.settings[param._attributes.name] = param._attributes.value;
+                }
+            }
         } else {
-            pkg.contents = [ manifest.MissionPackageManifest.Contents.Content ];
-        }
+            pkg.settings.name = path.parse(input).name;
+            pkg.settings.uid = await this.hash(input);
+            pkg.setEphemeral();
 
-        for (const param of manifest.MissionPackageManifest.Configuration.Parameter) {
-            pkg.settings[param._attributes.name] = param._attributes.value;
+            for (const [key, value] of Object.entries(preentries)) {
+                if (value.isDirectory) continue;
+                pkg.#addContent(
+                    key,
+                    await pkg.hash(key)
+                );
+            }
         }
 
         return pkg;
     }
 
-    #addContent(zipEntry: string, uid: string, name: string, ignore = false): void {
+    #addContent(zipEntry: string, uid: string, name?: string, ignore = false): void {
         if (this.destroyed) throw new Err(400, null, 'Attempt to access Data Package after it has been destroyed');
 
         // TODO: Seen in the wild but not currently implemented here:
@@ -196,7 +235,7 @@ export class DataPackage {
             Parameter: [{
                 _attributes: { name: 'uid', value: uid },
             },{
-                _attributes: { name: 'name', value: name }
+                _attributes: { name: 'name', value: name ?? path.parse(zipEntry).base }
             }]
         });
     }
