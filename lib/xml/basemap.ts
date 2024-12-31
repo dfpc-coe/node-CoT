@@ -20,8 +20,8 @@ export class Basemap extends XMLDocument<BasemapType> {
     /**
      * Return a Basemap from a string XML representation
      */
-    static parse(input: string): Basemap {
-        const basemap = super.check<BasemapType>(input, checkBasemap);
+    static parse(input: string | Buffer): Basemap {
+        const basemap = super.check<BasemapType>(String(input), checkBasemap);
         return new Basemap(basemap);
     }
 

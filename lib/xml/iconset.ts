@@ -19,8 +19,8 @@ export class Iconset extends XMLDocument<IconsetType> {
     /**
      * Return an Iconset from a string XML representation
      */
-    static parse(input: string): Iconset {
-        const basemap = super.check<IconsetType>(input, checkIconset);
+    static parse(input: string | Buffer): Iconset {
+        const basemap = super.check<IconsetType>(String(input), checkIconset);
         return new Iconset(basemap);
     }
 }

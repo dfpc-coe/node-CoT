@@ -162,9 +162,11 @@ export class DataPackage {
      * @param [opts] Parser Options
      * @param [opts.strict] By default the DataPackage must contain a manifest file, turning strict mode off will generate a manifest based on the contents of the file
      */
-    static async parse(input: string, opts?: {
+    static async parse(input: string | URL, opts?: {
         strict?: boolean
     }): Promise<DataPackage> {
+        input = input instanceof URL ? input.pathname : input;
+
         if (!opts) opts = {};
         if (opts.strict === undefined) opts.strict = true;
 
@@ -374,6 +376,18 @@ export class DataPackage {
         }
 
         return this.#attachments(cots, opts);
+    }
+
+    async getFileBuffer(path: string): Promise<Buffer> {
+        if (this.destroyed) throw new Err(400, null, 'Attempt to access Data Package after it has been destroyed');
+
+        try {
+            await fsp.access(`${this.path}/raw/${path}`)
+        } catch (err) {
+            throw new Err(400, err instanceof Error ? err : new Error(String(err)), 'Could not access file in Data Package');
+        }
+
+        return await fsp.readFile(`${this.path}/raw/${path}`);
     }
 
     /**

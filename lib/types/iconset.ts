@@ -9,7 +9,7 @@ export const IconsetAttributes = Type.Object({
     default_hostile: Type.Optional(Type.String()),
     default_neutral: Type.Optional(Type.String()),
     default_unknown: Type.Optional(Type.String()),
-    skip_resize: Type.Boolean({ default: false }),
+    skip_resize: Type.Optional(Type.Boolean()),
 })
 
 export default Type.Object({
