@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.18.0 - 2025-01-01
+
+- :tada: Add `strict: false` mode to DataPackage parsing that will turn a zip file into a DataPackage if it is not valid
+
 ### v12.17.1 - 2024-12-27
 
 - :arrow_up: Update all core deps
