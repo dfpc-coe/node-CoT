@@ -27,6 +27,7 @@
         "index.ts", 
         "test/**/*",
         "lib/*.ts",
+        "lib/xml/*.ts",
         "lib/schema.json"
     ]
 }

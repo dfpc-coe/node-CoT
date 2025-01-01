@@ -165,7 +165,7 @@ export class DataPackage {
     static async parse(input: string | URL, opts?: {
         strict?: boolean
     }): Promise<DataPackage> {
-        input = input instanceof URL ? input.pathname : input;
+        input = input instanceof URL ? decodeURIComponent(input.pathname) : input;
 
         if (!opts) opts = {};
         if (opts.strict === undefined) opts.strict = true;
