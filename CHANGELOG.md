@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.19.0 - 2025-01-04
+
+- :rocket: Ensure entire attribute type is reflected in GeoJSON
+
 ### v12.18.0 - 2025-01-01
 
 - :tada: Add `strict: false` mode to DataPackage parsing that will turn a zip file into a DataPackage if it is not valid
