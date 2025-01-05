@@ -378,13 +378,15 @@ export const Uid = Type.Object({
     })
 })
 
+export const ContactAttributes = Type.Object({
+    phone: Type.Optional(Type.String()),
+    name: Type.Optional(Type.String()),
+    callsign: Type.String(),
+    endpoint: Type.Optional(Type.String())
+})
+
 export const Contact = Type.Object({
-    _attributes: Type.Object({
-        phone: Type.Optional(Type.String()),
-        name: Type.Optional(Type.String()),
-        callsign: Type.String(),
-        endpoint: Type.Optional(Type.String())
-    })
+    _attributes: ContactAttributes
 })
 
 export const MartiDestAttributes = Type.Object({

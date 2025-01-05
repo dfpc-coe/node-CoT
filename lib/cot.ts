@@ -993,8 +993,8 @@ export default class CoT {
         if (feature.properties.contact) {
             cot.event.detail.contact = {
                 _attributes: {
+                    ...feature.properties.contact,
                     callsign: feature.properties.callsign || 'UNKNOWN',
-                    ...feature.properties.contact
                 }
             };
         }

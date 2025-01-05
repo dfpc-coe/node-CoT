@@ -5,6 +5,7 @@ import {
     ShapeEllipseAttributes,
     GeofenceAttributes,
     StatusAttributes,
+    ContactAttributes,
     PrecisionLocationAttributes,
     VideoConnectionEntryAttributes,
     MartiDestAttributes,
@@ -76,10 +77,7 @@ export const InputProperties = Type.Object({
     metadata: Type.Optional(Type.Record(Type.String(), Type.Unknown())),
     archived: Type.Optional(Type.Boolean()),
     geofence: Type.Optional(GeofenceAttributes),
-    contact: Type.Optional(Type.Object({
-        phone: Type.Optional(Type.String()),
-        endpoint: Type.Optional(Type.String())
-    })),
+    contact: Type.Optional(ContactAttributes),
     shape: Type.Optional(Type.Object({
         ellipse: Type.Optional(ShapeEllipseAttributes)
     })),
@@ -138,10 +136,7 @@ export const Properties = Type.Object({
     metadata: Type.Optional(Type.Record(Type.String(), Type.Unknown())),
     archived: Type.Optional(Type.Boolean()),
     geofence: Type.Optional(GeofenceAttributes),
-    contact: Type.Optional(Type.Object({
-        phone: Type.Optional(Type.String()),
-        endpoint: Type.Optional(Type.String())
-    })),
+    contact: Type.Optional(ContactAttributes),
     shape: Type.Optional(Type.Object({
         ellipse: Type.Optional(ShapeEllipseAttributes)
     })),
