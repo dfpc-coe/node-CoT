@@ -441,10 +441,7 @@ export class DataPackage {
     }): Promise<void> {
         if (this.destroyed) throw new Err(400, null, 'Attempt to access Data Package after it has been destroyed');
 
-        let name = 'Unknown';
-        if (cot.raw.event.detail && cot.raw.event.detail.contact) {
-            name = cot.raw.event.detail.contact._attributes.callsign;
-        }
+        const name = cot.callsign();
 
         this.#addContent(`${cot.raw.event._attributes.uid}/${cot.raw.event._attributes.uid}.cot`, cot.raw.event._attributes.uid, name, opts.ignore);
         await fsp.mkdir(`${this.path}/raw/${cot.raw.event._attributes.uid}/`, { recursive: true });
