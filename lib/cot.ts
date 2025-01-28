@@ -159,7 +159,11 @@ export default class CoT {
             this.raw.event.detail.contact._attributes.callsign = callsign;
         }
 
-        return this.raw.event.detail.contact ? this.raw.event.detail.contact._attributes.callsign : 'UNKNOWN';
+        if (this.raw.event.detail.contact && this.raw.event.detail.contact._attributes && typeof this.raw.event.detail.contact._attributes.callsign === 'string') {
+            return this.raw.event.detail.contact._attributes.callsign;
+        } else {
+            return 'UNKNOWN'
+        }
     }
 
     /**

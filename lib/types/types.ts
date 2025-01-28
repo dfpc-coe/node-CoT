@@ -381,7 +381,7 @@ export const Uid = Type.Object({
 export const ContactAttributes = Type.Object({
     phone: Type.Optional(Type.String()),
     name: Type.Optional(Type.String()),
-    callsign: Type.String(),
+    callsign: Type.Optional(Type.String()),
     endpoint: Type.Optional(Type.String())
 })
 
