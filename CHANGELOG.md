@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.20.0 - 2025-01-28
+
+- :rocket: Make Callsign Optional
+
 ### v12.19.0 - 2025-01-04
 
 - :rocket: Ensure entire attribute type is reflected in GeoJSON
