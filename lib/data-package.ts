@@ -19,7 +19,7 @@ import AJV from 'ajv';
 export const Parameter = Type.Object({
     _attributes: Type.Object({
         name: Type.String(),
-        value: Type.String()
+        value: Type.String({ default: '' })
     })
 })
 
@@ -31,21 +31,46 @@ export const ManifestContent = Type.Object({
     Parameter: Type.Union([Parameter, Type.Array(Parameter)])
 })
 
-export const Manifest = Type.Object({
-    MissionPackageManifest: Type.Object({
+export const Group = Type.Object({
+    _attributes: Type.Object({
+        name: Type.String(),
+    }),
+})
+
+export const Permission = Type.Object({
+    _attributes: Type.Object({
+        name: Type.String(),
+    }),
+})
+
+const MissionPackageManifest = Type.Object({
+    _attributes: Type.Object({
+        version: Type.String()
+    }),
+    Configuration: Type.Object({
+        Parameter: Type.Array(Parameter)
+    }),
+    Contents: Type.Object({
+        Content: Type.Optional(Type.Union([ManifestContent, Type.Array(ManifestContent)]))
+    }),
+
+    // Used in MissionArchive Exports
+    Groups: Type.Optional(Type.Object({
+        group: Type.Optional(Type.Union([Group, Type.Array(Group)]))
+    })),
+    Role: Type.Optional(Type.Object({
         _attributes: Type.Object({
-            version: Type.String()
+            name: Type.String()
         }),
-        Configuration: Type.Object({
-            Parameter: Type.Array(Parameter)
-        }),
-        Contents: Type.Object({
-            Content: Type.Union([ManifestContent, Type.Array(ManifestContent)])
-        })
-    })
+        Permissions: Type.Optional(Type.Union([Permission, Type.Array(Permission)]))
+    }))
 });
 
+export const Manifest = Type.Object({ MissionPackageManifest });
+
 const checkManifest = (new AJV({
+    strict: false,
+    useDefaults: true,
     allErrors: true,
     coerceTypes: true,
     allowUnionTypes: true
@@ -74,6 +99,8 @@ export class DataPackage {
         [k: string]: boolean | string | undefined;
     }
 
+    unknown: Record<string, unknown>;
+
     /**
      * @param uid Unique ID of the Data Package
      * @param name Human Readable name of the DataPackage
@@ -83,6 +110,7 @@ export class DataPackage {
         this.destroyed = false;
         fs.mkdirSync(this.path);
         this.version = '2';
+        this.unknown = {};
         this.settings = {
             uid: uid ?? randomUUID(),
             name: name ?? 'New Data Package'
@@ -118,7 +146,8 @@ export class DataPackage {
                 },
                 Contents: {
                     Content: this.contents
-                }
+                },
+                ...this.unknown
             }
         };
 
@@ -132,6 +161,14 @@ export class DataPackage {
         const xml = `<?xml version="1.0" encoding="UTF-8"?>\n${xmljs.js2xml(manifest, { compact: true })}`;
 
         return xml;
+    }
+
+    /**
+     * Mission Sync archived are returned in DataPackage format
+     * Return true if the DataPackage is a MissionSync Archive
+     */
+    isMissionArchive(): boolean {
+        return !!(this.settings.mission_guid && this.settings.mission_name);
     }
 
     /**
@@ -197,7 +234,7 @@ export class DataPackage {
 
             if (Array.isArray(manifest.MissionPackageManifest.Contents.Content)) {
                 pkg.contents = manifest.MissionPackageManifest.Contents.Content;
-            } else {
+            } else if (manifest.MissionPackageManifest.Contents.Content) {
                 pkg.contents = [ manifest.MissionPackageManifest.Contents.Content ];
             }
 
@@ -207,6 +244,12 @@ export class DataPackage {
                 } else {
                     pkg.settings[param._attributes.name] = param._attributes.value;
                 }
+            }
+
+            for (const [key, value] of Object.entries(manifest.MissionPackageManifest)) {
+                // Top level properties that are encoded in the class
+                if (['_attributes', 'Contents', 'Configuration'].includes(key)) continue;
+                pkg.unknown[key] = value;
             }
         } else {
             pkg.settings.name = path.parse(input).name;
@@ -260,6 +303,8 @@ export class DataPackage {
 
         const cots: CoT[] = [];
         for (const content of this.contents) {
+            if (!content) continue;
+
             if (path.parse(content._attributes.zipEntry).ext !== '.cot') continue;
             if (opts.respectIgnore && content._attributes.ignore) continue;
 
@@ -312,6 +357,8 @@ export class DataPackage {
         const attachments: Map<string, Array<Static<typeof ManifestContent>>> = new Map();
 
         for (const content of this.contents) {
+            if (!content) continue;
+
             if (path.parse(content._attributes.zipEntry).ext === '.cot') continue;
             if (opts.respectIgnore && content._attributes.ignore) continue;
 
@@ -349,6 +396,7 @@ export class DataPackage {
         }
 
         for (const content of this.contents) {
+            if (!content) continue;
             if (path.parse(content._attributes.zipEntry).ext === '.cot') continue;
             if (opts.respectIgnore && content._attributes.ignore) continue;
 

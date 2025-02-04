@@ -343,6 +343,60 @@ test(`DataPackage File Parsing: Iconset-FalconView.zip (strict: false)`, async (
 
     t.ok(files.has('iconset.xml'));
 
+    t.equals(pkg.isMissionArchive(), false)
+
+    await pkg.destroy();
+
+    t.end();
+});
+
+test(`MissionArchive: Testing Export`, async (t) => {
+    const pkg = await DataPackage.parse(new URL('./packages/MissionArchive.zip', import.meta.url).pathname, {
+        strict: false
+    });
+
+    t.equals(
+        await DataPackage.hash(new URL('./packages/Iconset-FalconView.zip', import.meta.url).pathname),
+        '53622c90841d2ef66b3b508412be0ecd33f90f1cd7887295ab0c3a31ee2e7315'
+    );
+
+    t.equals(pkg.version, '2');
+    t.ok(pkg.path);
+    t.deepEquals(pkg.settings, {
+        uid: '26f64fe4-57f1-4109-8e79-d616f8050b57',
+        name: 'Ingalls Testing',
+        mission_guid: 'cedfcdbe-5be7-4f29-92c7-216a506772b2',
+        password_hash: '',
+        creatorUid: 'ANDROID-CloudTAK-nicholas.ingalls@state.co.us',
+        create_time: '1738621323646',
+        expiration: '-1',
+        chatroom: '',
+        description: 'Data Sync Testing',
+        tool: 'public',
+        onReceiveImport: true,
+        onReceiveDelete: false,
+        mission_name: 'Ingalls Testing',
+        mission_label: 'Ingalls Testing',
+        mission_uid: 'ops.cotak.gov-8443-ssl-Ingalls Testing',
+        mission_server: 'ops.cotak.gov:8443:ssl'
+    });
+
+    t.deepEquals(pkg.contents.length, 0);
+
+    const cots = await pkg.cots();
+    t.equal(cots.length, 0);
+
+    const attachments = await pkg.attachments();
+    t.equals(attachments.size, 0)
+
+
+    const files = await pkg.files();
+    t.equals(files.size, 0)
+
+    t.equals(pkg.isMissionArchive(), true)
+
+    t.deepEquals(pkg.manifest(), '<?xml version="1.0" encoding="UTF-8"?>\n<MissionPackageManifest version="2"><Configuration><Parameter name="uid" value="26f64fe4-57f1-4109-8e79-d616f8050b57"/><Parameter name="name" value="Ingalls Testing"/><Parameter name="mission_guid" value="cedfcdbe-5be7-4f29-92c7-216a506772b2"/><Parameter name="creatorUid" value="ANDROID-CloudTAK-nicholas.ingalls@state.co.us"/><Parameter name="create_time" value="1738621323646"/><Parameter name="expiration" value="-1"/><Parameter name="description" value="Data Sync Testing"/><Parameter name="tool" value="public"/><Parameter name="onReceiveImport" value="true"/><Parameter name="mission_name" value="Ingalls Testing"/><Parameter name="mission_label" value="Ingalls Testing"/><Parameter name="mission_uid" value="ops.cotak.gov-8443-ssl-Ingalls Testing"/><Parameter name="mission_server" value="ops.cotak.gov:8443:ssl"/></Configuration><Contents></Contents><Groups><Group name="DFPCCoE - All Personnel"/></Groups><Role name="MISSION_SUBSCRIBER"><Permissions name="MISSION_READ"/><Permissions name="MISSION_WRITE"/></Role></MissionPackageManifest>');
+
     await pkg.destroy();
 
     t.end();
