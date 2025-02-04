@@ -12,6 +12,12 @@
 
 ### Pending Fixed
 
+### v12.21.0 - 2025-02-03
+
+- :tada: Add support for identifying DataPackages that are Mission Archive Exports
+- :rocket: Add types present in MissionArchive Exports
+- :rocket: Include unknown properties in `unknown` object of DataPackage
+
 ### v12.20.0 - 2025-01-28
 
 - :rocket: Make Callsign Optional
