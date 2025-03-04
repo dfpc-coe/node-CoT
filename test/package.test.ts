@@ -4,7 +4,9 @@ import fs from 'node:fs';
 import test from 'tape';
 
 test(`DataPackage CoT Parsing: CameraCOTs.zip`, async (t) => {
-    const pkg = await DataPackage.parse(new URL('./packages/CameraCOTs.zip', import.meta.url).pathname);
+    const pkg = await DataPackage.parse(new URL('./packages/CameraCOTs.zip', import.meta.url).pathname, {
+        cleanup: false
+    });
 
     t.equals(pkg.version, '2');
     t.ok(pkg.path);
@@ -137,7 +139,9 @@ test(`DataPackage CoT Writing`, async (t) => {
 });
 
 test(`DataPackage CoT Parsing: QuickPic.zip`, async (t) => {
-    const pkg = await DataPackage.parse(new URL('./packages/QuickPic.zip', import.meta.url).pathname);
+    const pkg = await DataPackage.parse(new URL('./packages/QuickPic.zip', import.meta.url).pathname, {
+        cleanup: false
+    });
 
     t.equals(await DataPackage.hash(new URL('./packages/QuickPic.zip', import.meta.url).pathname), 'bd13db0f18ccb423833cc21c0678e0224dd15ff504c1f16c43aff03e216b82a7');
 
@@ -272,7 +276,9 @@ test(`DataPackage CoT Parsing: AttachmentInManifest.zip`, async (t) => {
 });
 
 test(`DataPackage File Parsing: COMileposts.zip`, async (t) => {
-    const pkg = await DataPackage.parse(new URL('./packages/COMilePosts.zip', import.meta.url).pathname);
+    const pkg = await DataPackage.parse(new URL('./packages/COMilePosts.zip', import.meta.url).pathname, {
+        cleanup: false
+    });
 
     t.equals(await DataPackage.hash(new URL('./packages/COMilePosts.zip', import.meta.url).pathname), '118e6b6f4cd30c855606879263f6376ca8a6f9b1694dd38ac43868ecfbe46edb');
 
@@ -315,7 +321,8 @@ test(`DataPackage File Parsing: COMileposts.zip`, async (t) => {
 
 test(`DataPackage File Parsing: Iconset-FalconView.zip (strict: false)`, async (t) => {
     const pkg = await DataPackage.parse(new URL('./packages/Iconset-FalconView.zip', import.meta.url).pathname, {
-        strict: false
+        strict: false,
+        cleanup: false
     });
 
     t.equals(await DataPackage.hash(new URL('./packages/Iconset-FalconView.zip', import.meta.url).pathname), '53622c90841d2ef66b3b508412be0ecd33f90f1cd7887295ab0c3a31ee2e7315');
@@ -352,7 +359,8 @@ test(`DataPackage File Parsing: Iconset-FalconView.zip (strict: false)`, async (
 
 test(`MissionArchive: Testing Export`, async (t) => {
     const pkg = await DataPackage.parse(new URL('./packages/MissionArchive.zip', import.meta.url).pathname, {
-        strict: false
+        strict: false,
+        cleanup: false
     });
 
     t.equals(
