@@ -12,6 +12,11 @@
 
 ### Pending Fixed
 
+### v12.23.0 - 2025-03-04
+
+- :rocket: Ensure DataPackage zip reader is closed when using `DataPackage.parse`
+- :rocket: Automatically remove provided zip container given to `DataPackage.parse` unless `opts.cleanup = false`
+
 ### v12.22.0 - 2025-03-04
 
 - :arrow_up: Update core deps
