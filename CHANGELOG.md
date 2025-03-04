@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.22.0 - 2025-03-04
+
+- :arrow_up: Update core deps
+
 ### v12.21.0 - 2025-02-03
 
 - :tada: Add support for identifying DataPackages that are Mission Archive Exports
