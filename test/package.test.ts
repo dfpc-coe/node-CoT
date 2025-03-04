@@ -223,7 +223,9 @@ test(`DataPackage CoT Parsing: addFile,getFile`, async (t) => {
 });
 
 test(`DataPackage CoT Parsing: AttachmentInManifest.zip`, async (t) => {
-    const pkg = await DataPackage.parse(new URL('./packages/AttachmentInManifest.zip', import.meta.url).pathname);
+    const pkg = await DataPackage.parse(new URL('./packages/AttachmentInManifest.zip', import.meta.url).pathname, {
+        cleanup: false
+    });
 
     t.equals(await DataPackage.hash(new URL('./packages/AttachmentInManifest.zip', import.meta.url).pathname), '313127964ac117dfbe6d64bb8a0832182593348692df3b8f9f9448d9f91c289e');
 
