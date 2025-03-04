@@ -198,14 +198,17 @@ export class DataPackage {
      * @param input path to zipped DataPackage on disk
      * @param [opts] Parser Options
      * @param [opts.strict] By default the DataPackage must contain a manifest file, turning strict mode off will generate a manifest based on the contents of the file
+     * @param [opts.cleanup] If the Zip is parsed as a DataSync successfully, remove the initial zip file
      */
     static async parse(input: string | URL, opts?: {
         strict?: boolean
+        cleanup?: boolean
     }): Promise<DataPackage> {
         input = input instanceof URL ? decodeURIComponent(input.pathname) : input;
 
         if (!opts) opts = {};
         if (opts.strict === undefined) opts.strict = true;
+        if (opts.cleanup === undefined) opts.cleanup = true;
 
         const pkg = new DataPackage();
 
@@ -263,6 +266,11 @@ export class DataPackage {
                     await pkg.hash(key)
                 );
             }
+        }
+
+        await zip.close();
+        if (opts.cleanup) {
+            await fsp.unlink(input);
         }
 
         return pkg;
