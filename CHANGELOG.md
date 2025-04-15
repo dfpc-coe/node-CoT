@@ -12,6 +12,11 @@
 
 ### Pending Fixed
 
+### v12.24.0 - 2025-04-15
+
+- :bug: Fix paths when running on windows
+- :arrow_up: Update all base deps
+
 ### v12.23.0 - 2025-03-04
 
 - :rocket: Ensure DataPackage zip reader is closed when using `DataPackage.parse`
