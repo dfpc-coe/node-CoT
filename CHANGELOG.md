@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.25.0 - 2025-04-15
+
+- :rocket: Add support for `Marti => Dest => Group`
+
 ### v12.24.0 - 2025-04-15
 
 - :bug: Fix paths when running on windows
