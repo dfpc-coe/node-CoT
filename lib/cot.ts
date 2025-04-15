@@ -33,11 +33,14 @@ import Color from './utils/color.js';
 import JSONCoT, { Detail } from './types/types.js'
 import AJV from 'ajv';
 import fs from 'fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 // GeoJSON Geospatial ops will truncate to the below
 const COORDINATE_PRECISION = 6;
 
-const RootMessage = await protobuf.load(new URL('./proto/takmessage.proto', import.meta.url).pathname);
+const protoPath = path.join(path.dirname(fileURLToPath(import.meta.url)), 'proto', 'takmessage.proto');
+const RootMessage = await protobuf.load(protoPath);
 
 const pkg = JSON.parse(String(fs.readFileSync(new URL('../package.json', import.meta.url))));
 

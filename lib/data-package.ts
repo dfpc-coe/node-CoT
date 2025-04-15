@@ -204,8 +204,7 @@ export class DataPackage {
         strict?: boolean
         cleanup?: boolean
     }): Promise<DataPackage> {
-        input = input instanceof URL ? decodeURIComponent(input.pathname) : input;
-
+        input = input instanceof URL ? path.normalize(decodeURIComponent(input.pathname)) : input;
         if (!opts) opts = {};
         if (opts.strict === undefined) opts.strict = true;
         if (opts.cleanup === undefined) opts.cleanup = true;
