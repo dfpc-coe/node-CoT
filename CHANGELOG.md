@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.26.0 - 2025-04-17
+
+- :rocket: Allow specifying a working path when creating a DataPackage
+
 ### v12.25.0 - 2025-04-15
 
 - :rocket: Add support for `Marti => Dest => Group`
