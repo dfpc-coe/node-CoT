@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.27.0 - 2025-04-17
+
+- :rocket: Add `is_stale` fn
+
 ### v12.26.0 - 2025-04-17
 
 - :rocket: Allow specifying a working path when creating a DataPackage
