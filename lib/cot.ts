@@ -647,6 +647,10 @@ export default class CoT {
         return xmljs.js2xml(this.raw, { compact: true });
     }
 
+    is_stale(): boolean {
+        return new Date(this.raw.event._attributes.stale) < new Date();
+    }
+
     /**
      * Determines if the CoT message represents a Tasking Message
      *
