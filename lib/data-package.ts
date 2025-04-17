@@ -81,9 +81,11 @@ const checkManifest = (new AJV({
  * Helper class for creating and parsing static Data Packages
  * @class
  *
- * @prop path The local path to the Data Package working directory
- * @prop destroyed Indcates that the DataPackage has been destroyed and all local files removed
- * @prop version DataPackage schema version - 2 is most common
+ * @prop path           The local path to the Data Package working directory
+ * @prop destroyed      Indcates that the DataPackage has been destroyed and all local files removed
+ * @prop version        DataPackage schema version - 2 is most common
+ * @prop contents       Array Manifest of DataPackage contents
+ * @prop settings       Top level DataPackage settings
  */
 export class DataPackage {
     path: string;
@@ -102,13 +104,28 @@ export class DataPackage {
     unknown: Record<string, unknown>;
 
     /**
-     * @param uid Unique ID of the Data Package
-     * @param name Human Readable name of the DataPackage
+     * @constructor
+     * @param uid       Unique ID of the Data Package
+     * @param name      Human Readable name of the DataPackage
+     * @param opts      Optional Options
     */
-    constructor(uid?: string, name?: string) {
-        this.path = os.tmpdir() + '/' + randomUUID();
+    constructor(
+        uid?: string,
+        name?: string,
+        opts: {
+            path?: string
+        } = {}
+    ) {
+        if (opts && opts.path) {
+            this.path = opts.path;
+        } else {
+            this.path = os.tmpdir() + '/' + randomUUID();
+        }
+    
         this.destroyed = false;
-        fs.mkdirSync(this.path);
+        fs.mkdirSync(this.path, {
+            recursive: true
+        });
         this.version = '2';
         this.unknown = {};
         this.settings = {
