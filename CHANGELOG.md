@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.28.0 - 2025-04-17
+
+- :bug: Update StrokeWidth to allow Numeric Values
+
 ### v12.27.0 - 2025-04-17
 
 - :rocket: Add `is_stale` fn
