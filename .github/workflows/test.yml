@@ -1,38 +1,43 @@
 name: Test
 
 on:
-    push:
-        branches:
-            - main
+  push:
+    branches:
+      - main
     pull_request:
-        types:
-            - opened
-            - synchronize
-            - reopened
-            - ready_for_review
+      types:
+        - opened
+        - synchronize
+        - reopened
+        - ready_for_review
 
 jobs:
-    test:
-        runs-on: ubuntu-latest
-        if: github.event.pull_request.draft == false
-        steps:
-            - uses: actions/checkout@v3
-              with:
-                  ref: ${{ github.event.pull_request.head.sha }}
+  test:
+    runs-on: ubuntu-latest
+    if: github.event.pull_request.draft == false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
 
-            - uses: actions/setup-node@v3
-              with:
-                  node-version: 18
-                  registry-url: https://registry.npmjs.org/
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          registry-url: https://registry.npmjs.org/
 
-            - name: Install
-              run: npm install
+      - name: Install
+        run: npm install
 
-            - name: Build
-              run: npm run build
+      - name: Build
+        run: npm run build
 
-            - name: Lint
-              run: npm run lint
+      - name: Lint
+        run: npm run lint
 
-            - name: Test
-              run: npm test
+      - name: Test
+        run: npm test
+
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v5
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
