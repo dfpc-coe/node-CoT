@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.29.0 - 2025-04-21
+
+- :rocket: Add `COT.type()` helper fn
+
 ### v12.28.0 - 2025-04-17
 
 - :bug: Update StrokeWidth to allow Numeric Values
