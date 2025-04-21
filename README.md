@@ -2,6 +2,12 @@
 
 <p align=center>Typescript/Javascript Cursor-On-Target Library</p>
 
+<p align='center'>
+    <a href="https://codecov.io/gh/dfpc-coe/node-CoT" > 
+        <img src="https://codecov.io/gh/dfpc-coe/node-CoT/graph/badge.svg?token=0SENX44QG7"/> 
+    </a>
+</p>
+
 Lightweight Typescript library for parsing and manipulating TAK related messages, primarily [Cursor-on-Target (COT)](https://git.tak.gov/standards/takcot)
 
 ## About
