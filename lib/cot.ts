@@ -153,6 +153,17 @@ export default class CoT {
     /**
      * Returns or sets the Callsign of the CoT
      */
+    type(type?: string): string {
+        if (type) {
+            this.raw.event._attributes.type = type;
+        }
+
+        return this.raw.event._attributes.type;
+    }
+
+    /**
+     * Returns or sets the Callsign of the CoT
+     */
     callsign(callsign?: string): string {
         if (!this.raw.event.detail) this.raw.event.detail = {};
 
