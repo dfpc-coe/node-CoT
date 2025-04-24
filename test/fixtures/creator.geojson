@@ -8,10 +8,10 @@
         "callsign": "BasicTest",
         "center": [ 1.1, 2.2, 0 ],
         "creator": {
-            uid: 'ANDROID-0ca41830e11d2ef3',
-            callsign: 'DFPC Ingalls Tab',
-            time: '2025-04-24T15:09:21.789Z',
-            type: 'a-f-G-E-V-C'
+            "uid": "ANDROID-0ca41830e11d2ef3",
+            "callsign": "DFPC Ingalls Tab",
+            "time": "2025-04-24T15:09:21.789Z",
+            "type": "a-f-G-E-V-C"
         },
         "time": "2023-08-04T15:17:43.649Z",
         "start": "2023-08-04T15:17:43.649Z",
