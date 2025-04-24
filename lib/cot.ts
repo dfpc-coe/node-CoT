@@ -16,6 +16,7 @@ import type {
     MartiDestAttributes,
     Link,
     LinkAttributes,
+    CreatorAttributes,
     VideoAttributes,
     SensorAttributes,
     VideoConnectionEntryAttributes,
@@ -77,7 +78,17 @@ export default class CoT {
     // Does the CoT belong to a folder - defaults to "/"
     path: string;
 
-    constructor(cot: Buffer | Static<typeof JSONCoT> | object | string) {
+    constructor(
+        cot: Buffer | Static<typeof JSONCoT> | object | string,
+        opts: {
+            creator?: CoT | {
+                uid: string,
+                type: string,
+                callsign: string,
+                time?: Date | string,
+            }
+        } = {}
+    ) {
         if (typeof cot === 'string' || cot instanceof Buffer) {
             const raw = xmljs.xml2js(String(cot), { compact: true });
             this.raw = raw as Static<typeof JSONCoT>;
@@ -101,6 +112,15 @@ export default class CoT {
 
         if (this.raw.event.detail.archive && Object.keys(this.raw.event.detail.archive).length === 0) {
             this.raw.event.detail.archive = { _attributes: {} };
+        }
+
+        if (opts.creator) {
+            this.creator({
+                uid: opts.creator instanceof CoT ? opts.creator.uid() : opts.creator.uid,
+                type: opts.creator instanceof CoT ? opts.creator.type() : opts.creator.type,
+                callsign: opts.creator instanceof CoT ? opts.creator.callsign() : opts.creator.callsign,
+                time: opts.creator instanceof CoT ? new Date() : opts.creator.time
+            });
         }
     }
 
@@ -151,6 +171,14 @@ export default class CoT {
     }
 
     /**
+     * Returns or sets the UID of the CoT
+     */
+    uid(uid?: string): string {
+        if (uid) this.raw.event._attributes.uid = uid;
+        return this.raw.event._attributes.uid;
+    }
+
+    /**
      * Returns or sets the Callsign of the CoT
      */
     type(type?: string): string {
@@ -163,48 +191,51 @@ export default class CoT {
 
     /**
      * Returns or sets the Callsign of the CoT
+     *
+     * @param callsign - Optional Callsign to set
      */
     callsign(callsign?: string): string {
-        if (!this.raw.event.detail) this.raw.event.detail = {};
+        const detail = this.detail();
 
-        if (callsign && !this.raw.event.detail.contact) {
-            this.raw.event.detail.contact = { _attributes: { callsign } };
-        } else if (callsign && this.raw.event.detail.contact) {
-            this.raw.event.detail.contact._attributes.callsign = callsign;
+        if (callsign && !detail.contact) {
+            detail.contact = { _attributes: { callsign } };
+        } else if (callsign && detail.contact) {
+            detail.contact._attributes.callsign = callsign;
         }
 
-        if (this.raw.event.detail.contact && this.raw.event.detail.contact._attributes && typeof this.raw.event.detail.contact._attributes.callsign === 'string') {
-            return this.raw.event.detail.contact._attributes.callsign;
+        if (detail.contact && detail.contact._attributes && typeof detail.contact._attributes.callsign === 'string') {
+            return detail.contact._attributes.callsign;
         } else {
             return 'UNKNOWN'
         }
     }
 
     /**
-     * Returns or sets the UID of the CoT
+     * Return Detail Object of CoT or create one if it doesn't yet exist and pass a reference
      */
-    uid(uid?: string): string {
-        if (uid) this.raw.event._attributes.uid = uid;
-        return this.raw.event._attributes.uid;
+    detail(): Static<typeof Detail> {
+        if (!this.raw.event.detail) this.raw.event.detail = {};
+        return this.raw.event.detail;
     }
 
     /**
      * Add a given Dest tag to a CoT
      */
     addDest(dest: Static<typeof MartiDestAttributes>): CoT {
-        if (!this.raw.event.detail) this.raw.event.detail = {};
-        if (!this.raw.event.detail.marti) this.raw.event.detail.marti = {};
+        const detail = this.detail();
+
+        if (!detail.marti) detail.marti = {};
 
         let destArr: Array<Static<typeof MartiDest>> = [];
-        if (this.raw.event.detail.marti.dest && !Array.isArray(this.raw.event.detail.marti.dest)) {
-            destArr = [this.raw.event.detail.marti.dest]
-        } else if (this.raw.event.detail.marti.dest && Array.isArray(this.raw.event.detail.marti.dest)) {
-            destArr = this.raw.event.detail.marti.dest;
+        if (detail.marti.dest && !Array.isArray(detail.marti.dest)) {
+            destArr = [detail.marti.dest]
+        } else if (detail.marti.dest && Array.isArray(detail.marti.dest)) {
+            destArr = detail.marti.dest;
         }
 
         destArr.push({ _attributes: dest });
 
-        this.raw.event.detail.marti.dest = destArr;
+        detail.marti.dest = destArr;
 
         return this;
     }
@@ -213,8 +244,8 @@ export default class CoT {
         video: Static<typeof VideoAttributes>,
         connection?: Static<typeof VideoConnectionEntryAttributes>
     ): CoT {
-        if (!this.raw.event.detail) this.raw.event.detail = {};
-        if (this.raw.event.detail.__video) throw new Err(400, null, 'A video stream already exists on this CoT');
+        const detail = this.detail();
+        if (detail.__video) throw new Err(400, null, 'A video stream already exists on this CoT');
 
         if (!video.url) throw new Err(400, null, 'A Video URL must be provided');
 
@@ -226,16 +257,16 @@ export default class CoT {
             video.uid = crypto.randomUUID();
         }
 
-        this.raw.event.detail.__video = {
+        detail.__video = {
             _attributes: video
         };
 
         if (connection) {
-            this.raw.event.detail.__video.ConnectionEntry = {
+            detail.__video.ConnectionEntry = {
                 _attributes: connection
             }
         } else {
-            this.raw.event.detail.__video.ConnectionEntry = {
+            detail.__video.ConnectionEntry = {
                 _attributes: {
                     uid: video.uid,
                     networkTimeout: 12000,
@@ -268,37 +299,71 @@ export default class CoT {
     }
 
     sensor(sensor?: Static<typeof SensorAttributes>): Static<typeof Polygon> | null {
-        if (!this.raw.event.detail) this.raw.event.detail = {};
+        const detail = this.detail();
 
         if (sensor) {
-            this.raw.event.detail.sensor = {
+            detail.sensor = {
                 _attributes: sensor
             }
         }
 
-        if (!this.raw.event.detail.sensor || !this.raw.event.detail.sensor._attributes) {
+        if (!detail.sensor || !detail.sensor._attributes) {
             return null;
         }
 
         return new Sensor(
             this.position(),
-            this.raw.event.detail.sensor._attributes
+            detail.sensor._attributes
         ).to_geojson();
     };
 
+    creator(
+        creator?: {
+            uid: string,
+            type: string,
+            callsign: string,
+            time: Date | string | undefined,
+        }
+    ): Static<typeof CreatorAttributes> | undefined {
+        const detail = this.detail();
+
+        if (creator) {
+            this.addLink({
+                uid: creator.uid,
+                production_time: creator.time ? new Date(creator.time).toISOString() : new Date().toISOString(),
+                type: creator.type,
+                parent_callsign: creator.callsign,
+                relation: 'p-p'
+            });
+
+            detail.creator = {
+                _attributes: {
+                    ...creator,
+                    time: creator.time ? new Date(creator.time).toISOString() : new Date().toISOString(),
+                }
+            };
+        }
+
+        if (detail.creator) {
+            return detail.creator._attributes;
+        } else {
+            return;
+        }
+    }
+
     addLink(link: Static<typeof LinkAttributes>): CoT {
-        if (!this.raw.event.detail) this.raw.event.detail = {};
+        const detail = this.detail();
 
         let linkArr: Array<Static<typeof Link>> = [];
-        if (this.raw.event.detail.link && !Array.isArray(this.raw.event.detail.link)) {
-            linkArr = [this.raw.event.detail.link]
-        } else if (this.raw.event.detail.link && Array.isArray(this.raw.event.detail.link)) {
-            linkArr = this.raw.event.detail.link;
+        if (detail.link && !Array.isArray(detail.link)) {
+            linkArr = [detail.link]
+        } else if (detail.link && Array.isArray(detail.link)) {
+            linkArr = detail.link;
         }
 
         linkArr.push({ _attributes: link });
 
-        this.raw.event.detail.link = linkArr;
+        detail.link = linkArr;
 
         return this;
     }
@@ -373,6 +438,10 @@ export default class CoT {
         delete contact.callsign;
         if (Object.keys(contact).length) {
             feat.properties.contact = contact;
+        }
+
+        if (this.creator()) {
+            feat.properties.creator = this.creator();
         }
 
         if (raw.event.detail.remarks && raw.event.detail.remarks._text) {
@@ -976,6 +1045,10 @@ export default class CoT {
 
         if (feature.properties.takv) {
             cot.event.detail.takv = { _attributes: { ...feature.properties.takv } };
+        }
+
+        if (feature.properties.creator) {
+            cot.event.detail.creator = { _attributes: { ...feature.properties.creator } };
         }
 
         if (feature.properties.geofence) {
