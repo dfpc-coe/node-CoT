@@ -12,6 +12,12 @@
 
 ### Pending Fixed
 
+### v12.30.0 - 2025-04-24
+
+- :tada: Bi-Directional `creator` support
+- :tada: COT core MilSym support
+- :rocket: Avoid constant `detail` check with new helper fn
+
 ### v12.29.0 - 2025-04-21
 
 - :rocket: Add `COT.type()` helper fn
