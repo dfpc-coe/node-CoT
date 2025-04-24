@@ -36,8 +36,14 @@ export const TogAttributes = Type.Object({
 })
 
 export const LinkAttributes = Type.Object({
-    // Polygon/LineString
+    // Common to all Link Types
+    uid: Type.Optional(Type.String()),
+    relation: Type.Optional(Type.String()),
+
+    // Polgon/Linestring or Author
     type: Type.Optional(Type.String()),
+
+    // Polygon/LineString
     point: Type.Optional(Type.String()),
 
     // URL Style Links
@@ -45,11 +51,7 @@ export const LinkAttributes = Type.Object({
     mime: Type.Optional(Type.String()),
     remarks: Type.Optional(Type.String()),
 
-    // Common to all Link Types
-    uid: Type.Optional(Type.String()),
-    relation: Type.Optional(Type.String()),
-
-    // Seen on QuickPics
+    // Author Details
     production_time: Type.Optional(Type.String()),
     parent_callsign: Type.Optional(Type.String())
 })
@@ -304,6 +306,22 @@ export const Geofence = Type.Object({
     _attributes: GeofenceAttributes
 })
 
+export const MilsymUnitModifier = Type.Object({
+    _attributes: Type.Object({
+        code: Type.String()
+    }),
+    _text: Type.Optional(Type.String())
+});
+
+export const MilsymAttributes = Type.Object({
+    id: Type.String(),
+});
+
+export const Milsym = Type.Object({
+    _attributes: MilsymAttributes,
+    unitmodifier: Type.Optional(Type.Union([MilsymUnitModifier, Type.Array(MilsymUnitModifier)]))
+})
+
 export const Chat = Type.Object({
     _attributes: Type.Object({
         parent: Type.Optional(Type.String()),
@@ -376,6 +394,17 @@ export const Uid = Type.Object({
     _attributes: Type.Object({
         Droid: Type.String()
     })
+})
+
+export const CreatorAttributes = Type.Object({
+    uid: Type.String(),
+    callsign: Type.String(),
+    time: Type.String(),
+    type: Type.String()
+})
+
+export const Creator = Type.Object({
+    _attributes: CreatorAttributes
 })
 
 export const ContactAttributes = Type.Object({
@@ -500,10 +529,12 @@ export const Detail = Type.Object({
     '__chat': Type.Optional(Chat),
     '__video': Type.Optional(Video),
     '__geofence': Type.Optional(Geofence),
+    '__milsym': Type.Optional(Milsym),
     '__forcedelete': Type.Optional(ForceDelete),
     '_flow-tags_': Type.Optional(FlowTags),
     uid: Type.Optional(Uid),
     status: Type.Optional(Status),
+    creator: Type.Optional(Creator),
     fileshare: Type.Optional(FileShare),
     ackrequest: Type.Optional(ACKRequest),
     remarks: Type.Optional(Remarks),
