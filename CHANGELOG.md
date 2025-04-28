@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.30.1 - 2025-04-28
+
+- :arrow_up: Update Core Deps
+
 ### v12.30.0 - 2025-04-24
 
 - :tada: Bi-Directional `creator` support
