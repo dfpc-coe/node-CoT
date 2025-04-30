@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.32.1 - 2025-04-30
+
+- :rocket: Add 2525 Export
+
 ### v12.32.0 - 2025-04-30
 
 - :tada: Augment COT Types with 2525B
