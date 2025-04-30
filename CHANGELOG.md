@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.32.0 - 2025-04-30
+
+- :tada: Augment COT Types with 2525B
+
 ### v12.31.0 - 2025-04-30
 
 - :tada: Add CoT Type <=> SIDC
