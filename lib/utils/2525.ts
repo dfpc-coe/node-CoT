@@ -40,8 +40,9 @@ export default class Type2525 {
     static domain(cotType: string): Domain {
         const unknownDomain = cotType.split('-')[0];
 
-        if (Object.values(Domain).includes(unknownDomain)) {
-            return enumFromStringValue(Domain, unknownDomain);
+        const d = enumFromStringValue<Domain>(Domain, unknownDomain);
+        if (d) {
+            return d;
         } else {
             throw new Error('Domain could not be determined');
         }
@@ -53,8 +54,9 @@ export default class Type2525 {
 
         const unknownIdentity = cotType.split('-')[1];
 
-        if (Object.values(StandardIdentity).includes(unknownIdentity)) {
-            return enumFromStringValue(StandardIdentity, unknownIdentity);
+        const si = enumFromStringValue(StandardIdentity, unknownIdentity);
+        if (si) {
+            return si;
         } else {
             return StandardIdentity.NONE;
         }

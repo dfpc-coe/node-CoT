@@ -1,4 +1,4 @@
-import { Static, TSchema, TUnknown } from '@sinclair/typebox'
+import type { Static, TSchema, TUnknown } from '@sinclair/typebox'
 import { Value } from '@sinclair/typebox/value'
 
 export type TypeOpts = {
