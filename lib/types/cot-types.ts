@@ -2,15 +2,22 @@ import fsp from 'node:fs/promises';
 import xmljs from 'xml-js';
 import type { Static } from '@sinclair/typebox';
 import TypeValidator from '../utils/type.js';
-import MilSymType from '../utils/2525.js';
+import MilSymType, { StandardIdentity, Domain } from '../utils/2525.js';
 import { Type } from '@sinclair/typebox'
 
-export const TypeFormat_COT = Type.Object({
+export const AugmentedType = Type.Object({
     cot: Type.String(),
     desc: Type.String(),
 
     full: Type.Optional(Type.String()),
-    sidc: Type.Optional(Type.String())
+
+    '2525b': Type.Optional(Type.String())
+});
+
+export const TypeFormat_COT = Type.Object({
+    cot: Type.String(),
+    desc: Type.String(),
+    full: Type.Optional(Type.String()),
 })
 
 export const TypeFormat_Weapon = Type.Object({
@@ -81,10 +88,6 @@ export default class CoTTypes {
 
         const cots: Map<string, Static<typeof TypeFormat_COT>> = new Map();
         for (const cot of types.types.cot) {
-            if (MilSymType.is2525BConvertable(cot._attributes.cot)) {
-                cot._attributes.sidc = MilSymType.to2525B(cot._attributes.cot);
-            }
-
             cots.set(cot._attributes.cot, cot._attributes);
         }
 
@@ -111,7 +114,39 @@ export default class CoTTypes {
         return new CoTTypes(cots, weapons, relations, is, how);
     }
 
-    affiliation() {
+    types(
+        si: StandardIdentity,
+        opts: {
+            domain?: Domain
+        } = {}
+    ): Set<Static<typeof AugmentedType>> {
+        if (!si) throw new TypeError('No StandardIdentity Parameter provided');
 
+        const filtered: Set<Static<typeof AugmentedType>> = new Set();
+
+        for (const cot of this.cots.values()) {
+            if (opts.domain) {
+                if (!cot.cot.startsWith(`${opts.domain}-`)) {
+                    continue;
+                };
+            }
+
+            if (cot.cot.match(/^a-\.-/)) {
+                const type = cot.cot.replace(/^a-\.-/, `a-${si}-`);
+
+                filtered.add({
+                    ...cot,
+                    cot: type,
+                    '2525b': MilSymType.is2525BConvertable(type) ? MilSymType.to2525B(type) : undefined
+                })
+            } else {
+                filtered.add({
+                    ...cot,
+                    '2525b': MilSymType.is2525BConvertable(cot.cot) ? MilSymType.to2525B(cot.cot) : undefined
+                });
+            }
+        }
+
+        return filtered;
     }
 }

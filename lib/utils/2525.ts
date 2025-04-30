@@ -1,3 +1,12 @@
+export enum Domain {
+    ATOM = 'a',
+    BITS = 'b',
+    REFERENCE = 'r',
+    TASK = 't',
+    CAPABILITY = 'c',
+    REPLY = 'y',
+}
+
 export enum StandardIdentity {
     PENDING = 'p',
     UNKNOWN = 'u',
@@ -19,14 +28,23 @@ export enum StandardIdentity {
  * @ https://github.com/cyberpython/kotcot under the MIT License
  */
 export default class Type2525 {
-
     /**
      * Check a given COT Type to see if it is compatible with conversion to SIDC
      *
      * @param cotType - Cursor On Target Type to test
      */
     static is2525BConvertable(cotType: string): boolean {
-        return cotType.match(/^a-[puafnshjkox]-[PAGSUFXZ](-\w+)*$/);
+        return !!cotType.match(/^a-[puafnshjkox]-[PAGSUFXZ](-\w+)*$/);
+    }
+
+    static domain(cotType: string): Domain {
+        const unknownDomain = cotType.split('-')[0];
+
+        if (Object.values(Domain).includes(unknownDomain)) {
+            return enumFromStringValue(Domain, unknownDomain);
+        } else {
+            throw new Error('Domain could not be determined');
+        }
     }
 
     static standardIdentity(cotType: string): StandardIdentity {
@@ -73,7 +91,7 @@ export default class Type2525 {
      * @param sidc - SIDC to test
      */
     static isTypeConvertable(sidc: string): boolean {
-        return sidc.match(/^S[PUAFNSHGWMDLJK-][PAGSUFXZ-][AP-][A-Z0-9-]{10}[AECGNS-]$/)
+        return !!sidc.match(/^S[PUAFNSHGWMDLJK-][PAGSUFXZ-][AP-][A-Z0-9-]{10}[AECGNS-]$/)
     }
 
     /**
