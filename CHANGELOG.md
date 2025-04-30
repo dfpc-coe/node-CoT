@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.31.0 - 2025-04-30
+
+- :tada: Add CoT Type <=> SIDC
+
 ### v12.30.1 - 2025-04-28
 
 - :arrow_up: Update Core Deps
