@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.32.2 - 2025-04-30
+
+- :rocket: Remove Main
+
 ### v12.32.1 - 2025-04-30
 
 - :rocket: Add 2525 Export

@@ -4,7 +4,6 @@
     "version": "12.32.1",
     "description": "Lightweight JavaScript library for parsing and manipulating TAK messages",
     "author": "Nick Ingalls <nick@ingalls.ca>",
-    "main": "dist/index.js",
     "types": "index.ts",
     "exports": {
         ".": "./dist/index.js",
