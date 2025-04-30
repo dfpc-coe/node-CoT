@@ -1,14 +1,23 @@
-import Err from '@openaddresses/batch-error';
 import fsp from 'node:fs/promises';
 import xmljs from 'xml-js';
 import type { Static } from '@sinclair/typebox';
+import TypeValidator from '../utils/type.js';
+import MilSymType, { StandardIdentity, Domain } from '../utils/2525.js';
 import { Type } from '@sinclair/typebox'
-import AJV from 'ajv';
+
+export const AugmentedType = Type.Object({
+    cot: Type.String(),
+    desc: Type.String(),
+
+    full: Type.Optional(Type.String()),
+
+    '2525b': Type.Optional(Type.String())
+});
 
 export const TypeFormat_COT = Type.Object({
     cot: Type.String(),
+    desc: Type.String(),
     full: Type.Optional(Type.String()),
-    desc: Type.String()
 })
 
 export const TypeFormat_Weapon = Type.Object({
@@ -51,13 +60,6 @@ export const TypeFormat = Type.Object({
     })
 });
 
-const checkTypes = (new AJV({
-    allErrors: true,
-    coerceTypes: true,
-    allowUnionTypes: true
-}))
-    .compile(TypeFormat);
-
 export default class CoTTypes {
     cots: Map<string, Static<typeof TypeFormat_COT>>
     weapons: Map<string, Static<typeof TypeFormat_Weapon>>
@@ -82,9 +84,7 @@ export default class CoTTypes {
     static async load(): Promise<CoTTypes> {
         const xml = xmljs.xml2js(String(await fsp.readFile(new URL('cot-types.xml', import.meta.url))), { compact: true })
 
-        checkTypes(xml);
-        if (checkTypes.errors) throw new Err(400, null, `${checkTypes.errors[0].message} (${checkTypes.errors[0].instancePath})`);
-        const types = xml as Static<typeof TypeFormat>;
+        const types = TypeValidator.type(TypeFormat, xml);
 
         const cots: Map<string, Static<typeof TypeFormat_COT>> = new Map();
         for (const cot of types.types.cot) {
@@ -112,5 +112,41 @@ export default class CoTTypes {
         }
 
         return new CoTTypes(cots, weapons, relations, is, how);
+    }
+
+    types(
+        si: StandardIdentity,
+        opts: {
+            domain?: Domain
+        } = {}
+    ): Set<Static<typeof AugmentedType>> {
+        if (!si) throw new TypeError('No StandardIdentity Parameter provided');
+
+        const filtered: Set<Static<typeof AugmentedType>> = new Set();
+
+        for (const cot of this.cots.values()) {
+            if (opts.domain) {
+                if (!cot.cot.startsWith(`${opts.domain}-`)) {
+                    continue;
+                };
+            }
+
+            if (cot.cot.match(/^a-\.-/)) {
+                const type = cot.cot.replace(/^a-\.-/, `a-${si}-`);
+
+                filtered.add({
+                    ...cot,
+                    cot: type,
+                    '2525b': MilSymType.is2525BConvertable(type) ? MilSymType.to2525B(type) : undefined
+                })
+            } else {
+                filtered.add({
+                    ...cot,
+                    '2525b': MilSymType.is2525BConvertable(cot.cot) ? MilSymType.to2525B(cot.cot) : undefined
+                });
+            }
+        }
+
+        return filtered;
     }
 }
