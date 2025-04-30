@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.32.3 - 2025-04-30
+
+- :rocket: Expose 2525 via index
+
 ### v12.32.2 - 2025-04-30
 
 - :rocket: Remove Main
