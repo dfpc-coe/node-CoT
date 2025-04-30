@@ -32,7 +32,7 @@ export default class Type2525 {
     }
 
     static from2525B(sidc : string) : string {
-        if (!/^S[PUAFNSHGWMDLJK\-][PAGSUFXZ\-][AP\-][A-Z0-9\-]{10}[AECGNS\-]$/.test(sidc)) {
+        if (!/^S[PUAFNSHGWMDLJK-][PAGSUFXZ-][AP-][A-Z0-9-]{10}[AECGNS-]$/.test(sidc)) {
             throw new Error("2525B to CoT can only be applied to well-formed warfighting 2525B SIDCs.");
         }
 
