@@ -3,8 +3,8 @@
 <p align=center>Typescript/Javascript Cursor-On-Target Library</p>
 
 <p align='center'>
-    <a href="https://codecov.io/gh/dfpc-coe/node-CoT" > 
-        <img src="https://codecov.io/gh/dfpc-coe/node-CoT/graph/badge.svg?token=0SENX44QG7"/> 
+    <a href="https://codecov.io/gh/dfpc-coe/node-CoT" >
+        <img src="https://codecov.io/gh/dfpc-coe/node-CoT/graph/badge.svg?token=0SENX44QG7"/>
     </a>
 </p>
 
@@ -19,6 +19,17 @@ It also support creating and parsing the following TAK Data Types
 
 - Data Packages (CoTs, Attachments, etc)
 - Basemap XML Documents
+
+## API Documentation
+
+API Documentation for the latest version can be found on our [Github Pages Site](https://dfpc-coe.github.io/node-CoT/)
+
+Or generated locally with
+
+```sh
+npm run doc
+
+```
 
 ## Installation
 
