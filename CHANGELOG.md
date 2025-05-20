@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.32.4 - 2025-05-20
+
+- :arrow_up: Update Core Deps
+
 ### v12.32.3 - 2025-04-30
 
 - :rocket: Expose 2525 via index
