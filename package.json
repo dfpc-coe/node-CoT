@@ -22,6 +22,7 @@
     "dependencies": {
         "@openaddresses/batch-error": "^2.4.0",
         "@sinclair/typebox": "^0.34.0",
+        "@turf/destination": "^7.2.0",
         "@turf/ellipse": "^7.0.0",
         "@turf/helpers": "^7.0.0",
         "@turf/point-on-feature": "^7.0.0",
