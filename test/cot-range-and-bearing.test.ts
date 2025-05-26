@@ -87,6 +87,8 @@ test('Decode Range & Bearing', (t) => {
                 time: '2024-08-30T22:28:02Z',
                 start: '2024-08-30T22:28:02Z',
                 stale: '2024-08-31T22:28:02Z',
+                range: 14806.869682096987,
+                bearing: 102.28151464168589,
                 stroke: "#FF0000",
                 'stroke-opacity': 1,
                 'stroke-style': "solid",
