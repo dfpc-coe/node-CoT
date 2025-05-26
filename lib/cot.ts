@@ -626,11 +626,16 @@ export default class CoT {
 
             // Range & Bearing Line
             if (raw.event._attributes.type === 'u-rb-a') {
+                const detail = this.detail();
+
+                if (!detail.range) throw new Error('Range value not provided')
+                if (!detail.bearing) throw new Error('Bearing value not provided')
+
                 // TODO Support inclination
                 const dest = destination(
                     this.position(),
-                    this.detail().range._attributes.value,
-                    this.detail().bearing._attributes.value
+                    detail.range._attributes.value,
+                    detail.bearing._attributes.value
                 ).geometry.coordinates;
 
                 feat.geometry = {
