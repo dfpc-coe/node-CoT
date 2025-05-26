@@ -12,6 +12,11 @@
 
 ### Pending Fixed
 
+### v12.34.0 - 2025-05-26
+
+- :tada: Add to/from parsing of R&B to geojson utilities
+- :bug: Ensure units are in Km for Turf Conversion
+
 ### v12.33.0 - 2025-05-26
 
 - :tada: Initial support for Range & Bearing geometry generation
