@@ -460,6 +460,14 @@ export default class CoT {
             feat.properties.sensor = raw.event.detail.sensor._attributes;
         }
 
+        if (raw.event.detail.range) {
+            feat.properties.range = raw.event.detail.range._attributes.value;
+        }
+
+        if (raw.event.detail.bearing) {
+            feat.properties.bearing = raw.event.detail.bearing._attributes.value;
+        }
+
         if (raw.event.detail.__video && raw.event.detail.__video._attributes) {
             feat.properties.video = raw.event.detail.__video._attributes;
 
@@ -634,7 +642,7 @@ export default class CoT {
                 // TODO Support inclination
                 const dest = destination(
                     this.position(),
-                    detail.range._attributes.value,
+                    detail.range._attributes.value / 1000,
                     detail.bearing._attributes.value
                 ).geometry.coordinates;
 
@@ -1069,6 +1077,14 @@ export default class CoT {
 
         if (feature.properties.creator) {
             cot.event.detail.creator = { _attributes: { ...feature.properties.creator } };
+        }
+
+        if (feature.properties.range !== undefined) {
+            cot.event.detail.range = { _attributes: { value:  feature.properties.range  } }
+        }
+
+        if (feature.properties.bearing !== undefined) {
+            cot.event.detail.bearing = { _attributes: { value:  feature.properties.bearing  } }
         }
 
         if (feature.properties.geofence) {

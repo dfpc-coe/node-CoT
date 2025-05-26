@@ -64,6 +64,8 @@ export const Properties = Type.Object({
     start: Type.String(),
     stale: Type.String(),
     center: Position,
+    range: Type.Optional(Type.Number()),
+    bearing: Type.Optional(Type.Number()),
     creator: Type.Optional(CreatorAttributes),
     course: Type.Optional(Type.Number()),
     slope: Type.Optional(Type.Number()),
