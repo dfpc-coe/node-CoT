@@ -31,10 +31,10 @@ test('Decode Range & Bearing', (t) => {
                 },
                 "range": {
                     "_attributes": {
-                        "value": "14806.869682096987"
+                        "value": 14806.869682096987
                     }
                 },
-                "bearing": { "_attributes": { "value": "102.28151464168589" } },
+                "bearing": { "_attributes": { "value": 102.28151464168589 } },
                 "inclination": { "_attributes": { "value": "5.373568186490131" } },
                 "rangeUnits": { "_attributes": { "value": "0" } },
                 "bearingUnits": { "_attributes": { "value": "0" } },
@@ -95,7 +95,7 @@ test('Decode Range & Bearing', (t) => {
             },
             geometry: {
                 type: 'LineString',
-                coordinates: [ [ -108.7395013, 39.0981196 ], [ 12.54094506163988, -33.4915465561154 ]]
+                coordinates: [ [ -108.7395013, 39.0981196 ], [  -108.5719110069878, 39.06967421349145 ]]
             }
         });
     }
