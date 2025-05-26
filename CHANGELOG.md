@@ -12,6 +12,11 @@
 
 ### Pending Fixed
 
+### v12.33.0 - 2025-05-26
+
+- :tada: Initial support for Range & Bearing geometry generation
+- :arrow_up: Update Core Deps
+
 ### v12.32.4 - 2025-05-20
 
 - :arrow_up: Update Core Deps
