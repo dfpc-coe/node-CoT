@@ -28,6 +28,7 @@ import Sensor from './sensor.js';
 import type { AllGeoJSON } from "@turf/helpers";
 import PointOnFeature from '@turf/point-on-feature';
 import Truncate from '@turf/truncate';
+import { destination } from '@turf/destination';
 import Ellipse from '@turf/ellipse';
 import Util from './utils/util.js';
 import Color from './utils/color.js';
@@ -600,7 +601,8 @@ export default class CoT {
             feat.properties.precisionlocation = raw.event.detail.precisionlocation._attributes;
         }
 
-        if (['u-d-f', 'u-d-r', 'b-m-r'].includes(raw.event._attributes.type) && Array.isArray(raw.event.detail.link)) {
+        // Line or Polygon style types
+        if (['u-d-f', 'u-d-r', 'b-m-r', 'u-rb-a'].includes(raw.event._attributes.type) && Array.isArray(raw.event.detail.link)) {
             const coordinates = [];
 
             for (const l of raw.event.detail.link) {
@@ -622,7 +624,25 @@ export default class CoT {
                 feat.properties['stroke-style'] = raw.event.detail.strokeStyle._attributes.value;
             }
 
-            if (raw.event._attributes.type === 'u-d-r' || (coordinates[0][0] === coordinates[coordinates.length -1][0] && coordinates[0][1] === coordinates[coordinates.length -1][1])) {
+            // Range & Bearing Line
+            if (raw.event._attributes.type === 'u-rb-a') {
+                const detail = this.detail();
+
+                if (!detail.range) throw new Error('Range value not provided')
+                if (!detail.bearing) throw new Error('Bearing value not provided')
+
+                // TODO Support inclination
+                const dest = destination(
+                    this.position(),
+                    detail.range._attributes.value,
+                    detail.bearing._attributes.value
+                ).geometry.coordinates;
+
+                feat.geometry = {
+                    type: 'LineString',
+                    coordinates: [this.position(), dest]
+                };
+            } else if (raw.event._attributes.type === 'u-d-r' || (coordinates[0][0] === coordinates[coordinates.length -1][0] && coordinates[0][1] === coordinates[coordinates.length -1][1])) {
                 if (raw.event._attributes.type === 'u-d-r') {
                     // CoT rectangles are only 4 points - GeoJSON needs to be closed
                     coordinates.push(coordinates[0])

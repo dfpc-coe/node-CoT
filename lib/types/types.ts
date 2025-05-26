@@ -449,7 +449,7 @@ export const Attachment = Type.Object({
 });
 
 export const RangeAttributes = Type.Object({
-    value: Type.String()
+    value: Type.Number()
 });
 
 export const Range = Type.Object({
@@ -465,7 +465,7 @@ export const RangeUnits = Type.Object({
 });
 
 export const BearingAttributes = Type.Object({
-    value: Type.String()
+    value: Type.Number()
 });
 
 export const Bearing = Type.Object({

@@ -74,7 +74,7 @@ test('Decode Range & Bearing', (t) => {
         t.ok(cot.raw.event.detail['_flow-tags_']);
         delete cot.raw.event.detail['_flow-tags_'];
 
-        t.deepEquals({
+        t.deepEquals(cot.to_geojson(), {
             id: 'ebbf42a7-ea71-43a1-baf6-e259c3d115bf',
             type: 'Feature',
             path: '/',
@@ -87,13 +87,17 @@ test('Decode Range & Bearing', (t) => {
                 time: '2024-08-30T22:28:02Z',
                 start: '2024-08-30T22:28:02Z',
                 stale: '2024-08-31T22:28:02Z',
+                stroke: "#FF0000",
+                'stroke-opacity': 1,
+                'stroke-style': "solid",
+                'stroke-width': 3,
                 metadata: {}
             },
             geometry: {
-                type: 'Point',
-                coordinates: [ -108.7395013, 39.0981196, 0 ]
+                type: 'LineString',
+                coordinates: [ [ -108.7395013, 39.0981196 ], [ 12.54094506163988, -33.4915465561154 ]]
             }
-        }, cot.to_geojson());
+        });
     }
 
     t.end();
