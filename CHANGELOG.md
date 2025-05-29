@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.35.0 - 2025-05-28
+
+- :rocket: `stale` value is now calculated based on current time
+
 ### v12.34.0 - 2025-05-26
 
 - :tada: Add to/from parsing of R&B to geojson utilities
