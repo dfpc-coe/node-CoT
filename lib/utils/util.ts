@@ -61,7 +61,7 @@ export default class Util {
      */
     static cot_track_attr(course?: number, speed?: number, slope?: number): Static<typeof TrackAttributes> {
         const attr: Static<typeof TrackAttributes> = {};
- 
+
         if (course) attr.course = String(course);
         if (speed) attr.speed = String(speed);
         if (slope) attr.slope = String(slope);
@@ -122,13 +122,13 @@ export default class Util {
             return {
                 time: (new Date(time || now)).toISOString(),
                 start: (new Date(start || now)).toISOString(),
-                stale: (new Date(new Date(start || now).getTime() + 20 * 1000)).toISOString()
+                stale: (new Date(new Date(now).getTime() + 20 * 1000)).toISOString()
             };
         } else if (typeof stale === 'number') {
             return {
                 time: (new Date(time || now)).toISOString(),
                 start: (new Date(start || now)).toISOString(),
-                stale: (new Date(new Date(start || now).getTime() + Number(stale))).toISOString()
+                stale: (new Date(new Date(now).getTime() + Number(stale))).toISOString()
             };
         } else {
             return {

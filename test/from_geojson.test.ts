@@ -171,7 +171,7 @@ test('CoT.from_geojson - Start', (t) => {
     t.ok(+new Date(geo.raw.event._attributes.time) < +new Date() + 100);
 
     // Approx +/- 100ms +1hr20s ahead of now
-    t.ok(+new Date(geo.raw.event._attributes.stale) > +new Date(geo.raw.event._attributes.start) - 100 + 20 * 1000);
+    t.ok(+new Date(geo.raw.event._attributes.stale) > +new Date(geo.raw.event._attributes.time) - 100 + 20 * 1000);
     t.ok(+new Date(geo.raw.event._attributes.stale) < +new Date(geo.raw.event._attributes.start) + 100 + 20 * 1000);
 
     t.end();
@@ -200,7 +200,7 @@ test('CoT.from_geojson - Start/Stale', (t) => {
     t.ok(+new Date(geo.raw.event._attributes.time) < +new Date() + 100);
 
     // Approx +/- 100ms +1hr60s ahead of now
-    t.ok(+new Date(geo.raw.event._attributes.stale) > +new Date(geo.raw.event._attributes.start) - 100 + 60 * 1000);
+    t.ok(+new Date(geo.raw.event._attributes.stale) > +new Date(geo.raw.event._attributes.time) - 100 + 60 * 1000);
     t.ok(+new Date(geo.raw.event._attributes.stale) < +new Date(geo.raw.event._attributes.start) + 100 + 60 * 1000);
 
     t.end();
@@ -309,7 +309,7 @@ test('CoT.from_geojson - Remarks', (t) => {
             coordinates: [1.1, 2.2]
         }
     })
-    
+
     if (!cot.raw.event.detail || !cot.raw.event.detail.remarks) {
         t.fail('No Detail Section')
     } else {
