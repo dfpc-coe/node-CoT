@@ -12,6 +12,11 @@
 
 ### Pending Fixed
 
+### v12.36.0 - 2025-06-01
+
+- :rocket: `archived(archived?: boolean): boolean` Helper Function
+- :white_check_mark: Add basic helper function tests
+
 ### v12.35.0 - 2025-05-28
 
 - :rocket: `stale` value is now calculated based on current time
