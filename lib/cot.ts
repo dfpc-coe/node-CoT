@@ -191,6 +191,23 @@ export default class CoT {
     }
 
     /**
+     * Returns or sets the Archived State of the CoT
+     *
+     * @param callsign - Optional Archive state to set
+     */
+    archived(archived?: boolean): boolean {
+        const detail = this.detail();
+
+        if (archived === true) {
+            detail.archive = { _attributes: { } };
+        } else if (archived === false) {
+            delete detail.archive;
+        }
+
+        return detail.archive !== undefined;
+    }
+
+    /**
      * Returns or sets the Callsign of the CoT
      *
      * @param callsign - Optional Callsign to set
