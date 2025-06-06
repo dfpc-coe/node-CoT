@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v12.37.0 - 2025-07-06
+
+- :tada: First pass at mapping MilSym
+
 ### v12.36.0 - 2025-06-01
 
 - :rocket: `archived(archived?: boolean): boolean` Helper Function
