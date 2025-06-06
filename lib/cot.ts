@@ -473,6 +473,12 @@ export default class CoT {
             }
         }
 
+        if (raw.event.detail.__milsym) {
+            feat.properties.milsym = {
+                id: raw.event.detail.__milsym._attributes.id
+            }
+        }
+
         if (raw.event.detail.sensor) {
             feat.properties.sensor = raw.event.detail.sensor._attributes;
         }
@@ -1106,6 +1112,10 @@ export default class CoT {
 
         if (feature.properties.geofence) {
             cot.event.detail.__geofence = { _attributes: { ...feature.properties.geofence } };
+        }
+
+        if (feature.properties.milsym) {
+            cot.event.detail.__milsym = { _attributes: { id: feature.properties.milsym.id} };
         }
 
         if (feature.properties.sensor) {

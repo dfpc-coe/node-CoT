@@ -23,6 +23,10 @@ export const Position = Type.Array(Type.Number(), {
     maxItems: 3
 })
 
+export const MilSym = Type.Object({
+    id: Type.String()
+})
+
 export const FeaturePropertyMissionLayer = Type.Object({
     name: Type.Optional(Type.String()),
     parentUid: Type.Optional(Type.String()),
@@ -86,6 +90,7 @@ export const Properties = Type.Object({
         ellipse: Type.Optional(ShapeEllipseAttributes)
     })),
     remarks: Type.Optional(Type.String()),
+    milsym: Type.Optional(MilSym),
     mission: Type.Optional(FeaturePropertyMission),
     fileshare: Type.Optional(FileShareAttributes),
     ackrequest: Type.Optional(ACKRequestAttributes),
