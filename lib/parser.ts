@@ -61,32 +61,39 @@ const checkFeat = (new AJV({
  * @prop raw Raw XML-JS representation of CoT
  */
 export class CoTParser {
-    static validate(cot: Static<typeof JSONCoT>) {
-        cot.metadata = {};
-        cot.path = '/';
-
-        if (!cot.event._attributes.uid) {
-            cot.event._attributes.uid = Util.cot_uuid();
+    static validate(
+        cot: CoT,
+        opts: {
+            flow: boolean
+        } = {
+            flow: true
         }
+    ): CoT {
+        if (!opts) opts = {};
+        if (opts.flow === undefined) opts.flow = true;
 
-        if (process.env.DEBUG_COTS) console.log(JSON.stringify(cot))
-
-        checkXML(cot);
+        checkXML(cot.raw);
         if (checkXML.errors) throw new Err(400, null, `${checkXML.errors[0].message} (${checkXML.errors[0].instancePath})`);
 
-        if (!cot.event.detail) cot.event.detail = {};
+        if (opts.flow) {
+            if (!cot.raw.event.detail['_flow-tags_']) {
+                cot.raw.event.detail['_flow-tags_'] = {};
+            }
 
-        if (!cot.event.detail['_flow-tags_']) {
-            cot.event.detail['_flow-tags_'] = {};
+            cot.raw.event.detail['_flow-tags_'][`NodeCoT-${pkg.version}`] = new Date().toISOString()
         }
 
-        cot.event.detail['_flow-tags_'][`NodeCoT-${pkg.version}`] = new Date().toISOString()
+        return cot;
+    }
 
-        if (cot.event.detail.archive && Object.keys(cot.event.detail.archive).length === 0) {
-            cot.event.detail.archive = { _attributes: {} };
-        }
+    static from_xml(cot: Buffer | string): CoT {
+        const cot = new CoT(xml2js(String(cot), { compact: true }) as Static<typeof JSONCoT>);
 
-        return new CoT(cot);
+        return this.validate(cot);
+    }
+
+    static to_xml(cot: CoT): string {
+        return xmljs.js2xml(cot.raw, { compact: true });
     }
 
     /**
@@ -477,10 +484,6 @@ export class CoTParser {
         return feat;
     }
 
-    static to_xml(cot: CoT): string {
-        return xmljs.js2xml(cot.raw, { compact: true });
-    }
-
     /**
      * Parse an ATAK compliant Protobuf to a JS Object
      */
@@ -541,7 +544,7 @@ export class CoTParser {
 
         cot.metadata = metadata;
 
-        return cot;
+        return this.validate(cot);
     }
 
     /**
@@ -833,6 +836,6 @@ export class CoTParser {
             newcot.path = feature.path
         }
 
-        return newcot;
+        return this.validate(newcot);
     }
 }

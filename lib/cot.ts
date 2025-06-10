@@ -55,7 +55,7 @@ export default class CoT {
     path: string;
 
     constructor(
-        cot: Buffer | Static<typeof JSONCoT> | object | string,
+        cot: Static<typeof JSONCoT>,
         opts: {
             creator?: CoT | {
                 uid: string,
@@ -65,26 +65,15 @@ export default class CoT {
             }
         } = {}
     ) {
-        if (typeof cot === 'string' || cot instanceof Buffer) {
-            const raw = xmljs.xml2js(String(cot), { compact: true });
-            this.raw = raw as Static<typeof JSONCoT>;
-        } else {
-            this.raw = cot as Static<typeof JSONCoT>;
-        }
+        this.raw = cot;
 
         this.metadata = {};
         this.path = '/';
 
+        if (!this.raw.event) this.raw.event = {};
         if (!this.raw.event._attributes.uid) this.raw.event._attributes.uid = Util.cot_uuid();
 
-        if (process.env.DEBUG_COTS) console.log(JSON.stringify(this.raw))
-
-        checkXML(this.raw);
-        if (checkXML.errors) throw new Err(400, null, `${checkXML.errors[0].message} (${checkXML.errors[0].instancePath})`);
-
         if (!this.raw.event.detail) this.raw.event.detail = {};
-        if (!this.raw.event.detail['_flow-tags_']) this.raw.event.detail['_flow-tags_'] = {};
-        this.raw.event.detail['_flow-tags_'][`NodeCoT-${pkg.version}`] = new Date().toISOString()
 
         if (this.raw.event.detail.archive && Object.keys(this.raw.event.detail.archive).length === 0) {
             this.raw.event.detail.archive = { _attributes: {} };
@@ -98,6 +87,8 @@ export default class CoT {
                 time: opts.creator instanceof CoT ? new Date() : opts.creator.time
             });
         }
+
+        if (process.env.DEBUG_COTS) console.log(JSON.stringify(this.raw))
     }
 
     /**
