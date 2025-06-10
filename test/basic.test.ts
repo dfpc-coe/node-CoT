@@ -1,5 +1,5 @@
 import test from 'tape';
-import COT, { CoTParser } from '../index.js';
+import { CoTParser } from '../index.js';
 
 test('COT.callsign', (t) => {
     const cot = CoTParser.from_geojson({

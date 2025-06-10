@@ -86,8 +86,8 @@ export class CoTParser {
         return cot;
     }
 
-    static from_xml(cot: Buffer | string): CoT {
-        const cot = new CoT(xml2js(String(cot), { compact: true }) as Static<typeof JSONCoT>);
+    static from_xml(raw: Buffer | string): CoT {
+        const cot = new CoT(xml2js(String(raw), { compact: true }) as Static<typeof JSONCoT>);
 
         return this.validate(cot);
     }
