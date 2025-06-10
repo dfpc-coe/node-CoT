@@ -1,8 +1,8 @@
 import test from 'tape';
-import COT from '../index.js';
+import COT, { CoTParser } from '../index.js';
 
 test('COT.callsign', (t) => {
-    const cot = COT.from_geojson({
+    const cot = CoTParser.from_geojson({
         "id": "123",
         "type": "Feature",
         "path": "/",
@@ -30,7 +30,7 @@ test('COT.callsign', (t) => {
 });
 
 test('COT.type', (t) => {
-    const cot = COT.from_geojson({
+    const cot = CoTParser.from_geojson({
         "id": "123",
         "type": "Feature",
         "path": "/",
@@ -58,7 +58,7 @@ test('COT.type', (t) => {
 });
 
 test('COT.archived', (t) => {
-    const cot = COT.from_geojson({
+    const cot = CoTParser.from_geojson({
         "id": "123",
         "type": "Feature",
         "path": "/",

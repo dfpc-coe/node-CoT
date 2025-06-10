@@ -1,12 +1,10 @@
-import crypto from 'node:crypto';
+import protobuf from 'protobufjs';
 import Err from '@openaddresses/batch-error';
-import { diff } from 'json-diff-ts';
 import xmljs from 'xml-js';
 import type { Static } from '@sinclair/typebox';
 import type {
     Feature,
     Polygon,
-    Position,
     FeaturePropertyMission,
     FeaturePropertyMissionLayer,
 } from './types/feature.js';
@@ -15,25 +13,44 @@ import type {
     MartiDestAttributes,
     Link,
     LinkAttributes,
-    CreatorAttributes,
-    VideoAttributes,
-    SensorAttributes,
-    VideoConnectionEntryAttributes,
 } from './types/types.js'
 import {
     InputFeature,
 } from './types/feature.js';
-import Sensor from './sensor.js';
+import type { AllGeoJSON } from "@turf/helpers";
+import PointOnFeature from '@turf/point-on-feature';
 import Truncate from '@turf/truncate';
 import { destination } from '@turf/destination';
-import Ellipse from '@turf/ellipse';
 import Util from './utils/util.js';
 import Color from './utils/color.js';
 import JSONCoT, { Detail } from './types/types.js'
+import CoT from './cot.js';
+import AJV from 'ajv';
+import fs from 'fs';
+import path from 'node:path';
+import { fileURLToPath } from 'node:url';
 
 // GeoJSON Geospatial ops will truncate to the below
 const COORDINATE_PRECISION = 6;
 
+const protoPath = path.join(path.dirname(fileURLToPath(import.meta.url)), 'proto', 'takmessage.proto');
+const RootMessage = await protobuf.load(protoPath);
+
+const pkg = JSON.parse(String(fs.readFileSync(new URL('../package.json', import.meta.url))));
+
+const checkXML = (new AJV({
+    allErrors: true,
+    coerceTypes: true,
+    allowUnionTypes: true
+}))
+    .compile(JSONCoT);
+
+const checkFeat = (new AJV({
+    allErrors: true,
+    coerceTypes: true,
+    allowUnionTypes: true
+}))
+    .compile(InputFeature);
 
 /**
  * Convert to and from an XML CoT message
@@ -43,328 +60,39 @@ const COORDINATE_PRECISION = 6;
  *
  * @prop raw Raw XML-JS representation of CoT
  */
-export default class CoT {
-    raw: Static<typeof JSONCoT>;
+export class CoTParser {
+    static validate(cot: Static<typeof JSONCoT>) {
+        cot.metadata = {};
+        cot.path = '/';
 
-    // Key/Value JSON Records - not currently support by TPC Clients
-    // but used for styling/dynamic overrides and hopefully eventually
-    // merged into the CoT spec
-    metadata: Record<string, unknown>;
-
-    // Does the CoT belong to a folder - defaults to "/"
-    path: string;
-
-    constructor(
-        cot: Buffer | Static<typeof JSONCoT> | object | string,
-        opts: {
-            creator?: CoT | {
-                uid: string,
-                type: string,
-                callsign: string,
-                time?: Date | string,
-            }
-        } = {}
-    ) {
-        if (typeof cot === 'string' || cot instanceof Buffer) {
-            const raw = xmljs.xml2js(String(cot), { compact: true });
-            this.raw = raw as Static<typeof JSONCoT>;
-        } else {
-            this.raw = cot as Static<typeof JSONCoT>;
+        if (!cot.event._attributes.uid) {
+            cot.event._attributes.uid = Util.cot_uuid();
         }
 
-        this.metadata = {};
-        this.path = '/';
+        if (process.env.DEBUG_COTS) console.log(JSON.stringify(cot))
 
-        if (!this.raw.event._attributes.uid) this.raw.event._attributes.uid = Util.cot_uuid();
-
-        if (process.env.DEBUG_COTS) console.log(JSON.stringify(this.raw))
-
-        checkXML(this.raw);
+        checkXML(cot);
         if (checkXML.errors) throw new Err(400, null, `${checkXML.errors[0].message} (${checkXML.errors[0].instancePath})`);
 
-        if (!this.raw.event.detail) this.raw.event.detail = {};
-        if (!this.raw.event.detail['_flow-tags_']) this.raw.event.detail['_flow-tags_'] = {};
-        this.raw.event.detail['_flow-tags_'][`NodeCoT-${pkg.version}`] = new Date().toISOString()
+        if (!cot.event.detail) cot.event.detail = {};
 
-        if (this.raw.event.detail.archive && Object.keys(this.raw.event.detail.archive).length === 0) {
-            this.raw.event.detail.archive = { _attributes: {} };
+        if (!cot.event.detail['_flow-tags_']) {
+            cot.event.detail['_flow-tags_'] = {};
         }
 
-        if (opts.creator) {
-            this.creator({
-                uid: opts.creator instanceof CoT ? opts.creator.uid() : opts.creator.uid,
-                type: opts.creator instanceof CoT ? opts.creator.type() : opts.creator.type,
-                callsign: opts.creator instanceof CoT ? opts.creator.callsign() : opts.creator.callsign,
-                time: opts.creator instanceof CoT ? new Date() : opts.creator.time
-            });
-        }
-    }
+        cot.event.detail['_flow-tags_'][`NodeCoT-${pkg.version}`] = new Date().toISOString()
 
-    /**
-     * Detect difference between CoT messages
-     * Note: This diffs based on GeoJSON Representation of message
-     *       So if unknown properties are present they will be excluded from the diff
-     */
-    isDiff(
-        cot: CoT,
-        opts = {
-            diffMetadata: false,
-            diffStaleStartTime: false,
-            diffDest: false,
-            diffFlow: false
-        }
-    ): boolean {
-        const a = this.to_geojson() as Static<typeof InputFeature>;
-        const b = cot.to_geojson() as Static<typeof InputFeature>;
-
-        if (!opts.diffDest) {
-            delete a.properties.dest;
-            delete b.properties.dest;
+        if (cot.event.detail.archive && Object.keys(cot.event.detail.archive).length === 0) {
+            cot.event.detail.archive = { _attributes: {} };
         }
 
-        if (!opts.diffMetadata) {
-            delete a.properties.metadata;
-            delete b.properties.metadata;
-        }
-
-        if (!opts.diffFlow) {
-            delete a.properties.flow;
-            delete b.properties.flow;
-        }
-
-        if (!opts.diffStaleStartTime) {
-            delete a.properties.time;
-            delete a.properties.stale;
-            delete a.properties.start;
-            delete b.properties.time;
-            delete b.properties.stale;
-            delete b.properties.start;
-        }
-
-        const diffs = diff(a, b);
-
-        return diffs.length > 0;
-    }
-
-    /**
-     * Returns or sets the UID of the CoT
-     */
-    uid(uid?: string): string {
-        if (uid) this.raw.event._attributes.uid = uid;
-        return this.raw.event._attributes.uid;
-    }
-
-    /**
-     * Returns or sets the Callsign of the CoT
-     */
-    type(type?: string): string {
-        if (type) {
-            this.raw.event._attributes.type = type;
-        }
-
-        return this.raw.event._attributes.type;
-    }
-
-    /**
-     * Returns or sets the Archived State of the CoT
-     *
-     * @param callsign - Optional Archive state to set
-     */
-    archived(archived?: boolean): boolean {
-        const detail = this.detail();
-
-        if (archived === true) {
-            detail.archive = { _attributes: { } };
-        } else if (archived === false) {
-            delete detail.archive;
-        }
-
-        return detail.archive !== undefined;
-    }
-
-    /**
-     * Returns or sets the Callsign of the CoT
-     *
-     * @param callsign - Optional Callsign to set
-     */
-    callsign(callsign?: string): string {
-        const detail = this.detail();
-
-        if (callsign && !detail.contact) {
-            detail.contact = { _attributes: { callsign } };
-        } else if (callsign && detail.contact) {
-            detail.contact._attributes.callsign = callsign;
-        }
-
-        if (detail.contact && detail.contact._attributes && typeof detail.contact._attributes.callsign === 'string') {
-            return detail.contact._attributes.callsign;
-        } else {
-            return 'UNKNOWN'
-        }
-    }
-
-    /**
-     * Return Detail Object of CoT or create one if it doesn't yet exist and pass a reference
-     */
-    detail(): Static<typeof Detail> {
-        if (!this.raw.event.detail) this.raw.event.detail = {};
-        return this.raw.event.detail;
-    }
-
-    /**
-     * Add a given Dest tag to a CoT
-     */
-    addDest(dest: Static<typeof MartiDestAttributes>): CoT {
-        const detail = this.detail();
-
-        if (!detail.marti) detail.marti = {};
-
-        let destArr: Array<Static<typeof MartiDest>> = [];
-        if (detail.marti.dest && !Array.isArray(detail.marti.dest)) {
-            destArr = [detail.marti.dest]
-        } else if (detail.marti.dest && Array.isArray(detail.marti.dest)) {
-            destArr = detail.marti.dest;
-        }
-
-        destArr.push({ _attributes: dest });
-
-        detail.marti.dest = destArr;
-
-        return this;
-    }
-
-    addVideo(
-        video: Static<typeof VideoAttributes>,
-        connection?: Static<typeof VideoConnectionEntryAttributes>
-    ): CoT {
-        const detail = this.detail();
-        if (detail.__video) throw new Err(400, null, 'A video stream already exists on this CoT');
-
-        if (!video.url) throw new Err(400, null, 'A Video URL must be provided');
-
-        if (!video.uid && connection && connection.uid) {
-            video.uid = connection.uid
-        } else if (video.uid && connection && !connection.uid) {
-            connection.uid = video.uid;
-        } else if (!video.uid) {
-            video.uid = crypto.randomUUID();
-        }
-
-        detail.__video = {
-            _attributes: video
-        };
-
-        if (connection) {
-            detail.__video.ConnectionEntry = {
-                _attributes: connection
-            }
-        } else {
-            detail.__video.ConnectionEntry = {
-                _attributes: {
-                    uid: video.uid,
-                    networkTimeout: 12000,
-                    path: '',
-                    protocol: 'raw',
-                    bufferTime: -1,
-                    address: video.url,
-                    port: -1,
-                    roverPort: -1,
-                    rtspReliable: 0,
-                    ignoreEmbeddedKLV: false,
-                    alias: this.callsign()
-                }
-            }
-        }
-
-        return this;
-    }
-
-    position(position?: Static<typeof Position>): Static<typeof Position> {
-        if (position) {
-            this.raw.event.point._attributes.lon = String(position[0]);
-            this.raw.event.point._attributes.lat = String(position[1]);
-        }
-
-        return [
-            Number(this.raw.event.point._attributes.lon),
-            Number(this.raw.event.point._attributes.lat)
-        ];
-    }
-
-    sensor(sensor?: Static<typeof SensorAttributes>): Static<typeof Polygon> | null {
-        const detail = this.detail();
-
-        if (sensor) {
-            detail.sensor = {
-                _attributes: sensor
-            }
-        }
-
-        if (!detail.sensor || !detail.sensor._attributes) {
-            return null;
-        }
-
-        return new Sensor(
-            this.position(),
-            detail.sensor._attributes
-        ).to_geojson();
-    };
-
-    creator(
-        creator?: {
-            uid: string,
-            type: string,
-            callsign: string,
-            time: Date | string | undefined,
-        }
-    ): Static<typeof CreatorAttributes> | undefined {
-        const detail = this.detail();
-
-        if (creator) {
-            this.addLink({
-                uid: creator.uid,
-                production_time: creator.time ? new Date(creator.time).toISOString() : new Date().toISOString(),
-                type: creator.type,
-                parent_callsign: creator.callsign,
-                relation: 'p-p'
-            });
-
-            detail.creator = {
-                _attributes: {
-                    ...creator,
-                    time: creator.time ? new Date(creator.time).toISOString() : new Date().toISOString(),
-                }
-            };
-        }
-
-        if (detail.creator) {
-            return detail.creator._attributes;
-        } else {
-            return;
-        }
-    }
-
-    addLink(link: Static<typeof LinkAttributes>): CoT {
-        const detail = this.detail();
-
-        let linkArr: Array<Static<typeof Link>> = [];
-        if (detail.link && !Array.isArray(detail.link)) {
-            linkArr = [detail.link]
-        } else if (detail.link && Array.isArray(detail.link)) {
-            linkArr = detail.link;
-        }
-
-        linkArr.push({ _attributes: link });
-
-        detail.link = linkArr;
-
-        return this;
+        return new CoT(cot);
     }
 
     /**
      * Return an ATAK Compliant Protobuf
      */
-    to_proto(version = 1): Uint8Array {
+    static to_proto(version = 1): Uint8Array {
         if (version < 1 || version > 1) throw new Err(400, null, `Unsupported Proto Version: ${version}`);
         const ProtoMessage = RootMessage.lookupType(`atakmap.commoncommo.protobuf.v${version}.TakMessage`)
 
@@ -403,8 +131,8 @@ export default class CoT {
     /**
      * Return a GeoJSON Feature from an XML CoT message
      */
-    to_geojson(): Static<typeof Feature> {
-        const raw: Static<typeof JSONCoT> = JSON.parse(JSON.stringify(this.raw));
+    static to_geojson(cot: CoT): Static<typeof Feature> {
+        const raw: Static<typeof JSONCoT> = JSON.parse(JSON.stringify(cot.raw));
         if (!raw.event.detail) raw.event.detail = {};
         if (!raw.event.detail.contact) raw.event.detail.contact = { _attributes: { callsign: 'UNKNOWN' } };
         if (!raw.event.detail.contact._attributes) raw.event.detail.contact._attributes = { callsign: 'UNKNOWN' };
@@ -749,200 +477,362 @@ export default class CoT {
         return feat;
     }
 
-    is_stale(): boolean {
-        return new Date(this.raw.event._attributes.stale) < new Date();
+    static to_xml(cot: CoT): string {
+        return xmljs.js2xml(cot.raw, { compact: true });
     }
 
     /**
-     * Determines if the CoT message represents a Tasking Message
-     *
-     * @return {boolean}
+     * Parse an ATAK compliant Protobuf to a JS Object
      */
-    is_tasking(): boolean {
-        return !!this.raw.event._attributes.type.match(/^t-/)
-    }
+    static from_proto(raw: Uint8Array, version = 1): CoT {
+        const ProtoMessage = RootMessage.lookupType(`atakmap.commoncommo.protobuf.v${version}.TakMessage`)
 
-    /**
-     * Determines if the CoT message represents a Chat Message
-     *
-     * @return {boolean}
-     */
-    is_chat(): boolean {
-        return !!(this.raw.event.detail && this.raw.event.detail.__chat);
-    }
+        // TODO Type this
+        const msg: any = ProtoMessage.decode(raw);
 
-    /**
-     * Determines if the CoT message represents a Friendly Element
-     *
-     * @return {boolean}
-     */
-    is_friend(): boolean {
-        return !!this.raw.event._attributes.type.match(/^a-f-/)
-    }
+        if (!msg.cotEvent) throw new Err(400, null, 'No cotEvent Data');
 
-    /**
-     * Determines if the CoT message represents a Hostile Element
-     *
-     * @return {boolean}
-     */
-    is_hostile(): boolean {
-        return !!this.raw.event._attributes.type.match(/^a-h-/)
-    }
+        const detail: Record<string, any> = {};
+        const metadata: Record<string, unknown> = {};
+        for (const key in msg.cotEvent.detail) {
+            if (key === 'xmlDetail') {
+                const parsed: any = xmljs.xml2js(`<detail>${msg.cotEvent.detail.xmlDetail}</detail>`, { compact: true });
+                Object.assign(detail, parsed.detail);
 
-    /**
-     * Determines if the CoT message represents a Unknown Element
-     *
-     * @return {boolean}
-     */
-    is_unknown(): boolean {
-        return !!this.raw.event._attributes.type.match(/^a-u-/)
-    }
+                if (detail.metadata) {
+                    for (const key in detail.metadata) {
+                        metadata[key] = detail.metadata[key]._text;
+                    }
+                    delete detail.metadata;
+                }
+            } else if (key === 'group') {
+                if (msg.cotEvent.detail[key]) {
+                    detail.__group = { _attributes: msg.cotEvent.detail[key] };
+                }
+            } else if (['contact', 'precisionlocation', 'status', 'takv', 'track'].includes(key)) {
+                if (msg.cotEvent.detail[key]) {
+                    detail[key] = { _attributes: msg.cotEvent.detail[key] };
+                }
+            }
+        }
 
-    /**
-     * Determines if the CoT message represents a Pending Element
-     *
-     * @return {boolean}
-     */
-    is_pending(): boolean {
-        return !!this.raw.event._attributes.type.match(/^a-p-/)
-    }
-
-    /**
-     * Determines if the CoT message represents an Assumed Element
-     *
-     * @return {boolean}
-     */
-    is_assumed(): boolean {
-        return !!this.raw.event._attributes.type.match(/^a-a-/)
-    }
-
-    /**
-     * Determines if the CoT message represents a Neutral Element
-     *
-     * @return {boolean}
-     */
-    is_neutral(): boolean {
-        return !!this.raw.event._attributes.type.match(/^a-n-/)
-    }
-
-    /**
-     * Determines if the CoT message represents a Suspect Element
-     *
-     * @return {boolean}
-     */
-    is_suspect(): boolean {
-        return !!this.raw.event._attributes.type.match(/^a-s-/)
-    }
-
-    /**
-     * Determines if the CoT message represents a Joker Element
-     *
-     * @return {boolean}
-     */
-    is_joker(): boolean {
-        return !!this.raw.event._attributes.type.match(/^a-j-/)
-    }
-
-    /**
-     * Determines if the CoT message represents a Faker Element
-     *
-     * @return {boolean}
-     */
-    is_faker(): boolean {
-        return !!this.raw.event._attributes.type.match(/^a-k-/)
-    }
-
-    /**
-     * Determines if the CoT message represents an Element
-     *
-     * @return {boolean}
-     */
-    is_atom(): boolean {
-        return !!this.raw.event._attributes.type.match(/^a-/)
-    }
-
-    /**
-     * Determines if the CoT message represents an Airborne Element
-     *
-     * @return {boolean}
-     */
-    is_airborne(): boolean {
-        return !!this.raw.event._attributes.type.match(/^a-.-A/)
-    }
-
-    /**
-     * Determines if the CoT message represents a Ground Element
-     *
-     * @return {boolean}
-     */
-    is_ground(): boolean {
-        return !!this.raw.event._attributes.type.match(/^a-.-G/)
-    }
-
-    /**
-     * Determines if the CoT message represents an Installation
-     *
-     * @return {boolean}
-     */
-    is_installation(): boolean {
-        return !!this.raw.event._attributes.type.match(/^a-.-G-I/)
-    }
-
-    /**
-     * Determines if the CoT message represents a Vehicle
-     *
-     * @return {boolean}
-     */
-    is_vehicle(): boolean {
-        return !!this.raw.event._attributes.type.match(/^a-.-G-E-V/)
-    }
-
-    /**
-     * Determines if the CoT message represents Equipment
-     *
-     * @return {boolean}
-     */
-    is_equipment(): boolean {
-        return !!this.raw.event._attributes.type.match(/^a-.-G-E/)
-    }
-
-    /**
-     * Determines if the CoT message represents a Surface Element
-     *
-     * @return {boolean}
-     */
-    is_surface(): boolean {
-        return !!this.raw.event._attributes.type.match(/^a-.-S/)
-    }
-
-    /**
-     * Determines if the CoT message represents a Subsurface Element
-     *
-     * @return {boolean}
-     */
-    is_subsurface(): boolean {
-        return !!this.raw.event._attributes.type.match(/^a-.-U/)
-    }
-
-    /**
-     * Determines if the CoT message represents a UAV Element
-     *
-     * @return {boolean}
-     */
-    is_uav(): boolean {
-        return !!this.raw.event._attributes.type.match(/^a-f-A-M-F-Q-r/)
-    }
-
-    /**
-     * Return a CoT Message
-     */
-    static ping(): CoT {
-        return new CoT({
+        const cot = new CoT({
             event: {
-                _attributes: Util.cot_event_attr('t-x-c-t', 'h-g-i-g-o'),
-                detail: {},
-                point: Util.cot_point()
+                _attributes: {
+                    version: '2.0',
+                    uid: msg.cotEvent.uid, type: msg.cotEvent.type, how: msg.cotEvent.how,
+                    qos: msg.cotEvent.qos, opex: msg.cotEvent.opex, access: msg.cotEvent.access,
+                    time: new Date(msg.cotEvent.sendTime.toNumber()).toISOString(),
+                    start: new Date(msg.cotEvent.startTime.toNumber()).toISOString(),
+                    stale: new Date(msg.cotEvent.staleTime.toNumber()).toISOString(),
+                },
+                detail,
+                point: {
+                    _attributes: {
+                        lat: msg.cotEvent.lat,
+                        lon: msg.cotEvent.lon,
+                        hae: msg.cotEvent.hae,
+                        le: msg.cotEvent.le,
+                        ce: msg.cotEvent.ce,
+                    },
+                }
             }
         });
+
+        cot.metadata = metadata;
+
+        return cot;
+    }
+
+    /**
+     * Return an CoT Message given a GeoJSON Feature
+     *
+     * @param {Object} feature GeoJSON Point Feature
+     *
+     * @return {CoT}
+     */
+    static from_geojson(feature: Static<typeof InputFeature>): CoT {
+        checkFeat(feature);
+        if (checkFeat.errors) throw new Err(400, null, `${checkFeat.errors[0].message} (${checkFeat.errors[0].instancePath})`);
+
+        const cot: Static<typeof JSONCoT> = {
+            event: {
+                _attributes: Util.cot_event_attr(
+                    feature.properties.type || 'a-f-G',
+                    feature.properties.how || 'm-g',
+                    feature.properties.time,
+                    feature.properties.start,
+                    feature.properties.stale
+                ),
+                point: Util.cot_point(),
+                detail: Util.cot_event_detail(feature.properties.callsign)
+            }
+        };
+
+        if (feature.id) cot.event._attributes.uid = String(feature.id);
+        if (feature.properties.callsign && !feature.id) cot.event._attributes.uid = feature.properties.callsign;
+        if (!cot.event.detail) cot.event.detail = {};
+
+        if (feature.properties.droid) {
+            cot.event.detail.uid = { _attributes: { Droid: feature.properties.droid } };
+        }
+
+        if (feature.properties.archived) {
+            cot.event.detail.archive = { _attributes: { } };
+        }
+
+        if (feature.properties.links) {
+            if (!cot.event.detail.link) cot.event.detail.link = [];
+            else if (!Array.isArray(cot.event.detail.link)) cot.event.detail.link = [cot.event.detail.link];
+
+            cot.event.detail.link.push(...feature.properties.links.map((link: Static<typeof LinkAttributes>) => {
+                return { _attributes: link };
+            }))
+        }
+
+        if (feature.properties.dest) {
+            const dest = !Array.isArray(feature.properties.dest) ? [ feature.properties.dest ] : feature.properties.dest;
+
+            cot.event.detail.marti = {
+                dest: dest.map((dest) => {
+                    return { _attributes: { ...dest } };
+                })
+            }
+        }
+
+        if (feature.properties.takv) {
+            cot.event.detail.takv = { _attributes: { ...feature.properties.takv } };
+        }
+
+        if (feature.properties.creator) {
+            cot.event.detail.creator = { _attributes: { ...feature.properties.creator } };
+        }
+
+        if (feature.properties.range !== undefined) {
+            cot.event.detail.range = { _attributes: { value:  feature.properties.range  } }
+        }
+
+        if (feature.properties.bearing !== undefined) {
+            cot.event.detail.bearing = { _attributes: { value:  feature.properties.bearing  } }
+        }
+
+        if (feature.properties.geofence) {
+            cot.event.detail.__geofence = { _attributes: { ...feature.properties.geofence } };
+        }
+
+        if (feature.properties.milsym) {
+            cot.event.detail.__milsym = { _attributes: { id: feature.properties.milsym.id} };
+        }
+
+        if (feature.properties.sensor) {
+            cot.event.detail.sensor = { _attributes: { ...feature.properties.sensor } };
+        }
+
+        if (feature.properties.ackrequest) {
+            cot.event.detail.ackrequest = { _attributes: { ...feature.properties.ackrequest } };
+        }
+
+        if (feature.properties.video) {
+            if (feature.properties.video.connection) {
+                const video = JSON.parse(JSON.stringify(feature.properties.video));
+
+                const connection = video.connection;
+                delete video.connection;
+
+                cot.event.detail.__video = {
+                    _attributes: { ...video },
+                    ConnectionEntry: {
+                        _attributes: connection
+                    }
+                }
+            } else {
+                cot.event.detail.__video = { _attributes: { ...feature.properties.video } };
+            }
+        }
+
+        if (feature.properties.attachments) {
+            cot.event.detail.attachment_list = { _attributes: { hashes: JSON.stringify(feature.properties.attachments) } };
+        }
+
+        if (feature.properties.contact) {
+            cot.event.detail.contact = {
+                _attributes: {
+                    ...feature.properties.contact,
+                    callsign: feature.properties.callsign || 'UNKNOWN',
+                }
+            };
+        }
+
+        if (feature.properties.fileshare) {
+            cot.event.detail.fileshare = { _attributes: { ...feature.properties.fileshare } };
+        }
+
+        if (feature.properties.course !== undefined || feature.properties.speed !== undefined || feature.properties.slope !== undefined) {
+            cot.event.detail.track = {
+                _attributes: Util.cot_track_attr(feature.properties.course, feature.properties.speed, feature.properties.slope)
+            }
+        }
+
+        if (feature.properties.group) {
+            cot.event.detail.__group = { _attributes: { ...feature.properties.group } }
+        }
+
+        if (feature.properties.flow) {
+            cot.event.detail['_flow-tags_'] = { _attributes: { ...feature.properties.flow } }
+        }
+
+        if (feature.properties.status) {
+            cot.event.detail.status = { _attributes: { ...feature.properties.status } }
+        }
+
+        if (feature.properties.precisionlocation) {
+            cot.event.detail.precisionlocation = { _attributes: { ...feature.properties.precisionlocation } }
+        }
+
+        if (feature.properties.icon) {
+            cot.event.detail.usericon = { _attributes: { iconsetpath: feature.properties.icon } }
+        }
+
+        if (feature.properties.mission) {
+            cot.event.detail.mission = {
+                _attributes: {
+                    type: feature.properties.mission.type,
+                    guid: feature.properties.mission.guid,
+                    tool: feature.properties.mission.tool,
+                    name: feature.properties.mission.name,
+                    authorUid: feature.properties.mission.authorUid,
+                }
+            }
+
+            if (feature.properties.mission.missionLayer) {
+                cot.event.detail.mission.missionLayer = {};
+
+                if (feature.properties.mission.missionLayer.name) {
+                    cot.event.detail.mission.missionLayer.name = { _text: feature.properties.mission.missionLayer.name };
+                }
+
+                if (feature.properties.mission.missionLayer.parentUid) {
+                    cot.event.detail.mission.missionLayer.parentUid = { _text: feature.properties.mission.missionLayer.parentUid };
+                }
+
+                if (feature.properties.mission.missionLayer.type) {
+                    cot.event.detail.mission.missionLayer.type = { _text: feature.properties.mission.missionLayer.type };
+                }
+
+                if (feature.properties.mission.missionLayer.uid) {
+                    cot.event.detail.mission.missionLayer.uid = { _text: feature.properties.mission.missionLayer.uid };
+                }
+            }
+        }
+
+        cot.event.detail.remarks = { _attributes: { }, _text: feature.properties.remarks || '' };
+
+        if (!feature.geometry) {
+            throw new Err(400, null, 'Must have Geometry');
+        } else if (!['Point', 'Polygon', 'LineString'].includes(feature.geometry.type)) {
+            throw new Err(400, null, 'Unsupported Geometry Type');
+        }
+
+        if (feature.geometry.type === 'Point') {
+            cot.event.point._attributes.lon = String(feature.geometry.coordinates[0]);
+            cot.event.point._attributes.lat = String(feature.geometry.coordinates[1]);
+            cot.event.point._attributes.hae = String(feature.geometry.coordinates[2] || '0.0');
+
+
+            if (feature.properties['marker-color']) {
+                const color = new Color(feature.properties['marker-color'] || -1761607936);
+                color.a = feature.properties['marker-opacity'] !== undefined ? feature.properties['marker-opacity'] * 255 : 128;
+                cot.event.detail.color = { _attributes: { argb: String(color.as_32bit()) } };
+            }
+        } else if (feature.geometry.type === 'Polygon' && feature.properties.type === 'u-d-c-c') {
+            if (!feature.properties.shape || !feature.properties.shape.ellipse) {
+                throw new Err(400, null, 'u-d-c-c (Circle) must define a feature.properties.shape.ellipse property')
+            }
+            cot.event.detail.shape = { ellipse: { _attributes: feature.properties.shape.ellipse } }
+
+            if (feature.properties.center) {
+                cot.event.point._attributes.lon = String(feature.properties.center[0]);
+                cot.event.point._attributes.lat = String(feature.properties.center[1]);
+            } else {
+                const centre = PointOnFeature(feature as AllGeoJSON);
+                cot.event.point._attributes.lon = String(centre.geometry.coordinates[0]);
+                cot.event.point._attributes.lat = String(centre.geometry.coordinates[1]);
+                cot.event.point._attributes.hae = '0.0';
+            }
+        } else if (['Polygon', 'LineString'].includes(feature.geometry.type)) {
+            const stroke = new Color(feature.properties.stroke || -1761607936);
+            stroke.a = feature.properties['stroke-opacity'] !== undefined ? feature.properties['stroke-opacity'] * 255 : 128;
+            cot.event.detail.strokeColor = { _attributes: { value: String(stroke.as_32bit()) } };
+
+            if (!feature.properties['stroke-width']) feature.properties['stroke-width'] = 3;
+            cot.event.detail.strokeWeight = { _attributes: {
+                value: String(feature.properties['stroke-width'])
+            } };
+
+            if (!feature.properties['stroke-style']) feature.properties['stroke-style'] = 'solid';
+            cot.event.detail.strokeStyle = { _attributes: {
+                value: feature.properties['stroke-style']
+            } };
+
+            if (feature.geometry.type === 'LineString') {
+                cot.event._attributes.type = 'u-d-f';
+
+                if (!cot.event.detail.link) cot.event.detail.link = [];
+                else if (!Array.isArray(cot.event.detail.link)) cot.event.detail.link = [cot.event.detail.link]
+
+                for (const coord of feature.geometry.coordinates) {
+                    cot.event.detail.link.push({
+                        _attributes: { point: `${coord[1]},${coord[0]}` }
+                    });
+                }
+            } else if (feature.geometry.type === 'Polygon') {
+                cot.event._attributes.type = 'u-d-f';
+
+                if (!cot.event.detail.link) cot.event.detail.link = [];
+                else if (!Array.isArray(cot.event.detail.link)) cot.event.detail.link = [cot.event.detail.link]
+
+                // Inner rings are not yet supported
+                for (const coord of feature.geometry.coordinates[0]) {
+                    cot.event.detail.link.push({
+                        _attributes: { point: `${coord[1]},${coord[0]}` }
+                    });
+                }
+
+                const fill = new Color(feature.properties.fill || -1761607936);
+                fill.a = feature.properties['fill-opacity'] !== undefined ? feature.properties['fill-opacity'] * 255 : 128;
+                cot.event.detail.fillColor = { _attributes: { value: String(fill.as_32bit()) } };
+            }
+
+            cot.event.detail.labels_on = { _attributes: { value: 'false' } };
+            cot.event.detail.tog = { _attributes: { enabled: '0' } };
+
+            if (feature.properties.center && Array.isArray(feature.properties.center) && feature.properties.center.length >= 2) {
+                cot.event.point._attributes.lon = String(feature.properties.center[0]);
+                cot.event.point._attributes.lat = String(feature.properties.center[1]);
+
+                if (feature.properties.center.length >= 3) {
+                    cot.event.point._attributes.hae = String(feature.properties.center[2] || '0.0');
+                } else {
+                    cot.event.point._attributes.hae = '0.0';
+                }
+            } else {
+                const centre = PointOnFeature(feature as AllGeoJSON);
+                cot.event.point._attributes.lon = String(centre.geometry.coordinates[0]);
+                cot.event.point._attributes.lat = String(centre.geometry.coordinates[1]);
+                cot.event.point._attributes.hae = '0.0';
+            }
+        }
+
+        const newcot = new CoT(cot);
+
+        if (feature.properties.metadata) {
+            newcot.metadata = feature.properties.metadata
+        }
+
+        if (feature.path) {
+            newcot.path = feature.path
+        }
+
+        return newcot;
     }
 }
