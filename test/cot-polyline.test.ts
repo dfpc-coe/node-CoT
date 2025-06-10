@@ -1,5 +1,5 @@
 import test from 'tape';
-import CoT from '../index.js';
+import CoT, { CoTParser } from '../index.js';
 
 test('En-decode polyline', (t) => {
     const cot = new CoT({
@@ -51,7 +51,7 @@ test('En-decode polyline', (t) => {
         }
     })
 
-    const cot2 = CoT.from_proto(cot.to_proto())
+    const cot2 = CoTParser.from_proto(cot.to_proto())
     const vertex = cot2.raw.event.detail?.shape?.polyline?.vertex
     t.ok(Array.isArray(vertex) && vertex.length === 5)
 
@@ -96,7 +96,7 @@ test('En-decode 0-length polyline', (t) => {
     })
 
     // xml en-decoding looses empty array, but should work. 
-    const cot4 = CoT.from_proto(cot3.to_proto())
+    const cot4 = CoTParser.from_proto(cot3.to_proto())
     t.ok(cot4.raw.event.detail?.shape?.polyline)
 
     t.end();
