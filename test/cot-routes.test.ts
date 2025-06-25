@@ -1,5 +1,5 @@
 import test from 'tape';
-import CoT from '../index.js';
+import CoT, { CoTParser } from '../index.js';
 
 test('Decode Range & Bearing', (t) => {
     const cot = new CoT({
@@ -373,7 +373,7 @@ test('Decode Range & Bearing', (t) => {
                 ],
                 "link_attr": {
                     "_attributes": {
-                        "color": "-256",
+                        "color": -256,
                         "method": "Walking",
                         "prefix": "CP",
                         "direction": "Infil",
@@ -461,7 +461,7 @@ test('Decode Range & Bearing', (t) => {
                     [ -108.535962334931, 38.5190139289798 ]
                 ]
             }
-        }, cot.to_geojson());
+        }, CoTParser.to_geojson(cot));
     }
 
     t.end();

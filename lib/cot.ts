@@ -1,6 +1,5 @@
 import crypto from 'node:crypto';
 import Err from '@openaddresses/batch-error';
-import { diff } from 'json-diff-ts';
 import type { Static } from '@sinclair/typebox';
 import type {
     Polygon,
@@ -16,12 +15,18 @@ import type {
     SensorAttributes,
     VideoConnectionEntryAttributes,
 } from './types/types.js'
-import {
-    InputFeature,
-} from './types/feature.js';
 import Sensor from './sensor.js';
 import Util from './utils/util.js';
 import JSONCoT, { Detail } from './types/types.js'
+
+export type CoTOptions = {
+    creator?: CoT | {
+        uid: string,
+        type: string,
+        callsign: string,
+        time?: Date | string,
+    }
+}
 
 /**
  * Convert to and from an XML CoT message
@@ -44,22 +49,16 @@ export default class CoT {
 
     constructor(
         cot: Static<typeof JSONCoT>,
-        opts: {
-            creator?: CoT | {
-                uid: string,
-                type: string,
-                callsign: string,
-                time?: Date | string,
-            }
-        } = {}
+        opts: CoTOptions = {}
     ) {
         this.raw = cot;
 
         this.metadata = {};
         this.path = '/';
 
-        if (!this.raw.event) this.raw.event = {};
-        if (!this.raw.event._attributes.uid) this.raw.event._attributes.uid = Util.cot_uuid();
+        if (!this.raw.event._attributes.uid) {
+            this.raw.event._attributes.uid = Util.cot_uuid();
+        }
 
         if (!this.raw.event.detail) this.raw.event.detail = {};
 
@@ -77,52 +76,6 @@ export default class CoT {
         }
 
         if (process.env.DEBUG_COTS) console.log(JSON.stringify(this.raw))
-    }
-
-    /**
-     * Detect difference between CoT messages
-     * Note: This diffs based on GeoJSON Representation of message
-     *       So if unknown properties are present they will be excluded from the diff
-     */
-    isDiff(
-        cot: CoT,
-        opts = {
-            diffMetadata: false,
-            diffStaleStartTime: false,
-            diffDest: false,
-            diffFlow: false
-        }
-    ): boolean {
-        const a = this.to_geojson() as Static<typeof InputFeature>;
-        const b = cot.to_geojson() as Static<typeof InputFeature>;
-
-        if (!opts.diffDest) {
-            delete a.properties.dest;
-            delete b.properties.dest;
-        }
-
-        if (!opts.diffMetadata) {
-            delete a.properties.metadata;
-            delete b.properties.metadata;
-        }
-
-        if (!opts.diffFlow) {
-            delete a.properties.flow;
-            delete b.properties.flow;
-        }
-
-        if (!opts.diffStaleStartTime) {
-            delete a.properties.time;
-            delete a.properties.stale;
-            delete a.properties.start;
-            delete b.properties.time;
-            delete b.properties.stale;
-            delete b.properties.start;
-        }
-
-        const diffs = diff(a, b);
-
-        return diffs.length > 0;
     }
 
     /**

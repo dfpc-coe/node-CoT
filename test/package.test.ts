@@ -1,4 +1,4 @@
-import CoT, { DataPackage } from '../index.js'
+import { DataPackage, CoTParser } from '../index.js'
 import stream2buffer from './stream.js';
 import fs from 'node:fs';
 import test from 'tape';
@@ -39,7 +39,7 @@ test(`DataPackage CoT Parsing: CameraCOTs.zip`, async (t) => {
 test(`DataPackage CoT Writing`, async (t) => {
     const pkg = new DataPackage();
 
-    pkg.addCoT(CoT.from_geojson({
+    pkg.addCoT(CoTParser.from_geojson({
         id: '123',
         type: 'Feature',
         properties: {
@@ -90,7 +90,7 @@ test(`DataPackage CoT Writing`, async (t) => {
 test(`DataPackage CoT Writing`, async (t) => {
     const pkg = new DataPackage();
 
-    pkg.addCoT(CoT.from_geojson({
+    pkg.addCoT(CoTParser.from_geojson({
         id: '123',
         type: 'Feature',
         properties: {

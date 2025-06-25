@@ -1,8 +1,8 @@
 import test from 'tape';
-import CoT, { ForceDelete } from '../index.js';
+import { ForceDelete } from '../index.js';
 
 test('ForceDelete - Basic', (t) => {
-    const cot = new CoT(new ForceDelete('delete-uid').to_xml());
+    const cot = new ForceDelete('delete-uid');
 
     if (!cot.raw.event.detail) {
         t.fail('No Detail Section')

@@ -46,6 +46,9 @@ export const LinkAttributes = Type.Object({
     // Polygon/LineString
     point: Type.Optional(Type.String()),
 
+    // Used in Routes
+    callsign: Type.Optional(Type.String()),
+
     // URL Style Links
     url: Type.Optional(Type.String()),
     mime: Type.Optional(Type.String()),
@@ -114,13 +117,34 @@ export const ServerVersionAttributes = Type.Object({
 
 export const ColorAttributes = Type.Object({
     _attributes: Type.Optional(Type.Object({
-        argb: Type.Optional(Type.String())
+        argb: Type.Optional(Type.Integer()),
+
+        // Have seen this used in range and bearing
+        value: Type.Optional(Type.Integer())
     }))
 })
 
-export const GenericAttributes = Type.Object({
+export const GenericStringAttributes = Type.Object({
     _attributes: Type.Optional(Type.Object({
         value: Type.Optional(Type.String())
+    }))
+})
+
+export const GenericBooleanAttributes = Type.Object({
+    _attributes: Type.Optional(Type.Object({
+        value: Type.Optional(Type.Boolean())
+    }))
+})
+
+export const GenericIntegerAttributes = Type.Object({
+    _attributes: Type.Optional(Type.Object({
+        value: Type.Optional(Type.Integer())
+    }))
+})
+
+export const GenericNumberAttributes = Type.Object({
+    _attributes: Type.Optional(Type.Object({
+        value: Type.Optional(Type.Integer())
     }))
 })
 
@@ -457,7 +481,7 @@ export const Range = Type.Object({
 });
 
 export const RangeUnitsAttributes = Type.Object({
-    value: Type.String()
+    value: Type.Integer()
 });
 
 export const RangeUnits = Type.Object({
@@ -473,7 +497,7 @@ export const Bearing = Type.Object({
 });
 
 export const BearingUnitsAttributes = Type.Object({
-    value: Type.String()
+    value: Type.Integer()
 });
 
 export const BearingUnits = Type.Object({
@@ -481,7 +505,7 @@ export const BearingUnits = Type.Object({
 });
 
 export const InclinationAttributes = Type.Object({
-    value: Type.String()
+    value: Type.Number()
 });
 
 export const Inclination = Type.Object({
@@ -489,7 +513,7 @@ export const Inclination = Type.Object({
 });
 
 export const NorthRefAttributes = Type.Object({
-    value: Type.String()
+    value: Type.Number()
 });
 
 export const NorthRef = Type.Object({
@@ -540,12 +564,12 @@ export const Detail = Type.Object({
     remarks: Type.Optional(Remarks),
     precisionlocation: Type.Optional(PrecisionLocation),
     color: Type.Optional(ColorAttributes),
-    strokeColor: Type.Optional(GenericAttributes),
-    archive: Type.Optional(Type.Union([GenericAttributes, Type.Array(GenericAttributes)])),
-    strokeWeight: Type.Optional(GenericAttributes),
-    strokeStyle: Type.Optional(GenericAttributes),
-    labels_on: Type.Optional(GenericAttributes),
-    fillColor: Type.Optional(GenericAttributes),
+    strokeColor: Type.Optional(GenericIntegerAttributes),
+    archive: Type.Optional(Type.Union([GenericStringAttributes, Type.Array(GenericStringAttributes)])),
+    strokeWeight: Type.Optional(GenericNumberAttributes),
+    strokeStyle: Type.Optional(GenericStringAttributes),
+    labels_on: Type.Optional(GenericBooleanAttributes),
+    fillColor: Type.Optional(GenericIntegerAttributes),
     mission: Type.Optional(Mission),
     shape: Type.Optional(Shape),
 

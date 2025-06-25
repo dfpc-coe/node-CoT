@@ -3,6 +3,7 @@ import CoT from '../index.js';
 
 test('CoT.from_geojson - Point', (t) => {
     try {
+        // @ts-expect-error - Testing invalid input
         new CoT({ event: { _attributes: {} } });
         t.fail();
     } catch (err) {

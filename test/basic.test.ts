@@ -81,13 +81,13 @@ test('COT.archived', (t) => {
     t.equals(cot.archived(), false);
     t.equals(cot.archived(true), true);
 
-    t.equals(cot.to_geojson().properties.archived, true)
+    t.equals(CoTParser.to_geojson(cot).properties.archived, true)
 
     t.equals(cot.archived(), true);
     t.equals(cot.archived(false), false);
     t.equals(cot.archived(), false);
 
-    t.equals(cot.to_geojson().properties.archived, undefined)
+    t.equals(CoTParser.to_geojson(cot).properties.archived, undefined)
 
     t.end();
 });

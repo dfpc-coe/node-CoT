@@ -93,7 +93,7 @@ test('Decode iTAK COT message', (t) => {
                 type: 'Point',
                 coordinates: [ -107.72376567, 41.52309645, 1681.23725821 ]
             }
-        }, cot.to_geojson());
+        }, CoTParser.to_geojson(cot));
     }
 
     t.end();

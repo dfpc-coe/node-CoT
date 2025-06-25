@@ -10,9 +10,9 @@ for (const fixturename of await fs.readdir(new URL('./fixtures/', import.meta.ur
     test(`Protobuf Reversal Tests: ${fixturename}`, async (t) => {
         const fixture: Static<typeof Feature> = JSON.parse(String(await fs.readFile(path.join(path.parse(fileURLToPath(import.meta.url)).dir, 'fixtures/', fixturename))));
         const geo = CoTParser.from_geojson(fixture)
-        const intermediate = geo.to_proto();
+        const intermediate = CoTParser.to_proto(geo);
         const output = CoTParser.from_proto(intermediate);
-        t.deepEquals(fixture, output.to_geojson(), fixturename);
+        t.deepEquals(fixture, CoTParser.to_geojson(output), fixturename);
 
         t.end();
     });
@@ -51,9 +51,9 @@ test('Protobuf Multiple Calls', (t) => {
         },
     })
 
-    const cot2 = CoTParser.from_proto(cot.to_proto())
+    const cot2 = CoTParser.from_proto(CoTParser.to_proto(cot))
     t.deepEqual(cot2.raw.event.detail?.contact?._attributes.callsign, 'sign')
-    const cot3 = CoTParser.from_proto(cot.to_proto())
+    const cot3 = CoTParser.from_proto(CoTParser.to_proto(cot))
     t.deepEqual(cot3.raw.event.detail?.contact?._attributes.callsign, 'sign')
 
     t.end();

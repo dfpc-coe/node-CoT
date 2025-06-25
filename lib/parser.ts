@@ -1,6 +1,7 @@
 import protobuf from 'protobufjs';
 import Err from '@openaddresses/batch-error';
-import xmljs from 'xml-js';
+import { xml2js, js2xml } from 'xml-js';
+import { diff } from 'json-diff-ts';
 import type { Static } from '@sinclair/typebox';
 import type {
     Feature,
@@ -18,6 +19,7 @@ import {
     InputFeature,
 } from './types/feature.js';
 import type { AllGeoJSON } from "@turf/helpers";
+import Ellipse from '@turf/ellipse';
 import PointOnFeature from '@turf/point-on-feature';
 import Truncate from '@turf/truncate';
 import { destination } from '@turf/destination';
@@ -25,6 +27,7 @@ import Util from './utils/util.js';
 import Color from './utils/color.js';
 import JSONCoT, { Detail } from './types/types.js'
 import CoT from './cot.js';
+import type { CoTOptions } from './cot.js';
 import AJV from 'ajv';
 import fs from 'fs';
 import path from 'node:path';
@@ -69,13 +72,14 @@ export class CoTParser {
             flow: true
         }
     ): CoT {
-        if (!opts) opts = {};
         if (opts.flow === undefined) opts.flow = true;
 
         checkXML(cot.raw);
         if (checkXML.errors) throw new Err(400, null, `${checkXML.errors[0].message} (${checkXML.errors[0].instancePath})`);
 
         if (opts.flow) {
+            if (!cot.raw.event.detail) cot.raw.event.detail = {};
+
             if (!cot.raw.event.detail['_flow-tags_']) {
                 cot.raw.event.detail['_flow-tags_'] = {};
             }
@@ -86,33 +90,87 @@ export class CoTParser {
         return cot;
     }
 
-    static from_xml(raw: Buffer | string): CoT {
-        const cot = new CoT(xml2js(String(raw), { compact: true }) as Static<typeof JSONCoT>);
+    /**
+     * Detect difference between CoT messages
+     * Note: This diffs based on GeoJSON Representation of message
+     *       So if unknown properties are present they will be excluded from the diff
+     */
+    static isDiff(
+        aCoT: CoT,
+        bCoT: CoT,
+        opts = {
+            diffMetadata: false,
+            diffStaleStartTime: false,
+            diffDest: false,
+            diffFlow: false
+        }
+    ): boolean {
+        const a = this.to_geojson(aCoT) as Static<typeof InputFeature>;
+        const b = this.to_geojson(bCoT) as Static<typeof InputFeature>;
+
+        if (!opts.diffDest) {
+            delete a.properties.dest;
+            delete b.properties.dest;
+        }
+
+        if (!opts.diffMetadata) {
+            delete a.properties.metadata;
+            delete b.properties.metadata;
+        }
+
+        if (!opts.diffFlow) {
+            delete a.properties.flow;
+            delete b.properties.flow;
+        }
+
+        if (!opts.diffStaleStartTime) {
+            delete a.properties.time;
+            delete a.properties.stale;
+            delete a.properties.start;
+            delete b.properties.time;
+            delete b.properties.stale;
+            delete b.properties.start;
+        }
+
+        const diffs = diff(a, b);
+
+        return diffs.length > 0;
+    }
+
+
+    static from_xml(
+        raw: Buffer | string,
+        opts: CoTOptions = {}
+   ): CoT {
+        const cot = new CoT(
+            xml2js(String(raw), { compact: true }) as Static<typeof JSONCoT>,
+            opts
+        );
 
         return this.validate(cot);
     }
 
     static to_xml(cot: CoT): string {
-        return xmljs.js2xml(cot.raw, { compact: true });
+        return js2xml(cot.raw, { compact: true });
     }
 
     /**
      * Return an ATAK Compliant Protobuf
      */
-    static to_proto(version = 1): Uint8Array {
+    static to_proto(cot: CoT, version = 1): Uint8Array {
         if (version < 1 || version > 1) throw new Err(400, null, `Unsupported Proto Version: ${version}`);
         const ProtoMessage = RootMessage.lookupType(`atakmap.commoncommo.protobuf.v${version}.TakMessage`)
 
         // The spread operator is important to make sure the delete doesn't modify the underlying detail object
-        const detail = { ...this.raw.event.detail };
+        const detail = { ...cot.raw.event.detail };
 
         const msg: any = {
             cotEvent: {
-                ...this.raw.event._attributes,
-                sendTime: new Date(this.raw.event._attributes.time).getTime(),
-                startTime: new Date(this.raw.event._attributes.start).getTime(),
-                staleTime: new Date(this.raw.event._attributes.stale).getTime(),
-                ...this.raw.event.point._attributes,
+                ...cot.raw.event._attributes,
+                sendTime: new Date(cot.raw.event._attributes.time).getTime(),
+                startTime: new Date(cot.raw.event._attributes.start).getTime(),
+                staleTime: new Date(cot.raw.event._attributes.stale).getTime(),
+                ...cot.raw.event.point._attributes,
                 detail: {
                     xmlDetail: ''
                 }
@@ -127,9 +185,9 @@ export class CoTParser {
             }
         }
 
-        msg.cotEvent.detail.xmlDetail = xmljs.js2xml({
+        msg.cotEvent.detail.xmlDetail = js2xml({
             ...detail,
-            metadata: this.metadata
+            metadata: cot.metadata
         }, { compact: true });
 
         return ProtoMessage.encode(msg).finish();
@@ -168,8 +226,8 @@ export class CoTParser {
             feat.properties.contact = contact;
         }
 
-        if (this.creator()) {
-            feat.properties.creator = this.creator();
+        if (cot.creator()) {
+            feat.properties.creator = cot.creator();
         }
 
         if (raw.event.detail.remarks && raw.event.detail.remarks._text) {
@@ -367,21 +425,21 @@ export class CoTParser {
 
             // Range & Bearing Line
             if (raw.event._attributes.type === 'u-rb-a') {
-                const detail = this.detail();
+                const detail = cot.detail();
 
                 if (!detail.range) throw new Error('Range value not provided')
                 if (!detail.bearing) throw new Error('Bearing value not provided')
 
                 // TODO Support inclination
                 const dest = destination(
-                    this.position(),
+                    cot.position(),
                     detail.range._attributes.value / 1000,
                     detail.bearing._attributes.value
                 ).geometry.coordinates;
 
                 feat.geometry = {
                     type: 'LineString',
-                    coordinates: [this.position(), dest]
+                    coordinates: [cot.position(), dest]
                 };
             } else if (raw.event._attributes.type === 'u-d-r' || (coordinates[0][0] === coordinates[coordinates.length -1][0] && coordinates[0][1] === coordinates[coordinates.length -1][1])) {
                 if (raw.event._attributes.type === 'u-d-r') {
@@ -478,8 +536,8 @@ export class CoTParser {
             feat.properties['marker-opacity'] = color.as_opacity() / 255;
         }
 
-        feat.properties.metadata = this.metadata;
-        feat.path = this.path;
+        feat.properties.metadata = cot.metadata;
+        feat.path = cot.path;
 
         return feat;
     }
@@ -487,7 +545,11 @@ export class CoTParser {
     /**
      * Parse an ATAK compliant Protobuf to a JS Object
      */
-    static from_proto(raw: Uint8Array, version = 1): CoT {
+    static from_proto(
+            raw: Uint8Array,
+            version = 1,
+            opts: CoTOptions = {} 
+    ): CoT {
         const ProtoMessage = RootMessage.lookupType(`atakmap.commoncommo.protobuf.v${version}.TakMessage`)
 
         // TODO Type this
@@ -499,7 +561,7 @@ export class CoTParser {
         const metadata: Record<string, unknown> = {};
         for (const key in msg.cotEvent.detail) {
             if (key === 'xmlDetail') {
-                const parsed: any = xmljs.xml2js(`<detail>${msg.cotEvent.detail.xmlDetail}</detail>`, { compact: true });
+                const parsed: any = xml2js(`<detail>${msg.cotEvent.detail.xmlDetail}</detail>`, { compact: true });
                 Object.assign(detail, parsed.detail);
 
                 if (detail.metadata) {
@@ -540,7 +602,7 @@ export class CoTParser {
                     },
                 }
             }
-        });
+        }, opts);
 
         cot.metadata = metadata;
 
@@ -554,7 +616,10 @@ export class CoTParser {
      *
      * @return {CoT}
      */
-    static from_geojson(feature: Static<typeof InputFeature>): CoT {
+    static from_geojson(
+        feature: Static<typeof InputFeature>,
+        opts: CoTOptions = {}
+    ): CoT {
         checkFeat(feature);
         if (checkFeat.errors) throw new Err(400, null, `${checkFeat.errors[0].message} (${checkFeat.errors[0].instancePath})`);
 
@@ -745,7 +810,7 @@ export class CoTParser {
             if (feature.properties['marker-color']) {
                 const color = new Color(feature.properties['marker-color'] || -1761607936);
                 color.a = feature.properties['marker-opacity'] !== undefined ? feature.properties['marker-opacity'] * 255 : 128;
-                cot.event.detail.color = { _attributes: { argb: String(color.as_32bit()) } };
+                cot.event.detail.color = { _attributes: { argb: color.as_32bit() } };
             }
         } else if (feature.geometry.type === 'Polygon' && feature.properties.type === 'u-d-c-c') {
             if (!feature.properties.shape || !feature.properties.shape.ellipse) {
@@ -765,11 +830,11 @@ export class CoTParser {
         } else if (['Polygon', 'LineString'].includes(feature.geometry.type)) {
             const stroke = new Color(feature.properties.stroke || -1761607936);
             stroke.a = feature.properties['stroke-opacity'] !== undefined ? feature.properties['stroke-opacity'] * 255 : 128;
-            cot.event.detail.strokeColor = { _attributes: { value: String(stroke.as_32bit()) } };
+            cot.event.detail.strokeColor = { _attributes: { value: stroke.as_32bit() } };
 
             if (!feature.properties['stroke-width']) feature.properties['stroke-width'] = 3;
             cot.event.detail.strokeWeight = { _attributes: {
-                value: String(feature.properties['stroke-width'])
+                value: feature.properties['stroke-width']
             } };
 
             if (!feature.properties['stroke-style']) feature.properties['stroke-style'] = 'solid';
@@ -803,15 +868,15 @@ export class CoTParser {
 
                 const fill = new Color(feature.properties.fill || -1761607936);
                 fill.a = feature.properties['fill-opacity'] !== undefined ? feature.properties['fill-opacity'] * 255 : 128;
-                cot.event.detail.fillColor = { _attributes: { value: String(fill.as_32bit()) } };
+                cot.event.detail.fillColor = { _attributes: { value: fill.as_32bit() } };
             }
 
-            cot.event.detail.labels_on = { _attributes: { value: 'false' } };
+            cot.event.detail.labels_on = { _attributes: { value: false } };
             cot.event.detail.tog = { _attributes: { enabled: '0' } };
 
             if (feature.properties.center && Array.isArray(feature.properties.center) && feature.properties.center.length >= 2) {
-                cot.event.point._attributes.lon = String(feature.properties.center[0]);
-                cot.event.point._attributes.lat = String(feature.properties.center[1]);
+                cot.event.point._attributes.lon = feature.properties.center[0];
+                cot.event.point._attributes.lat = feature.properties.center[1];
 
                 if (feature.properties.center.length >= 3) {
                     cot.event.point._attributes.hae = String(feature.properties.center[2] || '0.0');
@@ -826,7 +891,7 @@ export class CoTParser {
             }
         }
 
-        const newcot = new CoT(cot);
+        const newcot = new CoT(cot, opts);
 
         if (feature.properties.metadata) {
             newcot.metadata = feature.properties.metadata
