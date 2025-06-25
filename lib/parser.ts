@@ -802,9 +802,9 @@ export class CoTParser {
         }
 
         if (feature.geometry.type === 'Point') {
-            cot.event.point._attributes.lon = String(feature.geometry.coordinates[0]);
-            cot.event.point._attributes.lat = String(feature.geometry.coordinates[1]);
-            cot.event.point._attributes.hae = String(feature.geometry.coordinates[2] || '0.0');
+            cot.event.point._attributes.lon = feature.geometry.coordinates[0];
+            cot.event.point._attributes.lat = feature.geometry.coordinates[1];
+            cot.event.point._attributes.hae = feature.geometry.coordinates[2] || 0.0;
 
 
             if (feature.properties['marker-color']) {
@@ -819,13 +819,13 @@ export class CoTParser {
             cot.event.detail.shape = { ellipse: { _attributes: feature.properties.shape.ellipse } }
 
             if (feature.properties.center) {
-                cot.event.point._attributes.lon = String(feature.properties.center[0]);
-                cot.event.point._attributes.lat = String(feature.properties.center[1]);
+                cot.event.point._attributes.lon = feature.properties.center[0];
+                cot.event.point._attributes.lat = feature.properties.center[1];
             } else {
                 const centre = PointOnFeature(feature as AllGeoJSON);
-                cot.event.point._attributes.lon = String(centre.geometry.coordinates[0]);
-                cot.event.point._attributes.lat = String(centre.geometry.coordinates[1]);
-                cot.event.point._attributes.hae = '0.0';
+                cot.event.point._attributes.lon = centre.geometry.coordinates[0];
+                cot.event.point._attributes.lat = centre.geometry.coordinates[1];
+                cot.event.point._attributes.hae = 0.0;
             }
         } else if (['Polygon', 'LineString'].includes(feature.geometry.type)) {
             const stroke = new Color(feature.properties.stroke || -1761607936);
@@ -879,15 +879,15 @@ export class CoTParser {
                 cot.event.point._attributes.lat = feature.properties.center[1];
 
                 if (feature.properties.center.length >= 3) {
-                    cot.event.point._attributes.hae = String(feature.properties.center[2] || '0.0');
+                    cot.event.point._attributes.hae = feature.properties.center[2] || 0.0;
                 } else {
-                    cot.event.point._attributes.hae = '0.0';
+                    cot.event.point._attributes.hae = 0.0;
                 }
             } else {
                 const centre = PointOnFeature(feature as AllGeoJSON);
-                cot.event.point._attributes.lon = String(centre.geometry.coordinates[0]);
-                cot.event.point._attributes.lat = String(centre.geometry.coordinates[1]);
-                cot.event.point._attributes.hae = '0.0';
+                cot.event.point._attributes.lon = centre.geometry.coordinates[0];
+                cot.event.point._attributes.lat = centre.geometry.coordinates[1];
+                cot.event.point._attributes.hae = 0.0;
             }
         }
 

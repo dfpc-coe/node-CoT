@@ -34,11 +34,11 @@ test('Protobuf Multiple Calls', (t) => {
             },
             point: {
                 _attributes: {
-                    lat: '39.0981196',
-                    lon: '-108.7395013',
-                    hae: '0.0',
-                    ce: '9999999.0',
-                    le: '9999999.0',
+                    lat: 39.0981196,
+                    lon: -108.7395013,
+                    hae: 0.0,
+                    ce: 9999999.0,
+                    le: 9999999.0,
                 },
             },
             detail: {

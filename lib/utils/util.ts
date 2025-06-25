@@ -89,11 +89,11 @@ export default class Util {
     static cot_point(): Static<typeof Point> {
         return {
             '_attributes': {
-                'lat': '0.000000',
-                'lon': '0.000000',
-                'hae': '0.0',
-                'ce': '9999999.0',
-                'le': '9999999.0'
+                'lat': 0.000000,
+                'lon': 0.000000,
+                'hae': 0.0,
+                'ce': 9999999.0,
+                'le': 9999999.0
             }
         };
     }

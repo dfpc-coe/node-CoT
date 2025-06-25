@@ -27,7 +27,7 @@ test('ForceDelete - Basic', (t) => {
                     start: '2024-04-01'
                 },
                 point: {
-                    _attributes: { lat: '0.000000', lon: '0.000000', hae: '0.0', ce: '9999999.0', le: '9999999.0' }
+                    _attributes: { lat: 0.000000, lon: 0.000000, hae: 0.0, ce: 9999999.0, le: 9999999.0 }
                 },
                 detail: {
                     __forcedelete: {},

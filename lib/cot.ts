@@ -213,8 +213,8 @@ export default class CoT {
 
     position(position?: Static<typeof Position>): Static<typeof Position> {
         if (position) {
-            this.raw.event.point._attributes.lon = String(position[0]);
-            this.raw.event.point._attributes.lat = String(position[1]);
+            this.raw.event.point._attributes.lon = position[0];
+            this.raw.event.point._attributes.lat = position[1];
         }
 
         return [
