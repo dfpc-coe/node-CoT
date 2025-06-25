@@ -7,9 +7,6 @@ test('ForceDelete - Basic', (t) => {
     if (!cot.raw.event.detail) {
         t.fail('No Detail Section')
     } else {
-        t.ok(cot.raw.event.detail['_flow-tags_']);
-        delete cot.raw.event.detail['_flow-tags_'];
-
         t.equals(typeof cot.raw.event._attributes.time, 'string');
         cot.raw.event._attributes.time = '2024-04-01'
         t.equals(typeof cot.raw.event._attributes.start, 'string');

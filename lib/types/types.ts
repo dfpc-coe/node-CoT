@@ -599,11 +599,11 @@ export const Detail = Type.Object({
 
 export const Point = Type.Object({
     _attributes: Type.Object({
-        lat: Type.Union([Type.String(), Type.Number()]),
-        lon: Type.Union([Type.String(), Type.Number()]),
-        hae: Type.Union([Type.String(), Type.Number()]),
-        ce: Type.Union([Type.String(), Type.Number()]),
-        le: Type.Union([Type.String(), Type.Number()]),
+        lat: Type.Number(),
+        lon: Type.Number(),
+        hae: Type.Number(),
+        ce: Type.Number(),
+        le: Type.Number()
     })
 })
 

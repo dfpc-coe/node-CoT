@@ -31,11 +31,11 @@ Speed: 1</remarks><_flow-tags_ TAK-Server-e87a0e02420b44a08f6032bcf1877745="2024
                 },
                 'point': {
                     '_attributes': {
-                        'lat': '39.1',
-                        'lon': '-105.1',
-                        'hae': '0.0',
-                        'ce': '9999999.0',
-                        'le': '9999999.0'
+                        'lat': 39.1,
+                        'lon': -105.1,
+                        'hae': 0.0,
+                        'ce': 9999999.0,
+                        'le': 9999999.0
                     }
                 },
                 detail: {

@@ -190,11 +190,11 @@ test('Decode iTAK COT UAS Message', (t) => {
                 },
                 "point": {
                     "_attributes": {
-                        "lat": "39.1",
-                        "lon": "-108.6",
-                        "ce": "0",
-                        "hae": "1381.333",
-                        "le": "0"
+                        "lat": 39.1,
+                        "lon": -108.6,
+                        "ce": 0,
+                        "hae": 1381.333,
+                        "le": 0
                     }
                 }
             }

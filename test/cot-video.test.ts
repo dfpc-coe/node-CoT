@@ -25,7 +25,7 @@ test('CoT.addVideo', (t) => {
                 how: 'h-g-i-g-o',
                 access: 'Undefined'
             },
-            point: { _attributes: { lat: '38.2089117', lon: '-104.6282182', hae: '1455.285', ce: '9999999.0', le: '9999999.0' } },
+            point: { _attributes: { lat: 38.2089117, lon: -104.6282182, hae: 1455.285, ce: 9999999.0, le: 9999999.0 } },
             detail: {
                 __video: {
                     _attributes: {
@@ -75,7 +75,7 @@ test('Decode MultiMissionAircraft CoTs', (t) => {
                     how: 'h-g-i-g-o',
                     access: 'Undefined'
                 },
-                point: { _attributes: { lat: '38.2089117', lon: '-104.6282182', hae: '1455.285', ce: '9999999.0', le: '9999999.0' } },
+                point: { _attributes: { lat: 38.2089117, lon: -104.6282182, hae: 1455.285, ce: 9999999.0, le: 9999999.0 } },
                 detail: {
                     status: { _attributes: { readiness: 'true' } },
                     archive: [ {}, {} ],
@@ -100,7 +100,7 @@ test('Decode MultiMissionAircraft CoTs', (t) => {
                             }
                         },
                     },
-                    color: { _attributes: { argb: '-1' } },
+                    color: { _attributes: { argb: -1 } },
                     link: {
                         _attributes: {
                             uid: 'ANDROID-94e13cc4880cbcce',

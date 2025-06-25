@@ -20,7 +20,7 @@ test('CoTParser.from_geojson - Point', (t) => {
     t.equals(geo.raw.event._attributes.stale.length, 24);
 
     t.deepEquals(geo.raw.event.point, {
-        _attributes: { lat: '2.2', lon: '1.1', hae: '0.0', ce: '9999999.0', le: '9999999.0' }
+        _attributes: { lat: 2.2, lon: 1.1, hae: 0.0, ce: 9999999.0, le: 9999999.0 }
     });
 
     if (!geo.raw.event.detail || !geo.raw.event.detail.remarks) {
@@ -63,7 +63,7 @@ test('CoTParser.from_geojson - Polygon', (t) => {
     t.equals(geo.raw.event._attributes.stale.length, 24);
 
     t.deepEquals(geo.raw.event.point, {
-        _attributes: { lat: '39.065', lon: '-108.54599999999999', hae: '0.0', ce: '9999999.0', le: '9999999.0' }
+        _attributes: { lat: 39.065, lon: -108.54599999999999, hae: 0.0, ce: 9999999.0, le: 9999999.0 }
     });
 
     if (!geo.raw.event.detail || !geo.raw.event.detail.remarks) {
@@ -81,12 +81,12 @@ test('CoTParser.from_geojson - Polygon', (t) => {
                 { _attributes: { point: '39.098,-108.505' } },
                 { _attributes: { point: '39.098,-108.587' } },
             ],
-            labels_on: { _attributes: { value: 'false' } },
+            labels_on: { _attributes: { value: false } },
             tog: { _attributes: { enabled: '0' } },
-            strokeColor: { _attributes: { value: '-2130706688' } },
-            strokeWeight: { _attributes: { value: '3' } },
+            strokeColor: { _attributes: { value: -2130706688 } },
+            strokeWeight: { _attributes: { value: 3 } },
             strokeStyle: { _attributes: { value: 'solid' } },
-            fillColor: { _attributes: { value: '-2130706688' } },
+            fillColor: { _attributes: { value: -2130706688 } },
             remarks: { _attributes: {}, _text: '' }
         });
     }
@@ -119,7 +119,7 @@ test('CoTParser.from_geojson - LineString', (t) => {
     t.equals(geo.raw.event._attributes.stale.length, 24);
 
     t.deepEquals(geo.raw.event.point, {
-        _attributes: { lat: '39.098', lon: '-108.505', hae: '0.0', ce: '9999999.0', le: '9999999.0' }
+        _attributes: { lat: 39.098, lon: -108.505, hae: 0.0, ce: 9999999.0, le: 9999999.0 }
     });
 
     if (!geo.raw.event.detail || !geo.raw.event.detail.remarks) {
@@ -137,10 +137,10 @@ test('CoTParser.from_geojson - LineString', (t) => {
                 { _attributes: { point: '39.098,-108.505' } },
                 { _attributes: { point: '39.098,-108.587' } }
             ],
-            labels_on: { _attributes: { value: 'false' } },
+            labels_on: { _attributes: { value: false } },
             tog: { _attributes: { enabled: '0' } },
-            strokeColor: { _attributes: { value: '-2130706688' } },
-            strokeWeight: { _attributes: { value: '3' } },
+            strokeColor: { _attributes: { value: -2130706688 } },
+            strokeWeight: { _attributes: { value: 3 } },
             strokeStyle: { _attributes: { value: 'solid' } },
             remarks: { _attributes: {}, _text: '' }
         });
@@ -243,11 +243,11 @@ test('CoTParser.from_geojson - Height Above Earth', (t) => {
             coordinates: [1.1, 2.2]
         }
     }).raw.event.point._attributes, {
-        lat: '2.2',
-        lon: '1.1',
-        hae: '0.0',
-        ce: '9999999.0',
-        le: '9999999.0'
+        lat: 2.2,
+        lon: 1.1,
+        hae: 0.0,
+        ce: 9999999.0,
+        le: 9999999.0
     }, 'default hae');
 
     t.deepEquals(CoTParser.from_geojson({
@@ -259,11 +259,11 @@ test('CoTParser.from_geojson - Height Above Earth', (t) => {
             coordinates: [1.1, 2.2, 101]
         }
     }).raw.event.point._attributes, {
-        lat: '2.2',
-        lon: '1.1',
-        hae: '101',
-        ce: '9999999.0',
-        le: '9999999.0'
+        lat: 2.2,
+        lon: 1.1,
+        hae: 101,
+        ce: 9999999.0,
+        le: 9999999.0
     }, 'custom hae (meters)');
 
     t.end();
