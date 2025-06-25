@@ -12,6 +12,11 @@
 
 ### Pending Fixed
 
+### v13.0.0 - 2025-07-25
+
+- :tada: The base CoT object is now seperate from the Parser
+- :rocket: Migrate to/from calls to use `CoTParser` class
+
 ### v12.37.0 - 2025-07-06
 
 - :tada: First pass at mapping MilSym
