@@ -7,9 +7,6 @@ test('Decode MissionChange CoTs', (t) => {
     if (!cot.raw.event.detail) {
         t.fail('No Detail Section')
     } else {
-        t.ok(cot.raw.event.detail['_flow-tags_']);
-        delete cot.raw.event.detail['_flow-tags_'];
-
         t.deepEquals({
             id: 'f205227b-2e23-40bf-8948-711566116365',
             type: 'Feature',
@@ -58,9 +55,6 @@ test('Decode MissionChange CoTs - #2', (t) => {
     if (!cot.raw.event.detail) {
         t.fail('No Detail Section')
     } else {
-        t.ok(cot.raw.event.detail['_flow-tags_']);
-        delete cot.raw.event.detail['_flow-tags_'];
-
         t.deepEquals({
             id: 'f205227b-2e23-40bf-8948-711566116365',
             type: 'Feature',
@@ -113,9 +107,6 @@ test('Decode MissionChange Logs', (t) => {
     if (!cot.raw.event.detail) {
         t.fail('No Detail Section')
     } else {
-        t.ok(cot.raw.event.detail['_flow-tags_']);
-        delete cot.raw.event.detail['_flow-tags_'];
-
         t.deepEquals({
             id: 'e77c55da-c5d2-4200-bbc9-9967b3f30b5b',
             type: 'Feature',
