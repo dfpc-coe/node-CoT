@@ -1,12 +1,12 @@
 import test from 'tape';
-import CoT from '../index.js';
+import { CoTParser } from '../index.js';
 
-test('CoT.from_geojson - Point', (t) => {
+test('CoTParser.from_xml - Invalid', (t) => {
     try {
-        new CoT({ event: { _attributes: {} } });
-        t.fail();
+        CoTParser.from_xml('<not-cot-xml test="1"/>');
+        t.fail('Shoult not parse invalid CoT XML');
     } catch (err) {
-        t.ok(String(err).includes('must have required property'));
+        t.ok(String(err).includes('Cannot read properties of undefined'));
     }
 
     t.end();

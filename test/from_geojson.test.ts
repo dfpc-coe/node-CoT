@@ -1,8 +1,8 @@
 import test from 'tape';
-import CoT from '../index.js';
+import { CoTParser } from '../index.js';
 
-test('CoT.from_geojson - Point', (t) => {
-    const geo = CoT.from_geojson({
+test('CoTParser.from_geojson - Point', (t) => {
+    const geo = CoTParser.from_geojson({
         type: 'Feature',
         properties: {},
         geometry: {
@@ -20,7 +20,7 @@ test('CoT.from_geojson - Point', (t) => {
     t.equals(geo.raw.event._attributes.stale.length, 24);
 
     t.deepEquals(geo.raw.event.point, {
-        _attributes: { lat: '2.2', lon: '1.1', hae: '0.0', ce: '9999999.0', le: '9999999.0' }
+        _attributes: { lat: 2.2, lon: 1.1, hae: 0.0, ce: 9999999.0, le: 9999999.0 }
     });
 
     if (!geo.raw.event.detail || !geo.raw.event.detail.remarks) {
@@ -38,8 +38,8 @@ test('CoT.from_geojson - Point', (t) => {
     t.end();
 });
 
-test('CoT.from_geojson - Polygon', (t) => {
-    const geo = CoT.from_geojson({
+test('CoTParser.from_geojson - Polygon', (t) => {
+    const geo = CoTParser.from_geojson({
         type: 'Feature',
         properties: {},
         geometry: {
@@ -63,7 +63,7 @@ test('CoT.from_geojson - Polygon', (t) => {
     t.equals(geo.raw.event._attributes.stale.length, 24);
 
     t.deepEquals(geo.raw.event.point, {
-        _attributes: { lat: '39.065', lon: '-108.54599999999999', hae: '0.0', ce: '9999999.0', le: '9999999.0' }
+        _attributes: { lat: 39.065, lon: -108.54599999999999, hae: 0.0, ce: 9999999.0, le: 9999999.0 }
     });
 
     if (!geo.raw.event.detail || !geo.raw.event.detail.remarks) {
@@ -81,12 +81,12 @@ test('CoT.from_geojson - Polygon', (t) => {
                 { _attributes: { point: '39.098,-108.505' } },
                 { _attributes: { point: '39.098,-108.587' } },
             ],
-            labels_on: { _attributes: { value: 'false' } },
+            labels_on: { _attributes: { value: false } },
             tog: { _attributes: { enabled: '0' } },
-            strokeColor: { _attributes: { value: '-2130706688' } },
-            strokeWeight: { _attributes: { value: '3' } },
+            strokeColor: { _attributes: { value: -2130706688 } },
+            strokeWeight: { _attributes: { value: 3 } },
             strokeStyle: { _attributes: { value: 'solid' } },
-            fillColor: { _attributes: { value: '-2130706688' } },
+            fillColor: { _attributes: { value: -2130706688 } },
             remarks: { _attributes: {}, _text: '' }
         });
     }
@@ -94,8 +94,8 @@ test('CoT.from_geojson - Polygon', (t) => {
     t.end();
 });
 
-test('CoT.from_geojson - LineString', (t) => {
-    const geo = CoT.from_geojson({
+test('CoTParser.from_geojson - LineString', (t) => {
+    const geo = CoTParser.from_geojson({
         type: 'Feature',
         properties: {},
         geometry: {
@@ -119,7 +119,7 @@ test('CoT.from_geojson - LineString', (t) => {
     t.equals(geo.raw.event._attributes.stale.length, 24);
 
     t.deepEquals(geo.raw.event.point, {
-        _attributes: { lat: '39.098', lon: '-108.505', hae: '0.0', ce: '9999999.0', le: '9999999.0' }
+        _attributes: { lat: 39.098, lon: -108.505, hae: 0.0, ce: 9999999.0, le: 9999999.0 }
     });
 
     if (!geo.raw.event.detail || !geo.raw.event.detail.remarks) {
@@ -137,10 +137,10 @@ test('CoT.from_geojson - LineString', (t) => {
                 { _attributes: { point: '39.098,-108.505' } },
                 { _attributes: { point: '39.098,-108.587' } }
             ],
-            labels_on: { _attributes: { value: 'false' } },
+            labels_on: { _attributes: { value: false } },
             tog: { _attributes: { enabled: '0' } },
-            strokeColor: { _attributes: { value: '-2130706688' } },
-            strokeWeight: { _attributes: { value: '3' } },
+            strokeColor: { _attributes: { value: -2130706688 } },
+            strokeWeight: { _attributes: { value: 3 } },
             strokeStyle: { _attributes: { value: 'solid' } },
             remarks: { _attributes: {}, _text: '' }
         });
@@ -149,8 +149,8 @@ test('CoT.from_geojson - LineString', (t) => {
     t.end();
 });
 
-test('CoT.from_geojson - Start', (t) => {
-    const geo = CoT.from_geojson({
+test('CoTParser.from_geojson - Start', (t) => {
+    const geo = CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             // 1hr in the future
@@ -177,8 +177,8 @@ test('CoT.from_geojson - Start', (t) => {
     t.end();
 });
 
-test('CoT.from_geojson - Start/Stale', (t) => {
-    const geo = CoT.from_geojson({
+test('CoTParser.from_geojson - Start/Stale', (t) => {
+    const geo = CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             // 1hr in the future
@@ -206,8 +206,8 @@ test('CoT.from_geojson - Start/Stale', (t) => {
     t.end();
 });
 
-test('CoT.from_geojson - Icon', (t) => {
-    const geo = CoT.from_geojson({
+test('CoTParser.from_geojson - Icon', (t) => {
+    const geo = CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             icon: '66f14976-4b62-4023-8edb-d8d2ebeaa336/Public Safety Air/EMS_ROTOR.png'
@@ -233,8 +233,8 @@ test('CoT.from_geojson - Icon', (t) => {
     t.end();
 });
 
-test('CoT.from_geojson - Height Above Earth', (t) => {
-    t.deepEquals(CoT.from_geojson({
+test('CoTParser.from_geojson - Height Above Earth', (t) => {
+    t.deepEquals(CoTParser.from_geojson({
         type: 'Feature',
         properties: {
         },
@@ -243,14 +243,14 @@ test('CoT.from_geojson - Height Above Earth', (t) => {
             coordinates: [1.1, 2.2]
         }
     }).raw.event.point._attributes, {
-        lat: '2.2',
-        lon: '1.1',
-        hae: '0.0',
-        ce: '9999999.0',
-        le: '9999999.0'
+        lat: 2.2,
+        lon: 1.1,
+        hae: 0.0,
+        ce: 9999999.0,
+        le: 9999999.0
     }, 'default hae');
 
-    t.deepEquals(CoT.from_geojson({
+    t.deepEquals(CoTParser.from_geojson({
         type: 'Feature',
         properties: {
         },
@@ -259,18 +259,18 @@ test('CoT.from_geojson - Height Above Earth', (t) => {
             coordinates: [1.1, 2.2, 101]
         }
     }).raw.event.point._attributes, {
-        lat: '2.2',
-        lon: '1.1',
-        hae: '101',
-        ce: '9999999.0',
-        le: '9999999.0'
+        lat: 2.2,
+        lon: 1.1,
+        hae: 101,
+        ce: 9999999.0,
+        le: 9999999.0
     }, 'custom hae (meters)');
 
     t.end();
 });
 
-test('CoT.from_geojson - Course & Speed', (t) => {
-    const cot = CoT.from_geojson({
+test('CoTParser.from_geojson - Course & Speed', (t) => {
+    const cot = CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             course: 260,
@@ -296,8 +296,8 @@ test('CoT.from_geojson - Course & Speed', (t) => {
     t.end();
 });
 
-test('CoT.from_geojson - Remarks', (t) => {
-    const cot = CoT.from_geojson({
+test('CoTParser.from_geojson - Remarks', (t) => {
+    const cot = CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             course: 260,

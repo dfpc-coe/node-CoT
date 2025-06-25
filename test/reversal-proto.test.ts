@@ -3,16 +3,16 @@ import type { Feature } from '../lib/types/feature.js';
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import test from 'tape';
-import CoT from '../index.js';
+import CoT, { CoTParser } from '../index.js';
 import { fileURLToPath } from 'node:url';
 
 for (const fixturename of await fs.readdir(new URL('./fixtures/', import.meta.url))) {
     test(`Protobuf Reversal Tests: ${fixturename}`, async (t) => {
         const fixture: Static<typeof Feature> = JSON.parse(String(await fs.readFile(path.join(path.parse(fileURLToPath(import.meta.url)).dir, 'fixtures/', fixturename))));
-        const geo = CoT.from_geojson(fixture)
-        const intermediate = geo.to_proto();
-        const output = CoT.from_proto(intermediate);
-        t.deepEquals(fixture, output.to_geojson(), fixturename);
+        const geo = CoTParser.from_geojson(fixture)
+        const intermediate = CoTParser.to_proto(geo);
+        const output = CoTParser.from_proto(intermediate);
+        t.deepEquals(fixture, CoTParser.to_geojson(output), fixturename);
 
         t.end();
     });
@@ -34,11 +34,11 @@ test('Protobuf Multiple Calls', (t) => {
             },
             point: {
                 _attributes: {
-                    lat: '39.0981196',
-                    lon: '-108.7395013',
-                    hae: '0.0',
-                    ce: '9999999.0',
-                    le: '9999999.0',
+                    lat: 39.0981196,
+                    lon: -108.7395013,
+                    hae: 0.0,
+                    ce: 9999999.0,
+                    le: 9999999.0,
                 },
             },
             detail: {
@@ -51,9 +51,9 @@ test('Protobuf Multiple Calls', (t) => {
         },
     })
 
-    const cot2 = CoT.from_proto(cot.to_proto())
+    const cot2 = CoTParser.from_proto(CoTParser.to_proto(cot))
     t.deepEqual(cot2.raw.event.detail?.contact?._attributes.callsign, 'sign')
-    const cot3 = CoT.from_proto(cot.to_proto())
+    const cot3 = CoTParser.from_proto(CoTParser.to_proto(cot))
     t.deepEqual(cot3.raw.event.detail?.contact?._attributes.callsign, 'sign')
 
     t.end();

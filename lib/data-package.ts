@@ -9,6 +9,7 @@ import StreamZip from 'node-stream-zip'
 import { Readable } from 'node:stream';
 import { randomUUID } from 'node:crypto';
 import CoT from './cot.js';
+import { CoTParser } from './parser.js';
 import xmljs from 'xml-js';
 import os from 'node:os';
 import fs from 'node:fs';
@@ -332,7 +333,7 @@ export class DataPackage {
             if (path.parse(content._attributes.zipEntry).ext !== '.cot') continue;
             if (opts.respectIgnore && content._attributes.ignore) continue;
 
-            const cot = new CoT(await fsp.readFile(this.path + '/raw/' + content._attributes.zipEntry));
+            const cot = CoTParser.from_xml(await fsp.readFile(this.path + '/raw/' + content._attributes.zipEntry));
 
             cotsMap.set(cot.uid(), cot);
 
@@ -517,7 +518,7 @@ export class DataPackage {
 
         this.#addContent(`${cot.raw.event._attributes.uid}/${cot.raw.event._attributes.uid}.cot`, cot.raw.event._attributes.uid, name, opts.ignore);
         await fsp.mkdir(`${this.path}/raw/${cot.raw.event._attributes.uid}/`, { recursive: true });
-        await fsp.writeFile(`${this.path}/raw/${cot.raw.event._attributes.uid}/${cot.raw.event._attributes.uid}.cot`, cot.to_xml())
+        await fsp.writeFile(`${this.path}/raw/${cot.raw.event._attributes.uid}/${cot.raw.event._attributes.uid}.cot`, CoTParser.to_xml(cot))
     }
 
     /**

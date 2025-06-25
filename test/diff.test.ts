@@ -1,8 +1,8 @@
 import test from 'tape';
-import CoT from '../index.js';
+import { CoTParser } from '../index.js';
 
 test('CoT.diff - no diff - ignored date & meta', (t) => {
-    const a = CoT.from_geojson({
+    const a = CoTParser.from_geojson({
         id: 'C94B9215-9BD4-4DBE-BDE1-83625F09153F',
         type: 'Feature',
         properties: {
@@ -20,7 +20,7 @@ test('CoT.diff - no diff - ignored date & meta', (t) => {
         }
     });
 
-    const b = CoT.from_geojson({
+    const b = CoTParser.from_geojson({
         id: 'C94B9215-9BD4-4DBE-BDE1-83625F09153F',
         type: 'Feature',
         properties: {
@@ -38,13 +38,13 @@ test('CoT.diff - no diff - ignored date & meta', (t) => {
         }
     });
 
-    t.equals(a.isDiff(b), false);
+    t.equals(CoTParser.isDiff(a, b), false);
 
     t.end();
 });
 
 test('CoT.diff - simple diff', (t) => {
-    const a = CoT.from_geojson({
+    const a = CoTParser.from_geojson({
         id: 'D94B9215-9BD4-4DBE-BDE1-83625F09153F',
         type: 'Feature',
         properties: {
@@ -59,7 +59,7 @@ test('CoT.diff - simple diff', (t) => {
         }
     });
 
-    const b = CoT.from_geojson({
+    const b = CoTParser.from_geojson({
         id: 'C94B9215-9BD4-4DBE-BDE1-83625F09153F',
         type: 'Feature',
         properties: {
@@ -74,7 +74,7 @@ test('CoT.diff - simple diff', (t) => {
         }
     });
 
-    t.equals(a.isDiff(b), true);
+    t.equals(CoTParser.isDiff(a, b), true);
 
     t.end();
 });

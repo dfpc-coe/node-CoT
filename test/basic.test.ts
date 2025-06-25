@@ -1,8 +1,8 @@
 import test from 'tape';
-import COT from '../index.js';
+import { CoTParser } from '../index.js';
 
 test('COT.callsign', (t) => {
-    const cot = COT.from_geojson({
+    const cot = CoTParser.from_geojson({
         "id": "123",
         "type": "Feature",
         "path": "/",
@@ -30,7 +30,7 @@ test('COT.callsign', (t) => {
 });
 
 test('COT.type', (t) => {
-    const cot = COT.from_geojson({
+    const cot = CoTParser.from_geojson({
         "id": "123",
         "type": "Feature",
         "path": "/",
@@ -58,7 +58,7 @@ test('COT.type', (t) => {
 });
 
 test('COT.archived', (t) => {
-    const cot = COT.from_geojson({
+    const cot = CoTParser.from_geojson({
         "id": "123",
         "type": "Feature",
         "path": "/",
@@ -81,13 +81,13 @@ test('COT.archived', (t) => {
     t.equals(cot.archived(), false);
     t.equals(cot.archived(true), true);
 
-    t.equals(cot.to_geojson().properties.archived, true)
+    t.equals(CoTParser.to_geojson(cot).properties.archived, true)
 
     t.equals(cot.archived(), true);
     t.equals(cot.archived(false), false);
     t.equals(cot.archived(), false);
 
-    t.equals(cot.to_geojson().properties.archived, undefined)
+    t.equals(CoTParser.to_geojson(cot).properties.archived, undefined)
 
     t.end();
 });

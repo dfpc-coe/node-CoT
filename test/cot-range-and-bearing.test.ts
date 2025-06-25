@@ -1,5 +1,5 @@
 import test from 'tape';
-import CoT from '../index.js';
+import CoT, { CoTParser } from '../index.js';
 
 test('Decode Range & Bearing', (t) => {
     const cot = new CoT({
@@ -16,11 +16,11 @@ test('Decode Range & Bearing', (t) => {
             },
             "point": {
                 "_attributes": {
-                    "lat": "39.0981196",
-                    "lon": "-108.7395013",
-                    "hae": "0.0",
-                    "ce": "9999999.0",
-                    "le": "9999999.0"
+                    "lat": 39.0981196,
+                    "lon": -108.7395013,
+                    "hae": 0.0,
+                    "ce": 9999999.0,
+                    "le": 9999999.0
                 }
             },
             "detail": {
@@ -35,15 +35,15 @@ test('Decode Range & Bearing', (t) => {
                     }
                 },
                 "bearing": { "_attributes": { "value": 102.28151464168589 } },
-                "inclination": { "_attributes": { "value": "5.373568186490131" } },
-                "rangeUnits": { "_attributes": { "value": "0" } },
-                "bearingUnits": { "_attributes": { "value": "0" } },
-                "northRef": { "_attributes": { "value": "1" } },
-                "strokeColor": { "_attributes": { "value": "-65536" } },
-                "strokeWeight": { "_attributes": { "value": "3.0" } },
+                "inclination": { "_attributes": { "value": 5.373568186490131 } },
+                "rangeUnits": { "_attributes": { "value": 0 } },
+                "bearingUnits": { "_attributes": { "value": 0 } },
+                "northRef": { "_attributes": { "value": 1 } },
+                "strokeColor": { "_attributes": { "value": -65536 } },
+                "strokeWeight": { "_attributes": { "value": 3.0 } },
                 "strokeStyle": { "_attributes": { "value": "solid" } },
                 "remarks": {},
-                "labels_on": { "_attributes": { "value": "false" } },
+                "labels_on": { "_attributes": { "value": false } },
                 "archive": {},
                 "link": {
                     "_attributes": {
@@ -56,7 +56,7 @@ test('Decode Range & Bearing', (t) => {
                 },
                 "color": {
                     "_attributes": {
-                        "value": "-65536"
+                        "value": -65536
                     }
                 },
                 "_flow-tags_": {
@@ -74,7 +74,7 @@ test('Decode Range & Bearing', (t) => {
         t.ok(cot.raw.event.detail['_flow-tags_']);
         delete cot.raw.event.detail['_flow-tags_'];
 
-        t.deepEquals(cot.to_geojson(), {
+        t.deepEquals(CoTParser.to_geojson(cot), {
             id: 'ebbf42a7-ea71-43a1-baf6-e259c3d115bf',
             type: 'Feature',
             path: '/',
