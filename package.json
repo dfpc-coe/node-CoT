@@ -10,7 +10,7 @@
         "./2525": "./dist/lib/utils/2525.js"
     },
     "scripts": {
-        "test": "c8 --reporter=lcov tsx --test test/*.ts",
+        "test": "c8 --reporter=lcov --reporter html tsx --test test/*.ts",
         "lint": "eslint *.ts lib/ test/",
         "doc": "typedoc index.ts",
         "build": "tsc --build && cp package.json dist/ && cp ./lib/types/*.xml ./dist/lib/types/ &&  mkdir -p ./dist/lib/proto/ && cp lib/proto/* ./dist/lib/proto/",
