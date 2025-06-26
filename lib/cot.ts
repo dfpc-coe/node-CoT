@@ -1,4 +1,4 @@
-import crypto from 'node:crypto';
+import { v4 as randomUUID } from 'uuid';
 import Err from '@openaddresses/batch-error';
 import type { Static } from '@sinclair/typebox';
 import type {
@@ -179,7 +179,7 @@ export default class CoT {
         } else if (video.uid && connection && !connection.uid) {
             connection.uid = video.uid;
         } else if (!video.uid) {
-            video.uid = crypto.randomUUID();
+            video.uid = randomUUID();
         }
 
         detail.__video = {

@@ -2,7 +2,7 @@ import protobuf from 'protobufjs';
 import Err from '@openaddresses/batch-error';
 import { xml2js, js2xml } from 'xml-js';
 import { diff } from 'json-diff-ts';
-import crypto from 'node:crypto';
+import { v4 as randomUUID } from 'uuid';
 import type { Static } from '@sinclair/typebox';
 import type {
     Feature,
@@ -862,7 +862,7 @@ export class CoTParser {
                     cot.event.detail.link.push({
                         _attributes: {
                             type: 'b-m-p-c',
-                            uid: crypto.randomUUID(),
+                            uid: randomUUID(),
                             callsign: "",
                             point: `${coord[1]},${coord[0]}`
                         }

@@ -7,7 +7,7 @@ import Err from '@openaddresses/batch-error';
 import archiver from 'archiver';
 import StreamZip from 'node-stream-zip'
 import { Readable } from 'node:stream';
-import { randomUUID } from 'node:crypto';
+import { v4 as randomUUID } from 'uuid';
 import CoT from './cot.js';
 import { CoTParser } from './parser.js';
 import xmljs from 'xml-js';
