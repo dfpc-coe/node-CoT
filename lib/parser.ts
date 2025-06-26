@@ -2,6 +2,7 @@ import protobuf from 'protobufjs';
 import Err from '@openaddresses/batch-error';
 import { xml2js, js2xml } from 'xml-js';
 import { diff } from 'json-diff-ts';
+import crypto from 'node:crypto';
 import type { Static } from '@sinclair/typebox';
 import type {
     Feature,
@@ -851,16 +852,30 @@ export class CoTParser {
                     cot.event.detail.link = [cot.event.detail.link]
                 }
 
+                cot.event.detail.__routeinfo = {
+                    __navcues: {
+                        __navcue: []
+                    }
+                }
+
                 for (const coord of feature.geometry.coordinates) {
                     cot.event.detail.link.push({
-                        _attributes: { point: `${coord[1]},${coord[0]}` }
+                        _attributes: {
+                            type: 'b-m-p-c',
+                            uid: crypto.randomUUID(),
+                            callsign: "",
+                            point: `${coord[1]},${coord[0]}`
+                        }
                     });
                 }
             } else if (feature.geometry.type === 'LineString') {
                 cot.event._attributes.type = 'u-d-f';
 
-                if (!cot.event.detail.link) cot.event.detail.link = [];
-                else if (!Array.isArray(cot.event.detail.link)) cot.event.detail.link = [cot.event.detail.link]
+                if (!cot.event.detail.link) {
+                    cot.event.detail.link = [];
+                } else if (!Array.isArray(cot.event.detail.link)) {
+                    cot.event.detail.link = [cot.event.detail.link]
+                }
 
                 for (const coord of feature.geometry.coordinates) {
                     cot.event.detail.link.push({

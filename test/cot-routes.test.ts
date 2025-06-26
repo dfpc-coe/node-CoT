@@ -467,6 +467,61 @@ test('Decode Route', (t) => {
     t.end();
 });
 
+test('Parser from LineString', (t) => {
+    const cot = CoTParser.from_geojson({
+        id: '6da80127-44d4-4bf0-89bd-ecd326afaef1',
+        type: 'Feature',
+        path: '/',
+        properties: {
+            callsign: 'Walking Alt Route 5',
+            type: 'b-m-r',
+        },
+        geometry: {
+            type: 'LineString',
+            coordinates: [
+                [ -108.547391197293, 38.5144413169673 ],
+                [ -108.546923921927, 38.5149532310605 ],
+                [ -108.546926767992, 38.5150249333408 ],
+                [ -108.546895974379, 38.5151394174434 ],
+            ]
+        }
+    });
+
+    if (!cot.raw.event.detail) {
+        t.fail('No Detail Section');
+    } else {
+        t.ok(cot.raw.event.detail['_flow-tags_']);
+        delete cot.raw.event.detail['_flow-tags_'];
+
+        if (cot.raw.event.detail.link && Array.isArray(cot.raw.event.detail.link)) {
+            cot.raw.event.detail.link.forEach((link, it) => {
+                link._attributes.uid = String(it);
+            });
+        }
+
+        t.deepEquals(cot.raw.event.detail, {
+            contact: {
+                _attributes: { callsign: 'Walking Alt Route 5' }
+            },
+            remarks: { _attributes: {}, _text: '' },
+            strokeColor: { _attributes: { value: -2130706688 } },
+            strokeWeight: { _attributes: { value: 3 } },
+            strokeStyle: { _attributes: { value: 'solid' } },
+            link: [
+                { _attributes: { type: 'b-m-p-c', uid: '0', callsign: '', point: '38.5144413169673,-108.547391197293' } },
+                { _attributes: { type: 'b-m-p-c', uid: '1', callsign: '', point: '38.5149532310605,-108.546923921927' } },
+                { _attributes: { type: 'b-m-p-c', uid: '2', callsign: '', point: '38.5150249333408,-108.546926767992' } },
+                { _attributes: { type: 'b-m-p-c', uid: '3', callsign: '', point: '38.5151394174434,-108.546895974379' } }
+            ],
+            __routeinfo: { __navcues: { __navcue: [] } },
+            labels_on: { _attributes: { value: false } },
+            tog: { _attributes: { enabled: '0' } }
+        });
+    }
+
+    t.end();
+});
+
 test('Decode Route (5.4 Additions)', (t) => {
     const cot = CoTParser.from_xml(`
 <event version="2.0" uid="9bb32cff-9eb2-4330-a9ba-a92ba01e9eb7" type="b-m-r" time="2025-06-26T00:03:05.328Z" start="2025-06-26T00:03:05.328Z" stale="2025-06-27T00:03:05.328Z" how="h-e" access="Undefined">
