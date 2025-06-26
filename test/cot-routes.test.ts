@@ -1,7 +1,7 @@
 import test from 'tape';
-import CoT, { CoTParser } from '../index.js';
+import CoT, { CoTParser, Route } from '../index.js';
 
-test('Decode Range & Bearing', (t) => {
+test('Decode Route', (t) => {
     const cot = new CoT({
         "event": {
             "_attributes": {
@@ -440,7 +440,7 @@ test('Decode Range & Bearing', (t) => {
                     [ -108.544236333091, 38.5172291006172 ],
                     [ -108.544165746257, 38.5173173331109 ],
                     [ -108.543976946151, 38.5174202795084 ],
-                    [ -108.543831758696, 38.5175036227552 ], 
+                    [ -108.543831758696, 38.5175036227552 ],
                     [ -108.543661143095, 38.517613542356 ],
                     [ -108.543325809711, 38.5178962265508 ],
                     [ -108.542564835311, 38.5179179531849 ],
@@ -463,6 +463,56 @@ test('Decode Range & Bearing', (t) => {
             }
         }, CoTParser.to_geojson(cot));
     }
+
+    t.end();
+});
+
+test('Decode Route (5.4 Additions)', (t) => {
+    const cot = CoTParser.from_xml(`
+<event version="2.0" uid="9bb32cff-9eb2-4330-a9ba-a92ba01e9eb7" type="b-m-r" time="2025-06-26T00:03:05.328Z" start="2025-06-26T00:03:05.328Z" stale="2025-06-27T00:03:05.328Z" how="h-e" access="Undefined">
+  <point lat="0.0" lon="0.0" hae="9999999.0" ce="9999999.0" le="9999999.0"/>
+  <detail>
+    <link uid="b21452d6-e790-4e62-94cf-ea4b2039d77b" callsign="Route 1 SP" type="b-m-p-w" point="39.739824,-108.6214369,2294.137" remarks="" relation="c"/>
+    <link uid="d54f26ac-45b1-4403-b917-ac22759ce51f" callsign="" type="b-m-p-c" point="39.8844583,-107.8598727,2558.013" remarks="" relation="c"/>
+    <link uid="ba83a98b-686f-45ca-84c6-bf24b0760b4b" callsign="" type="b-m-p-c" point="39.9832506,-107.0896848,3226.394" remarks="" relation="c"/>
+    <link uid="ab476fe0-7ac7-4a2a-9b2b-2c02b2a39ef2" callsign="" type="b-m-p-c" point="40.1245883,-107.4795999,2660.115" remarks="" relation="c"/>
+    <link uid="949e8175-fcb0-41c8-9547-de768f35d04b" callsign="" type="b-m-p-c" point="40.40795,-107.391659,2215.23" remarks="" relation="c"/>
+    <link uid="88c972aa-37ae-441e-b947-3c414a105d05" callsign="CP1" type="b-m-p-w" point="40.4424526,-106.8073534,2069.87" remarks="" relation="c"/>
+    <link uid="f68bab28-174d-48ba-93e4-d44df043bb2c" callsign="CP2" type="b-m-p-w" point="40.4201162,-106.3445289,2972.233" remarks="" relation="c"/>
+    <link uid="06580726-6036-4fa7-bc65-2557aa3cd119" callsign="" type="b-m-p-c" point="40.5270864,-106.0568542,2787.202" remarks="" relation="c"/>
+    <link uid="6ce419f7-3c0b-40f2-af48-abbc37f95b7d" callsign="" type="b-m-p-c" point="40.676681,-106.0420281,2507.621" remarks="" relation="c"/>
+    <link uid="0d245fd5-7381-45a0-9a67-3d814d0f11b0" callsign="TGT" type="b-m-p-w" point="40.8199031,-106.12258,2629.467" remarks="" relation="c"/>
+    <link_attr planningmethod="Infil" color="-65536" method="Walking" prefix="CP" style="0" type="On Foot" stroke="6" direction="Infil" routetype="Primary" order="Ascending Check Points"/>
+    <strokeColor value="-65536"/>
+    <strokeWeight value="6.24"/>
+    <strokeStyle value="solid"/>
+    <remarks/>
+    <contact callsign="Route 1"/>
+    <archive/>
+    <labels_on value="false"/>
+    <color value="-65536"/>
+    <creator uid="ANDROID-764679f74013dfe2" callsign="COTAK ADMIN Ingalls" time="2025-06-25T23:47:38.493Z" type="a-f-G-E-V-C"/>
+    <__routeinfo>
+      <__navcues>
+        <__navcue voice="Danger" id="0d245fd5-7381-45a0-9a67-3d814d0f11b0" text="Danger">
+          <trigger mode="d" value="70"/>
+        </__navcue>
+        <__navcue voice="Stop" id="88c972aa-37ae-441e-b947-3c414a105d05" text="Stop">
+          <trigger mode="d" value="70"/>
+        </__navcue>
+        <__navcue voice="Stay Right" id="b21452d6-e790-4e62-94cf-ea4b2039d77b" text="Stay Right">
+          <trigger mode="d" value="70"/>
+        </__navcue>
+        <__navcue voice="Speed Up" id="f68bab28-174d-48ba-93e4-d44df043bb2c" text="Speed Up">
+          <trigger mode="d" value="70"/>
+        </__navcue>
+      </__navcues>
+    </__routeinfo>
+  </detail>
+</event>
+    `)
+
+    new Route(cot);
 
     t.end();
 });
