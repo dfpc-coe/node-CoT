@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v13.3.0 - 2025-07-25
+
+- :rocket: Direct import of CoT Library
+
 ### v13.2.0 - 2025-07-25
 
 - :rocket: Web Compatible UUID generation
