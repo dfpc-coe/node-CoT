@@ -2,6 +2,7 @@ import protobuf from 'protobufjs';
 import Err from '@openaddresses/batch-error';
 import { xml2js, js2xml } from 'xml-js';
 import { diff } from 'json-diff-ts';
+import crypto from 'node:crypto';
 import type { Static } from '@sinclair/typebox';
 import type {
     Feature,
@@ -546,9 +547,9 @@ export class CoTParser {
      * Parse an ATAK compliant Protobuf to a JS Object
      */
     static from_proto(
-            raw: Uint8Array,
-            version = 1,
-            opts: CoTOptions = {} 
+        raw: Uint8Array,
+        version = 1,
+        opts: CoTOptions = {}
     ): CoT {
         const ProtoMessage = RootMessage.lookupType(`atakmap.commoncommo.protobuf.v${version}.TakMessage`)
 
@@ -842,11 +843,39 @@ export class CoTParser {
                 value: feature.properties['stroke-style']
             } };
 
-            if (feature.geometry.type === 'LineString') {
+            if (feature.geometry.type === 'LineString' && feature.properties.type === 'b-m-r') {
+                cot.event._attributes.type = 'b-m-r';
+
+                if (!cot.event.detail.link) {
+                    cot.event.detail.link = [];
+                } else if (!Array.isArray(cot.event.detail.link)) {
+                    cot.event.detail.link = [cot.event.detail.link]
+                }
+
+                cot.event.detail.__routeinfo = {
+                    __navcues: {
+                        __navcue: []
+                    }
+                }
+
+                for (const coord of feature.geometry.coordinates) {
+                    cot.event.detail.link.push({
+                        _attributes: {
+                            type: 'b-m-p-c',
+                            uid: crypto.randomUUID(),
+                            callsign: "",
+                            point: `${coord[1]},${coord[0]}`
+                        }
+                    });
+                }
+            } else if (feature.geometry.type === 'LineString') {
                 cot.event._attributes.type = 'u-d-f';
 
-                if (!cot.event.detail.link) cot.event.detail.link = [];
-                else if (!Array.isArray(cot.event.detail.link)) cot.event.detail.link = [cot.event.detail.link]
+                if (!cot.event.detail.link) {
+                    cot.event.detail.link = [];
+                } else if (!Array.isArray(cot.event.detail.link)) {
+                    cot.event.detail.link = [cot.event.detail.link]
+                }
 
                 for (const coord of feature.geometry.coordinates) {
                     cot.event.detail.link.push({

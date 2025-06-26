@@ -59,6 +59,28 @@ export const LinkAttributes = Type.Object({
     parent_callsign: Type.Optional(Type.String())
 })
 
+export const RouteInfoNavCueTrigger = Type.Object({
+    _attributes: Type.Object({
+        mode: Type.String(),
+        value: Type.String()
+    }),
+});
+
+export const RouteInfoNavCue = Type.Object({
+    _attributes: Type.Object({
+        id: Type.String(),
+        voice: Type.String(),
+        text: Type.String(),
+    }),
+    trigger: RouteInfoNavCueTrigger
+})
+
+export const RouteInfo = Type.Object({
+    __navcues: Type.Object({
+        __navcue: Type.Union([Type.Array(RouteInfoNavCue), RouteInfoNavCue])
+    })
+})
+
 export const Link = Type.Object({
     _attributes: LinkAttributes
 })
@@ -92,6 +114,7 @@ export const LinkAttrAttributes = Type.Object({
     color: Type.Optional(Type.Integer()),
     method: LinkAttrRouteMethod,
     prefix: Type.String(),
+    style: Type.Optional(Type.String()),
     stroke: Type.Optional(Type.String()),
     type: Type.Optional(Type.String()),
     routetype: LinkAttrRouteType,
@@ -144,7 +167,7 @@ export const GenericIntegerAttributes = Type.Object({
 
 export const GenericNumberAttributes = Type.Object({
     _attributes: Type.Optional(Type.Object({
-        value: Type.Optional(Type.Integer())
+        value: Type.Optional(Type.Number())
     }))
 })
 
@@ -554,6 +577,7 @@ export const Detail = Type.Object({
     '__video': Type.Optional(Video),
     '__geofence': Type.Optional(Geofence),
     '__milsym': Type.Optional(Milsym),
+    '__routeinfo': Type.Optional(RouteInfo),
     '__forcedelete': Type.Optional(ForceDelete),
     '_flow-tags_': Type.Optional(FlowTags),
     uid: Type.Optional(Uid),
