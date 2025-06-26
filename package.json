@@ -39,6 +39,7 @@
         "node-stream-zip": "^1.15.0",
         "protobufjs": "^7.3.0",
         "rimraf": "^6.0.0",
+        "uuid": "^11.1.0",
         "xml-js": "^1.6.11"
     },
     "devDependencies": {
