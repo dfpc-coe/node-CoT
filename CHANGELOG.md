@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v13.1.0 - 2025-07-25
+
+- :tada: Support parsing to Route format if type is set during `from_geojson`
+
 ### v13.0.0 - 2025-07-25
 
 - :tada: The base CoT object is now seperate from the Parser
