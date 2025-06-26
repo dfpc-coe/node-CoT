@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v13.2.0 - 2025-07-25
+
+- :rocket: Web Compatible UUID generation
+
 ### v13.1.0 - 2025-07-25
 
 - :tada: Support parsing to Route format if type is set during `from_geojson`
