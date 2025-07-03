@@ -12,24 +12,29 @@
 
 ### Pending Fixed
 
-### v13.3.0 - 2025-07-25
+### v13.4.0 - 2025-07-03
+
+- :tada: Add `Emergency` section to schema
+- :rocket: Infer `emergency` section in `from_geojson` if an Emergency CoT type is matched
+
+### v13.3.0 - 2025-06-25
 
 - :rocket: Direct import of CoT Library
 
-### v13.2.0 - 2025-07-25
+### v13.2.0 - 2025-06-25
 
 - :rocket: Web Compatible UUID generation
 
-### v13.1.0 - 2025-07-25
+### v13.1.0 - 2025-06-25
 
 - :tada: Support parsing to Route format if type is set during `from_geojson`
 
-### v13.0.0 - 2025-07-25
+### v13.0.0 - 2025-06-25
 
 - :tada: The base CoT object is now seperate from the Parser
 - :rocket: Migrate to/from calls to use `CoTParser` class
 
-### v12.37.0 - 2025-07-06
+### v12.37.0 - 2025-06-06
 
 - :tada: First pass at mapping MilSym
 
