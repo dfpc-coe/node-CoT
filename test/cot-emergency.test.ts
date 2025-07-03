@@ -252,3 +252,66 @@ test('COT Emergency - Ring The Bell - No Callsign', (t) => {
 
     t.end();
 });
+
+test('COT Emergency - GeoFence Breached', (t) => {
+    const cot = CoTParser.from_geojson({
+        id: '6da80127-44d4-4bf0-89bd-ecd326afaef1',
+        type: 'Feature',
+        properties: {
+            callsign: 'Example Emergency',
+            type: 'b-a-g',
+            how: 'm-g'
+        },
+        geometry: {
+            type: 'Point',
+            coordinates: [ -108.547391197293, 38.5144413169673 ]
+        }
+    })
+
+    if (!cot.raw.event.detail) {
+        t.fail('No Detail Section')
+    } else {
+        t.ok(cot.raw.event.detail['_flow-tags_']);
+        delete cot.raw.event.detail['_flow-tags_'];
+
+        t.deepEquals(cot.type(), 'b-a-g', 'Type should be b-a-g');
+
+        t.deepEquals(cot.raw.event.detail.emergency, {
+            _attributes: { type: 'Geo-fence Breached' },
+            _text: 'Example Emergency'
+        }, 'Detail should match expected values');
+    }
+
+    t.end();
+});
+
+test('COT Emergency - GeoFence Breached - No Callsign', (t) => {
+    const cot = CoTParser.from_geojson({
+        id: '6da80127-44d4-4bf0-89bd-ecd326afaef1',
+        type: 'Feature',
+        properties: {
+            type: 'b-a-g',
+            how: 'm-g'
+        },
+        geometry: {
+            type: 'Point',
+            coordinates: [ -108.547391197293, 38.5144413169673 ]
+        }
+    })
+
+    if (!cot.raw.event.detail) {
+        t.fail('No Detail Section')
+    } else {
+        t.ok(cot.raw.event.detail['_flow-tags_']);
+        delete cot.raw.event.detail['_flow-tags_'];
+
+        t.deepEquals(cot.type(), 'b-a-g', 'Type should be b-a-g');
+
+        t.deepEquals(cot.raw.event.detail.emergency, {
+            _attributes: { type: 'Geo-fence Breached' },
+            _text: 'UNKNOWN'
+        }, 'Detail should match expected values');
+    }
+
+    t.end();
+});
