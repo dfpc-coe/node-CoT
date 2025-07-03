@@ -669,6 +669,33 @@ export class CoTParser {
             }
         }
 
+        if (feature.properties.type === 'b-a-o-tbl') {
+            cot.event.detail.emergency = {
+                _attributes: { type: '911 Alert' },
+                _text: feature.properties.callsign || 'UNKNOWN'
+            }
+        } else if (feature.properties.type === 'b-a-o-can') {
+            cot.event.detail.emergency = {
+                _attributes: { cancel: true },
+                _text: feature.properties.callsign || 'UNKNOWN'
+            }
+        } else if (feature.properties.type === 'b-a-g') {
+            cot.event.detail.emergency = {
+                _attributes: { type: 'Geo-fence Breached' },
+                _text: feature.properties.callsign || 'UNKNOWN'
+            }
+        } else if (feature.properties.type === 'b-a-o-pan') {
+            cot.event.detail.emergency = {
+                _attributes: { type: 'Ring The Bell' },
+                _text: feature.properties.callsign || 'UNKNOWN'
+            }
+        } else if (feature.properties.type === 'b-a-o-opn') {
+            cot.event.detail.emergency = {
+                _attributes: { type: 'Troops In Contact' },
+                _text: feature.properties.callsign || 'UNKNOWN'
+            }
+        }
+
         if (feature.properties.takv) {
             cot.event.detail.takv = { _attributes: { ...feature.properties.takv } };
         }

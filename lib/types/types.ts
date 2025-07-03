@@ -81,6 +81,14 @@ export const RouteInfo = Type.Object({
     })
 })
 
+export const Emergency = Type.Object({
+    _attributes: Type.Object({
+        cancel: Type.Optional(Type.Boolean()),
+        type: Type.Optional(Type.String())
+    }),
+    _text: Type.String()
+});
+
 export const Link = Type.Object({
     _attributes: LinkAttributes
 })
@@ -581,6 +589,7 @@ export const Detail = Type.Object({
     '__forcedelete': Type.Optional(ForceDelete),
     '_flow-tags_': Type.Optional(FlowTags),
     uid: Type.Optional(Uid),
+    emergency: Type.Optional(Emergency),
     status: Type.Optional(Status),
     creator: Type.Optional(Creator),
     fileshare: Type.Optional(FileShare),
