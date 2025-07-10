@@ -12,6 +12,13 @@
 
 ### Pending Fixed
 
+### v13.4.0 - 2025-07-10
+
+- :rocket: Update Schema to support additional symbol properties
+- :tada: Add support for new circle type `u-r-b-c-c`
+- :rocket: Add support for Circle Style properties
+- :tada: Add support for `labels_on`
+
 ### v13.4.0 - 2025-07-03
 
 - :tada: Add `Emergency` section to schema
