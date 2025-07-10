@@ -885,7 +885,7 @@ export class CoTParser {
             } };
 
 
-            if (feature.geometry.type === 'Polygon' && ['u-d-c-c', 'u-r-b-c-c'].includes(feature.properties.type)) {
+            if (feature.geometry.type === 'Polygon' && feature.properties.type && ['u-d-c-c', 'u-r-b-c-c'].includes(feature.properties.type)) {
                 if (!feature.properties.shape || !feature.properties.shape.ellipse) {
                     throw new Err(400, null, `${feature.properties.type} (Circle) must define a feature.properties.shape.ellipse property`)
                 }
