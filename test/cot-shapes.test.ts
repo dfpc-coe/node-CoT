@@ -210,15 +210,11 @@ test('Basic Circle', (t) => {
                         },
                         Style:{
                             LineStyle: {
-                                _attributes:{
-                                    color: "FF7700FF",
-                                    width: 3
-                                }
+                                color: { _text: "FF7700FF" },
+                                width: { _text: 3 }
                             },
                             PolyStyle: {
-                                _attributes: {
-                                    color: "00FF0000"
-                                }
+                                color: { _text: "00FF0000" }
                             }
                         }
                     }
