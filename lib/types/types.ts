@@ -263,7 +263,7 @@ export const ShapeLink = Type.Object({
 export const Shape = Type.Object({
     polyline: Type.Optional(ShapePolyLine),
     ellipse: Type.Optional(ShapeEllipse),
-    link: Type.Union([Type.Array(ShapeLink), ShapeLink])
+    link: Type.Optional(Type.Union([Type.Array(ShapeLink), ShapeLink]))
 })
 
 export const MissionAttributes = Type.Object({
