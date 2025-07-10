@@ -36,7 +36,20 @@ export default class Color {
     }
 
     as_hex(): string {
-        return _color.rgb(this.r, this.g, this.b).hex();
+        return _color({
+            r: this.r,
+            g: this.g,
+            b: this.b,
+         }).hex();
+    }
+
+    as_hexa(): string {
+        return _color({
+            r: this.r,
+            g: this.g,
+            b: this.b,
+            alpha: this.a
+         }).hexa();
     }
 
     as_32bit(): number {

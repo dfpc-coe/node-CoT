@@ -890,7 +890,36 @@ export class CoTParser {
                     throw new Err(400, null, `${feature.properties.type} (Circle) must define a feature.properties.shape.ellipse property`)
                 }
 
-                cot.event.detail.shape = { ellipse: { _attributes: feature.properties.shape.ellipse } }
+                const strokeColor = cot.event.detail.strokeColor ? new Color(cot.event.detail.strokeColor._attributes.value) : new Color('#00FF0000');
+                const fillColor = cot.event.detail.fillColor ? new Color(cot.event.detail.fillColor._attributes.value) : new Color('#00FF0000');
+
+                cot.event.detail.shape = {
+                    ellipse: {
+                        _attributes: feature.properties.shape.ellipse
+                    },
+                    link: {
+                        _attributes: {
+                            uid: `${cot.event._attributes.uid}.Style`,
+                            type: 'b-x-KmlStyle',
+                            relation: 'p-c'
+                        },
+                        Style: {
+                            LineStyle: {
+                                _attributes: {
+                                    color: strokeColor.as_hexa().slice(1),
+                                    width: cot.event.detail.strokeWeight ? cot.event.detail.strokeWeight._attributes.value : 3
+                                }
+                            },
+                            PolyStyle: {
+                                _attributes: {
+                                    color: fillColor.as_hexa().slice(1),
+                                }
+                            }
+                        }
+                    }
+                }
+
+                console.error(JSON.stringify(cot.event.detail.shape));
             } else if (feature.geometry.type === 'LineString' && feature.properties.type === 'b-m-r') {
                 cot.event._attributes.type = 'b-m-r';
 
