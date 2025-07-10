@@ -84,6 +84,7 @@ test('Decode Range & Bearing', (t) => {
                 center: [ -108.7395013, 39.0981196, 0 ],
                 type: 'u-rb-a',
                 how: 'h-e',
+                labels: false,
                 time: '2024-08-30T22:28:02Z',
                 start: '2024-08-30T22:28:02Z',
                 stale: '2024-08-31T22:28:02Z',

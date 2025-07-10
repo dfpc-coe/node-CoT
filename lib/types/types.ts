@@ -233,9 +233,37 @@ export const ShapeEllipse = Type.Object({
     _attributes: ShapeEllipseAttributes,
 })
 
+export const ShapeLink = Type.Object({
+    _attributes: Type.Object({
+        uid: Type.Optional(Type.String()),
+        type: Type.Optional(Type.String()),
+        relation: Type.Optional(Type.String()),
+    }),
+
+    Style: Type.Optional(Type.Object({
+        LineStyle: Type.Optional(Type.Object({
+            color: Type.Optional(Type.Object({
+                _text: Type.String()
+            })),
+            width: Type.Optional(Type.Object({
+                _text: Type.Number()
+            }))
+        })),
+        PolyStyle: Type.Optional(Type.Object({
+            color: Type.Optional(Type.Object({
+                _text: Type.String()
+            })),
+            width: Type.Optional(Type.Object({
+                _text: Type.Number()
+            }))
+        }))
+    }))
+});
+
 export const Shape = Type.Object({
     polyline: Type.Optional(ShapePolyLine),
-    ellipse: Type.Optional(ShapeEllipse)
+    ellipse: Type.Optional(ShapeEllipse),
+    link: Type.Optional(Type.Union([Type.Array(ShapeLink), ShapeLink]))
 })
 
 export const MissionAttributes = Type.Object({
@@ -577,6 +605,13 @@ export const UserIcon = Type.Object({
 
 export const ForceDelete = Type.Object({})
 
+export const ShapeExtras = Type.Object({
+    _attributes: Type.Object({
+        cpvis: Type.Optional(Type.Boolean()),
+        editable: Type.Optional(Type.Boolean()),
+    })
+});
+
 export const Detail = Type.Object({
     contact: Type.Optional(Contact),
     tog: Type.Optional(TogAttributes),
@@ -587,6 +622,7 @@ export const Detail = Type.Object({
     '__milsym': Type.Optional(Milsym),
     '__routeinfo': Type.Optional(RouteInfo),
     '__forcedelete': Type.Optional(ForceDelete),
+    '__shapeExtras': Type.Optional(ShapeExtras),
     '_flow-tags_': Type.Optional(FlowTags),
     uid: Type.Optional(Uid),
     emergency: Type.Optional(Emergency),
@@ -596,7 +632,7 @@ export const Detail = Type.Object({
     ackrequest: Type.Optional(ACKRequest),
     remarks: Type.Optional(Remarks),
     precisionlocation: Type.Optional(PrecisionLocation),
-    color: Type.Optional(ColorAttributes),
+    color: Type.Optional(Type.Union([Type.Array(ColorAttributes), ColorAttributes])),
     strokeColor: Type.Optional(GenericIntegerAttributes),
     archive: Type.Optional(Type.Union([GenericStringAttributes, Type.Array(GenericStringAttributes)])),
     strokeWeight: Type.Optional(GenericNumberAttributes),
