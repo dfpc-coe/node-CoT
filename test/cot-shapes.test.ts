@@ -167,6 +167,10 @@ test('Basic Circle', (t) => {
             },
             'marker-color': '#FF7700',
             'marker-opacity': 1,
+            "stroke": "#FF7700",
+            "stroke-opacity": 1,
+            "stroke-width": 3,
+            "stroke-style": "solid",
             metadata: {}
         },
         geometry: {
@@ -191,7 +195,7 @@ test('Basic Circle', (t) => {
                 archive: { _attributes: {} },
                 creator: { _attributes: { uid: 'ANDROID-764679f74013dfe2', callsign: 'COTAK Admin Ingalls', time: '2025-07-09T22:12:06.038Z', type: 'a-f-G-E-V-C' } },
                 precisionlocation: { _attributes: { altsrc: 'DTED0' } },
-                strokeColor: { "_attributes": { "value": -2130706688 } },
+                strokeColor: { "_attributes": { "value": -35072 } },
                 strokeWeight: { "_attributes": { "value": 3 } },
                 labels_on: { "_attributes": { "value": true } },
                 tog: { "_attributes": { "enabled": "0" } },
