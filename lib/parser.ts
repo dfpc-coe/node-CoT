@@ -15,6 +15,7 @@ import type {
     MartiDestAttributes,
     Link,
     LinkAttributes,
+    ColorAttributes,
 } from './types/types.js'
 import {
     InputFeature,
@@ -531,10 +532,29 @@ export class CoTParser {
             }
         }
 
-        if (raw.event.detail.color && raw.event.detail.color._attributes && raw.event.detail.color._attributes.argb) {
-            const color = new Color(Number(raw.event.detail.color._attributes.argb));
-            feat.properties['marker-color'] = color.as_hex();
-            feat.properties['marker-opacity'] = color.as_opacity() / 255;
+        if (raw.event.detail.color) {
+            let color: Static<typeof ColorAttributes> | null = null;
+
+            if (Array.isArray(raw.event.detail.color) && raw.event.detail.color.length > 1) {
+                color = raw.event.detail.color[0];
+                if (!color._attributes) color._attributes = {};
+
+                for (let i = raw.event.detail.color.length - 1; i >= 1; i--) {
+                    if (raw.event.detail.color[i]._attributes) {
+                        Object.assign(color._attributes, raw.event.detail.color[i]._attributes);
+                    }
+                }
+            } else if (Array.isArray(raw.event.detail.color) && raw.event.detail.color.length === 1) {
+                color = raw.event.detail.color[0];
+            } else if (!Array.isArray(raw.event.detail.color)) {
+                color = raw.event.detail.color;
+            }
+
+            if (color && color._attributes && color._attributes.argb) {
+                const parsedColor = new Color(Number(color._attributes.argb));
+                feat.properties['marker-color'] = parsedColor.as_hex();
+                feat.properties['marker-opacity'] = parsedColor.as_opacity() / 255;
+            }
         }
 
         feat.properties.metadata = cot.metadata;
@@ -838,7 +858,13 @@ export class CoTParser {
             if (feature.properties['marker-color']) {
                 const color = new Color(feature.properties['marker-color'] || -1761607936);
                 color.a = feature.properties['marker-opacity'] !== undefined ? feature.properties['marker-opacity'] * 255 : 128;
-                cot.event.detail.color = { _attributes: { argb: color.as_32bit() } };
+
+                cot.event.detail.color = {
+                    _attributes: {
+                        argb: color.as_32bit(),
+                        value: color.as_32bit()
+                    }
+                };
             }
         } else if (feature.geometry.type === 'Polygon' && feature.properties.type === 'u-d-c-c') {
             if (!feature.properties.shape || !feature.properties.shape.ellipse) {

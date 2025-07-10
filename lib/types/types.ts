@@ -632,7 +632,7 @@ export const Detail = Type.Object({
     ackrequest: Type.Optional(ACKRequest),
     remarks: Type.Optional(Remarks),
     precisionlocation: Type.Optional(PrecisionLocation),
-    color: Type.Optional(ColorAttributes),
+    color: Type.Optional(Type.Union([Type.Array(ColorAttributes), ColorAttributes])),
     strokeColor: Type.Optional(GenericIntegerAttributes),
     archive: Type.Optional(Type.Union([GenericStringAttributes, Type.Array(GenericStringAttributes)])),
     strokeWeight: Type.Optional(GenericNumberAttributes),
