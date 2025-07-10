@@ -74,6 +74,7 @@ export const Properties = Type.Object({
     course: Type.Optional(Type.Number()),
     slope: Type.Optional(Type.Number()),
     speed: Type.Optional(Type.Number()),
+    labels: Type.Optional(Type.Boolean()),
     'marker-color': Type.Optional(Type.String()),
     'marker-opacity': Type.Optional(Type.Number({ minimum: 0, maximum: 1 })),
     'stroke': Type.Optional(Type.String()),

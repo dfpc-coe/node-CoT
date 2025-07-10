@@ -261,6 +261,10 @@ export class CoTParser {
             feat.properties.bearing = raw.event.detail.bearing._attributes.value;
         }
 
+        if (raw.event.detail.labels_on && raw.event.detail.labels_on._attributes && raw.event.detail.labels_on._attributes.value !== undefined) {
+            feat.properties.labels = raw.event.detail.labels_on._attributes.value;
+        }
+
         if (raw.event.detail.__video && raw.event.detail.__video._attributes) {
             feat.properties.video = raw.event.detail.__video._attributes;
 
@@ -402,27 +406,52 @@ export class CoTParser {
             feat.properties.precisionlocation = raw.event.detail.precisionlocation._attributes;
         }
 
-        // Line or Polygon style types
+        if (raw.event.detail.strokeColor && raw.event.detail.strokeColor._attributes && raw.event.detail.strokeColor._attributes.value) {
+            const stroke = new Color(Number(raw.event.detail.strokeColor._attributes.value));
+            feat.properties.stroke = stroke.as_hex();
+            feat.properties['stroke-opacity'] = stroke.as_opacity() / 255;
+        }
+
+        if (raw.event.detail.strokeWeight && raw.event.detail.strokeWeight._attributes && raw.event.detail.strokeWeight._attributes.value) {
+            feat.properties['stroke-width'] = Number(raw.event.detail.strokeWeight._attributes.value);
+        }
+
+        if (raw.event.detail.strokeStyle && raw.event.detail.strokeStyle._attributes && raw.event.detail.strokeStyle._attributes.value) {
+            feat.properties['stroke-style'] = raw.event.detail.strokeStyle._attributes.value;
+        }
+
+        if (raw.event.detail.color) {
+            let color: Static<typeof ColorAttributes> | null = null;
+
+            if (Array.isArray(raw.event.detail.color) && raw.event.detail.color.length > 1) {
+                color = raw.event.detail.color[0];
+                if (!color._attributes) color._attributes = {};
+
+                for (let i = raw.event.detail.color.length - 1; i >= 1; i--) {
+                    if (raw.event.detail.color[i]._attributes) {
+                        Object.assign(color._attributes, raw.event.detail.color[i]._attributes);
+                    }
+                }
+            } else if (Array.isArray(raw.event.detail.color) && raw.event.detail.color.length === 1) {
+                color = raw.event.detail.color[0];
+            } else if (!Array.isArray(raw.event.detail.color)) {
+                color = raw.event.detail.color;
+            }
+
+            if (color && color._attributes && color._attributes.argb) {
+                const parsedColor = new Color(Number(color._attributes.argb));
+                feat.properties['marker-color'] = parsedColor.as_hex();
+                feat.properties['marker-opacity'] = parsedColor.as_opacity() / 255;
+            }
+        }
+
+        // Line, Polygon style types
         if (['u-d-f', 'u-d-r', 'b-m-r', 'u-rb-a'].includes(raw.event._attributes.type) && Array.isArray(raw.event.detail.link)) {
             const coordinates = [];
 
             for (const l of raw.event.detail.link) {
                 if (!l._attributes.point) continue;
                 coordinates.push(l._attributes.point.split(',').map((p: string) => { return Number(p.trim()) }).splice(0, 2).reverse());
-            }
-
-            if (raw.event.detail.strokeColor && raw.event.detail.strokeColor._attributes && raw.event.detail.strokeColor._attributes.value) {
-                const stroke = new Color(Number(raw.event.detail.strokeColor._attributes.value));
-                feat.properties.stroke = stroke.as_hex();
-                feat.properties['stroke-opacity'] = stroke.as_opacity() / 255;
-            }
-
-            if (raw.event.detail.strokeWeight && raw.event.detail.strokeWeight._attributes && raw.event.detail.strokeWeight._attributes.value) {
-                feat.properties['stroke-width'] = Number(raw.event.detail.strokeWeight._attributes.value);
-            }
-
-            if (raw.event.detail.strokeStyle && raw.event.detail.strokeStyle._attributes && raw.event.detail.strokeStyle._attributes.value) {
-                feat.properties['stroke-style'] = raw.event.detail.strokeStyle._attributes.value;
             }
 
             // Range & Bearing Line
@@ -465,12 +494,12 @@ export class CoTParser {
                     coordinates
                 }
             }
-        } else if (raw.event._attributes.type.startsWith('u-d-c-c')) {
-            if (!raw.event.detail.shape) throw new Err(400, null, 'u-d-c-c (Circle) must define shape value')
+        } else if (raw.event._attributes.type.startsWith('u-d-c-c') || raw.event._attributes.type.startsWith('u-r-b-c-c')) {
+            if (!raw.event.detail.shape) throw new Err(400, null, `${raw.event._attributes.type} (Circle) must define shape value`)
             if (
                 !raw.event.detail.shape.ellipse
                 || !raw.event.detail.shape.ellipse._attributes
-            ) throw new Err(400, null, 'u-d-c-c (Circle) must define ellipse shape value')
+            ) throw new Err(400, null, `${raw.event._attributes.type} (Circle) must define ellipse shape value`)
 
             const ellipse = {
                 major: Number(raw.event.detail.shape.ellipse._attributes.major),
@@ -516,7 +545,6 @@ export class CoTParser {
                 raw.event.detail.shape
                 && raw.event.detail.shape.polyline
                 && raw.event.detail.shape.polyline._attributes
-                && raw.event.detail.shape.polyline._attributes
             ) {
                 if (raw.event.detail.shape.polyline._attributes.fillColor) {
                     const fill = new Color(Number(raw.event.detail.shape.polyline._attributes.fillColor));
@@ -529,31 +557,6 @@ export class CoTParser {
                     feat.properties.stroke = stroke.as_hex();
                     feat.properties['stroke-opacity'] = stroke.as_opacity() / 255;
                 }
-            }
-        }
-
-        if (raw.event.detail.color) {
-            let color: Static<typeof ColorAttributes> | null = null;
-
-            if (Array.isArray(raw.event.detail.color) && raw.event.detail.color.length > 1) {
-                color = raw.event.detail.color[0];
-                if (!color._attributes) color._attributes = {};
-
-                for (let i = raw.event.detail.color.length - 1; i >= 1; i--) {
-                    if (raw.event.detail.color[i]._attributes) {
-                        Object.assign(color._attributes, raw.event.detail.color[i]._attributes);
-                    }
-                }
-            } else if (Array.isArray(raw.event.detail.color) && raw.event.detail.color.length === 1) {
-                color = raw.event.detail.color[0];
-            } else if (!Array.isArray(raw.event.detail.color)) {
-                color = raw.event.detail.color;
-            }
-
-            if (color && color._attributes && color._attributes.argb) {
-                const parsedColor = new Color(Number(color._attributes.argb));
-                feat.properties['marker-color'] = parsedColor.as_hex();
-                feat.properties['marker-opacity'] = parsedColor.as_opacity() / 255;
             }
         }
 
@@ -849,38 +852,23 @@ export class CoTParser {
             throw new Err(400, null, 'Unsupported Geometry Type');
         }
 
+        // This isn't specific to point as the color can apply to the centroid point
+        if (feature.properties['marker-color']) {
+            const color = new Color(feature.properties['marker-color'] || -1761607936);
+            color.a = feature.properties['marker-opacity'] !== undefined ? feature.properties['marker-opacity'] * 255 : 128;
+
+            cot.event.detail.color = {
+                _attributes: {
+                    argb: color.as_32bit(),
+                    value: color.as_32bit()
+                }
+            };
+        }
+
         if (feature.geometry.type === 'Point') {
             cot.event.point._attributes.lon = feature.geometry.coordinates[0];
             cot.event.point._attributes.lat = feature.geometry.coordinates[1];
             cot.event.point._attributes.hae = feature.geometry.coordinates[2] || 0.0;
-
-
-            if (feature.properties['marker-color']) {
-                const color = new Color(feature.properties['marker-color'] || -1761607936);
-                color.a = feature.properties['marker-opacity'] !== undefined ? feature.properties['marker-opacity'] * 255 : 128;
-
-                cot.event.detail.color = {
-                    _attributes: {
-                        argb: color.as_32bit(),
-                        value: color.as_32bit()
-                    }
-                };
-            }
-        } else if (feature.geometry.type === 'Polygon' && feature.properties.type === 'u-d-c-c') {
-            if (!feature.properties.shape || !feature.properties.shape.ellipse) {
-                throw new Err(400, null, 'u-d-c-c (Circle) must define a feature.properties.shape.ellipse property')
-            }
-            cot.event.detail.shape = { ellipse: { _attributes: feature.properties.shape.ellipse } }
-
-            if (feature.properties.center) {
-                cot.event.point._attributes.lon = feature.properties.center[0];
-                cot.event.point._attributes.lat = feature.properties.center[1];
-            } else {
-                const centre = PointOnFeature(feature as AllGeoJSON);
-                cot.event.point._attributes.lon = centre.geometry.coordinates[0];
-                cot.event.point._attributes.lat = centre.geometry.coordinates[1];
-                cot.event.point._attributes.hae = 0.0;
-            }
         } else if (['Polygon', 'LineString'].includes(feature.geometry.type)) {
             const stroke = new Color(feature.properties.stroke || -1761607936);
             stroke.a = feature.properties['stroke-opacity'] !== undefined ? feature.properties['stroke-opacity'] * 255 : 128;
@@ -896,7 +884,14 @@ export class CoTParser {
                 value: feature.properties['stroke-style']
             } };
 
-            if (feature.geometry.type === 'LineString' && feature.properties.type === 'b-m-r') {
+
+            if (feature.geometry.type === 'Polygon' && ['u-d-c-c', 'u-r-b-c-c'].includes(feature.properties.type)) {
+                if (!feature.properties.shape || !feature.properties.shape.ellipse) {
+                    throw new Err(400, null, `${feature.properties.type} (Circle) must define a feature.properties.shape.ellipse property`)
+                }
+
+                cot.event.detail.shape = { ellipse: { _attributes: feature.properties.shape.ellipse } }
+            } else if (feature.geometry.type === 'LineString' && feature.properties.type === 'b-m-r') {
                 cot.event._attributes.type = 'b-m-r';
 
                 if (!cot.event.detail.link) {
@@ -953,7 +948,12 @@ export class CoTParser {
                 cot.event.detail.fillColor = { _attributes: { value: fill.as_32bit() } };
             }
 
-            cot.event.detail.labels_on = { _attributes: { value: false } };
+            if (feature.properties.labels) {
+                cot.event.detail.labels_on = { _attributes: { value: feature.properties.labels } };
+            } else {
+                cot.event.detail.labels_on = { _attributes: { value: false } };
+            }
+
             cot.event.detail.tog = { _attributes: { enabled: '0' } };
 
             if (feature.properties.center && Array.isArray(feature.properties.center) && feature.properties.center.length >= 2) {
