@@ -12,7 +12,7 @@
 
 ### Pending Fixed
 
-### v13.4.0 - 2025-07-10
+### v13.5.0 - 2025-07-10
 
 - :rocket: Update Schema to support additional symbol properties
 - :tada: Add support for new circle type `u-r-b-c-c`
