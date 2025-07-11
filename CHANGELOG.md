@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v13.6.0 - 2025-07-10
+
+- :rocket: Include KML Styling
+
 ### v13.5.0 - 2025-07-10
 
 - :rocket: Update Schema to support additional symbol properties
