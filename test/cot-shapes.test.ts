@@ -200,7 +200,25 @@ test('Basic Circle', (t) => {
                 labels_on: { "_attributes": { "value": true } },
                 tog: { "_attributes": { "enabled": "0" } },
                 strokeStyle: { "_attributes": { "value": "solid" } },
-                shape: { "ellipse": { "_attributes": { "major": 185753.64687066682, "minor": 185753.64687066682, "angle": 360 } } },
+                shape: {
+                    ellipse: { "_attributes": { "major": 185753.64687066682, "minor": 185753.64687066682, "angle": 360 } },
+                    link: {
+                        _attributes: {
+                            uid: "96bba41c-e6fd-44d5-be90-8d816c6b873b.Style",
+                            type:"b-x-KmlStyle",
+                            relation:"p-c"
+                        },
+                        Style:{
+                            LineStyle: {
+                                color: { _text: "FF7700FF" },
+                                width: { _text: 3 }
+                            },
+                            PolyStyle: {
+                                color: { _text: "00FF0000" }
+                            }
+                        }
+                    }
+                },
                 remarks: { _attributes: {}, _text: '' },
                 color: { _attributes: { argb: -35072, value: -35072 } },
             }
