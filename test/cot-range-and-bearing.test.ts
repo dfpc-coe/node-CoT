@@ -1,7 +1,7 @@
 import test from 'tape';
 import CoT, { CoTParser } from '../index.js';
 
-test('Decode Range & Bearing', (t) => {
+test('Decode Range & Bearing', async (t) => {
     const cot = new CoT({
         "event": {
             "_attributes": {
@@ -74,7 +74,7 @@ test('Decode Range & Bearing', (t) => {
         t.ok(cot.raw.event.detail['_flow-tags_']);
         delete cot.raw.event.detail['_flow-tags_'];
 
-        t.deepEquals(CoTParser.to_geojson(cot), {
+        t.deepEquals(await CoTParser.to_geojson(cot), {
             id: 'ebbf42a7-ea71-43a1-baf6-e259c3d115bf',
             type: 'Feature',
             path: '/',

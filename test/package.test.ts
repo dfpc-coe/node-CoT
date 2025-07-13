@@ -39,7 +39,7 @@ test(`DataPackage CoT Parsing: CameraCOTs.zip`, async (t) => {
 test(`DataPackage CoT Writing`, async (t) => {
     const pkg = new DataPackage();
 
-    pkg.addCoT(CoTParser.from_geojson({
+    pkg.addCoT(await CoTParser.from_geojson({
         id: '123',
         type: 'Feature',
         properties: {
@@ -90,7 +90,7 @@ test(`DataPackage CoT Writing`, async (t) => {
 test(`DataPackage CoT Writing`, async (t) => {
     const pkg = new DataPackage();
 
-    pkg.addCoT(CoTParser.from_geojson({
+    pkg.addCoT(await CoTParser.from_geojson({
         id: '123',
         type: 'Feature',
         properties: {

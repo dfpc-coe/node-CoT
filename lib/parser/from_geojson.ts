@@ -1,11 +1,6 @@
-import protobuf from 'protobufjs';
 import Err from '@openaddresses/batch-error';
 import { v4 as randomUUID } from 'uuid';
 import type { Static } from '@sinclair/typebox';
-import type {
-    Feature,
-    Polygon,
-} from '../types/feature.js';
 import type {
     LinkAttributes,
 } from '../types/types.js'
@@ -20,12 +15,6 @@ import Color from '../utils/color.js';
 import JSONCoT from '../types/types.js'
 import CoT from '../cot.js';
 import type { CoTOptions } from '../cot.js';
-import fs from 'fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-
-// GeoJSON Geospatial ops will truncate to the below
-const COORDINATE_PRECISION = 6;
 
 /**
  * Return an CoT Message given a GeoJSON Feature
@@ -58,8 +47,12 @@ export default async function from_geojson(
         }
     };
 
-    if (feature.id) cot.event._attributes.uid = String(feature.id);
-    if (feature.properties.callsign && !feature.id) cot.event._attributes.uid = feature.properties.callsign;
+    if (feature.id) {
+        cot.event._attributes.uid = String(feature.id);
+    } else {
+        cot.event._attributes.uid = randomUUID();
+    }
+
     if (!cot.event.detail) cot.event.detail = {};
 
     if (feature.properties.droid) {

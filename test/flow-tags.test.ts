@@ -2,10 +2,10 @@ import test from 'tape';
 import { CoTParser } from '../index.js';
 import fs from 'node:fs';
 
-test('FlowTags - Basic', (t) => {
+test('FlowTags - Basic', async (t) => {
     const pkg = JSON.parse(String(fs.readFileSync(new URL('../package.json', import.meta.url))));
 
-    const cot = CoTParser.from_geojson({
+    const cot = await CoTParser.from_geojson({
         "id": "123",
         "type": "Feature",
         "path": "/",

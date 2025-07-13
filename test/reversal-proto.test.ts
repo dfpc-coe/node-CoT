@@ -9,17 +9,17 @@ import { fileURLToPath } from 'node:url';
 for (const fixturename of await fs.readdir(new URL('./fixtures/', import.meta.url))) {
     test(`Protobuf Reversal Tests: ${fixturename}`, async (t) => {
         const fixture: Static<typeof Feature> = JSON.parse(String(await fs.readFile(path.join(path.parse(fileURLToPath(import.meta.url)).dir, 'fixtures/', fixturename))));
-        const geo = CoTParser.from_geojson(fixture)
-        const intermediate = CoTParser.to_proto(geo);
-        const output = CoTParser.from_proto(intermediate);
-        t.deepEquals(fixture, CoTParser.to_geojson(output), fixturename);
+        const geo = await CoTParser.from_geojson(fixture)
+        const intermediate = await CoTParser.to_proto(geo);
+        const output = await CoTParser.from_proto(intermediate);
+        t.deepEquals(fixture, await CoTParser.to_geojson(output), fixturename);
 
         t.end();
     });
 }
 
 // Ref: https://github.com/dfpc-coe/node-CoT/issues/55
-test('Protobuf Multiple Calls', (t) => {
+test('Protobuf Multiple Calls', async (t) => {
     const cot = new CoT({
         event: {
             _attributes: {
@@ -51,9 +51,9 @@ test('Protobuf Multiple Calls', (t) => {
         },
     })
 
-    const cot2 = CoTParser.from_proto(CoTParser.to_proto(cot))
+    const cot2 = await CoTParser.from_proto(await CoTParser.to_proto(cot))
     t.deepEqual(cot2.raw.event.detail?.contact?._attributes.callsign, 'sign')
-    const cot3 = CoTParser.from_proto(CoTParser.to_proto(cot))
+    const cot3 = await CoTParser.from_proto(await CoTParser.to_proto(cot))
     t.deepEqual(cot3.raw.event.detail?.contact?._attributes.callsign, 'sign')
 
     t.end();

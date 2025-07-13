@@ -1,8 +1,8 @@
 import test from 'tape';
 import { CoTParser } from '../index.js';
 
-test('COT Emergency - Troops in Contact', (t) => {
-    const cot = CoTParser.from_geojson({
+test('COT Emergency - Troops in Contact', async (t) => {
+    const cot = await CoTParser.from_geojson({
         id: '6da80127-44d4-4bf0-89bd-ecd326afaef1',
         type: 'Feature',
         properties: {
@@ -33,8 +33,8 @@ test('COT Emergency - Troops in Contact', (t) => {
     t.end();
 });
 
-test('COT Emergency - Troops in Contact - No Callsign', (t) => {
-    const cot = CoTParser.from_geojson({
+test('COT Emergency - Troops in Contact - No Callsign', async (t) => {
+    const cot = await CoTParser.from_geojson({
         id: '6da80127-44d4-4bf0-89bd-ecd326afaef1',
         type: 'Feature',
         properties: {
@@ -64,8 +64,8 @@ test('COT Emergency - Troops in Contact - No Callsign', (t) => {
     t.end();
 });
 
-test('COT Emergency - 911 Alert', (t) => {
-    const cot = CoTParser.from_geojson({
+test('COT Emergency - 911 Alert', async (t) => {
+    const cot = await CoTParser.from_geojson({
         id: '6da80127-44d4-4bf0-89bd-ecd326afaef1',
         type: 'Feature',
         properties: {
@@ -96,8 +96,8 @@ test('COT Emergency - 911 Alert', (t) => {
     t.end();
 });
 
-test('COT Emergency - 911 Alert - No Callsign', (t) => {
-    const cot = CoTParser.from_geojson({
+test('COT Emergency - 911 Alert - No Callsign', async (t) => {
+    const cot = await CoTParser.from_geojson({
         id: '6da80127-44d4-4bf0-89bd-ecd326afaef1',
         type: 'Feature',
         properties: {
@@ -127,8 +127,8 @@ test('COT Emergency - 911 Alert - No Callsign', (t) => {
     t.end();
 });
 
-test('COT Emergency - Cancel', (t) => {
-    const cot = CoTParser.from_geojson({
+test('COT Emergency - Cancel', async (t) => {
+    const cot = await CoTParser.from_geojson({
         id: '6da80127-44d4-4bf0-89bd-ecd326afaef1',
         type: 'Feature',
         properties: {
@@ -159,8 +159,8 @@ test('COT Emergency - Cancel', (t) => {
     t.end();
 });
 
-test('COT Emergency - Cancel - No Callsign', (t) => {
-    const cot = CoTParser.from_geojson({
+test('COT Emergency - Cancel - No Callsign', async (t) => {
+    const cot = await CoTParser.from_geojson({
         id: '6da80127-44d4-4bf0-89bd-ecd326afaef1',
         type: 'Feature',
         properties: {
@@ -190,8 +190,8 @@ test('COT Emergency - Cancel - No Callsign', (t) => {
     t.end();
 });
 
-test('COT Emergency - Ring The Bell', (t) => {
-    const cot = CoTParser.from_geojson({
+test('COT Emergency - Ring The Bell', async (t) => {
+    const cot = await CoTParser.from_geojson({
         id: '6da80127-44d4-4bf0-89bd-ecd326afaef1',
         type: 'Feature',
         properties: {
@@ -222,8 +222,8 @@ test('COT Emergency - Ring The Bell', (t) => {
     t.end();
 });
 
-test('COT Emergency - Ring The Bell - No Callsign', (t) => {
-    const cot = CoTParser.from_geojson({
+test('COT Emergency - Ring The Bell - No Callsign', async (t) => {
+    const cot = await CoTParser.from_geojson({
         id: '6da80127-44d4-4bf0-89bd-ecd326afaef1',
         type: 'Feature',
         properties: {
@@ -253,8 +253,8 @@ test('COT Emergency - Ring The Bell - No Callsign', (t) => {
     t.end();
 });
 
-test('COT Emergency - GeoFence Breached', (t) => {
-    const cot = CoTParser.from_geojson({
+test('COT Emergency - GeoFence Breached', async (t) => {
+    const cot = await CoTParser.from_geojson({
         id: '6da80127-44d4-4bf0-89bd-ecd326afaef1',
         type: 'Feature',
         properties: {
@@ -285,8 +285,8 @@ test('COT Emergency - GeoFence Breached', (t) => {
     t.end();
 });
 
-test('COT Emergency - GeoFence Breached - No Callsign', (t) => {
-    const cot = CoTParser.from_geojson({
+test('COT Emergency - GeoFence Breached - No Callsign', async (t) => {
+    const cot = await CoTParser.from_geojson({
         id: '6da80127-44d4-4bf0-89bd-ecd326afaef1',
         type: 'Feature',
         properties: {

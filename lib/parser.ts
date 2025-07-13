@@ -87,7 +87,7 @@ export class CoTParser {
      * Note: This diffs based on GeoJSON Representation of message
      *       So if unknown properties are present they will be excluded from the diff
      */
-    static isDiff(
+    static async isDiff(
         aCoT: CoT,
         bCoT: CoT,
         opts = {
