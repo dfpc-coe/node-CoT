@@ -8,7 +8,8 @@
     "exports": {
         ".": "./dist/index.js",
         "./cot": "./dist/lib/cot.js",
-        "./2525": "./dist/lib/utils/2525.js"
+        "./2525": "./dist/lib/utils/2525.js",
+        "./parsers": "./dist/lib/parser/"
     },
     "scripts": {
         "test": "c8 --reporter=lcov --reporter html tsx --test test/*.ts",
