@@ -38,7 +38,7 @@ test('normalize_geojson - Point', async (t) => {
             archived: true,
             callsign: 'New Feature',
             remarks: '',
-            'marker-color': 'FF0000',
+            'marker-color': '#FF0000',
             time: '2025-07-14T03:00:57.112Z',
             start: '2025-07-14T03:00:57.112Z',
             stale: '2025-07-14T03:00:57.112Z',

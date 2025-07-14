@@ -47,8 +47,14 @@ export async function normalize_geojson(
         if (
             props[color]
             && typeof props[color] === 'string'
+            && /^#?[0-9a-fA-F]{6}$/.test(props[color])
         ) {
             feature.properties[color] = props[color];
+
+            if (!feature.properties[color].startsWith('#')) {
+                feature.properties[color] = `#${feature.properties[color]}`;
+            }
+
         }
     }
 
