@@ -1,7 +1,7 @@
 import test from 'tape';
 import { CoTParser } from '../index.js';
 
-test('Decode iTAK COT message', (t) => {
+test('Decode iTAK COT message', async (t) => {
     const packet = `<event version="2.0" uid="layer-35-4707" type="a-f-G" how="m-g" time="2024-06-07T15:28:48Z" start="2024-06-07T15:28:48.669Z" stale="2024-06-07T15:33:48.669Z"><point lat="39.1" lon="-105.1" hae="0.0" ce="9999999.0" le="9999999.0"/><detail><contact callsign="9T20"/><usericon iconsetpath="f7f71666-8b28-4b57-9fbb-e38e61d33b79/Google/police.png"/><remarks>Incident ID: 6841390
 Master Incident Number: 05242024-0253042
 Unit Name: 9F20
@@ -10,7 +10,7 @@ Status: Dispatched
 Jurisdiction: Golden PD
 Speed: 1</remarks><_flow-tags_ TAK-Server-e87a0e02420b44a08f6032bcf1877745="2024-06-07T15:28:48Z"><NodeCoT-8.1.0>2024-06-07T15:28:48.669Z</NodeCoT-8.1.0></_flow-tags_></detail></event>`
 
-    const cot = CoTParser.from_xml(packet);
+    const cot = await CoTParser.from_xml(packet);
 
     if (!cot.raw.event.detail) {
         t.fail('No Detail Section')
@@ -56,7 +56,7 @@ Speed: 1</remarks><_flow-tags_ TAK-Server-e87a0e02420b44a08f6032bcf1877745="2024
             }
         }, cot.raw);
 
-        t.deepEquals(CoTParser.to_geojson(cot), {
+        t.deepEquals(await CoTParser.to_geojson(cot), {
             id: 'layer-35-4707',
             type: 'Feature',
             path: '/',

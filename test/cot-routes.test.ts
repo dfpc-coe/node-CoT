@@ -1,7 +1,7 @@
 import test from 'tape';
 import CoT, { CoTParser, Route } from '../index.js';
 
-test('Decode Route', (t) => {
+test('Decode Route', async (t) => {
     const cot = new CoT({
         "event": {
             "_attributes": {
@@ -461,14 +461,14 @@ test('Decode Route', (t) => {
                     [ -108.535962334931, 38.5190139289798 ]
                 ]
             }
-        }, CoTParser.to_geojson(cot));
+        }, await CoTParser.to_geojson(cot));
     }
 
     t.end();
 });
 
-test('Parser from LineString', (t) => {
-    const cot = CoTParser.from_geojson({
+test('Parser from LineString', async (t) => {
+    const cot = await CoTParser.from_geojson({
         id: '6da80127-44d4-4bf0-89bd-ecd326afaef1',
         type: 'Feature',
         path: '/',
@@ -522,8 +522,8 @@ test('Parser from LineString', (t) => {
     t.end();
 });
 
-test('Decode Route (5.4 Additions)', (t) => {
-    const cot = CoTParser.from_xml(`
+test('Decode Route (5.4 Additions)', async (t) => {
+    const cot = await CoTParser.from_xml(`
 <event version="2.0" uid="9bb32cff-9eb2-4330-a9ba-a92ba01e9eb7" type="b-m-r" time="2025-06-26T00:03:05.328Z" start="2025-06-26T00:03:05.328Z" stale="2025-06-27T00:03:05.328Z" how="h-e" access="Undefined">
   <point lat="0.0" lon="0.0" hae="9999999.0" ce="9999999.0" le="9999999.0"/>
   <detail>

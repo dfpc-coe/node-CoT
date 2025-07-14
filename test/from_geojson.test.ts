@@ -1,8 +1,8 @@
 import test from 'tape';
 import { CoTParser } from '../index.js';
 
-test('CoTParser.from_geojson - Point', (t) => {
-    const geo = CoTParser.from_geojson({
+test('CoTParser.from_geojson - Point', async (t) => {
+    const geo = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {},
         geometry: {
@@ -38,8 +38,8 @@ test('CoTParser.from_geojson - Point', (t) => {
     t.end();
 });
 
-test('CoTParser.from_geojson - Polygon', (t) => {
-    const geo = CoTParser.from_geojson({
+test('CoTParser.from_geojson - Polygon', async (t) => {
+    const geo = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {},
         geometry: {
@@ -94,8 +94,8 @@ test('CoTParser.from_geojson - Polygon', (t) => {
     t.end();
 });
 
-test('CoTParser.from_geojson - LineString', (t) => {
-    const geo = CoTParser.from_geojson({
+test('CoTParser.from_geojson - LineString', async (t) => {
+    const geo = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {},
         geometry: {
@@ -149,8 +149,8 @@ test('CoTParser.from_geojson - LineString', (t) => {
     t.end();
 });
 
-test('CoTParser.from_geojson - Start', (t) => {
-    const geo = CoTParser.from_geojson({
+test('CoTParser.from_geojson - Start', async (t) => {
+    const geo = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             // 1hr in the future
@@ -177,8 +177,8 @@ test('CoTParser.from_geojson - Start', (t) => {
     t.end();
 });
 
-test('CoTParser.from_geojson - Start/Stale', (t) => {
-    const geo = CoTParser.from_geojson({
+test('CoTParser.from_geojson - Start/Stale', async (t) => {
+    const geo = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             // 1hr in the future
@@ -206,8 +206,8 @@ test('CoTParser.from_geojson - Start/Stale', (t) => {
     t.end();
 });
 
-test('CoTParser.from_geojson - Icon', (t) => {
-    const geo = CoTParser.from_geojson({
+test('CoTParser.from_geojson - Icon', async (t) => {
+    const geo = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             icon: '66f14976-4b62-4023-8edb-d8d2ebeaa336/Public Safety Air/EMS_ROTOR.png'
@@ -233,8 +233,8 @@ test('CoTParser.from_geojson - Icon', (t) => {
     t.end();
 });
 
-test('CoTParser.from_geojson - Height Above Earth', (t) => {
-    t.deepEquals(CoTParser.from_geojson({
+test('CoTParser.from_geojson - Height Above Earth', async (t) => {
+    t.deepEquals((await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
         },
@@ -242,7 +242,7 @@ test('CoTParser.from_geojson - Height Above Earth', (t) => {
             type: 'Point',
             coordinates: [1.1, 2.2]
         }
-    }).raw.event.point._attributes, {
+    })).raw.event.point._attributes, {
         lat: 2.2,
         lon: 1.1,
         hae: 0.0,
@@ -250,7 +250,7 @@ test('CoTParser.from_geojson - Height Above Earth', (t) => {
         le: 9999999.0
     }, 'default hae');
 
-    t.deepEquals(CoTParser.from_geojson({
+    t.deepEquals((await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
         },
@@ -258,7 +258,7 @@ test('CoTParser.from_geojson - Height Above Earth', (t) => {
             type: 'Point',
             coordinates: [1.1, 2.2, 101]
         }
-    }).raw.event.point._attributes, {
+    })).raw.event.point._attributes, {
         lat: 2.2,
         lon: 1.1,
         hae: 101,
@@ -269,8 +269,8 @@ test('CoTParser.from_geojson - Height Above Earth', (t) => {
     t.end();
 });
 
-test('CoTParser.from_geojson - Course & Speed', (t) => {
-    const cot = CoTParser.from_geojson({
+test('CoTParser.from_geojson - Course & Speed', async (t) => {
+    const cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             course: 260,
@@ -296,8 +296,8 @@ test('CoTParser.from_geojson - Course & Speed', (t) => {
     t.end();
 });
 
-test('CoTParser.from_geojson - Remarks', (t) => {
-    const cot = CoTParser.from_geojson({
+test('CoTParser.from_geojson - Remarks', async (t) => {
+    const cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             course: 260,

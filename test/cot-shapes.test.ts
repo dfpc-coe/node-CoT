@@ -1,7 +1,7 @@
 import test from 'tape';
 import CoT, { CoTParser } from '../index.js';
 
-test('En-decode polyline', (t) => {
+test('En-decode polyline', async (t) => {
     const cot = new CoT({
         "event": {
             "_attributes": {
@@ -51,14 +51,14 @@ test('En-decode polyline', (t) => {
         }
     })
 
-    const cot2 = CoTParser.from_proto(CoTParser.to_proto(cot))
+    const cot2 = await CoTParser.from_proto(await CoTParser.to_proto(cot))
     const vertex = cot2.raw.event.detail?.shape?.polyline?.vertex
     t.ok(Array.isArray(vertex) && vertex.length === 5)
 
     t.end();
 });
 
-test('En-decode 0-length polyline', (t) => {
+test('En-decode 0-length polyline', async (t) => {
     const cot3 = new CoT({
         "event": {
             "_attributes": {
@@ -96,14 +96,14 @@ test('En-decode 0-length polyline', (t) => {
     })
 
     // xml en-decoding looses empty array, but should work.
-    const cot4 = CoTParser.from_proto(CoTParser.to_proto(cot3))
+    const cot4 = await CoTParser.from_proto(await CoTParser.to_proto(cot3))
     t.ok(cot4.raw.event.detail?.shape?.polyline)
 
     t.end();
 });
 
-test('Basic Circle', (t) => {
-    const cot = CoTParser.from_xml(`
+test('Basic Circle', async (t) => {
+    const cot = await CoTParser.from_xml(`
        <event version="2.0" uid="96bba41c-e6fd-44d5-be90-8d816c6b873b" type="u-r-b-c-c" how="h-e" time="2025-07-10T16:49:54Z" start="2025-07-10T16:49:43Z" stale="2025-07-11T16:49:43Z" access="Undefined">
             <point lat="41.8988499" lon="-113.9094586" hae="2040.381" ce="9999999.0" le="9999999.0"/>
             <detail>
@@ -139,7 +139,7 @@ test('Basic Circle', (t) => {
         </event>
     `);
 
-    const feat = CoTParser.to_geojson(cot);
+    const feat = await CoTParser.to_geojson(cot);
     delete feat.properties.flow;
 
     t.deepEqual(feat, {
@@ -179,7 +179,7 @@ test('Basic Circle', (t) => {
         },
     });
 
-    const parsedCoT = CoTParser.from_geojson(feat);
+    const parsedCoT = await CoTParser.from_geojson(feat);
 
     if (!parsedCoT.raw.event.detail) {
         t.fail('No Detail Section')

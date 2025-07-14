@@ -8,7 +8,10 @@
     "exports": {
         ".": "./dist/index.js",
         "./cot": "./dist/lib/cot.js",
-        "./2525": "./dist/lib/utils/2525.js"
+        "./2525": "./dist/lib/utils/2525.js",
+        "./normalize_geojson": "./dist/lib/parser/normalize_geojson.js",
+        "./from_geojson": "./dist/lib/parser/from_geojson.js",
+        "./to_geojson": "./dist/lib/parser/to_geojson.js"
     },
     "scripts": {
         "test": "c8 --reporter=lcov --reporter html tsx --test test/*.ts",

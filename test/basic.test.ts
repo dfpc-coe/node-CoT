@@ -1,8 +1,8 @@
 import test from 'tape';
 import { CoTParser } from '../index.js';
 
-test('COT.callsign', (t) => {
-    const cot = CoTParser.from_geojson({
+test('COT.callsign', async (t) => {
+    const cot = await CoTParser.from_geojson({
         "id": "123",
         "type": "Feature",
         "path": "/",
@@ -29,8 +29,8 @@ test('COT.callsign', (t) => {
     t.end();
 });
 
-test('COT.type', (t) => {
-    const cot = CoTParser.from_geojson({
+test('COT.type', async (t) => {
+    const cot = await CoTParser.from_geojson({
         "id": "123",
         "type": "Feature",
         "path": "/",
@@ -57,8 +57,8 @@ test('COT.type', (t) => {
     t.end();
 });
 
-test('COT.archived', (t) => {
-    const cot = CoTParser.from_geojson({
+test('COT.archived', async (t) => {
+    const cot = await CoTParser.from_geojson({
         "id": "123",
         "type": "Feature",
         "path": "/",
@@ -81,13 +81,13 @@ test('COT.archived', (t) => {
     t.equals(cot.archived(), false);
     t.equals(cot.archived(true), true);
 
-    t.equals(CoTParser.to_geojson(cot).properties.archived, true)
+    t.equals((await CoTParser.to_geojson(cot)).properties.archived, true)
 
     t.equals(cot.archived(), true);
     t.equals(cot.archived(false), false);
     t.equals(cot.archived(), false);
 
-    t.equals(CoTParser.to_geojson(cot).properties.archived, undefined)
+    t.equals((await CoTParser.to_geojson(cot)).properties.archived, undefined)
 
     t.end();
 });

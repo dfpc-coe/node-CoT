@@ -1,8 +1,8 @@
 import test from 'tape';
 import { CoTParser } from '../index.js';
 
-test('CoT.is_friend', (t) => {
-    let cot = CoTParser.from_geojson({
+test('CoT.is_friend', async (t) => {
+    let cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-f-B'
@@ -12,7 +12,7 @@ test('CoT.is_friend', (t) => {
 
     t.ok(cot.is_friend());
 
-    cot = CoTParser.from_geojson({
+    cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-h-B'
@@ -25,8 +25,8 @@ test('CoT.is_friend', (t) => {
     t.end();
 });
 
-test('CoT.is_hostile', (t) => {
-    let cot = CoTParser.from_geojson({
+test('CoT.is_hostile', async (t) => {
+    let cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-h-B'
@@ -36,7 +36,7 @@ test('CoT.is_hostile', (t) => {
 
     t.ok(cot.is_hostile());
 
-    cot = CoTParser.from_geojson({
+    cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-f-B'
@@ -49,8 +49,8 @@ test('CoT.is_hostile', (t) => {
     t.end();
 });
 
-test('CoT.is_unknown', (t) => {
-    let cot = CoTParser.from_geojson({
+test('CoT.is_unknown', async (t) => {
+    let cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-u-B'
@@ -60,7 +60,7 @@ test('CoT.is_unknown', (t) => {
 
     t.ok(cot.is_unknown());
 
-    cot = CoTParser.from_geojson({
+    cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-f-B'
@@ -73,8 +73,8 @@ test('CoT.is_unknown', (t) => {
     t.end();
 });
 
-test('CoT.is_pending', (t) => {
-    let cot = CoTParser.from_geojson({
+test('CoT.is_pending', async (t) => {
+    let cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-p-B'
@@ -84,7 +84,7 @@ test('CoT.is_pending', (t) => {
 
     t.ok(cot.is_pending());
 
-    cot = CoTParser.from_geojson({
+    cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-f-B'
@@ -97,8 +97,8 @@ test('CoT.is_pending', (t) => {
     t.end();
 });
 
-test('CoT.is_assumed', (t) => {
-    let cot = CoTParser.from_geojson({
+test('CoT.is_assumed', async (t) => {
+    let cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-a-B'
@@ -108,7 +108,7 @@ test('CoT.is_assumed', (t) => {
 
     t.ok(cot.is_assumed());
 
-    cot = CoTParser.from_geojson({
+    cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-f-B'
@@ -120,8 +120,8 @@ test('CoT.is_assumed', (t) => {
     t.end();
 });
 
-test('CoT.is_neutral', (t) => {
-    let cot = CoTParser.from_geojson({
+test('CoT.is_neutral', async (t) => {
+    let cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-n-B'
@@ -131,7 +131,7 @@ test('CoT.is_neutral', (t) => {
 
     t.ok(cot.is_neutral());
 
-    cot = CoTParser.from_geojson({
+    cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-f-B'
@@ -143,8 +143,8 @@ test('CoT.is_neutral', (t) => {
     t.end();
 });
 
-test('CoT.is_suspect', (t) => {
-    let cot = CoTParser.from_geojson({
+test('CoT.is_suspect', async (t) => {
+    let cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-s-B'
@@ -154,7 +154,7 @@ test('CoT.is_suspect', (t) => {
 
     t.ok(cot.is_suspect());
 
-    cot = CoTParser.from_geojson({
+    cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-f-B'
@@ -166,8 +166,8 @@ test('CoT.is_suspect', (t) => {
     t.end();
 });
 
-test('CoT.is_joker', (t) => {
-    let cot = CoTParser.from_geojson({
+test('CoT.is_joker', async (t) => {
+    let cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-j-B'
@@ -177,7 +177,7 @@ test('CoT.is_joker', (t) => {
 
     t.ok(cot.is_joker());
 
-    cot = CoTParser.from_geojson({
+    cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-f-B'
@@ -189,8 +189,8 @@ test('CoT.is_joker', (t) => {
     t.end();
 });
 
-test('CoT.is_faker', (t) => {
-    let cot = CoTParser.from_geojson({
+test('CoT.is_faker', async (t) => {
+    let cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-k-B'
@@ -200,7 +200,7 @@ test('CoT.is_faker', (t) => {
 
     t.ok(cot.is_faker());
 
-    cot = CoTParser.from_geojson({
+    cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-f-B'
@@ -212,8 +212,8 @@ test('CoT.is_faker', (t) => {
     t.end();
 });
 
-test('CoT.is_atom', (t) => {
-    let cot = CoTParser.from_geojson({
+test('CoT.is_atom', async (t) => {
+    let cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-'
@@ -223,7 +223,7 @@ test('CoT.is_atom', (t) => {
 
     t.ok(cot.is_atom());
 
-    cot = CoTParser.from_geojson({
+    cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'h'
@@ -235,8 +235,8 @@ test('CoT.is_atom', (t) => {
     t.end();
 });
 
-test('CoT.is_airborne', (t) => {
-    let cot = CoTParser.from_geojson({
+test('CoT.is_airborne', async (t) => {
+    let cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-f-A'
@@ -246,7 +246,7 @@ test('CoT.is_airborne', (t) => {
 
     t.ok(cot.is_airborne());
 
-    cot = CoTParser.from_geojson({
+    cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-h-G'
@@ -258,8 +258,8 @@ test('CoT.is_airborne', (t) => {
     t.end();
 });
 
-test('CoT.is_ground', (t) => {
-    let cot = CoTParser.from_geojson({
+test('CoT.is_ground', async (t) => {
+    let cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-f-G'
@@ -269,7 +269,7 @@ test('CoT.is_ground', (t) => {
 
     t.ok(cot.is_ground());
 
-    cot = CoTParser.from_geojson({
+    cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-h-A'
@@ -281,8 +281,8 @@ test('CoT.is_ground', (t) => {
     t.end();
 });
 
-test('CoT.is_installation', (t) => {
-    let cot = CoTParser.from_geojson({
+test('CoT.is_installation', async (t) => {
+    let cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-f-G-I'
@@ -292,7 +292,7 @@ test('CoT.is_installation', (t) => {
 
     t.ok(cot.is_installation());
 
-    cot = CoTParser.from_geojson({
+    cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-f-G'
@@ -302,7 +302,7 @@ test('CoT.is_installation', (t) => {
 
     t.notOk(cot.is_installation());
 
-    cot = CoTParser.from_geojson({
+    cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-h-A'
@@ -314,8 +314,8 @@ test('CoT.is_installation', (t) => {
     t.end();
 });
 
-test('CoT.is_vehicle', (t) => {
-    let cot = CoTParser.from_geojson({
+test('CoT.is_vehicle', async (t) => {
+    let cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-f-G-E-V'
@@ -325,7 +325,7 @@ test('CoT.is_vehicle', (t) => {
 
     t.ok(cot.is_vehicle());
 
-    cot = CoTParser.from_geojson({
+    cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-h-G-E-V'
@@ -335,7 +335,7 @@ test('CoT.is_vehicle', (t) => {
 
     t.ok(cot.is_vehicle());
 
-    cot = CoTParser.from_geojson({
+    cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-f-G-E'
@@ -347,8 +347,8 @@ test('CoT.is_vehicle', (t) => {
     t.end();
 });
 
-test('CoT.is_equipment', (t) => {
-    let cot = CoTParser.from_geojson({
+test('CoT.is_equipment', async (t) => {
+    let cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-f-G-E'
@@ -358,7 +358,7 @@ test('CoT.is_equipment', (t) => {
 
     t.ok(cot.is_equipment());
 
-    cot = CoTParser.from_geojson({
+    cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-f-G'
@@ -371,8 +371,8 @@ test('CoT.is_equipment', (t) => {
     t.end();
 });
 
-test('CoT.is_surface', (t) => {
-    let cot = CoTParser.from_geojson({
+test('CoT.is_surface', async (t) => {
+    let cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-f-S'
@@ -382,7 +382,7 @@ test('CoT.is_surface', (t) => {
 
     t.ok(cot.is_surface());
 
-    cot = CoTParser.from_geojson({
+    cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-f-G'
@@ -394,8 +394,8 @@ test('CoT.is_surface', (t) => {
     t.end();
 });
 
-test('CoT.is_subsurface', (t) => {
-    let cot = CoTParser.from_geojson({
+test('CoT.is_subsurface', async (t) => {
+    let cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-f-U'
@@ -405,7 +405,7 @@ test('CoT.is_subsurface', (t) => {
 
     t.ok(cot.is_subsurface());
 
-    cot = CoTParser.from_geojson({
+    cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-f-G'
@@ -417,8 +417,8 @@ test('CoT.is_subsurface', (t) => {
     t.end();
 });
 
-test('CoT.is_uav', (t) => {
-    const cot = CoTParser.from_geojson({
+test('CoT.is_uav', async (t) => {
+    const cot = await CoTParser.from_geojson({
         type: 'Feature',
         properties: {
             type: 'a-f-A-M-F-Q-r'
