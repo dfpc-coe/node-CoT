@@ -23,7 +23,7 @@ import type { CoTOptions } from '../cot.js';
  *
  * @return {CoT}
  */
-export default async function from_geojson(
+export async function from_geojson(
     feature: Static<typeof InputFeature>,
     opts: CoTOptions = {}
 ): Promise<CoT> {

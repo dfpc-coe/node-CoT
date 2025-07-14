@@ -9,7 +9,8 @@
         ".": "./dist/index.js",
         "./cot": "./dist/lib/cot.js",
         "./2525": "./dist/lib/utils/2525.js",
-        "./parsers": "./dist/lib/parser/"
+        "./from_geojson": "./dist/lib/parser/from_geojson.js",
+        "./to_geojson": "./dist/lib/parser/to_geojson.js"
     },
     "scripts": {
         "test": "c8 --reporter=lcov --reporter html tsx --test test/*.ts",
