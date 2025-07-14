@@ -4,10 +4,14 @@ import { xml2js, js2xml } from 'xml-js';
 import { diff } from 'json-diff-ts';
 import type { Static } from '@sinclair/typebox';
 import { from_geojson } from './parser/from_geojson.js';
+import { normalize_geojson } from './parser/normalize_geojson.js';
 import { to_geojson } from './parser/to_geojson.js';
 import type {
     Feature,
 } from './types/feature.js';
+import type {
+    GeoJSONFeature,
+} from './types/geojson.js';
 import {
     InputFeature,
 } from './types/feature.js';
@@ -241,6 +245,13 @@ export class CoTParser {
         cot.metadata = metadata;
 
         return this.validate(cot);
+    }
+
+    static async normalize_geojson(
+        feature: Static<typeof GeoJSONFeature>
+    ): Promise<Static<typeof Feature>> {
+        const feat = await normalize_geojson(feature);
+        return feat;
     }
 
     /**
