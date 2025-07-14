@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.0.2 - 2025-07-13
+
+- :rocket: Include .d.ts files in output
+
 ### v14.0.1 - 2025-07-13
 
 - :bug: Ensure `archived: true` is set on normalized features as these will result in `u-d` type CoTs
