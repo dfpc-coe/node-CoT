@@ -12,9 +12,13 @@
 
 ### Pending Fixed
 
+### v14.0.5 - 2025-07-13
+
+- :bug: Fix TS error
+
 ### v14.0.4 - 2025-07-13
 
-- :rocket Prepend `#` to color values in normalized features to ensure they are valid hex colors
+- :rocket: Prepend `#` to color values in normalized features to ensure they are valid hex colors
 
 ### v14.0.3 - 2025-07-13
 
