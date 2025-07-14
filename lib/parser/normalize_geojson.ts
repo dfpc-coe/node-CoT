@@ -3,6 +3,7 @@ import { v4 as randomUUID } from 'uuid';
 import type { Static } from '@sinclair/typebox';
 import { coordEach } from "@turf/meta";
 import TypeValidator from '../type.js';
+import { Feature } from '../types/feature.js';
 import PointOnFeature from '@turf/point-on-feature';
 import { GeoJSONFeature } from '../types/geojson.js';
 
@@ -39,7 +40,7 @@ export async function normalize_geojson(
     } else if (feature.geometry.type === 'Polygon') {
         feature.properties.type = 'u-d-f';
     } else {
-        throw new Err(400, null, `Unsupported Geometry Type: ${feature.geometry.type}`);
+        throw new Err(400, null, `Unsupported Geometry Type`);
     }
 
     for (const color of ['marker-color', 'stroke', 'fill']) {
@@ -74,7 +75,7 @@ export async function normalize_geojson(
 
     // Remarks Options
     for (const remarks of ['remarks', 'description']) {
-        if (props[remarks] && typeof props[remakrs] === 'string') {
+        if (props[remarks] && typeof props[remarks] === 'string') {
             feature.properties.remarks = props[remarks];
             break;
         }

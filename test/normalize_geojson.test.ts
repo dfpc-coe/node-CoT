@@ -24,22 +24,24 @@ test('normalize_geojson - Point', async (t) => {
     });
 
     t.ok(feat.properties.start);
-    delete feat.properties.start;
+    feat.properties.start = '2025-07-14T03:00:57.112Z';
     t.ok(feat.properties.time);
-    delete feat.properties.time;
+    feat.properties.time = '2025-07-14T03:00:57.112Z';
     t.ok(feat.properties.stale);
-    delete feat.properties.stale;
+    feat.properties.stale = '2025-07-14T03:00:57.112Z';
 
     t.deepEquals(feat, {
         id: '3dcbbdf0-b832-4f86-ac8b-d33f64acfad5',
         type: 'Feature',
         properties: {
             type: 'u-d-p',
-            metadata: {},
             archived: false,
             callsign: 'New Feature',
             remarks: '',
             'marker-color': 'FF0000',
+            time: '2025-07-14T03:00:57.112Z',
+            start: '2025-07-14T03:00:57.112Z',
+            stale: '2025-07-14T03:00:57.112Z',
             center: [
                 -108.2982,
                 39.0833
@@ -96,18 +98,17 @@ test('normalize_geojson - LineString', async (t) => {
     });
 
     t.ok(feat.properties.start);
-    delete feat.properties.start;
+    feat.properties.start = '2025-07-14T03:00:57.112Z';
     t.ok(feat.properties.time);
-    delete feat.properties.time;
+    feat.properties.time = '2025-07-14T03:00:57.112Z';
     t.ok(feat.properties.stale);
-    delete feat.properties.stale;
+    feat.properties.stale = '2025-07-14T03:00:57.112Z';
 
     t.deepEquals(feat, {
         id:"d9e51148-ca9d-4a82-a032-afe9fbc9d2e1",
         type:"Feature",
         properties:{
             type: 'u-d-f',
-            metadata: {},
             archived: false,
             stroke: "#FFAA00",
             fill: "#FFAA00",
@@ -115,6 +116,9 @@ test('normalize_geojson - LineString', async (t) => {
             'stroke-width': 2,
             callsign: 'Proposed route',
             remarks: '',
+            time: '2025-07-14T03:00:57.112Z',
+            start: '2025-07-14T03:00:57.112Z',
+            stale: '2025-07-14T03:00:57.112Z',
             center: [ -108.29433, 39.11486 ],
             metadata: {
                 "-updated-by":"16SV07",
@@ -164,18 +168,17 @@ test('normalize_geojson - Polygon', async (t) => {
     });
 
     t.ok(feat.properties.start);
-    delete feat.properties.start;
+    feat.properties.start = '2025-07-14T03:00:57.112Z';
     t.ok(feat.properties.time);
-    delete feat.properties.time;
+    feat.properties.time = '2025-07-14T03:00:57.112Z';
     t.ok(feat.properties.stale);
-    delete feat.properties.stale;
+    feat.properties.stale = '2025-07-14T03:00:57.112Z';
 
     t.deepEquals(feat, {
         id: "6df241c8-a9fa-4a9b-b56c-3fa0cb4af2cb",
         type:"Feature",
         properties:{
             type: 'u-d-f',
-            metadata: {},
             archived: false,
             stroke: "#FF0000",
             'stroke-opacity': 1,
@@ -184,6 +187,9 @@ test('normalize_geojson - Polygon', async (t) => {
             'fill-opacity': 0.1,
             callsign: "New Feature",
             remarks: '',
+            time: '2025-07-14T03:00:57.112Z',
+            start: '2025-07-14T03:00:57.112Z',
+            stale: '2025-07-14T03:00:57.112Z',
             center: [ -108.5260372670612, 39.08394118256409 ],
             metadata: {
                 "stroke-opacity":1,
