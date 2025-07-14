@@ -12,6 +12,11 @@
 
 ### Pending Fixed
 
+### v14.0.0 - 2025-07-10
+
+- :rocket: Replace AJV with TypeBox for schema validation in `from_geojson`
+- :rocket: **Breaking** All parser functions now return `Promise`
+
 ### v13.6.0 - 2025-07-10
 
 - :rocket: Include KML Styling
