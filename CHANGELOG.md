@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.0.3 - 2025-07-13
+
+- :rocket: Use `Type.Literal` for `type: Feature`
+
 ### v14.0.2 - 2025-07-13
 
 - :rocket: Include .d.ts files in output

@@ -162,7 +162,7 @@ export const Geometry = Type.Union([
 
 export const Feature = Type.Object({
     id: Type.String(),
-    type: Type.Const('Feature'),
+    type: Type.Literal('Feature'),
     properties: Properties,
     path: Type.Optional(Type.String()),
     geometry: Geometry
@@ -177,7 +177,7 @@ export const InputProperties = Type.Partial(Type.Composite([
 
 export const InputFeature = Type.Object({
     id: Type.Optional(Type.String()),
-    type: Type.Const('Feature'),
+    type: Type.Literal('Feature'),
     path: Type.Optional(Type.String()),
     properties: InputProperties,
     geometry: Geometry
