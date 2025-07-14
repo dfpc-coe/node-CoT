@@ -94,7 +94,7 @@ export async function normalize_geojson(
 
     feature.properties.center = PointOnFeature(feature).geometry.coordinates;
 
-    feature.properties.archived = feature.properties.archived || false;
+    feature.properties.archived = true;
 
     coordEach(feature.geometry, (coord) => {
         return coord.slice(0, 3);

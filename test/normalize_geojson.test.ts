@@ -35,7 +35,7 @@ test('normalize_geojson - Point', async (t) => {
         type: 'Feature',
         properties: {
             type: 'u-d-p',
-            archived: false,
+            archived: true,
             callsign: 'New Feature',
             remarks: '',
             'marker-color': 'FF0000',
@@ -109,7 +109,7 @@ test('normalize_geojson - LineString', async (t) => {
         type:"Feature",
         properties:{
             type: 'u-d-f',
-            archived: false,
+            archived: true,
             stroke: "#FFAA00",
             fill: "#FFAA00",
             'stroke-opacity': 1,
@@ -179,7 +179,7 @@ test('normalize_geojson - Polygon', async (t) => {
         type:"Feature",
         properties:{
             type: 'u-d-f',
-            archived: false,
+            archived: true,
             stroke: "#FF0000",
             'stroke-opacity': 1,
             'stroke-width': 2,
