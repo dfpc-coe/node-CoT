@@ -182,3 +182,13 @@ export const InputFeature = Type.Object({
     properties: InputProperties,
     geometry: Geometry
 })
+
+export const InputFeatureCollection = Type.Object({
+    type: Type.Literal('FeatureCollection'),
+    features: Type.Array(InputFeature)
+})
+
+export const FeatureCollection = Type.Object({
+    type: Type.Literal('FeatureCollection'),
+    features: Type.Array(Feature)
+})
