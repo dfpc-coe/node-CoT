@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.1.0 - 2025-08-07
+
+- :rocket: Include `InputFeatureCollection` and `FeatureCollection` in types
+
 ### v14.0.5 - 2025-07-13
 
 - :bug: Fix TS error
