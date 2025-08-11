@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.1.1 - 2025-08-07
+
+- :rocket: Support WebIcon style icon paths
+
 ### v14.1.0 - 2025-08-07
 
 - :rocket: Include `InputFeatureCollection` and `FeatureCollection` in types
