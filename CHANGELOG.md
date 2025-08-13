@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.2.1 - 2025-08-12
+
+- :rocket: Include ACKRequested in FileRequest Builder
+
 ### v14.1.1 - 2025-08-07
 
 - :rocket: Support WebIcon style icon paths
