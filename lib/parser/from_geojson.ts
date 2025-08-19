@@ -200,7 +200,14 @@ export async function from_geojson(
 
     if (feature.properties.icon) {
         // Web Rendering uses a ":", to avoid issues we support it on input and normalize it to a "/"
-        feature.properties.icon = feature.properties.icon.split(':').join('/')
+        if (feature.properties.icon.includes(':')) {
+            feature.properties.icon = feature.properties.icon
+                .split(':').join('/')
+
+            if (!feature.properties.icon.endsWith('.png')) {
+                feature.properties.icon += '.png';
+            }
+        }
 
         cot.event.detail.usericon = { _attributes: { iconsetpath: feature.properties.icon } }
     }
