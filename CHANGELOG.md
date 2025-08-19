@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.3.0 - 2025-08-19
+
+- :tada: Add TAK Request/Response type defs
+
 ### v14.2.2 - 2025-08-19
 
 - :bug: Postfix Icon with .png if it isn't present
