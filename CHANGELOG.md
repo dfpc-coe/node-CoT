@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.2.2 - 2025-08-19
+
+- :bug: Postfix Icon with .png if it isn't present
+
 ### v14.2.1 - 2025-08-12
 
 - :rocket: Include ACKRequested in FileRequest Builder
