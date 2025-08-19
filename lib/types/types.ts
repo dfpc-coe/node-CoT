@@ -134,6 +134,18 @@ export const LinkAttr = Type.Object({
     _attributes: LinkAttrAttributes
 })
 
+export const TakRequestAttributes = Type.Object({
+    _attributes: Type.Optional(Type.Object({
+        version: Type.Optional(Type.String())
+    }))
+});
+
+export const TakResponseAttributes = Type.Object({
+    _attributes: Type.Optional(Type.Object({
+        status: Type.Boolean()
+    }))
+});
+
 export const ProtocolSupportAttributes = Type.Object({
     _attributes: Type.Optional(Type.Object({
         version: Type.Optional(Type.String())
@@ -661,6 +673,8 @@ export const Detail = Type.Object({
     northRef: Type.Optional(NorthRef),
 
     TakControl: Type.Optional(Type.Object({
+        TakRequest: Type.Optional(TakRequestAttributes),
+        TakResponse: Type.Optional(TakResponseAttributes),
         TakProtocolSupport: Type.Optional(ProtocolSupportAttributes),
         TakServerVersionInfo: Type.Optional(ServerVersionAttributes)
     }))
