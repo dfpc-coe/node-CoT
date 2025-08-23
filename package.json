@@ -6,7 +6,10 @@
     "author": "Nick Ingalls <nick@ingalls.ca>",
     "types": "index.ts",
     "exports": {
-        ".": "./dist/index.js",
+        ".": {
+            "types": "./dist/index.d.ts",
+            "import": "./dist/index.js"
+        },
         "./cot": "./dist/lib/cot.js",
         "./2525": "./dist/lib/utils/2525.js",
         "./normalize_geojson": "./dist/lib/parser/normalize_geojson.js",
