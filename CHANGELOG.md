@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.4.0 - 2025-08-23
+
+- :rocket: Include types in package exports field
+
 ### v14.3.0 - 2025-08-19
 
 - :tada: Add TAK Request/Response type defs
