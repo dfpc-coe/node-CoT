@@ -122,7 +122,7 @@ export class DataPackage {
         } else {
             this.path = os.tmpdir() + '/' + randomUUID();
         }
-    
+
         this.destroyed = false;
         fs.mkdirSync(this.path, {
             recursive: true
@@ -218,10 +218,13 @@ export class DataPackage {
      * @param [opts.strict] By default the DataPackage must contain a manifest file, turning strict mode off will generate a manifest based on the contents of the file
      * @param [opts.cleanup] If the Zip is parsed as a DataSync successfully, remove the initial zip file
      */
-    static async parse(input: string | URL, opts?: {
-        strict?: boolean
-        cleanup?: boolean
-    }): Promise<DataPackage> {
+    static async parse(
+        input: string | URL,
+        opts?: {
+            strict?: boolean
+            cleanup?: boolean
+        }
+    ): Promise<DataPackage> {
         input = input instanceof URL ? path.normalize(decodeURIComponent(input.pathname)) : input;
         if (!opts) opts = {};
         if (opts.strict === undefined) opts.strict = true;
