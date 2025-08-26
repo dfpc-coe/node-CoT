@@ -12,7 +12,7 @@ export default class XMLDocument<T> {
     constructor(raw: T) {
         this.raw = raw;
     }
-    
+
     static check<U>(input: string, check: ValidateFunction<unknown>): U {
         const xml = xmljs.xml2js(input, { compact: true })
 
