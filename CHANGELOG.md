@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.5.0 - 2025-05-26
+
+- :arrow_up: Update Core Deps
+
 ### v14.4.0 - 2025-08-23
 
 - :rocket: Include types in package exports field
