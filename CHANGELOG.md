@@ -12,7 +12,11 @@
 
 ### Pending Fixed
 
-### v14.5.0 - 2025-05-26
+### v14.6.0 - 2025-09-06
+
+- :arrow_up: Update Core Deps
+
+### v14.5.0 - 2025-08-26
 
 - :arrow_up: Update Core Deps
 
