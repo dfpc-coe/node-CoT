@@ -324,6 +324,7 @@ export async function to_geojson(cot: CoT): Promise<Static<typeof Feature>> {
         }
     } else if (raw.event._attributes.type.startsWith('u-d-c-c') || raw.event._attributes.type.startsWith('u-r-b-c-c')) {
         if (!raw.event.detail.shape) throw new Err(400, null, `${raw.event._attributes.type} (Circle) must define shape value`)
+
         if (
             !raw.event.detail.shape.ellipse
             || !raw.event.detail.shape.ellipse._attributes
