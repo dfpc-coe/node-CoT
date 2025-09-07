@@ -24,7 +24,7 @@ test('Parse Creator', (t) => {
         </event>
     `);
 
-    const detail = cot.detail(); 
+    const detail = cot.detail();
 
     if (!detail.__milsym) t.fail();
 
@@ -71,7 +71,7 @@ test('MilSym Augmentation', (t) => {
     });
 
     t.deepEquals(cot.raw.event.detail!.__milsym, {
-        _attributes: { id: 'SNGP-----------' },
+        _attributes: { id: '12041000000000000000' },
     });
 
     t.end();
