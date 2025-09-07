@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.7.4 - 2025-09-07
+
+- :bug: Support TAK Aware's Pathless Iconset Property
+
 ### v14.7.3 - 2025-09-07
 
 - :rocket: MilSym Battle Dimension is now case-insensitive
