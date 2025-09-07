@@ -80,10 +80,10 @@ export default class CoT {
         }
 
         if (opts.milsym && opts.milsym.augment && !this.raw.event.detail.__milsym) {
-            if (util2525.is2525BConvertable(this.raw.point._attributes.type)) {
+            if (util2525.is2525BConvertable(this.raw.event._attributes.type)) {
                 this.raw.event.detail.__milsym = {
                     _attributes: {
-                        id: util2525.to2525B(this.raw.event.point._attributes.type)
+                        id: util2525.to2525B(this.raw.event._attributes.type)
                     }
                 }
             }
