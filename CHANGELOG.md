@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.7.0 - 2025-09-06
+
+- :rocket: Introduce 2525 Augmentation Feature
+
 ### v14.6.0 - 2025-09-06
 
 - :arrow_up: Update Core Deps
