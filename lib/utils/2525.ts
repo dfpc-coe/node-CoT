@@ -73,7 +73,7 @@ export default class Type2525 {
      * @param cotType - Cursor On Target Type to test
      */
     static is2525BConvertable(cotType: string): boolean {
-        return !!cotType.match(/^a-[puafnshjkox]-[PAGSUFXZ](-\w+)*$/);
+        return !!cotType.match(/^a-[PUAFNSHJKOXpuafnshjkox]-[PAGSUFXZ](-\w+)*$/);
     }
 
     static domain(cotType: string): Domain {
@@ -112,15 +112,15 @@ export default class Type2525 {
 
         // Handle Short Codes Manually
         if (str_sidc.match(/^S[A-Z]{3}-{11}/)) {
-            const AFF = str_sidc[1]
-            const DIM = str_sidc[2]
-            const STS = str_sidc[3]
+            const AFF = str_sidc[1].toUpperCase()
+            const DIM = str_sidc[2].toUpperCase()
+            const STS = str_sidc[3].toUpperCase()
 
             return '12' + SID_MAP[AFF] + DIM_MAP[DIM] + STATUS_MAP[STS] + '0000000000000';
         } else {
             const convert = convertLetterSidc2NumberSidc(str_sidc);
 
-            if (!convert.success) {
+            if (!convert.sidc) {
                 throw new Error(`Could not convert 2525B SIDC to 2525D`);
             }
 
