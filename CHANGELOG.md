@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.7.2 - 2025-09-07
+
+- :rocket: MilSym Augmentation should never error out parsing
+
 ### v14.7.1 - 2025-09-07
 
 - :rocket: Export CoTOptions objects from CoT for downstream users
