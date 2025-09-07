@@ -1,5 +1,7 @@
 import CoT from './lib/cot.js';
 
+export * from './lib/cot.js';
+
 export * from './lib/parser.js';
 
 export * from './lib/types/geojson.js';

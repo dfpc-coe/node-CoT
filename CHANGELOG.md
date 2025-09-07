@@ -12,7 +12,11 @@
 
 ### Pending Fixed
 
-### v14.7.0 - 2025-09-06
+### v14.7.1 - 2025-09-07
+
+- :rocket: Export CoTOptions objects from CoT for downstream users
+
+### v14.7.0 - 2025-09-07
 
 - :rocket: Introduce 2525 Augmentation Feature
 
