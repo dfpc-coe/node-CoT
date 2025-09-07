@@ -1,3 +1,5 @@
+import { convertLetterSidc2NumberSidc } from "@orbat-mapper/convert-symbology";
+
 export enum Domain {
     ATOM = 'a',
     BITS = 'b',
@@ -18,6 +20,43 @@ export enum StandardIdentity {
     JOKER = 'j',
     FAKER = 'k',
     NONE = 'o'
+}
+
+export const SID_MAP: Record<string, string> = {
+    P: "00", // pending
+    U: "01", // unknown
+    A: "02", // assumed friend
+    F: "03", // friend
+    N: "04", // neutral
+    S: "05", // suspect
+    H: "06", // hostile
+    G: "10", // exercise pending
+    W: "11", // exercise unknown
+    M: "12", // exercise assumed friend
+    D: "13", // exercise friend
+    L: "14", // exercise neutral
+    J: "15", // joker
+    K: "16", // faker
+};
+
+export const STATUS_MAP: Record<string, string> = {
+    P: "0", // present
+    A: "1", // anticipated/planned
+    C: "2", // present fully capable
+    D: "3", // present damaged
+    X: "4", // present destroyed
+    F: "5", // present full to capacity
+};
+
+export const DIM_MAP: Record<string, string> = {
+    P: '05', // Space
+    A: '01', // Air
+    G: '10', // Ground
+    S: '30', // SeaSurface
+    U: '35', // SubSurface
+    F: '10', // SOF
+    Z: '10', // Unknown
+    X: '10'  // Unknown
 }
 
 /**
@@ -55,10 +94,37 @@ export default class Type2525 {
         const unknownIdentity = cotType.split('-')[1];
 
         const si = enumFromStringValue(StandardIdentity, unknownIdentity);
+
         if (si) {
             return si;
         } else {
             return StandardIdentity.NONE;
+        }
+    }
+
+    /**
+     * Given a COT Atom Type, return an SIDC in 2525D format
+     *
+     * @param cotType - Cursor On Target Type (Note must start with atomic "a")
+     */
+    static to2525D(cotType: string): string {
+        const str_sidc = this.to2525B(cotType);
+
+        // Handle Short Codes Manually
+        if (str_sidc.match(/^S[A-Z]{3}-{11}/)) {
+            const AFF = str_sidc[1]
+            const DIM = str_sidc[2]
+            const STS = str_sidc[3]
+
+            return '12' + SID_MAP[AFF] + DIM_MAP[DIM] + STATUS_MAP[STS] + '0000000000000';
+        } else {
+            const convert = convertLetterSidc2NumberSidc(str_sidc);
+
+            if (!convert.success) {
+                throw new Error(`Could not convert 2525B SIDC to 2525D`);
+            }
+
+            return convert.sidc;
         }
     }
 

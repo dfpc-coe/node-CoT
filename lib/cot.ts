@@ -17,6 +17,7 @@ import type {
 } from './types/types.js'
 import Sensor from './sensor.js';
 import Util from './utils/util.js';
+import util2525 from './utils/2525.js'
 import JSONCoT, { Detail } from './types/types.js'
 
 export type CoTOptions = {
@@ -25,6 +26,9 @@ export type CoTOptions = {
         type: string,
         callsign: string,
         time?: Date | string,
+    },
+    milsym?: {
+        augment?: boolean
     }
 }
 
@@ -73,6 +77,16 @@ export default class CoT {
                 callsign: opts.creator instanceof CoT ? opts.creator.callsign() : opts.creator.callsign,
                 time: opts.creator instanceof CoT ? new Date() : opts.creator.time
             });
+        }
+
+        if (opts.milsym && opts.milsym.augment && !this.raw.event.detail.__milsym) {
+            if (util2525.is2525BConvertable(this.raw.event._attributes.type)) {
+                this.raw.event.detail.__milsym = {
+                    _attributes: {
+                        id: util2525.to2525D(this.raw.event._attributes.type)
+                    }
+                }
+            }
         }
 
         if (process.env.DEBUG_COTS) console.log(JSON.stringify(this.raw))

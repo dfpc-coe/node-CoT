@@ -417,6 +417,16 @@ export const Milsym = Type.Object({
     unitmodifier: Type.Optional(Type.Union([MilsymUnitModifier, Type.Array(MilsymUnitModifier)]))
 })
 
+export const MilIconAttributes = Type.Object({
+    id: Type.String(),
+});
+
+// https://wiki.tak.gov/spaces/DEV/pages/116031525/Single+Multi+Point+Symbology
+// I know this exists but don't have examples as of yet
+export const MilIcon = Type.Object({
+    _attributes: MilIconAttributes,
+})
+
 export const Chat = Type.Object({
     _attributes: Type.Object({
         parent: Type.Optional(Type.String()),
@@ -632,6 +642,7 @@ export const Detail = Type.Object({
     '__video': Type.Optional(Video),
     '__geofence': Type.Optional(Geofence),
     '__milsym': Type.Optional(Milsym),
+    '__milicon': Type.Optional(MilIcon),
     '__routeinfo': Type.Optional(RouteInfo),
     '__forcedelete': Type.Optional(ForceDelete),
     '__shapeExtras': Type.Optional(ShapeExtras),

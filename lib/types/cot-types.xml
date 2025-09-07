@@ -37,6 +37,14 @@
 -->
 
 <types>
+  <!-- Start Custom Types -->
+  <cot cot="u-d-p"                     full="Drawn Point"                                                   desc="User Drawn Point"                                                       />
+  <cot cot="u-d-r"                     full="Drawn Rectangle"                                               desc="User Drawn Rectangle"                                                   />
+  <cot cot="u-d-f"                     full="Drawn Polyline"                                                desc="User Drawn Polyline"                                                    />
+  <cot cot="u-d-c-c"                   full="Drawn Circle"                                                  desc="User Drawn Circle"                                                      />
+  <cot cot="u-rb-a"                    full="Drawn Range"                                                   desc="User Drawn Range &amp; Bearing"                                         />
+  <!-- End Custom Types -->
+
   <cot cot="a-.-A"                     full="Air/Air Track"                                                 desc="Air Track"                                                              />
   <cot cot="a-.-A-C"                   full="Air/Civ"                                                       desc="CIVIL AIRCRAFT"                                                         />
   <cot cot="a-.-A-C-F"                 full="Air/Civ/fixed"                                                 desc="FIXED WING"                                                             />
@@ -1070,12 +1078,12 @@
   <cot cot="b-d-a-c"               desc="Detection/Acoustic/Cyclostationary"					 />
   <cot cot="b-d-m"                 desc="Detection/Motion"                                                       />
   <cot cot="b-d-s"                 desc="Detection/Seismic"							 />
-  
+
   <!-- Deprecated - use b-d-c-. branch instead for Radation and Nuclear -->
   <cot cot="b-d-r"                 desc="Detection/Radiaition"                                                   />
   <cot cot="b-d-n"                 desc="Detection/Nuclear"							 />
   <cot cot="b-d-c"                 desc="Detection/CBRNE"                                                        />
-  <cot cot="b-d-c-b"               desc="Detection/CBRNE/BioChem"                                                />  
+  <cot cot="b-d-c-b"               desc="Detection/CBRNE/BioChem"                                                />
   <cot cot="b-d-c-b-b"		   desc="Detection/CBRNE/BioChem/Biological"				         />
   <cot cot="b-d-c-b-c"		   desc="Detection/CBRNE/BioChem/Chemical"				         />
   <cot cot="b-d-c-e"		   desc="Detection/CBRNE/Explosive"						 />
@@ -1086,7 +1094,7 @@
   <cot cot="b-d-c-n-n-sm"          desc="Detection/CBRNE/NuclearRadiological/Nuclear/Special Nuclear Material"	 />
   <cot cot="b-d-c-n-r"             desc="Detection/CBRNE/NuclearRadiological/Radiation"				 />
   <cot cot="b-d-c-n-r-dd"          desc="Detection/CBRNE/NuclearRadiological/Radiological/Dispersal Device (Dirty Bomb)"		 />
- 
+
   <cot cot="b-d-l"		   desc="Detection/Launch"						         />
   <cot cot="b-d-l-b"		   desc="Detection/Launch/Bullet"					         />
   <cot cot="b-d-l-m"               desc="Detection/Launch/Mortar"						 />
@@ -1096,9 +1104,9 @@
   <!-- Begin section that incorporates experimental extensions to support Incident Management alarms  -->
   <!-- MKRISTAN - 12 Feb 2009 - Based on discussion in November 2008, b-a is overloaded.
        b-a could be Alarm
-       b-a could be Aggregate 
+       b-a could be Aggregate
        b-a could be Audio
-		 
+
        because of this, the decision was made by the MITRE CoT group to redesignate alarm to b-l (Bits-aLarm)
        going forward.  This change was coordinated within MITRE in order to support multiple customers that use
        this branch -->
@@ -2171,7 +2179,7 @@
   <cot cot="r-c-x-c-p-r-w"         desc="white"                        />
   <cot cot="r-c-x-c-p-r-y"         desc="yellow"                       />
   <cot cot="r-c-x-c-p-s"           desc="Sulfuryl fluoride"      />
-  
+
   <cot cot="r-c-x-c-i"             desc="Incapacitating Agents: Drugs that make people unable to think clearly or that cause an altered state of consciousness (possibly unconsciousness)"     />
   <cot cot="r-c-x-c-i-b"           desc="BZ"     />
   <cot cot="r-c-x-c-i-o"           desc="opioids: chemical substance that causes a morphine-like action"     />
@@ -2186,7 +2194,7 @@
   <cot cot="r-c-x-c-m-m"           desc="Mercury"     />
   <cot cot="r-c-x-c-m-t"           desc="Thallium"     />
 
-  
+
   <cot cot="r-c-x-c-n"             desc="Nerve Agents: Highly poisonous chemicals that work by preventing the nervous system from working properly"     />
   <cot cot="r-c-x-c-n-g"           desc="G agents"     />
   <cot cot="r-c-x-c-n-g-b"         desc="Sarin (GB)"     />
@@ -2210,7 +2218,7 @@
 
   <cot cot="r-c-x-c-v"             desc="Vomiting Agents: Chemicals that cause nausea and vomiting"     />
   <cot cot="r-c-x-c-v-a"           desc="Adamsite (DM)"     />
-  
+
   <!--
      NBC - Biological attack.
      Values below are from http://en.wikipedia.org/wiki/Biological_agent
@@ -2312,10 +2320,10 @@
   <cot cot="r-c-x-b-s-t"           desc="BT, Bacillus thursidius" />
   <cot cot="r-c-x-b-s-w"           desc="EH, Erwinia hebicola" />
   <cot cot="r-c-x-b-s-f"           desc="FP, fluorescent particle" />
-  
+
   <!--
      Values below are from http://www.bt.cdc.gov/agent/agentlist-category.asp
-     
+
   <cot cot="r-c-x-b-a"             desc="Category A - High-priority agents include organisms that pose a risk to national security" />
   <cot cot="r-c-x-b-a-a"           desc="Anthrax (Bacillus anthracis)" />
   <cot cot="r-c-x-b-a-b"           desc="Botulism (Clostridium botulinumcu toxin)" />
@@ -2343,12 +2351,12 @@
   <cot cot="r-c-x-b-b-t"           desc="Typhus fever (Rickettsia prowazekii)" />
   <cot cot="r-c-x-b-b-v"           desc="Viral encephalitis (alphaviruses [e.g., Venezuelan equine encephalitis, eastern equine encephalitis, western equine encephalitis])" />
   <cot cot="r-c-x-b-b-w"           desc="Water safety threats (e.g., Vibrio cholerae, Cryptosporidium parvum)" />
-  
+
   <cot cot="r-c-x-b-c"             desc="Category C - Third highest priority agents include emerging pathogens that could be engineered for mass dissemination in the future" />
   <cot cot="r-c-x-b-c-n"           desc="Nipah virus" />
   <cot cot="r-c-x-b-c-h"           desc="hantavirus" />
   -->
-  
+
   <!-- CoT weapon type hierarchy... -->
   <!-- Thanks to Tom Burger and the DLARS folks at NGC for providing this... -->
   <!-- Tree description is in types.txt.  Below is the flattened version. -->
@@ -2569,19 +2577,19 @@
 
   <is what="alarm"         match="^b-l"           />   <!-- Alarms  -->
 
-  <is what="metoc"         match="^b-w"           />        
-  <is what="temperature"   match="^b-w-A-t"       />        
-  <is what="turbulence"    match="^b-w-A-T"       />        
-  <is what="icing"         match="^b-w-A-I"       />        
-  <is what="tstorm"        match="^b-w-A-S-T"     />        
-  <is what="winds"         match="^b-w-A-W"       />        
-  <is what="coverage"      match="^b-w-A-C"       />        
-  <is what="cloudtop"      match="^b-w-A-C-t"     />        
-  <is what="cloudbase"     match="^b-w-A-C-b"     />        
-  <is what="cloudceiling"  match="^b-w-A-C-c"     />        
-  <is what="cloudtotal"    match="^b-w-A-C-a"     />        
+  <is what="metoc"         match="^b-w"           />
+  <is what="temperature"   match="^b-w-A-t"       />
+  <is what="turbulence"    match="^b-w-A-T"       />
+  <is what="icing"         match="^b-w-A-I"       />
+  <is what="tstorm"        match="^b-w-A-S-T"     />
+  <is what="winds"         match="^b-w-A-W"       />
+  <is what="coverage"      match="^b-w-A-C"       />
+  <is what="cloudtop"      match="^b-w-A-C-t"     />
+  <is what="cloudbase"     match="^b-w-A-C-b"     />
+  <is what="cloudceiling"  match="^b-w-A-C-c"     />
+  <is what="cloudtotal"    match="^b-w-A-C-a"     />
 
-  <is what="not.cot"       match="^b-x"           />        
+  <is what="not.cot"       match="^b-x"           />
 
   <is what="any"           match=".*"             />
   <is what="true"          match=".*"             />
