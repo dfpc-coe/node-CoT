@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.7.4 - 2025-09-07
+
+- :rocket: MilSym Battle Dimension is now case-insensitive
+
 ### v14.7.2 - 2025-09-07
 
 - :rocket: MilSym Augmentation should never error out parsing
