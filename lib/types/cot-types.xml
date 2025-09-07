@@ -42,7 +42,7 @@
   <cot cot="u-d-r"                     full="Drawn Rectangle"                                               desc="User Drawn Rectangle"                                                   />
   <cot cot="u-d-f"                     full="Drawn Polyline"                                                desc="User Drawn Polyline"                                                    />
   <cot cot="u-d-c-c"                   full="Drawn Circle"                                                  desc="User Drawn Circle"                                                      />
-  <cot cot="u-rb-a"                    full="Drawn Range"                                                   desc="User Drawn Range & Bearing"                                             />
+  <cot cot="u-rb-a"                    full="Drawn Range"                                                   desc="User Drawn Range &amp; Bearing"                                         />
   <!-- End Custom Types -->
 
   <cot cot="a-.-A"                     full="Air/Air Track"                                                 desc="Air Track"                                                              />
