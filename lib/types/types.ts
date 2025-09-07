@@ -620,9 +620,9 @@ export const PrecisionLocation = Type.Object({
 })
 
 export const UserIcon = Type.Object({
-    _attributes: Type.Object({
+    _attributes: Type.Optional(Type.Object({
         iconsetpath: Type.String()
-    })
+    }))
 })
 
 export const ForceDelete = Type.Object({})
