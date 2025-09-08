@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.7.5 - 2025-09-07
+
+- :bug: Migrate single point 2525D symbols to `__milicon`
+
 ### v14.7.4 - 2025-09-07
 
 - :bug: Support TAK Aware's Pathless Iconset Property
