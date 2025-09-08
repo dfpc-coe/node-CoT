@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.7.6 - 2025-09-07
+
+- :bug: https://jdstaerk.substack.com/p/we-just-found-malicious-code-in-the - Revert Deps
+
 ### v14.7.5 - 2025-09-07
 
 - :bug: Migrate single point 2525D symbols to `__milicon`
