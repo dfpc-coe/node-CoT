@@ -12,7 +12,11 @@
 
 ### Pending Fixed
 
-### v14.7.6 - 2025-09-07
+### v14.7.7 - 2025-09-09
+
+- :arrow_up: Update UUID to latest version
+
+### v14.7.6 - 2025-09-08
 
 - :bug: https://jdstaerk.substack.com/p/we-just-found-malicious-code-in-the - Revert Deps
 
