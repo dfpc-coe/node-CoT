@@ -48,7 +48,7 @@ export default class Color {
             r: this.r,
             g: this.g,
             b: this.b,
-            alpha: this.a
+            alpha: this.a / 255,
          }).hexa();
     }
 
