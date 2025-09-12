@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.7.9 - 2025-09-12
+
+- :rocket: Loosen support for Route Prefix
+
 ### v14.7.8 - 2025-09-11
 
 - :rocket: Loosen support for Route NavCues

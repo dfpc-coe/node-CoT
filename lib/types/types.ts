@@ -121,7 +121,7 @@ export const LinkAttrAttributes = Type.Object({
     planningmethod: Type.Optional(LinkAttrRouteFil),
     color: Type.Optional(Type.Integer()),
     method: LinkAttrRouteMethod,
-    prefix: Type.String(),
+    prefix: Type.Optional(Type.String()),
     style: Type.Optional(Type.String()),
     stroke: Type.Optional(Type.String()),
     type: Type.Optional(Type.String()),
