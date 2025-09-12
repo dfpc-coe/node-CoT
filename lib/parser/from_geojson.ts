@@ -290,8 +290,11 @@ export async function from_geojson(
                 throw new Err(400, null, `${feature.properties.type} (Circle) must define a feature.properties.shape.ellipse property`)
             }
 
-            const strokeColor = (cot.event.detail.strokeColor?._attributes?.value) ? new Color(cot.event.detail.strokeColor._attributes.value) : new Color('#00FF0000');
-            const fillColor = (cot.event.detail.fillColor?._attributes?.value) ? new Color(cot.event.detail.fillColor._attributes.value) : new Color('#00FF0000');
+            const strokeColor = new Color(feature.properties.stroke || -1761607936);
+            strokeColor.a = feature.properties['stroke-opacity'] !== undefined ? feature.properties['stroke-opacity'] * 255 : 128;
+
+            const fillColor = new Color(feature.properties.fill || -1761607936);
+            fillColor.a = feature.properties['fill-opacity'] !== undefined ? feature.properties['fill-opacity'] * 255 : 128;
 
             cot.event.detail.shape = {
                 ellipse: {

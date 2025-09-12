@@ -337,13 +337,19 @@ export async function to_geojson(cot: CoT): Promise<Static<typeof Feature>> {
         }
 
         if (
-            raw.event.detail.shape.link?._attributes.type === 'b-x-KmlStyle'
+            !Array.isArray(raw.event.detail.shape.link)
+            && raw.event.detail.shape.link?._attributes.type === 'b-x-KmlStyle'
             && raw.event.detail.shape.link?.Style
         ) {
             if (raw.event.detail.shape.link.Style.LineStyle?.color) {
-                const strokeColor = new Color(Number(raw.event.detail.shape.link.Style.LineStyle.color._text));
+                const rawColor = raw.event.detail.shape.link.Style.LineStyle.color._text.startsWith('#')
+                    ? raw.event.detail.shape.link.Style.LineStyle.color._text
+                    : '#' + raw.event.detail.shape.link.Style.LineStyle.color._text;
+
+                const strokeColor = new Color(rawColor);
                 feat.properties.stroke = strokeColor.as_hex();
-                feat.properties['stroke-opacity'] = strokeColor.as_opacity() / 255;
+
+                feat.properties['stroke-opacity'] = strokeColor.as_opacity();
             }
 
             if (raw.event.detail.shape.link.Style.LineStyle?.width) {
@@ -351,7 +357,11 @@ export async function to_geojson(cot: CoT): Promise<Static<typeof Feature>> {
             }
 
             if (raw.event.detail.shape.link.Style.PolyStyle?.color) {
-                const fillColor = new Color(Number(raw.event.detail.shape.link.Style.PolyStyle.color._text));
+                const rawColor = raw.event.detail.shape.link.Style.PolyStyle.color._text.startsWith('#')
+                    ? raw.event.detail.shape.link.Style.PolyStyle.color._text
+                    : '#' + raw.event.detail.shape.link.Style.PolyStyle.color._text;
+
+                const fillColor = new Color(rawColor);
                 feat.properties['fill-opacity'] = fillColor.as_opacity() / 255;
                 feat.properties['fill'] = fillColor.as_hex();
             }

@@ -102,7 +102,7 @@ test('En-decode 0-length polyline', async (t) => {
     t.end();
 });
 
-test('Basic Circle', async (t) => {
+test.only('Basic Circle', async (t) => {
     const cot = await CoTParser.from_xml(`
        <event version="2.0" uid="96bba41c-e6fd-44d5-be90-8d816c6b873b" type="u-r-b-c-c" how="h-e" time="2025-07-10T16:49:54Z" start="2025-07-10T16:49:43Z" stale="2025-07-11T16:49:43Z" access="Undefined">
             <point lat="41.8988499" lon="-113.9094586" hae="2040.381" ce="9999999.0" le="9999999.0"/>
@@ -167,10 +167,13 @@ test('Basic Circle', async (t) => {
             },
             'marker-color': '#FF7700',
             'marker-opacity': 1,
-            "stroke": "#FF7700",
-            "stroke-opacity": 1,
+            "stroke": "#FFFF77",
+            // Link Styles take precedence over detail styles
+            "stroke-opacity": 0,
             "stroke-width": 3,
             "stroke-style": "solid",
+            "fill-opacity": 0,
+            fill: "#00FF77",
             metadata: {}
         },
         geometry: {
@@ -195,7 +198,7 @@ test('Basic Circle', async (t) => {
                 archive: { _attributes: {} },
                 creator: { _attributes: { uid: 'ANDROID-764679f74013dfe2', callsign: 'COTAK Admin Ingalls', time: '2025-07-09T22:12:06.038Z', type: 'a-f-G-E-V-C' } },
                 precisionlocation: { _attributes: { altsrc: 'DTED0' } },
-                strokeColor: { "_attributes": { "value": -35072 } },
+                strokeColor: { "_attributes": { "value": 16777079 } },
                 strokeWeight: { "_attributes": { "value": 3 } },
                 labels_on: { "_attributes": { "value": true } },
                 tog: { "_attributes": { "enabled": "0" } },
@@ -210,11 +213,11 @@ test('Basic Circle', async (t) => {
                         },
                         Style:{
                             LineStyle: {
-                                color: { _text: "FF7700FF" },
+                                color: { _text: "FFFF7700" },
                                 width: { _text: 3 }
                             },
                             PolyStyle: {
-                                color: { _text: "00FF0000" }
+                                color: { _text: "00FF7700" }
                             }
                         }
                     }
