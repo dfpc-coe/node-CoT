@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.8.0 - 2025-09-12
+
+- :rocket: Support Circle KML Style Properties
+
 ### v14.7.9 - 2025-09-12
 
 - :rocket: Loosen support for Route Prefix
