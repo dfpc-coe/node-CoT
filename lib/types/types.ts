@@ -113,8 +113,10 @@ export const LinkAttrRouteType = Type.Enum({
 });
 
 export const LinkAttrRouteOrder = Type.Enum({
-    Ascending: 'Ascending Check Points',
-    Descending: 'Descending Check Points',
+    Ascending: 'Ascending',
+    Descending: 'Descending',
+    AscendingCheckPoint: 'Ascending Check Points',
+    DescendingCheckPoints: 'Descending Check Points',
 });
 
 export const LinkAttrAttributes = Type.Object({

@@ -18,6 +18,8 @@
         "stroke-style": "solid",
         "stroke": "#FFFF00",
         "stroke-opacity": 0.5019607843137255,
+        "fill": "#00FF00",
+        "fill-opacity": 0,
 
         "labels": true,
         "shape": {

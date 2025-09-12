@@ -336,6 +336,27 @@ export async function to_geojson(cot: CoT): Promise<Static<typeof Feature>> {
             angle: Number(raw.event.detail.shape.ellipse._attributes.angle)
         }
 
+        if (
+            raw.event.detail.shape.link?._attributes.type === 'b-x-KmlStyle'
+            && raw.event.detail.shape.link?.Style
+        ) {
+            if (raw.event.detail.shape.link.Style.LineStyle?.color) {
+                const strokeColor = new Color(Number(raw.event.detail.shape.link.Style.LineStyle.color._text));
+                feat.properties.stroke = strokeColor.as_hex();
+                feat.properties['stroke-opacity'] = strokeColor.as_opacity() / 255;
+            }
+
+            if (raw.event.detail.shape.link.Style.LineStyle?.width) {
+                feat.properties['stroke-width'] = Number(raw.event.detail.shape.link.Style.LineStyle.width._text);
+            }
+
+            if (raw.event.detail.shape.link.Style.PolyStyle?.color) {
+                const fillColor = new Color(Number(raw.event.detail.shape.link.Style.PolyStyle.color._text));
+                feat.properties['fill-opacity'] = fillColor.as_opacity() / 255;
+                feat.properties['fill'] = fillColor.as_hex();
+            }
+        }
+
         feat.geometry = Truncate(Ellipse(
             feat.geometry.coordinates as number[],
             Number(ellipse.major) / 1000,
