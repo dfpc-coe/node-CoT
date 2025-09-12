@@ -1,7 +1,7 @@
 {
     "name": "@tak-ps/node-cot",
     "type": "module",
-    "version": "14.7.7",
+    "version": "14.7.8",
     "description": "Lightweight JavaScript library for parsing and manipulating TAK messages",
     "author": "Nick Ingalls <nick@ingalls.ca>",
     "types": "index.ts",
