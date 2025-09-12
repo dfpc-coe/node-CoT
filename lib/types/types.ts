@@ -77,7 +77,7 @@ export const RouteInfoNavCue = Type.Object({
 
 export const RouteInfo = Type.Object({
     __navcues: Type.Object({
-        __navcue: Type.Union([Type.Array(RouteInfoNavCue), RouteInfoNavCue])
+        __navcue: Type.Optional(Type.Union([Type.Array(RouteInfoNavCue), RouteInfoNavCue]))
     })
 })
 
