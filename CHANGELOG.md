@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.7.8 - 2025-09-11
+
+- :rocket: Loosen support for Route NavCues
+
 ### v14.7.7 - 2025-09-09
 
 - :arrow_up: Update UUID to latest version
