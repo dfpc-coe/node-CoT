@@ -362,7 +362,7 @@ export async function to_geojson(cot: CoT): Promise<Static<typeof Feature>> {
                     : '#' + raw.event.detail.shape.link.Style.PolyStyle.color._text;
 
                 const fillColor = new Color(rawColor);
-                feat.properties['fill-opacity'] = fillColor.as_opacity() / 255;
+                feat.properties['fill-opacity'] = fillColor.as_opacity();
                 feat.properties['fill'] = fillColor.as_hex();
             }
         }
