@@ -131,8 +131,8 @@ export default class CoTTypes {
                 };
             }
 
-            if (cot.cot.match(/^a-\.-/)) {
-                const type = cot.cot.replace(/^a-\.-/, `a-${si}-`);
+            if (cot.cot.match(/^a-.-/)) {
+                const type = cot.cot.replace(/^a-.-/, `a-${si}-`);
 
                 filtered.add({
                     ...cot,

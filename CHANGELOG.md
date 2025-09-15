@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.8.2 - 2025-09-15
+
+- :bug: Improve COT Type Parsing
+
 ### v14.8.1 - 2025-09-12
 
 - :rocket: Support Circle KML Style Properties
