@@ -310,7 +310,7 @@ export const MissionChangeDetails = Type.Object({
 })
 
 export const MissionChange = Type.Object({
-    contentUid: GenericText,
+    contentUid: Type.Optional(GenericText),
     creatorUid: GenericOptionalText,
     isFederatedChange: GenericText,
     missionName: GenericText,
