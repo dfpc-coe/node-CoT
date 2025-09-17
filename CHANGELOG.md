@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.9.1 - 2025-09-17
+
+- :bug: Relax Mission Change parsing to allow empty `details`
+
 ### v14.9.0 - 2025-09-17
 
 - :bug: Relax Mission Change parsing to allow empty `creatorUid`

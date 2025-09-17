@@ -316,7 +316,7 @@ export const MissionChange = Type.Object({
     missionName: GenericText,
     timestamp: GenericText,
     type: GenericText,
-    details: MissionChangeDetails
+    details: Type.Optional(MissionChangeDetails)
 })
 
 export const MissionChanges = Type.Object({
