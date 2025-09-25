@@ -504,10 +504,18 @@ export const Uid = Type.Object({
 })
 
 export const CreatorAttributes = Type.Object({
-    uid: Type.String(),
-    callsign: Type.String(),
-    time: Type.String(),
-    type: Type.String()
+    uid: Type.String({
+        description: 'The Unique ID of the creator of the CoT'
+    }),
+    callsign: Type.String({
+        description: 'The Callsign of the creator of the CoT'
+    }),
+    time: Type.Optional(Type.String({
+        description: 'Time at which the CoT was created by the creator'
+    })),
+    type: Type.String({
+        description: 'The Type of the creator - typically a- for things on the ground, b- for digital things, etc'
+    })
 })
 
 export const Creator = Type.Object({

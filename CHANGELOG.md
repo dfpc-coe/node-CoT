@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.9.2 - 2025-09-25
+
+- :bug: Relax Creator parsing to allow undefined `time`
+
 ### v14.9.1 - 2025-09-17
 
 - :bug: Relax Mission Change parsing to allow empty `details`
