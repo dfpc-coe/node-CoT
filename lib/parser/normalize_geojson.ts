@@ -98,7 +98,7 @@ export async function normalize_geojson(
     feature.properties.archived = true;
 
     coordEach(feature.geometry, (coord) => {
-        return coord.slice(0, 3);
+        coord.splice(3);
     });
 
     return feature as Static<typeof Feature>;

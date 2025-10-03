@@ -28,7 +28,9 @@ export async function from_geojson(
     opts: CoTOptions = {}
 ): Promise<CoT> {
     try {
-        feature = await TypeValidator.type(InputFeature, feature);
+        feature = await TypeValidator.type(InputFeature, feature, {
+            verbose: opts.verbose
+        });
     } catch (err) {
         throw new Err(400, null, `Validation Error: ${err}`);
     }

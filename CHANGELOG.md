@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.9.3 - 2025-10-03
+
+- :bug: Ensure additional coordinates are removed properly in normalize step
+
 ### v14.9.2 - 2025-09-25
 
 - :bug: Relax Creator parsing to allow undefined `time`

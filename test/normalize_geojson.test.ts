@@ -64,7 +64,7 @@ test('normalize_geojson - Point', async (t) => {
         },
         geometry: {
             type: 'Point',
-            coordinates: [ -108.2982, 39.0833, 0, 0 ],
+            coordinates: [ -108.2982, 39.0833, 0 ],
         }
     });
 

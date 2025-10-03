@@ -21,6 +21,7 @@ import util2525 from './utils/2525.js'
 import JSONCoT, { Detail } from './types/types.js'
 
 export type CoTOptions = {
+    verbose?: boolean,
     creator?: CoT | {
         uid: string,
         type: string,
