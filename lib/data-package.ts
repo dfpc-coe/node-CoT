@@ -219,7 +219,7 @@ export class DataPackage {
      * @param [opts.cleanup] If the Zip is parsed as a DataSync successfully, remove the initial zip file
      */
     static async parse(
-        input: string | URL,
+        input: string | URL | Buffer,
         opts?: {
             strict?: boolean
             cleanup?: boolean

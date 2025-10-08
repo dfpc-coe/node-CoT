@@ -158,6 +158,7 @@ These are less common properties that can be used:
 | `u-d-f`           | LineString or Polygon |
 | `u-d-r`           | 4 Cornered Rectangle |
 | `u-d-p`           | Point |
+| `u-d-c-c`         | Circle |
 | `u-rb-a`          | Range Line |
 
 <p align='center'><strong>Internal</strong></p>
