@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.10.0 - 2025-10-10
+
+- :rocket: Expand type definitions and tests to allow parsing DataPackages that include an AOI file from ATAK
+
 ### v14.9.3 - 2025-10-03
 
 - :bug: Ensure additional coordinates are removed properly in normalize step
