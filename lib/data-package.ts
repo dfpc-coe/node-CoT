@@ -29,7 +29,7 @@ export const ManifestContent = Type.Object({
         ignore: Type.Boolean(),
         zipEntry: Type.String()
     }),
-    Parameter: Type.Union([Parameter, Type.Array(Parameter)])
+    Parameter: Type.Optional(Type.Union([Parameter, Type.Array(Parameter)]))
 })
 
 export const Group = Type.Object({
@@ -219,7 +219,7 @@ export class DataPackage {
      * @param [opts.cleanup] If the Zip is parsed as a DataSync successfully, remove the initial zip file
      */
     static async parse(
-        input: string | URL | Buffer,
+        input: string | URL,
         opts?: {
             strict?: boolean
             cleanup?: boolean
@@ -390,17 +390,19 @@ export class DataPackage {
             if (path.parse(content._attributes.zipEntry).ext === '.cot') continue;
             if (opts.respectIgnore && content._attributes.ignore) continue;
 
-            const params = Array.isArray(content.Parameter) ? content.Parameter : [content.Parameter];
+            if (content.Parameter) {
+                const params = Array.isArray(content.Parameter) ? content.Parameter : [content.Parameter];
 
-            for (const param of params) {
-                if (param._attributes.name === 'uid' && cots.has(param._attributes.value)) {
-                    const existing = attachments.get(param._attributes.value);
-                    if (existing) {
-                        existing.push(content);
-                    } else {
-                        attachments.set(param._attributes.value, [content]);
+                for (const param of params) {
+                    if (param._attributes.name === 'uid' && cots.has(param._attributes.value)) {
+                        const existing = attachments.get(param._attributes.value);
+                        if (existing) {
+                            existing.push(content);
+                        } else {
+                            attachments.set(param._attributes.value, [content]);
+                        }
+                        break;
                     }
-                    break;
                 }
             }
         }

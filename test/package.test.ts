@@ -36,6 +36,40 @@ test(`DataPackage CoT Parsing: CameraCOTs.zip`, async (t) => {
     t.end();
 });
 
+test(`DataPackage CoT Parsing: GrandJunctionAOI.zip`, async (t) => {
+    const pkg = await DataPackage.parse(new URL('./packages/GrandJunctionAOI.zip', import.meta.url).pathname, {
+        cleanup: false
+    });
+
+    t.equals(pkg.version, '2');
+    t.ok(pkg.path);
+    t.deepEquals(pkg.settings, {
+        uid: '76dc90d2-988e-46fe-bfeb-6ce360dac4b9',
+        name: 'gramd junction',
+        onReceiveImport: true,
+        onReceiveDelete: true
+    });
+
+    t.deepEquals(pkg.contents, [
+        {
+            _attributes: { ignore: false, zipEntry: 'aff3e2e94a1c7450bd0fd46f58b6ca65/fav_e713d.txt' },
+        }
+    ]);
+
+    const cots = await pkg.cots();
+    t.equal(cots.length, 0);
+
+    const attachments = await pkg.attachments();
+    t.equals(attachments.size, 0)
+
+    const files = await pkg.files();
+    t.equals(files.size, 1)
+
+    await pkg.destroy();
+
+    t.end();
+});
+
 test(`DataPackage CoT Writing`, async (t) => {
     const pkg = new DataPackage();
 
