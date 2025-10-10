@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.11.0 - 2025-10-10
+
+- :rocket: Fix version conflict on NPM
+
 ### v14.10.0 - 2025-10-10
 
 - :rocket: Expand type definitions and tests to allow parsing DataPackages that include an AOI file from ATAK
