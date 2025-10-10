@@ -57,13 +57,13 @@ test(`DataPackage CoT Parsing: GrandJunctionAOI.zip`, async (t) => {
     ]);
 
     const cots = await pkg.cots();
-    t.equal(cots.length, 1);
+    t.equal(cots.length, 0);
 
     const attachments = await pkg.attachments();
     t.equals(attachments.size, 0)
 
     const files = await pkg.files();
-    t.equals(files.size, 0)
+    t.equals(files.size, 1)
 
     await pkg.destroy();
 
