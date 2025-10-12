@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.11.1 - 2025-10-12
+
+- :bug: Ensure Direct Chat messages have a `Dest` flag
+
 ### v14.11.0 - 2025-10-10
 
 - :rocket: Fix version conflict on NPM
