@@ -76,6 +76,13 @@ test('DirectChat - Basic', (t) => {
                             }
                         }
                     },
+                    marti: {
+                        dest: [{
+                            _attributes: {
+                                uid: '123456',
+                            }
+                        }],
+                    },
                     link: {
                         _attributes: {
                             uid: '654321',

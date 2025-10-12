@@ -72,5 +72,10 @@ export class DirectChat extends CoT {
         }
 
         super(cot)
+
+        this.addDest({
+            uid: chat.to.uid
+        })
+
     }
 }
