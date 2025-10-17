@@ -678,6 +678,11 @@ export const Detail = Type.Object({
     link: Type.Optional(Type.Union([Link, Type.Array(Link)])),
     link_attr: Type.Optional(LinkAttr),
 
+    // Custom Attributes related to CloudTAK Display
+    minzoom: Type.Optional(GenericNumberAttributes),
+    maxzoom: Type.Optional(GenericNumberAttributes),
+    // ---------------------------------------------
+
     usericon: Type.Optional(UserIcon),
     track: Type.Optional(Track),
     sensor: Type.Optional(Sensor),
