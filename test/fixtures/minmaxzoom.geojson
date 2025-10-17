@@ -1,0 +1,21 @@
+{
+    "id": "123",
+    "type": "Feature",
+    "path": "/",
+    "properties": {
+        "type": "a-f-G",
+        "how": "m-g",
+        "callsign": "BasicTest",
+        "center": [ 1.1, 2.2, 0 ],
+        "time": "2023-08-04T15:17:43.649Z",
+        "start": "2023-08-04T15:17:43.649Z",
+        "maxzoom": 14,
+        "minzoom": 5,
+        "stale": "2023-08-04T15:17:43.649Z",
+        "metadata": {}
+    },
+    "geometry": {
+        "type": "Point",
+        "coordinates": [1.1, 2.2, 0]
+    }
+}
