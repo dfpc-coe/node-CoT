@@ -89,11 +89,11 @@ export async function to_geojson(cot: CoT): Promise<Static<typeof Feature>> {
         feat.properties.bearing = raw.event.detail.bearing._attributes.value;
     }
 
-    if (raw.event.detail.minzoom) {
+    if (raw.event.detail.minzoom?._attributes?.value !== undefined) {
         feat.properties.minzoom = raw.event.detail.minzoom._attributes.value;
     }
 
-    if (raw.event.detail.maxzoom) {
+    if (raw.event.detail.maxzoom?._attributes?.value !== undefined) {
         feat.properties.maxzoom = raw.event.detail.maxzoom._attributes.value;
     }
 
