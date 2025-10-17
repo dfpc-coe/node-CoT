@@ -115,12 +115,18 @@ export async function from_geojson(
         cot.event.detail.takv = { _attributes: { ...feature.properties.takv } };
     }
 
-    if (feature.properties.minzoom !== undefined) {
-        cot.event.detail.minzoom = { _attributes: { value: feature.properties.minzoom } };
-    }
+    if (feature.properties.minzoom !== undefined || feature.properties.maxzoom !== undefined) {
+        if (!cot.event.detail.display || !cot.event.detail.display._attributes) {
+            cot.event.detail.display = { _attributes: {} };
+        }
 
-    if (feature.properties.maxzoom !== undefined) {
-        cot.event.detail.maxzoom = { _attributes: { value: feature.properties.maxzoom } };
+        if (feature.properties.minzoom !== undefined) {
+            cot.event.detail.display._attributes.minzoom = feature.properties.minzoom;
+        }
+
+        if (feature.properties.maxzoom !== undefined) {
+            cot.event.detail.display._attributes.maxzoom = feature.properties.maxzoom;
+        }
     }
 
     if (feature.properties.creator) {
