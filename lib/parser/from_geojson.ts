@@ -115,16 +115,30 @@ export async function from_geojson(
         cot.event.detail.takv = { _attributes: { ...feature.properties.takv } };
     }
 
+    if (feature.properties.minzoom !== undefined || feature.properties.maxzoom !== undefined) {
+        if (!cot.event.detail.display || !cot.event.detail.display._attributes) {
+            cot.event.detail.display = { _attributes: {} };
+        }
+
+        if (feature.properties.minzoom !== undefined) {
+            cot.event.detail.display._attributes.minzoom = feature.properties.minzoom;
+        }
+
+        if (feature.properties.maxzoom !== undefined) {
+            cot.event.detail.display._attributes.maxzoom = feature.properties.maxzoom;
+        }
+    }
+
     if (feature.properties.creator) {
         cot.event.detail.creator = { _attributes: { ...feature.properties.creator } };
     }
 
     if (feature.properties.range !== undefined) {
-        cot.event.detail.range = { _attributes: { value:  feature.properties.range  } }
+        cot.event.detail.range = { _attributes: { value: feature.properties.range  } }
     }
 
     if (feature.properties.bearing !== undefined) {
-        cot.event.detail.bearing = { _attributes: { value:  feature.properties.bearing  } }
+        cot.event.detail.bearing = { _attributes: { value: feature.properties.bearing  } }
     }
 
     if (feature.properties.geofence) {

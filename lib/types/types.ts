@@ -603,6 +603,13 @@ export const Inclination = Type.Object({
     _attributes: InclinationAttributes,
 });
 
+export const Display = Type.Object({
+    _attributes: Type.Object({
+        minzoom: Type.Optional(Type.Number()),
+        maxzoom: Type.Optional(Type.Number()),
+    })
+});
+
 export const NorthRefAttributes = Type.Object({
     value: Type.Number()
 });
@@ -677,6 +684,10 @@ export const Detail = Type.Object({
 
     link: Type.Optional(Type.Union([Link, Type.Array(Link)])),
     link_attr: Type.Optional(LinkAttr),
+
+    // Custom Attributes related to CloudTAK Display
+    display: Type.Optional(Display),
+    // ---------------------------------------------
 
     usericon: Type.Optional(UserIcon),
     track: Type.Optional(Track),
