@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.12.0 - 2025-10-17
+
+- :tada: Allow setting display minzoom/maxzoom on Features
+
 ### v14.11.1 - 2025-10-12
 
 - :bug: Ensure Direct Chat messages have a `Dest` flag
