@@ -115,7 +115,11 @@ export async function from_geojson(
         cot.event.detail.takv = { _attributes: { ...feature.properties.takv } };
     }
 
-    if (feature.properties.minzoom !== undefined || feature.properties.maxzoom !== undefined) {
+    if (
+        feature.properties.minzoom !== undefined
+        || feature.properties.maxzoom !== undefined
+        || feature.properties.rotate !== undefined
+    ) {
         if (!cot.event.detail.display || !cot.event.detail.display._attributes) {
             cot.event.detail.display = { _attributes: {} };
         }
@@ -126,6 +130,10 @@ export async function from_geojson(
 
         if (feature.properties.maxzoom !== undefined) {
             cot.event.detail.display._attributes.maxzoom = feature.properties.maxzoom;
+        }
+
+        if (feature.properties.rotate !== undefined) {
+            cot.event.detail.display._attributes.rotate = feature.properties.rotate;
         }
     }
 
