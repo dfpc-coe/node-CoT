@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.13.0 - 2025-11-10
+
+- :tada: Allow setting rotation on Features
+
 ### v14.12.0 - 2025-10-17
 
 - :tada: Allow setting display minzoom/maxzoom on Features
