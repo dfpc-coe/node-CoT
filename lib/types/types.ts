@@ -605,8 +605,15 @@ export const Inclination = Type.Object({
 
 export const Display = Type.Object({
     _attributes: Type.Object({
-        minzoom: Type.Optional(Type.Number()),
-        maxzoom: Type.Optional(Type.Number()),
+        minzoom: Type.Optional(Type.Number({
+            description: 'The minimum zoom level at which to display the feature'
+        })),
+        maxzoom: Type.Optional(Type.Number({
+            description: 'The maximum zoom level at which to display the feature'
+        })),
+        rotate: Type.Optional(Type.Boolean({
+            description: 'Whether to rotate the icon based on heading'
+        })),
     })
 });
 

@@ -93,6 +93,10 @@ export async function to_geojson(cot: CoT): Promise<Static<typeof Feature>> {
         feat.properties.minzoom = raw.event.detail.display._attributes.minzoom;
     }
 
+    if (raw.event.detail.display?._attributes?.rotate !== undefined) {
+        feat.properties.rotate = raw.event.detail.display._attributes.rotate;
+    }
+
     if (raw.event.detail.display?._attributes?.maxzoom !== undefined) {
         feat.properties.maxzoom = raw.event.detail.display._attributes.maxzoom;
     }

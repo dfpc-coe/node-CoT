@@ -70,6 +70,7 @@ export const Properties = Type.Object({
     center: Position,
     minzoom: Type.Optional(Type.Number()),
     maxzoom: Type.Optional(Type.Number()),
+    rotate: Type.Optional(Type.Boolean()),
     range: Type.Optional(Type.Number()),
     bearing: Type.Optional(Type.Number()),
     creator: Type.Optional(CreatorAttributes),
