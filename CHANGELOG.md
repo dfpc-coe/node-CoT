@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.14.0 - 2025-11-17
+
+- :tada: Add BiDirectional support for Spotted Map Items
+
 ### v14.13.0 - 2025-11-10
 
 - :tada: Allow setting rotation on Features
