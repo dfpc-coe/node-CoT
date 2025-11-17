@@ -437,11 +437,9 @@ export async function to_geojson(cot: CoT): Promise<Static<typeof Feature>> {
             raw.event.detail.usericon?._attributes?.iconsetpath
             && raw.event.detail.usericon._attributes.iconsetpath.startsWith('COT_MAPPING_SPOTMAP/b-m-p-s-m/')
        ) {
-            const spot = new Color(Number(raw.event.detail.usericon._attributes.iconsetpath.split('/')[3]));
+            const spot = new Color(Number(raw.event.detail.usericon._attributes.iconsetpath.split('/')[2]));
             feat.properties['marker-color'] = spot.as_hex();
-            feat.properties['marker-opacity'] = spot.as_opacity();
-
-            console.error(spot);
+            feat.properties['marker-opacity'] = spot.as_opacity() / 255;
             delete feat.properties.icon;
         }
     }

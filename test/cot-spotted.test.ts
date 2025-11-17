@@ -36,8 +36,8 @@ test('Parse b-m-p-s-m (Spotted)', async (t) => {
             archived: true,
             status: { readiness: 'true' },
             precisionlocation: { altsrc: '???' },
-            'marker-color': '#000000',
-            'marker-opacity': 1,
+            'marker-color': '#FF0000',
+            'marker-opacity': 255,
             metadata: {}
         },
         geometry: {
