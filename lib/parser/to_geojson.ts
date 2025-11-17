@@ -164,10 +164,12 @@ export async function to_geojson(cot: CoT): Promise<Static<typeof Feature>> {
         feat.properties.dest = dest.length === 1 ? dest[0] : dest
     }
 
-    if (raw.event.detail.usericon && raw.event.detail.usericon._attributes && raw.event.detail.usericon._attributes.iconsetpath) {
+    if (
+        raw.event.detail.usericon?._attributes?.iconsetpath
+        && !['b-m-p-s-m'].includes(raw.event._attributes.type)
+   ) {
         feat.properties.icon = raw.event.detail.usericon._attributes.iconsetpath;
     }
-
 
     if (raw.event.detail.uid && raw.event.detail.uid._attributes && raw.event.detail.uid._attributes.Droid) {
         feat.properties.droid = raw.event.detail.uid._attributes.Droid;
@@ -429,6 +431,16 @@ export async function to_geojson(cot: CoT): Promise<Static<typeof Feature>> {
                 feat.properties.stroke = stroke.as_hex();
                 feat.properties['stroke-opacity'] = stroke.as_opacity() / 255;
             }
+        }
+    } else if (raw.event._attributes.type === 'b-m-p-s-m') {
+        if (
+            raw.event.detail.usericon?._attributes?.iconsetpath
+            && raw.event.detail.usericon._attributes.iconsetpath.startsWith('COT_MAPPING_SPOTMAP/b-m-p-s-m/')
+       ) {
+            const spot = new Color(Number(raw.event.detail.usericon._attributes.iconsetpath.split('/')[2]));
+            feat.properties['marker-color'] = spot.as_hex();
+            feat.properties['marker-opacity'] = spot.as_opacity() / 255;
+            delete feat.properties.icon;
         }
     }
 

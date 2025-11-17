@@ -109,7 +109,17 @@ export async function from_geojson(
             _attributes: { type: 'Troops In Contact' },
             _text: feature.properties.callsign || 'UNKNOWN'
         }
+    } else if (feature.properties.type === 'b-m-p-s-m') {
+        const spot = new Color(feature.properties['marker-color'] || -1761607936);
+        spot.a = feature.properties['marker-opacity'] !== undefined ? feature.properties['marker-opacity'] * 255 : 128;
+
+        cot.event.detail.usericon = {
+            _attributes: {
+                iconsetpath: `COT_MAPPING_SPOTMAP/b-m-p-s-m/${spot.as_32bit()}`
+            }
+        }
     }
+
 
     if (feature.properties.takv) {
         cot.event.detail.takv = { _attributes: { ...feature.properties.takv } };
