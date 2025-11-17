@@ -19,8 +19,6 @@ test('Parse b-m-p-s-m (Spotted)', async (t) => {
         </event>
     `);
 
-    const detail = cot.detail();
-
     t.deepEquals(await CoTParser.to_geojson(cot), {
         id: '9405e320-9356-41c4-8449-f46990aa17f8',
         type: 'Feature',
@@ -37,7 +35,7 @@ test('Parse b-m-p-s-m (Spotted)', async (t) => {
             status: { readiness: 'true' },
             precisionlocation: { altsrc: '???' },
             'marker-color': '#FF0000',
-            'marker-opacity': 255,
+            'marker-opacity': 1,
             metadata: {}
         },
         geometry: {
