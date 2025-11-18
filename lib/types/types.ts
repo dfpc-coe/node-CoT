@@ -49,6 +49,9 @@ export const LinkAttributes = Type.Object({
     // Used in Routes
     callsign: Type.Optional(Type.String()),
 
+    // Custom CloudTAK Attribute to open a Mission when clicked - Should always be a GUID
+    mission: Type.Optional(Type.String()),
+
     // URL Style Links
     url: Type.Optional(Type.String()),
     mime: Type.Optional(Type.String()),

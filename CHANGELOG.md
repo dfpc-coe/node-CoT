@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.15.0 - 2025-11-18
+
+- :tada: Add Mission Link Field
+
 ### v14.14.0 - 2025-11-17
 
 - :tada: Add BiDirectional support for Spotted Map Items
