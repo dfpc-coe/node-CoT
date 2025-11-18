@@ -390,6 +390,7 @@ export async function to_geojson(cot: CoT): Promise<Static<typeof Feature>> {
             }
         ), {
             precision: COORDINATE_PRECISION,
+            coordinates: 3,
             mutate: true
         }).geometry as Static<typeof Polygon>;
 
