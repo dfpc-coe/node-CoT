@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.16.0 - 2025-11-26
+
+- :tada: Bi-Directional MilIcon Support
+
 ### v14.15.0 - 2025-11-18
 
 - :tada: Add Mission Link Field
