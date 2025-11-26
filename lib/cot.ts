@@ -80,7 +80,7 @@ export default class CoT {
             });
         }
 
-        if (opts.milsym && opts.milsym.augment && !this.raw.event.detail.__milsym) {
+        if (opts.milsym?.augment && !this.raw.event.detail.__milsym) {
             if (util2525.is2525BConvertable(this.raw.event._attributes.type)) {
                 try {
                     this.raw.event.detail.__milicon = {
