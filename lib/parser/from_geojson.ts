@@ -167,6 +167,10 @@ export async function from_geojson(
         cot.event.detail.__milsym = { _attributes: { id: feature.properties.milsym.id} };
     }
 
+    if (feature.properties.milicon) {
+        cot.event.detail.__milicon = { _attributes: { id: feature.properties.milicon.id} };
+    }
+
     if (feature.properties.sensor) {
         cot.event.detail.sensor = { _attributes: { ...feature.properties.sensor } };
     }

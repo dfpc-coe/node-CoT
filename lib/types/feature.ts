@@ -27,6 +27,10 @@ export const MilSym = Type.Object({
     id: Type.String()
 })
 
+export const MilIcon = Type.Object({
+    id: Type.String()
+})
+
 export const FeaturePropertyMissionLayer = Type.Object({
     name: Type.Optional(Type.String()),
     parentUid: Type.Optional(Type.String()),
@@ -95,6 +99,7 @@ export const Properties = Type.Object({
     })),
     remarks: Type.Optional(Type.String()),
     milsym: Type.Optional(MilSym),
+    milicon: Type.Optional(MilIcon),
     mission: Type.Optional(FeaturePropertyMission),
     fileshare: Type.Optional(FileShareAttributes),
     ackrequest: Type.Optional(ACKRequestAttributes),

@@ -77,6 +77,12 @@ export async function to_geojson(cot: CoT): Promise<Static<typeof Feature>> {
         }
     }
 
+    if (raw.event.detail.__milicon) {
+        feat.properties.milicon = {
+            id: raw.event.detail.__milicon._attributes.id
+        }
+    }
+
     if (raw.event.detail.sensor) {
         feat.properties.sensor = raw.event.detail.sensor._attributes;
     }
