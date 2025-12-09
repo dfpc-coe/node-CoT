@@ -134,11 +134,20 @@ export async function to_geojson(cot: CoT): Promise<Static<typeof Feature>> {
     if (raw.event.detail.link) {
         if (!Array.isArray(raw.event.detail.link)) raw.event.detail.link = [raw.event.detail.link];
 
-        feat.properties.links = raw.event.detail.link.filter((link: Static<typeof Link>) => {
-            return !!link._attributes.url
-        }).map((link: Static<typeof Link>): Static<typeof LinkAttributes> => {
-            return link._attributes;
-        });
+        // These CoT Types use "point" links as geometry points
+        if (['u-d-f', 'u-d-r', 'b-m-r', 'u-rb-a'].includes(raw.event._attributes.type)) {
+            feat.properties.links = raw.event.detail.link
+                .filter((link: Static<typeof Link>) => {
+                    return !link._attributes.point
+                }).map((link: Static<typeof Link>): Static<typeof LinkAttributes> => {
+                    return link._attributes;
+                });
+        } else {
+            feat.properties.links = raw.event.detail.link
+                .map((link: Static<typeof Link>): Static<typeof LinkAttributes> => {
+                        return link._attributes;
+                });
+        }
 
         if (!feat.properties.links || !feat.properties.links.length) delete feat.properties.links;
     }
@@ -299,7 +308,12 @@ export async function to_geojson(cot: CoT): Promise<Static<typeof Feature>> {
 
         for (const l of raw.event.detail.link) {
             if (!l._attributes.point) continue;
-            coordinates.push(l._attributes.point.split(',').map((p: string) => { return Number(p.trim()) }).splice(0, 2).reverse());
+            coordinates.push(
+                l._attributes.point.split(',')
+                    .map((p: string) => { return Number(p.trim()) })
+                    .splice(0, 2)
+                    .reverse()
+            );
         }
 
         // Range & Bearing Line

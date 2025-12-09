@@ -66,8 +66,11 @@ export async function from_geojson(
     }
 
     if (feature.properties.links) {
-        if (!cot.event.detail.link) cot.event.detail.link = [];
-        else if (!Array.isArray(cot.event.detail.link)) cot.event.detail.link = [cot.event.detail.link];
+        if (!cot.event.detail.link) {
+            cot.event.detail.link = [];
+        } else if (!Array.isArray(cot.event.detail.link)) {
+            cot.event.detail.link = [cot.event.detail.link];
+        }
 
         cot.event.detail.link.push(...feature.properties.links.map((link: Static<typeof LinkAttributes>) => {
             return { _attributes: link };
