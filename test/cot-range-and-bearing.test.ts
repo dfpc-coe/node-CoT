@@ -90,7 +90,6 @@ test('Decode Range & Bearing', async (t) => {
                 stale: '2024-08-31T22:28:02Z',
                 range: 14806.869682096987,
                 bearing: 102.28151464168589,
-                labels: false,
                 links: [{
                     uid: "ANDROID-0ca41830e11d2ef3",
                     production_time: "2024-08-30T22:26:28.264Z",
