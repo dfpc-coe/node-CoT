@@ -31,6 +31,13 @@ test('Parse b-m-p-s-m (Spotted)', async (t) => {
             time: '2020-12-16T19:59:34.913Z',
             start: '2020-12-16T19:59:34.913Z',
             stale: '2021-01-02T20:40:03.841Z',
+            links: [{
+                uid: 'ANDROID-589520ccfcd20f01',
+                production_time: '2020-12-16T19:51:09.603Z',
+                type: 'a-f-G-U-C',
+                parent_callsign: 'HOPE',
+                relation: 'p-p'
+            }],
             archived: true,
             status: { readiness: 'true' },
             precisionlocation: { altsrc: '???' },

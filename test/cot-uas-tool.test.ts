@@ -217,6 +217,11 @@ test('Decode iTAK COT UAS Message', async (t) => {
                     spi: 'UAS-CO DFPC Lawrence.SPI1',
                     url: 'rtsp://18.254.132.96:8554/money'
                 },
+                links: [{
+                    uid: "ANDROID-c96c2c467371208c",
+                    type: "a-f-G-U-C",
+                    relation: "p-p"
+                }],
                 sensor: {
                     elevation: 0,
                     vfov: 41.6,
@@ -279,6 +284,11 @@ test('Decode iTAK COT UAS Message 2', async (t) => {
                     type: 'r-e',
                     version: '0.6'
                 },
+                links: [{
+                    uid: "ANDROID-c283321be77c8ec9",
+                    type: "a-f-G-U-C",
+                    relation: "p-p"
+                }],
                 course: -108.9,
                 slope: 0,
                 speed: 0,

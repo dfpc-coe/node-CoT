@@ -88,6 +88,10 @@ test('Decode MultiMissionAircraft CoTs', async (t) => {
                 contact: {
                     name: "CO-DFPC-WLD27-SPI"
                 },
+                links: [{
+                    uid: "CO-DFPC-WLD27_CO-DFPC-WLD27",
+                    relation: "p-p"
+                }],
                 metadata: {},
                 precisionlocation: {
                   "geopointsrc": "CALC",

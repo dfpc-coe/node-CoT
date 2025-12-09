@@ -186,6 +186,13 @@ test('Decode MultiMissionAircraft CoTs', async (t) => {
                         "alias": "I-25 .8 mi S CO-45"
                     }
                 },
+                links: [{
+                    uid: "ANDROID-94e13cc4880cbcce",
+                    production_time: "2022-01-31T17:35:49.565Z",
+                    type: "a-f-G-U-C",
+                    parent_callsign: "CO-DFPC-54-Schmidt",
+                    relation: "p-p"
+                }],
                 archived: true,
                 status: { readiness: 'true' },
                 precisionlocation: { altsrc: 'DTED2' },
