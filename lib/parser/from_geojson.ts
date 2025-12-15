@@ -35,6 +35,14 @@ export async function from_geojson(
         throw new Err(400, null, `Validation Error: ${err}`);
     }
 
+    if (!isNaN(Number(feature.properties.type)) && feature.properties.type.startsWith('13')) {
+        feature.properties.__milicon = {
+            id: Number(feature.properties.type)
+        };
+
+        // Perform Very Basic MilIcon to CoT Type Mapping
+    }
+
     const cot: Static<typeof JSONCoT> = {
         event: {
             _attributes: Util.cot_event_attr(
@@ -167,11 +175,11 @@ export async function from_geojson(
     }
 
     if (feature.properties.milsym) {
-        cot.event.detail.__milsym = { _attributes: { id: feature.properties.milsym.id} };
+        cot.event.detail.__milsym = { _attributes: { id: feature.properties.milsym.id } };
     }
 
     if (feature.properties.milicon) {
-        cot.event.detail.__milicon = { _attributes: { id: feature.properties.milicon.id} };
+        cot.event.detail.__milicon = { _attributes: { id: feature.properties.milicon.id } };
     }
 
     if (feature.properties.sensor) {
