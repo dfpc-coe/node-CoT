@@ -35,9 +35,9 @@ export async function from_geojson(
         throw new Err(400, null, `Validation Error: ${err}`);
     }
 
-    if (!isNaN(Number(feature.properties.type)) && feature.properties.type.startsWith('13')) {
-        feature.properties.__milicon = {
-            id: Number(feature.properties.type)
+    if (!isNaN(Number(feature.properties.type)) && feature.properties.type?.startsWith('13')) {
+        feature.properties.milicon = {
+            id: feature.properties.type
         };
 
         // Perform Very Basic MilIcon to CoT Type Mapping

@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.17.3 - 2025-12-16
+
+- :rocket: Fix Build
+
 ### v14.17.2 - 2025-12-16
 
 - :rocket: Add Build Step
