@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.18.0 - 2025-12-21
+
+- :arrow_up: Update Protobuf@8
+
 ### v14.17.3 - 2025-12-16
 
 - :rocket: Fix Build
