@@ -7,7 +7,7 @@ on:
 
 permissions:
   id-token: write  # Required for OIDC
-  contents: read
+  contents: write
 
 jobs:
   build:
@@ -17,7 +17,7 @@ jobs:
 
       - uses: actions/setup-node@v6
         with:
-          node-version: 22
+          node-version: 24
 
       - name: Update npm
         run: npm install -g npm@latest
@@ -30,3 +30,15 @@ jobs:
 
       - name: npm publish
         run: npm publish --provenance --access public
+
+      - name: Get tag
+        id: tag
+        uses: dawidd6/action-get-tag@v1
+
+      - name: Generate CHANGELOG
+        run: grep -Pzo "### ${{steps.tag.outputs.tag}}(?s).*?(?=###)" CHANGELOG.md > RELEASE
+
+      - name: Github Release
+        uses: softprops/action-gh-release@v2
+        with:
+          body_path: RELEASE
