@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.18.1 - 2025-12-24
+
+- :rocket: Update GitHub Actions release step
+
 ### v14.18.0 - 2025-12-21
 
 - :arrow_up: Update Protobuf@8
