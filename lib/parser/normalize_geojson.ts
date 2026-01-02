@@ -93,7 +93,7 @@ export async function normalize_geojson(
     stale.setHours(stale.getHours() + 1);
     feature.properties.stale = stale;
 
-    feature.properties.center = PointOnFeature(feature).geometry.coordinates;
+    feature.properties.center = PointOnFeature(feature).geometry.coordinates.splice(3);
 
     feature.properties.archived = true;
 

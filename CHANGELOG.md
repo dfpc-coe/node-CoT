@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.18.2 - 2025-01-02
+
+- :bug: Ensure normalize step never produces center with > 3 coordinates
+
 ### v14.18.1 - 2025-12-24
 
 - :rocket: Update GitHub Actions release step
