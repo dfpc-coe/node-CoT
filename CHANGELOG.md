@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.18.4 - 2025-01-02
+
+- :arrow_up: Update Core Deps
+
 ### v14.18.3 - 2025-01-02
 
 - :bug: Fixing GH Actions Trusted Publishing
