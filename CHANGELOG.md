@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.19.0 - 2025-01-28
+
+- :rocket: Update MissionChange Types
+
 ### v14.18.4 - 2025-01-02
 
 - :arrow_up: Update Core Deps
