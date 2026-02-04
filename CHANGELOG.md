@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.21.0 - 2025-02-04
+
+- :rocket: Include more properties from MOBAC Basemap.xml
+
 ### v14.20.0 - 2025-02-03
 
 - :rocket: Permissive changes to UID Schema
