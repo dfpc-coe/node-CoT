@@ -34,10 +34,10 @@ export const BasemapMapSource = Type.Object({
         _text: Type.String()
     }, { description: 'The background color of a map' })),
     ignoreErrors: Type.Optional(Type.Object({
-        _text: Type.String()
+        _text: Type.Boolean()
     }, { description: 'Handling of missing tiles' })),
     serverParts: Type.Optional(Type.Object({
-        _text: Type.String()
+        _text: Type.Optional(Type.String())
     }, { description: 'Use multiple servers for the map source' }))
 })
 
