@@ -502,7 +502,11 @@ export const Status = Type.Object({
 
 export const Uid = Type.Object({
     _attributes: Type.Object({
-        Droid: Type.String()
+        // TPC says this is required by ATAK-MIL 5.3.0.5 didn't include it
+        Droid: Type.Optional(Type.String()),
+        nett: Type.Optional(Type.String()),
+        // Unknown, seen in the same 5.3.0.5 client
+        alertable: Type.Optional(Type.Boolean())
     })
 })
 

@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.20.0 - 2025-02-03
+
+- :rocket: Permissive changes to UID Schema
+
 ### v14.19.0 - 2025-01-28
 
 - :rocket: Update MissionChange Types
