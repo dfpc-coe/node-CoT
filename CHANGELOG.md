@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.22.0 - 2025-02-07
+
+- :rocket: Change isFederatedChange from `String` to `Boolean` to match API Definition
+
 ### v14.21.0 - 2025-02-04
 
 - :rocket: Include more properties from MOBAC Basemap.xml

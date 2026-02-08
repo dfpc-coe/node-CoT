@@ -204,6 +204,10 @@ export const GenericText = Type.Object({
     _text: Type.String()
 })
 
+export const GenericTextBoolean = Type.Object({
+    _text: Type.Boolean()
+})
+
 export const TrackAttributes = Type.Object({
     speed: Type.Optional(Type.String()),
     course: Type.Optional(Type.String()),
@@ -315,7 +319,7 @@ export const MissionChangeDetails = Type.Object({
 export const MissionChange = Type.Object({
     contentUid: Type.Optional(GenericText),
     creatorUid: GenericOptionalText,
-    isFederatedChange: GenericText,
+    isFederatedChange: GenericTextBoolean,
     missionName: GenericText,
     timestamp: GenericText,
     type: GenericText,

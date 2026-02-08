@@ -41,7 +41,7 @@ export const FeaturePropertyMissionLayer = Type.Object({
 export const FeaturePropertyMissionChange = Type.Object({
     contentUid: Type.String(),
     creatorUid: Type.String(),
-    isFederatedChange: Type.String(),
+    isFederatedChange: Type.Boolean(),
     missionName: Type.String(),
     timestamp: Type.String(),
     type: Type.String(),
