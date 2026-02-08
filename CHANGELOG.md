@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.22.1 - 2025-02-07
+
+- :bug: Fix test input for isFederatedChange
+
 ### v14.22.0 - 2025-02-07
 
 - :rocket: Change isFederatedChange from `String` to `Boolean` to match API Definition
