@@ -58,7 +58,7 @@ export default class Color {
         const g = Math.round(this.g).toString(16).padStart(2, '0');
         const r = Math.round(this.r).toString(16).padStart(2, '0');
 
-        return `${a}${b}${g}${r}`.toUpperCase();
+        return `${a}${r}${g}${b}`.toUpperCase();
     }
 
     as_32bit(): number {

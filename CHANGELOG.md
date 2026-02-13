@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.23.1 - 2025-02-13
+
+- :bug: Fix color issue surfaced by KML Parsing fixes in 14.23
+
 ### v14.23.0 - 2025-02-13
 
 - :bug: Fix transparency parsing and writing of KML Alpha values

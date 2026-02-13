@@ -380,9 +380,9 @@ export async function to_geojson(cot: CoT): Promise<Static<typeof Feature>> {
                 if (rawColor.startsWith('#')) rawColor = rawColor.substring(1);
 
                 const a = parseInt(rawColor.substring(0, 2), 16);
-                const b = parseInt(rawColor.substring(2, 4), 16);
+                const r = parseInt(rawColor.substring(2, 4), 16);
                 const g = parseInt(rawColor.substring(4, 6), 16);
-                const r = parseInt(rawColor.substring(6, 8), 16);
+                const b = parseInt(rawColor.substring(6, 8), 16);
 
                 const strokeColor = new Color([a, r, g, b]);
                 feat.properties.stroke = strokeColor.as_hex();
@@ -399,9 +399,9 @@ export async function to_geojson(cot: CoT): Promise<Static<typeof Feature>> {
                 if (rawColor.startsWith('#')) rawColor = rawColor.substring(1);
 
                 const a = parseInt(rawColor.substring(0, 2), 16);
-                const b = parseInt(rawColor.substring(2, 4), 16);
+                const r = parseInt(rawColor.substring(2, 4), 16);
                 const g = parseInt(rawColor.substring(4, 6), 16);
-                const r = parseInt(rawColor.substring(6, 8), 16);
+                const b = parseInt(rawColor.substring(6, 8), 16);
 
                 const fillColor = new Color([a, r, g, b]);
                 feat.properties['fill-opacity'] = fillColor.as_opacity() / 255;
