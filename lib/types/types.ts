@@ -245,9 +245,15 @@ export const ShapePolyLine = Type.Object({
 })
 
 export const ShapeEllipseAttributes = Type.Object({
-    major: Type.Number(),
-    minor: Type.Number(),
-    angle: Type.Number(),
+    major: Type.Number({
+        description: 'The major axis of the ellipse in meters'
+    }),
+    minor: Type.Number({
+        description: 'The minor axis of the ellipse in meters'
+    }),
+    angle: Type.Number({
+        description: 'The angle of the ellipse in degrees'
+    }),
 })
 
 export const ShapeEllipse = Type.Object({
