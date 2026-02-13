@@ -357,11 +357,11 @@ export async function from_geojson(
                     },
                     Style: {
                         LineStyle: {
-                            color: { _text: strokeColor.as_hexa().slice(1) },
+                            color: { _text: strokeColor.as_kml() },
                             width: { _text: cot.event.detail.strokeWeight?._attributes?.value ? cot.event.detail.strokeWeight._attributes.value : 3 }
                         },
                         PolyStyle: {
-                            color: { _text: fillColor.as_hexa().slice(1) },
+                            color: { _text: fillColor.as_kml() },
                         }
                     }
                 }
