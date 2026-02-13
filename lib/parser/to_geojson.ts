@@ -376,14 +376,18 @@ export async function to_geojson(cot: CoT): Promise<Static<typeof Feature>> {
             && raw.event.detail.shape.link?.Style
         ) {
             if (raw.event.detail.shape.link.Style.LineStyle?.color) {
-                const rawColor = raw.event.detail.shape.link.Style.LineStyle.color._text.startsWith('#')
-                    ? raw.event.detail.shape.link.Style.LineStyle.color._text
-                    : '#' + raw.event.detail.shape.link.Style.LineStyle.color._text;
+                let rawColor = raw.event.detail.shape.link.Style.LineStyle.color._text;
+                if (rawColor.startsWith('#')) rawColor = rawColor.substring(1);
 
-                const strokeColor = new Color(rawColor);
+                const a = parseInt(rawColor.substring(0, 2), 16);
+                const b = parseInt(rawColor.substring(2, 4), 16);
+                const g = parseInt(rawColor.substring(4, 6), 16);
+                const r = parseInt(rawColor.substring(6, 8), 16);
+
+                const strokeColor = new Color([a, r, g, b]);
                 feat.properties.stroke = strokeColor.as_hex();
 
-                feat.properties['stroke-opacity'] = strokeColor.as_opacity();
+                feat.properties['stroke-opacity'] = strokeColor.as_opacity() / 255;
             }
 
             if (raw.event.detail.shape.link.Style.LineStyle?.width) {
@@ -391,12 +395,16 @@ export async function to_geojson(cot: CoT): Promise<Static<typeof Feature>> {
             }
 
             if (raw.event.detail.shape.link.Style.PolyStyle?.color) {
-                const rawColor = raw.event.detail.shape.link.Style.PolyStyle.color._text.startsWith('#')
-                    ? raw.event.detail.shape.link.Style.PolyStyle.color._text
-                    : '#' + raw.event.detail.shape.link.Style.PolyStyle.color._text;
+                let rawColor = raw.event.detail.shape.link.Style.PolyStyle.color._text;
+                if (rawColor.startsWith('#')) rawColor = rawColor.substring(1);
 
-                const fillColor = new Color(rawColor);
-                feat.properties['fill-opacity'] = fillColor.as_opacity();
+                const a = parseInt(rawColor.substring(0, 2), 16);
+                const b = parseInt(rawColor.substring(2, 4), 16);
+                const g = parseInt(rawColor.substring(4, 6), 16);
+                const r = parseInt(rawColor.substring(6, 8), 16);
+
+                const fillColor = new Color([a, r, g, b]);
+                feat.properties['fill-opacity'] = fillColor.as_opacity() / 255;
                 feat.properties['fill'] = fillColor.as_hex();
             }
         }

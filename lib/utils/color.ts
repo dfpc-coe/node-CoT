@@ -52,6 +52,15 @@ export default class Color {
          }).hexa();
     }
 
+    as_kml(): string {
+        const a = Math.round(this.a).toString(16).padStart(2, '0');
+        const b = Math.round(this.b).toString(16).padStart(2, '0');
+        const g = Math.round(this.g).toString(16).padStart(2, '0');
+        const r = Math.round(this.r).toString(16).padStart(2, '0');
+
+        return `${a}${b}${g}${r}`.toUpperCase();
+    }
+
     as_32bit(): number {
         return (this.a << 24) | (this.r << 16) | (this.g << 8) | this.b;
     }
