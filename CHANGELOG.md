@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.23.0 - 2025-02-13
+
+- :bug: Fix transparency parsing and writing of KML Alpha values
+
 ### v14.22.1 - 2025-02-07
 
 - :bug: Fix test input for isFederatedChange
