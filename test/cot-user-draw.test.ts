@@ -85,12 +85,12 @@ test('Parse u-d-c-c (Circle - Transparent)', async (t) => {
             precisionlocation: { 
                 altsrc: 'DTED2' 
             }, 
-            stroke: '#FFFF77', 
-            'stroke-opacity': 0, 
+            stroke: '#0077FF', 
+            'stroke-opacity': 1, 
             'stroke-width': 3, 
             'stroke-style': 'solid', 
             'fill-opacity': 0, 
-            fill: '#00FF77', 
+            fill: '#0077FF', 
             shape: { 
                 ellipse: { 
                     major: 2535.9708862816324, 
@@ -263,12 +263,12 @@ test('Parse u-d-c-c (Circle - Filled)', async (t) => {
             precisionlocation: { 
                 altsrc: 'DTED2' 
             }, 
-            stroke: '#FFFF77', 
-            'stroke-opacity': 0, 
+            stroke: '#0077FF', 
+            'stroke-opacity': 1, 
             'stroke-width': 3, 
             'stroke-style': 'solid', 
-            'fill-opacity': 0, 
-            fill: '#FFFF77', 
+            'fill-opacity': 1, 
+            fill: '#0077FF', 
             shape: { 
                 ellipse: { 
                     major: 2908.096601511143, 
