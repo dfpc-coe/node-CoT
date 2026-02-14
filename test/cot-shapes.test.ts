@@ -269,6 +269,7 @@ test.only('Basic Circle', async (t) => {
                 labels_on: { "_attributes": { "value": true } },
                 tog: { "_attributes": { "enabled": "0" } },
                 strokeStyle: { "_attributes": { "value": "solid" } },
+                fillColor: { "_attributes": { "value": 16742144 } },
                 shape: {
                     ellipse: { "_attributes": { "major": 185753.64687066682, "minor": 185753.64687066682, "angle": 360 } },
                     link: {

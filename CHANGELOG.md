@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.23.2 - 2025-02-13
+
+- :bug: Ensure Fill Color attribute is on all Polygon types
+
 ### v14.23.1 - 2025-02-13
 
 - :bug: Fix color issue surfaced by KML Parsing fixes in 14.23

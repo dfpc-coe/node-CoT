@@ -333,6 +333,11 @@ export async function from_geojson(
             value: feature.properties['stroke-style']
         } };
 
+        if (feature.geometry.type === 'Polygon') {
+            const fill = new Color(feature.properties.fill || -1761607936);
+            fill.a = feature.properties['fill-opacity'] !== undefined ? feature.properties['fill-opacity'] * 255 : 128;
+            cot.event.detail.fillColor = { _attributes: { value: fill.as_32bit() } };
+        }
 
         if (feature.geometry.type === 'Polygon' && feature.properties.type && ['u-d-c-c', 'u-r-b-c-c'].includes(feature.properties.type)) {
             if (!feature.properties.shape || !feature.properties.shape.ellipse) {
@@ -418,10 +423,6 @@ export async function from_geojson(
                     _attributes: { point: `${coord[1]},${coord[0]}` }
                 });
             }
-
-            const fill = new Color(feature.properties.fill || -1761607936);
-            fill.a = feature.properties['fill-opacity'] !== undefined ? feature.properties['fill-opacity'] * 255 : 128;
-            cot.event.detail.fillColor = { _attributes: { value: fill.as_32bit() } };
         }
 
         if (feature.properties.labels) {
