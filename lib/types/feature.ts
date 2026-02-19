@@ -39,19 +39,30 @@ export const FeaturePropertyMissionLayer = Type.Object({
 })
 
 export const FeaturePropertyMissionChange = Type.Object({
-    contentUid: Type.String(),
+    contentUid: Type.Optional(Type.String()),
     creatorUid: Type.String(),
     isFederatedChange: Type.Boolean(),
     missionName: Type.String(),
     timestamp: Type.String(),
     type: Type.String(),
-    details: Type.Object({
+    contentResource: Type.Optional(Type.Object({
+        expiration: Type.String(),
+        filename: Type.String(),
+        hash: Type.String(),
+        name: Type.String(),
+        size: Type.Integer(),
+        submissionTime: Type.String(),
+        submitter: Type.String(),
+        tool: Type.String(),
+        uid: Type.String(),
+    })),
+    details: Type.Optional(Type.Object({
         type: Type.String(),
         callsign: Type.String(),
         color: Type.String(),
         lat: Type.String(),
         lon: Type.String()
-    })
+    }))
 })
 
 export const FeaturePropertyMission = Type.Object({

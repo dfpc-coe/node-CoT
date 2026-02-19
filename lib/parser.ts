@@ -55,7 +55,9 @@ export class CoTParser {
         if (opts.flow === undefined) opts.flow = true;
 
         checkXML(cot.raw);
-        if (checkXML.errors) throw new Err(400, null, `${checkXML.errors[0].message} (${checkXML.errors[0].instancePath})`);
+        if (checkXML.errors) {
+            throw new Err(400, null, `${checkXML.errors[0].message} (${checkXML.errors[0].instancePath})`);
+        }
 
         if (opts.flow) {
             if (!cot.raw.event.detail) cot.raw.event.detail = {};

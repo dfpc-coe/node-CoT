@@ -4,6 +4,7 @@ import type {
     Feature,
     Polygon,
     FeaturePropertyMission,
+    FeaturePropertyMissionChange,
     FeaturePropertyMissionLayer,
 } from '../types/feature.js';
 import type {
@@ -219,20 +220,40 @@ export async function to_geojson(cot: CoT): Promise<Static<typeof Feature>> {
 
             mission.missionChanges = []
             for (const change of changes) {
-                mission.missionChanges.push({
-                    contentUid: change.MissionChange.contentUid._text,
+                const mc: Static<typeof FeaturePropertyMissionChange> = {
+                    contentUid: change.MissionChange.contentUid ? change.MissionChange.contentUid._text : undefined,
                     creatorUid: change.MissionChange.creatorUid._text,
                     isFederatedChange: change.MissionChange.isFederatedChange._text,
                     missionName: change.MissionChange.missionName._text,
                     timestamp: change.MissionChange.timestamp._text,
                     type: change.MissionChange.type._text,
-                    details: {
+                };
+
+                if (change.MissionChange.contentResource) {
+                    const cr = change.MissionChange.contentResource;
+                    mc.contentResource = {
+                        expiration: cr.expiration._text,
+                        filename: cr.filename._text,
+                        hash: cr.hash._text,
+                        name: cr.name._text,
+                        size: parseInt(cr.size._text),
+                        submissionTime: cr.submissionTime._text,
+                        submitter: cr.submitter._text,
+                        tool: cr.tool._text,
+                        uid: cr.uid._text,
+                    };
+                }
+
+                if (change.MissionChange.details) {
+                    mc.details = {
                         ...change.MissionChange.details._attributes,
                         ...change.MissionChange.details.location
                             ? change.MissionChange.details.location._attributes
                             : {}
-                    }
-                })
+                    };
+                }
+
+                mission.missionChanges.push(mc)
             }
         }
 
