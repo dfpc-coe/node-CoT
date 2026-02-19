@@ -220,18 +220,29 @@ export async function to_geojson(cot: CoT): Promise<Static<typeof Feature>> {
             mission.missionChanges = []
             for (const change of changes) {
                 mission.missionChanges.push({
-                    contentUid: change.MissionChange.contentUid._text,
-                    creatorUid: change.MissionChange.creatorUid._text,
+                    contentUid: change.MissionChange.contentUid?._text,
+                    creatorUid: change.MissionChange.creatorUid?._text,
                     isFederatedChange: change.MissionChange.isFederatedChange._text,
                     missionName: change.MissionChange.missionName._text,
                     timestamp: change.MissionChange.timestamp._text,
                     type: change.MissionChange.type._text,
-                    details: {
+                    contentResource: change.MissionChange.contentResource ? {
+                        expiration: change.MissionChange.contentResource.expiration._text,
+                        filename: change.MissionChange.contentResource.filename._text,
+                        hash: change.MissionChange.contentResource.hash._text,
+                        name: change.MissionChange.contentResource.name._text,
+                        size: change.MissionChange.contentResource.size._text,
+                        submissionTime: change.MissionChange.contentResource.submissionTime._text,
+                        submitter: change.MissionChange.contentResource.submitter._text,
+                        tool: change.MissionChange.contentResource.tool._text,
+                        uid: change.MissionChange.contentResource.uid._text,
+                    } : undefined,
+                    details: change.MissionChange.details ? {
                         ...change.MissionChange.details._attributes,
                         ...change.MissionChange.details.location
                             ? change.MissionChange.details.location._attributes
                             : {}
-                    }
+                    } : undefined
                 })
             }
         }

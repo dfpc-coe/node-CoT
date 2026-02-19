@@ -208,6 +208,11 @@ export const GenericTextBoolean = Type.Object({
     _text: Type.Boolean()
 })
 
+export const GenericTextInteger = Type.Object({
+    _text: Type.Integer()
+})
+
+
 export const TrackAttributes = Type.Object({
     speed: Type.Optional(Type.String()),
     course: Type.Optional(Type.String()),
@@ -322,6 +327,18 @@ export const MissionChangeDetails = Type.Object({
     }))
 })
 
+export const MissionChangeContentResource = Type.Object({
+    expiration: GenericText,
+    filename: GenericText,
+    hash: GenericText,
+    name: GenericText,
+    size: GenericTextInteger,
+    submissionTime: GenericText,
+    submitter: GenericText,
+    tool: GenericText,
+    uid: GenericText
+});
+
 export const MissionChange = Type.Object({
     contentUid: Type.Optional(GenericText),
     creatorUid: GenericOptionalText,
@@ -329,6 +346,7 @@ export const MissionChange = Type.Object({
     missionName: GenericText,
     timestamp: GenericText,
     type: GenericText,
+    contentResource: Type.Optional(MissionChangeContentResource),
     details: Type.Optional(MissionChangeDetails)
 })
 
