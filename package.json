@@ -53,6 +53,7 @@
         "xml-js": "^1.6.11"
     },
     "devDependencies": {
+        "@eslint/js": "^10.0.1",
         "@types/node": "^25.0.0",
         "@types/tape": "^5.6.0",
         "c8": "^10.1.3",

@@ -344,6 +344,7 @@ export const MissionChange = Type.Object({
     creatorUid: GenericOptionalText,
     isFederatedChange: GenericTextBoolean,
     missionName: GenericText,
+    missionGuid: Type.Optional(GenericText),
     timestamp: GenericText,
     type: GenericText,
     contentResource: Type.Optional(MissionChangeContentResource),
