@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.24.0 - 2025-02-19
+
+- :tada: Update CoT and GeoJSON schemas to support the contentResource type on MissionChange objects
+
 ### v14.23.2 - 2025-02-13
 
 - :bug: Ensure Fill Color attribute is on all Polygon types
