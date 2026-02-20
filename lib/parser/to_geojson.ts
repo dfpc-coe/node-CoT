@@ -232,15 +232,15 @@ export async function to_geojson(cot: CoT): Promise<Static<typeof Feature>> {
                 if (change.MissionChange.contentResource) {
                     const cr = change.MissionChange.contentResource;
                     mc.contentResource = {
+                        uid: cr.uid._text,
                         expiration: cr.expiration._text,
-                        filename: cr.filename._text,
                         hash: cr.hash._text,
                         name: cr.name._text,
                         size: parseInt(cr.size._text),
                         submissionTime: cr.submissionTime._text,
                         submitter: cr.submitter._text,
-                        tool: cr.tool._text,
-                        uid: cr.uid._text,
+                        filename: cr.filename ? cr.filename._text : undefined,
+                        tool: cr.tool ? cr.tool._text : undefined,
                     };
                 }
 
