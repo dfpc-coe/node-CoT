@@ -329,7 +329,7 @@ export const MissionChangeDetails = Type.Object({
 
 export const MissionChangeContentResource = Type.Object({
     expiration: GenericText,
-    filename: GenericText,
+    filename: Type.Optional(GenericText),
     hash: GenericText,
     name: GenericText,
     size: GenericTextInteger,

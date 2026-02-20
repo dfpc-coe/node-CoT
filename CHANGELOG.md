@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.24.1 - 2025-02-20
+
+- :rocket: Set `filename` as optional property in MissionChange contentResource
+
 ### v14.24.0 - 2025-02-19
 
 - :tada: Update CoT and GeoJSON schemas to support the contentResource type on MissionChange objects
