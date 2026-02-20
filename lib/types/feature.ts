@@ -47,13 +47,13 @@ export const FeaturePropertyMissionChange = Type.Object({
     type: Type.String(),
     contentResource: Type.Optional(Type.Object({
         expiration: Type.String(),
-        filename: Type.String(),
+        filename: Type.Optional(Type.String()),
         hash: Type.String(),
         name: Type.String(),
         size: Type.Integer(),
         submissionTime: Type.String(),
         submitter: Type.String(),
-        tool: Type.String(),
+        tool: Type.Optional(Type.String()),
         uid: Type.String(),
     })),
     details: Type.Optional(Type.Object({

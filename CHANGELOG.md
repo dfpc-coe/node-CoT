@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.24.2 - 2025-02-20
+
+- :rocket: Set `tool` as optional property in MissionChange contentResource
+
 ### v14.24.1 - 2025-02-20
 
 - :rocket: Set `filename` as optional property in MissionChange contentResource

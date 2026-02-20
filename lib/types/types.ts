@@ -335,7 +335,7 @@ export const MissionChangeContentResource = Type.Object({
     size: GenericTextInteger,
     submissionTime: GenericText,
     submitter: GenericText,
-    tool: GenericText,
+    tool: Type.Optional(GenericText),
     uid: GenericText
 });
 
