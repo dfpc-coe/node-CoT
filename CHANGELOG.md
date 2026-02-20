@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.24.3 - 2025-02-20
+
+- :rocket: Update to_geojson conversion of missionChanges
+
 ### v14.24.2 - 2025-02-20
 
 - :rocket: Set `tool` as optional property in MissionChange contentResource
