@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.25.0 - 2025-02-26
+
+- :rocket: Make Geofence Types Boolean where possible
+
 ### v14.24.3 - 2025-02-20
 
 - :rocket: Update to_geojson conversion of missionChanges

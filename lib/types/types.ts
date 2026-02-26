@@ -422,12 +422,12 @@ export const Video = Type.Object({
 })
 
 export const GeofenceAttributes = Type.Object({
-    elevationMonitored: Type.Optional(Type.String()),
+    elevationMonitored: Type.Optional(Type.Boolean()),
     minElevation: Type.Optional(Type.String()),
     maxElevation: Type.Optional(Type.String()),
     monitor: Type.Optional(Type.String()),
     trigger: Type.Optional(Type.String()),
-    tracking: Type.Optional(Type.String()),
+    tracking: Type.Optional(Type.Boolean()),
     boundingSphere: Type.Optional(Type.Number()),
 });
 
