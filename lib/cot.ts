@@ -117,9 +117,9 @@ export default class CoT {
     }
 
     /**
-     * Returns or sets the Archived State of the CoT
+     * Returns or sets the detail.archive tag which instructs the TAK client to locally archive this feature
      *
-     * @param callsign - Optional Archive state to set
+     * @param archived - Optional archive state to set
      */
     archived(archived?: boolean): boolean {
         const detail = this.detail();

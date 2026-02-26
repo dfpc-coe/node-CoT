@@ -587,7 +587,7 @@ export const MartiDest = Type.Object({
 export const Marti = Type.Object({
     _attributes: Type.Optional(Type.Object({
         archive: Type.Optional(Type.Boolean({
-            description: 'Whether the message should be archived by the TAK Server'
+            description: 'Instructs the TAK Server to archive this message'
         })),
     })),
     dest: Type.Optional(Type.Union([MartiDest, Type.Array(MartiDest)]))

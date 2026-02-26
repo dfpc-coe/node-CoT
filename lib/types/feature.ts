@@ -102,7 +102,9 @@ export const Properties = Type.Object({
     'fill': Type.Optional(Type.String()),
     'fill-opacity': Type.Optional(Type.Number({ minimum: 0, maximum: 1 })),
     metadata: Type.Optional(Type.Record(Type.String(), Type.Unknown())),
-    archived: Type.Optional(Type.Boolean()),
+    archived: Type.Optional(Type.Boolean({
+        description: 'Presence of the detail.archive tag - instructs the TAK client to locally archive this feature'
+    })),
     geofence: Type.Optional(GeofenceAttributes),
     contact: Type.Optional(ContactAttributes),
     shape: Type.Optional(Type.Object({
@@ -135,7 +137,7 @@ export const Properties = Type.Object({
     track: Type.Optional(TrackAttributes),
     dest: Type.Optional(Type.Union([MartiDestAttributes, Type.Array(MartiDestAttributes)])),
     marti_archive: Type.Optional(Type.Boolean({
-        description: 'Whether the TAK Server should archive this message (marti.archive)'
+        description: 'Presence of marti._attributes.archive - instructs the TAK Server to archive this message'
     })),
     icon: Type.Optional(Type.String()),
     droid: Type.Optional(Type.String()),
