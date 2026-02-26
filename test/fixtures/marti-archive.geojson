@@ -1,0 +1,20 @@
+{
+    "id": "MARTI-ARCHIVE-TEST-UID",
+    "type": "Feature",
+    "path": "/",
+    "properties": {
+        "callsign": "ArchiveTest",
+        "center": [1.1, 2.2, 0],
+        "type": "a-f-G",
+        "how": "m-g",
+        "time": "2025-01-01T00:00:00.000Z",
+        "start": "2025-01-01T00:00:00.000Z",
+        "stale": "2025-01-01T01:00:00.000Z",
+        "marti_archive": true,
+        "metadata": {}
+    },
+    "geometry": {
+        "type": "Point",
+        "coordinates": [1.1, 2.2, 0]
+    }
+}

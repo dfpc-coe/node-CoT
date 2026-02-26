@@ -134,6 +134,9 @@ export const Properties = Type.Object({
     })),
     track: Type.Optional(TrackAttributes),
     dest: Type.Optional(Type.Union([MartiDestAttributes, Type.Array(MartiDestAttributes)])),
+    marti_archive: Type.Optional(Type.Boolean({
+        description: 'Whether the TAK Server should archive this message (marti.archive)'
+    })),
     icon: Type.Optional(Type.String()),
     droid: Type.Optional(Type.String()),
     takv: Type.Optional(TakVersionAttributes),

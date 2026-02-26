@@ -85,13 +85,19 @@ export async function from_geojson(
         }))
     }
 
-    if (feature.properties.dest) {
-        const dest = !Array.isArray(feature.properties.dest) ? [ feature.properties.dest ] : feature.properties.dest;
+    if (feature.properties.dest || feature.properties.marti_archive) {
+        cot.event.detail.marti = {};
 
-        cot.event.detail.marti = {
-            dest: dest.map((dest) => {
+        if (feature.properties.marti_archive) {
+            cot.event.detail.marti._attributes = { archive: true };
+        }
+
+        if (feature.properties.dest) {
+            const dest = !Array.isArray(feature.properties.dest) ? [ feature.properties.dest ] : feature.properties.dest;
+
+            cot.event.detail.marti.dest = dest.map((dest) => {
                 return { _attributes: { ...dest } };
-            })
+            });
         }
     }
 

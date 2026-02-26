@@ -170,14 +170,20 @@ export async function to_geojson(cot: CoT): Promise<Static<typeof Feature>> {
         if (raw.event.detail.track._attributes.course) feat.properties.speed = Number(raw.event.detail.track._attributes.speed);
     }
 
-    if (raw.event.detail.marti && raw.event.detail.marti.dest) {
-        if (!Array.isArray(raw.event.detail.marti.dest)) raw.event.detail.marti.dest = [raw.event.detail.marti.dest];
+    if (raw.event.detail.marti) {
+        if (raw.event.detail.marti._attributes?.archive) {
+            feat.properties.marti_archive = true;
+        }
 
-        const dest: Array<Static<typeof MartiDestAttributes>> = raw.event.detail.marti.dest.map((d: Static<typeof MartiDest>) => {
-            return { ...d._attributes };
-        });
+        if (raw.event.detail.marti.dest) {
+            if (!Array.isArray(raw.event.detail.marti.dest)) raw.event.detail.marti.dest = [raw.event.detail.marti.dest];
 
-        feat.properties.dest = dest.length === 1 ? dest[0] : dest
+            const dest: Array<Static<typeof MartiDestAttributes>> = raw.event.detail.marti.dest.map((d: Static<typeof MartiDest>) => {
+                return { ...d._attributes };
+            });
+
+            feat.properties.dest = dest.length === 1 ? dest[0] : dest
+        }
     }
 
     if (
