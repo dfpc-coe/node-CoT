@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.26.0 - 2025-02-26
+
+- :tada: Add support for Marti.archive=<boolean> which in TAK server 5.7 will disable archiving in the `cot_router` table
+
 ### v14.25.0 - 2025-02-26
 
 - :rocket: Make Geofence Types Boolean where possible
