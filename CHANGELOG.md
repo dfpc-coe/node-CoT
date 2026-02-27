@@ -12,6 +12,12 @@
 
 ### Pending Fixed
 
+### v14.28.0 - 2025-02-27
+
+- :rocket: If a `LineString` feature is provided that happens to have the same first and end coordinate, TAK will treat it as a polygon as the U-D type doesn't differentiate
+           Set fillOpacity: 0 for LineString features to ensure they at least look correct. When it is parsed back into GeoJSON it will "become" a polygon which will need to 
+           be handled by downstream users if they want to maintain the original geometry type
+
 ### v14.27.0 - 2025-02-26
 
 - :tada: Add bi-directional parsing of `marti_archive` tag in `dest` section of CoT messages

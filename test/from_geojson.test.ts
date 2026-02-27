@@ -142,6 +142,7 @@ test('CoTParser.from_geojson - LineString', async (t) => {
             strokeColor: { _attributes: { value: -2130706688 } },
             strokeWeight: { _attributes: { value: 3 } },
             strokeStyle: { _attributes: { value: 'solid' } },
+            fillColor: { _attributes: { value: 16776960 } },
             remarks: { _attributes: {}, _text: '' }
         });
     }

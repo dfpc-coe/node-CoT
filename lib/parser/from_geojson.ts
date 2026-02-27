@@ -343,6 +343,15 @@ export async function from_geojson(
             const fill = new Color(feature.properties.fill || -1761607936);
             fill.a = feature.properties['fill-opacity'] !== undefined ? feature.properties['fill-opacity'] * 255 : 128;
             cot.event.detail.fillColor = { _attributes: { value: fill.as_32bit() } };
+        } else if (feature.geometry.type === 'LineString') {
+            // Ensure fill is fully transparent for LineStrings so that if Node treats the
+            // feature as a polygon (when first/last coordinates coincide), no fill is rendered.
+            // Exclude b-m-r (route) types as they are not user-drawn line features.
+            if (feature.properties.type !== 'b-m-r') {
+                const fill = new Color(feature.properties.fill || -1761607936);
+                fill.a = 0;
+                cot.event.detail.fillColor = { _attributes: { value: fill.as_32bit() } };
+            }
         }
 
         if (feature.geometry.type === 'Polygon' && feature.properties.type && ['u-d-c-c', 'u-r-b-c-c'].includes(feature.properties.type)) {
