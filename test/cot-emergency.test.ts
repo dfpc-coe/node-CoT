@@ -305,7 +305,7 @@ test('COT Emergency - GeoFence Breached - No Callsign', async (t) => {
         t.ok(cot.raw.event.detail['_flow-tags_']);
         delete cot.raw.event.detail['_flow-tags_'];
 
-        t.deepEquals(cot.type(), 'b-a-g', 'Type should be b-a-g');
+    t.deepEquals(cot.type(), 'b-a-g', 'Type should be b-a-g');
 
         t.deepEquals(cot.raw.event.detail.emergency, {
             _attributes: { type: 'Geo-fence Breached' },
@@ -314,4 +314,43 @@ test('COT Emergency - GeoFence Breached - No Callsign', async (t) => {
     }
 
     t.end();
+});
+
+test('COT Emergency - WearOS', async (t) => {
+    const cot = await CoTParser.from_xml(`
+         <event version='2.0' uid='17eaa1c4-e137-4328-b5e4-294d2a7fd01d' type='b-a-o' time='2026-02-04T13:40:15.895Z' start='2026-02-04T13:40:15.895Z' stale='2026-02-04T13:55:15.895Z' how='h-e' access='Undefined'>
+             <point lat='41.8838397' lon='-87.6590334' hae='155.50001525878906' ce='17.75' le='0.9278001' />
+             <detail>
+                 <link uid='WEAROS_dce34c83708172e9' type='a-f-G-U-C' relation='p-p'/>
+                 <contact callsign='SP-Dev&#10;Manual Alert: Gunshot'/>
+                 <emergency type='Manual Alert: Gunshot'>SP-Dev</emergency>
+                 <usericon iconsetpath='911 Alert'/>
+                 <color argb='-1'/>
+             </detail>
+         </event>
+    `)
+
+    t.deepEquals(await CoTParser.to_geojson(cot), {
+        id: '17eaa1c4-e137-4328-b5e4-294d2a7fd01d',
+        type: 'Feature',
+        path: '/',
+        properties: {
+            callsign: 'SP-Dev\nManual Alert: Gunshot',
+            center: [ -87.6590334, 41.8838397, 155.50001525878906 ],
+            type: 'b-a-o',
+            how: 'h-e',
+            time: '2026-02-04T13:40:15.895Z',
+            start: '2026-02-04T13:40:15.895Z',
+            stale: '2026-02-04T13:55:15.895Z',
+            links: [ { uid: 'WEAROS_dce34c83708172e9', type: 'a-f-G-U-C', relation: 'p-p' } ],
+            icon: '911 Alert',
+            'marker-color': '#FFFFFF',
+            'marker-opacity': 1,
+            metadata: {}
+        },
+        geometry: {
+            type: 'Point',
+            coordinates: [ -87.6590334, 41.8838397, 155.50001525878906 ]
+        },
+    });
 });
