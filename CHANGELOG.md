@@ -12,6 +12,11 @@
 
 ### Pending Fixed
 
+### v14.28.1 - 2025-03-10
+
+- :arrow_up: Update Core Deps
+- :white_check_mark: Add test for XML Escaped Characters
+
 ### v14.28.0 - 2025-02-27
 
 - :rocket: If a `LineString` feature is provided that happens to have the same first and end coordinate, TAK will treat it as a polygon as the U-D type doesn't differentiate
