@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.29.0 - 2025-03-12
+
+- :rocket: Add MVP for MissionChat builder
+
 ### v14.28.1 - 2025-03-10
 
 - :arrow_up: Update Core Deps

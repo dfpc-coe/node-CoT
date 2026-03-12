@@ -1,5 +1,81 @@
 import test from 'tape';
-import { DirectChat } from '../index.js';
+import { DirectChat, MissionChat, CoTParser } from '../index.js';
+
+test('MissionChat - GeoJSON output', async (t) => {
+    const messageId = '6c19bcd5-c632-4c59-95e2-ae8c76c8feab';
+
+    const cot = new MissionChat({
+        from: {
+            uid: 'ANDROID-764679f74013dfe2',
+            type: 'a-f-G-E-V-C'
+        },
+        mission: {
+            name: 'Test Attachments',
+            id: 'ops.cotak.gov-8443-ssl-Test Attachments'
+        },
+        senderCallsign: 'COTAK Admin Ingalls',
+        message: 'sent a datapackage with 1 item',
+        messageId
+    });
+
+    // Pin time fields to match expected output
+    cot.raw.event._attributes.time  = '2026-03-12T13:30:26Z';
+    cot.raw.event._attributes.start = '2026-03-12T13:30:26Z';
+    cot.raw.event._attributes.stale = '2026-03-13T13:30:26Z';
+
+    if (cot.raw.event.detail?.remarks?._attributes) {
+        cot.raw.event.detail.remarks._attributes.time = '2026-03-12T13:30:26Z';
+    }
+
+    // Set coordinates to match expected output
+    cot.raw.event.point._attributes.lon = -108.537452;
+    cot.raw.event.point._attributes.lat = 39.078503;
+    cot.raw.event.point._attributes.hae = 1393.296;
+
+    t.deepEquals(await CoTParser.to_geojson(cot), {
+        id: `GeoChat.ANDROID-764679f74013dfe2.ops.cotak.gov-8443-ssl-Test Attachments.${messageId}`,
+        type: 'Feature',
+        path: '/',
+        properties: {
+            callsign: 'UNKNOWN',
+            center: [ -108.537452, 39.078503, 1393.296 ],
+            type: 'b-t-f',
+            how: 'h-g-i-g-o',
+            time: '2026-03-12T13:30:26Z',
+            start: '2026-03-12T13:30:26Z',
+            stale: '2026-03-13T13:30:26Z',
+            remarks: 'sent a datapackage with 1 item',
+            links: [{
+                uid: 'ANDROID-764679f74013dfe2',
+                type: 'a-f-G-E-V-C',
+                relation: 'p-p'
+            }],
+            chat: {
+                parent: 'DataSyncMissionsList',
+                groupOwner: 'false',
+                messageId,
+                chatroom: 'Test Attachments',
+                id: 'ops.cotak.gov-8443-ssl-Test Attachments',
+                senderCallsign: 'COTAK Admin Ingalls',
+                chatgrp: {
+                    _attributes: {
+                        uid0: 'ANDROID-764679f74013dfe2',
+                        uid1: 'ops.cotak.gov-8443-ssl-Test Attachments',
+                        id: 'ops.cotak.gov-8443-ssl-Test Attachments'
+                    }
+                }
+            },
+            dest: { mission: 'Test Attachments' },
+            metadata: {}
+        },
+        geometry: {
+            type: 'Point',
+            coordinates: [ -108.537452, 39.078503, 1393.296 ]
+        }
+    });
+
+    t.end();
+});
 
 test('DirectChat - Basic', (t) => {
     const cot = new DirectChat({
