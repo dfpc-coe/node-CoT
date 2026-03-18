@@ -27,7 +27,9 @@ const COORDINATE_PRECISION = 6;
 /**
  * Return a GeoJSON Feature from an XML CoT message
  */
-export async function to_geojson(cot: CoT): Promise<Static<typeof Feature>> {
+export async function to_geojson(
+    cot: CoT
+): Promise<Static<typeof Feature>> {
     const raw: Static<typeof JSONCoT> = JSON.parse(JSON.stringify(cot.raw));
     if (!raw.event.detail) raw.event.detail = {};
     if (!raw.event.detail.contact) raw.event.detail.contact = { _attributes: { callsign: 'UNKNOWN' } };
