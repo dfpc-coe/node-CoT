@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.30.0 - 2025-03-18
+
+- :tada: Add the ability to reset flow tags
+
 ### v14.29.0 - 2025-03-12
 
 - :rocket: Add MVP for MissionChat builder
