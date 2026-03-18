@@ -142,7 +142,8 @@ export class CoTParser {
     ): string {
         if (opts?.resetFlow) {
             if (cot.raw.event.detail && cot.raw.event.detail['_flow-tags_']) {
-                cot.raw.event.detail['_flow-tags_'] = {};
+                cot.raw.event.detail['_flow-tags_'] = {}
+                cot.raw.event.detail['_flow-tags_'][`NodeCoT-${pkg.version}`] = new Date().toISOString()
             }
         }
 
@@ -162,7 +163,8 @@ export class CoTParser {
 
         if (opts?.resetFlow) {
             if (cot.raw.event.detail && cot.raw.event.detail['_flow-tags_']) {
-                cot.raw.event.detail['_flow-tags_'] = {};
+                cot.raw.event.detail['_flow-tags_'] = {}
+                cot.raw.event.detail['_flow-tags_'][`NodeCoT-${pkg.version}`] = new Date().toISOString()
             }
         }
 
