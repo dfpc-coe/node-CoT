@@ -23,6 +23,7 @@ import CoT from '../cot.js';
 
 // GeoJSON Geospatial ops will truncate to the below
 const COORDINATE_PRECISION = 6;
+const INTERNAL_FLOW_PREFIX = 'NodeCoT-';
 
 /**
  * Return a GeoJSON Feature from an XML CoT message
@@ -205,8 +206,28 @@ export async function to_geojson(cot: CoT): Promise<Static<typeof Feature>> {
         feat.properties.group = raw.event.detail.__group._attributes;
     }
 
-    if (raw.event.detail['_flow-tags_'] && raw.event.detail['_flow-tags_']._attributes) {
-        feat.properties.flow = raw.event.detail['_flow-tags_']._attributes;
+    if (raw.event.detail['_flow-tags_']) {
+        const flow = raw.event.detail['_flow-tags_']._attributes
+            ? raw.event.detail['_flow-tags_']._attributes
+            : Object.entries(raw.event.detail['_flow-tags_']).reduce((acc, [key, value]) => {
+                if (key !== '_attributes' && typeof value === 'string') {
+                    acc[key] = value;
+                }
+
+                return acc;
+            }, {} as Record<string, string>);
+
+        const visibleFlow = Object.entries(flow).reduce((acc, [key, value]) => {
+            if (!key.startsWith(INTERNAL_FLOW_PREFIX)) {
+                acc[key] = value;
+            }
+
+            return acc;
+        }, {} as Record<string, string>);
+
+        if (Object.keys(visibleFlow).length) {
+            feat.properties.flow = visibleFlow;
+        }
     }
 
     if (raw.event.detail.status && raw.event.detail.status._attributes) {

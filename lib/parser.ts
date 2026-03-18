@@ -19,14 +19,14 @@ import JSONCoT, { Detail } from './types/types.js'
 import CoT from './cot.js';
 import type { CoTOptions } from './cot.js';
 import AJV from 'ajv';
-import fs from 'fs';
+import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const protoPath = path.join(path.dirname(fileURLToPath(import.meta.url)), 'proto', 'takmessage.proto');
 const RootMessage = await protobuf.load(protoPath);
-
 const pkg = JSON.parse(String(fs.readFileSync(new URL('../package.json', import.meta.url))));
+const NODECOT_FLOW_TAG = `NodeCoT-${pkg.version}`;
 
 const checkXML = (new AJV({
     allErrors: true,
@@ -34,6 +34,25 @@ const checkXML = (new AJV({
     allowUnionTypes: true
 }))
     .compile(JSONCoT);
+
+export type CoTFlowOptions = {
+    /** Remove all existing flow tags before applying any other requested operations. */
+    remove?: boolean;
+
+    /** Replace all current flow tags with a single fresh entry. */
+    init?: boolean;
+
+    /** Add or update a single flow tag while preserving existing entries. */
+    stamp?: boolean;
+
+    /** Flow tag key to create when using `init` or `stamp`.
+     *  Defaults to the current `NodeCoT-*` version tag. */
+    source?: string;
+
+    /** Timestamp to use for the created flow tag.
+     *  Accepts a `Date` or ISO-8601 compatible string. Defaults to now. */
+    timestamp?: Date | string;
+}
 
 /**
  * Convert to and from an XML CoT message
@@ -44,6 +63,71 @@ const checkXML = (new AJV({
  * @prop raw Raw XML-JS representation of CoT
  */
 export class CoTParser {
+    /**
+     * Read or mutate CoT flow tags.
+     *
+     * With no `opts`, returns the current flow tag map if present.
+     *
+     * Mutation behavior is composable:
+     * - `remove`: clear all existing flow tags first
+     * - `init`: replace with exactly one fresh tag
+     * - `stamp`: add or update one tag while preserving others
+     *
+     * Examples:
+     * - `flow(cot)` → read current flow tags
+     * - `flow(cot, { remove: true })` → delete all flow tags
+     * - `flow(cot, { init: true })` → reset to a single `NodeCoT-*` tag
+     * - `flow(cot, { stamp: true, source: 'TAK-Server-1' })` → append/update one tag
+     */
+    static flow(cot: CoT, opts?: CoTFlowOptions): Record<string, string> | undefined {
+        if (!cot.raw.event.detail) cot.raw.event.detail = {};
+
+        const detail = cot.raw.event.detail;
+
+        let flow: Record<string, string> = {};
+        if (detail['_flow-tags_']?._attributes && typeof detail['_flow-tags_']._attributes === 'object') {
+            flow = { ...detail['_flow-tags_']._attributes };
+        } else if (detail['_flow-tags_'] && typeof detail['_flow-tags_'] === 'object') {
+            flow = Object.entries(detail['_flow-tags_']).reduce((acc, [key, value]) => {
+                if (key !== '_attributes' && typeof value === 'string') {
+                    acc[key] = value;
+                }
+
+                return acc;
+            }, {} as Record<string, string>);
+        }
+
+        if (!opts) {
+            return Object.keys(flow).length ? flow : undefined;
+        }
+
+        if (opts.remove) {
+            flow = {};
+        }
+
+        if (opts.init) {
+            flow = {};
+            flow[opts.source || NODECOT_FLOW_TAG] = opts.timestamp instanceof Date
+                ? opts.timestamp.toISOString()
+                : new Date(opts.timestamp || new Date()).toISOString();
+        } else if (opts.stamp) {
+            flow[opts.source || NODECOT_FLOW_TAG] = opts.timestamp instanceof Date
+                ? opts.timestamp.toISOString()
+                : new Date(opts.timestamp || new Date()).toISOString();
+        }
+
+        if (Object.keys(flow).length) {
+            detail['_flow-tags_'] = {
+                _attributes: flow
+            };
+
+            return flow;
+        } else {
+            delete detail['_flow-tags_'];
+            return undefined;
+        }
+    }
+
     static validate(
         cot: CoT,
         opts: {
@@ -60,13 +144,7 @@ export class CoTParser {
         }
 
         if (opts.flow) {
-            if (!cot.raw.event.detail) cot.raw.event.detail = {};
-
-            if (!cot.raw.event.detail['_flow-tags_']) {
-                cot.raw.event.detail['_flow-tags_'] = {};
-            }
-
-            cot.raw.event.detail['_flow-tags_'][`NodeCoT-${pkg.version}`] = new Date().toISOString()
+            this.flow(cot, { stamp: true });
         }
 
         return cot;
