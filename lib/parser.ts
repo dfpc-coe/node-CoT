@@ -80,7 +80,11 @@ export class CoTParser {
      * - `flow(cot, { stamp: true, source: 'TAK-Server-1' })` → append/update one tag
      */
     static flow(cot: CoT, opts?: CoTFlowOptions): Record<string, string> | undefined {
-        if (!cot.raw.event.detail) cot.raw.event.detail = {};
+        if (!cot.raw.event.detail) {
+            // In read-only mode, do not mutate the input by creating an empty detail object.
+            if (!opts) return undefined;
+            cot.raw.event.detail = {};
+        }
 
         const detail = cot.raw.event.detail;
 
