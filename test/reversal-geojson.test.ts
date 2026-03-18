@@ -10,7 +10,7 @@ for (const fixturename of await fs.readdir(new URL('./fixtures/', import.meta.ur
     test(`GeoJSON Reversal Tests: ${fixturename}`, async (t) => {
         const fixture: Static<typeof Feature> = JSON.parse(String(await fs.readFile(path.join(path.parse(fileURLToPath(import.meta.url)).dir, 'fixtures/', fixturename))));
         const geo = await CoTParser.from_geojson(fixture)
-        const output = await CoTParser.to_geojson(geo);
+        const output = await CoTParser.to_geojson(geo, { includeInternalFlow: false });
 
         t.deepEquals(fixture, output, fixturename);
 

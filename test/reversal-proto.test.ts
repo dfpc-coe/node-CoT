@@ -12,7 +12,7 @@ for (const fixturename of await fs.readdir(new URL('./fixtures/', import.meta.ur
         const geo = await CoTParser.from_geojson(fixture)
         const intermediate = await CoTParser.to_proto(geo);
         const output = await CoTParser.from_proto(intermediate);
-        t.deepEquals(fixture, await CoTParser.to_geojson(output), fixturename);
+        t.deepEquals(fixture, await CoTParser.to_geojson(output, { includeInternalFlow: false }), fixturename);
 
         t.end();
     });

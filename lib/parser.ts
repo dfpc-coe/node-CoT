@@ -6,6 +6,7 @@ import type { Static } from '@sinclair/typebox';
 import { from_geojson } from './parser/from_geojson.js';
 import { normalize_geojson } from './parser/normalize_geojson.js';
 import { to_geojson } from './parser/to_geojson.js';
+import type { ToGeoJSONOptions } from './parser/to_geojson.js';
 import type {
     Feature,
 } from './types/feature.js';
@@ -52,6 +53,22 @@ export type CoTFlowOptions = {
     /** Timestamp to use for the created flow tag.
      *  Accepts a `Date` or ISO-8601 compatible string. Defaults to now. */
     timestamp?: Date | string;
+}
+
+export type { ToGeoJSONOptions } from './parser/to_geojson.js';
+
+function flowTimestamp(timestamp?: Date | string): string {
+    if (timestamp === undefined) {
+        return new Date().toISOString();
+    }
+
+    const value = timestamp instanceof Date ? timestamp : new Date(timestamp);
+
+    if (Number.isNaN(value.getTime())) {
+        throw new Err(400, null, 'Invalid flow timestamp');
+    }
+
+    return value.toISOString();
 }
 
 /**
@@ -107,13 +124,9 @@ export class CoTParser {
 
         if (opts.init) {
             flow = {};
-            flow[opts.source || NODECOT_FLOW_TAG] = opts.timestamp instanceof Date
-                ? opts.timestamp.toISOString()
-                : new Date(opts.timestamp || new Date()).toISOString();
+            flow[opts.source || NODECOT_FLOW_TAG] = flowTimestamp(opts.timestamp);
         } else if (opts.stamp) {
-            flow[opts.source || NODECOT_FLOW_TAG] = opts.timestamp instanceof Date
-                ? opts.timestamp.toISOString()
-                : new Date(opts.timestamp || new Date()).toISOString();
+            flow[opts.source || NODECOT_FLOW_TAG] = flowTimestamp(opts.timestamp);
         }
 
         if (Object.keys(flow).length) {
@@ -256,8 +269,11 @@ export class CoTParser {
     /**
      * Return a GeoJSON Feature from an XML CoT message
      */
-    static async to_geojson(cot: CoT): Promise<Static<typeof Feature>> {
-        return await to_geojson(cot);
+    static async to_geojson(
+        cot: CoT,
+        opts: ToGeoJSONOptions = {}
+    ): Promise<Static<typeof Feature>> {
+        return await to_geojson(cot, opts);
     }
 
     /**

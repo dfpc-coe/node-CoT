@@ -25,10 +25,21 @@ import CoT from '../cot.js';
 const COORDINATE_PRECISION = 6;
 const INTERNAL_FLOW_PREFIX = 'NodeCoT-';
 
+export type ToGeoJSONOptions = {
+    /** Include internal `NodeCoT-*` flow tags in GeoJSON output.
+     *  Defaults to `true` to preserve round-trip fidelity. */
+    includeInternalFlow?: boolean;
+}
+
 /**
  * Return a GeoJSON Feature from an XML CoT message
  */
-export async function to_geojson(cot: CoT): Promise<Static<typeof Feature>> {
+export async function to_geojson(
+    cot: CoT,
+    opts: ToGeoJSONOptions = {}
+): Promise<Static<typeof Feature>> {
+    if (opts.includeInternalFlow === undefined) opts.includeInternalFlow = true;
+
     const raw: Static<typeof JSONCoT> = JSON.parse(JSON.stringify(cot.raw));
     if (!raw.event.detail) raw.event.detail = {};
     if (!raw.event.detail.contact) raw.event.detail.contact = { _attributes: { callsign: 'UNKNOWN' } };
@@ -218,7 +229,13 @@ export async function to_geojson(cot: CoT): Promise<Static<typeof Feature>> {
             }, {} as Record<string, string>);
 
         const visibleFlow = Object.entries(flow).reduce((acc, [key, value]) => {
-            if (!key.startsWith(INTERNAL_FLOW_PREFIX) && typeof value === 'string') {
+            if (
+                typeof value === 'string'
+                && (
+                    opts.includeInternalFlow
+                    || !key.startsWith(INTERNAL_FLOW_PREFIX)
+                )
+            ) {
                 acc[key] = value;
             }
 

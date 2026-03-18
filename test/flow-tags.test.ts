@@ -1,4 +1,5 @@
 import test from 'tape';
+import Err from '@openaddresses/batch-error';
 import { CoTParser } from '../index.js';
 import fs from 'node:fs';
 
@@ -96,5 +97,57 @@ test('FlowTags - Legacy Flow Parsing', async (t) => {
     const feat = await CoTParser.to_geojson(cot);
 
     t.equal(feat.properties.flow?.LegacyFlow, '2026-03-08T04:48:00Z', 'parses legacy flow tag shape');
+    t.end();
+});
+
+test('FlowTags - GeoJSON Internal Flow Control', async (t) => {
+    const cot = await CoTParser.from_geojson({
+        id: '123',
+        type: 'Feature',
+        path: '/',
+        properties: {
+            type: 'a-f-G',
+            how: 'm-g',
+            callsign: 'BasicTest',
+            center: [1.1, 2.2, 0],
+            time: '2023-08-04T15:17:43.649Z',
+            start: '2023-08-04T15:17:43.649Z',
+            stale: '2023-08-04T15:17:43.649Z',
+            metadata: {}
+        },
+        geometry: {
+            type: 'Point',
+            coordinates: [1.1, 2.2, 0]
+        }
+    });
+
+    const full = await CoTParser.to_geojson(cot);
+    const filtered = await CoTParser.to_geojson(cot, { includeInternalFlow: false });
+
+    t.ok(full.properties.flow, 'default GeoJSON output retains internal flow tags');
+    t.ok(Object.keys(full.properties.flow || {}).some((key) => key.startsWith('NodeCoT-')), 'default output includes NodeCoT flow tags');
+    t.equal(filtered.properties.flow, undefined, 'filtered GeoJSON output hides internal-only flow tags');
+    t.end();
+});
+
+test('FlowTags - Invalid Timestamp', async (t) => {
+    const cot = CoTParser.from_xml(`
+        <event version="2.0" uid="123" type="a-f-G" how="m-g" time="2023-08-04T15:17:43.649Z" start="2023-08-04T15:17:43.649Z" stale="2023-08-04T15:17:43.649Z">
+            <point lat="2.2" lon="1.1" hae="0" ce="9999999" le="9999999" />
+            <detail>
+                <contact callsign="BasicTest" />
+            </detail>
+        </event>
+    `);
+
+    try {
+        CoTParser.flow(cot, { stamp: true, timestamp: 'not-a-date' });
+        t.fail('expected invalid timestamp to throw');
+    } catch (err) {
+        t.ok(err instanceof Err, 'throws batch error');
+        t.equal((err as Err).status, 400, 'returns bad request status');
+        t.equal((err as Error).message, 'Invalid flow timestamp', 'returns clear validation message');
+    }
+
     t.end();
 });
