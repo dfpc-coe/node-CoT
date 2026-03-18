@@ -20,10 +20,11 @@ import { destination } from '@turf/destination';
 import Color from '../utils/color.js';
 import JSONCoT from '../types/types.js'
 import CoT from '../cot.js';
+import { NODECOT_FLOW_TAG } from '../parser.js';
 
 // GeoJSON Geospatial ops will truncate to the below
 const COORDINATE_PRECISION = 6;
-const INTERNAL_FLOW_PREFIX = 'NodeCoT-';
+const INTERNAL_FLOW_PREFIX = NODECOT_FLOW_TAG + '-';
 
 /**
  * Return a GeoJSON Feature from an XML CoT message
