@@ -35,6 +35,10 @@ const checkXML = (new AJV({
 }))
     .compile(JSONCoT);
 
+export interface SerializerOptions {
+    resetFlow: boolean
+}
+
 /**
  * Convert to and from an XML CoT message
  * @class
@@ -132,20 +136,40 @@ export class CoTParser {
         return this.validate(cot);
     }
 
-    static to_xml(cot: CoT): string {
+    static to_xml(
+        cot: CoT,
+        opts?: SerializerOptions
+    ): string {
+        if (opts?.resetFlow) {
+            if (cot.raw.event.detail && cot.raw.event.detail['_flow-tags_']) {
+                cot.raw.event.detail['_flow-tags_'] = {}
+                cot.raw.event.detail['_flow-tags_'][`NodeCoT-${pkg.version}`] = new Date().toISOString()
+            }
+        }
+
         return js2xml(cot.raw, { compact: true });
     }
 
     /**
      * Return an ATAK Compliant Protobuf
      */
-    static async to_proto(cot: CoT, version = 1): Promise<Uint8Array> {
+    static async to_proto(
+        cot: CoT,
+        version = 1,
+        opts?: SerializerOptions
+    ): Promise<Uint8Array> {
         if (version < 1 || version > 1) throw new Err(400, null, `Unsupported Proto Version: ${version}`);
         const ProtoMessage = RootMessage.lookupType(`atakmap.commoncommo.protobuf.v${version}.TakMessage`)
 
+        if (opts?.resetFlow) {
+            if (cot.raw.event.detail && cot.raw.event.detail['_flow-tags_']) {
+                cot.raw.event.detail['_flow-tags_'] = {}
+                cot.raw.event.detail['_flow-tags_'][`NodeCoT-${pkg.version}`] = new Date().toISOString()
+            }
+        }
+
         // The spread operator is important to make sure the delete doesn't modify the underlying detail object
         const detail = { ...cot.raw.event.detail };
-
         const msg: any = {
             cotEvent: {
                 ...cot.raw.event._attributes,
