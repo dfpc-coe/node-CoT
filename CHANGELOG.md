@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.30.1 - 2025-03-18
+
+- :tada: Retain Non-TAK Server Flow Tags
+
 ### v14.30.0 - 2025-03-18
 
 - :tada: Add the ability to reset flow tags

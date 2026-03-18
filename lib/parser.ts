@@ -39,6 +39,35 @@ export interface SerializerOptions {
     resetFlow: boolean
 }
 
+function resetFlowTags(cot: CoT): void {
+    const flowTags = cot.raw.event.detail?.['_flow-tags_'];
+
+    if (!flowTags || typeof flowTags !== 'object' || Array.isArray(flowTags)) {
+        return;
+    }
+
+    const stripServerFlowTags = (tags: Record<string, unknown>): void => {
+        for (const key of Object.keys(tags)) {
+            if (key !== '_attributes' && key.startsWith('TAK-Server')) {
+                delete tags[key];
+            }
+        }
+    };
+
+    stripServerFlowTags(flowTags as Record<string, unknown>);
+
+    if (
+        '_attributes' in flowTags
+        && flowTags._attributes
+        && typeof flowTags._attributes === 'object'
+        && !Array.isArray(flowTags._attributes)
+    ) {
+        stripServerFlowTags(flowTags._attributes as Record<string, unknown>);
+    }
+
+    flowTags[`NodeCoT-${pkg.version}`] = new Date().toISOString();
+}
+
 /**
  * Convert to and from an XML CoT message
  * @class
@@ -141,10 +170,7 @@ export class CoTParser {
         opts?: SerializerOptions
     ): string {
         if (opts?.resetFlow) {
-            if (cot.raw.event.detail && cot.raw.event.detail['_flow-tags_']) {
-                cot.raw.event.detail['_flow-tags_'] = {}
-                cot.raw.event.detail['_flow-tags_'][`NodeCoT-${pkg.version}`] = new Date().toISOString()
-            }
+            resetFlowTags(cot);
         }
 
         return js2xml(cot.raw, { compact: true });
@@ -162,10 +188,7 @@ export class CoTParser {
         const ProtoMessage = RootMessage.lookupType(`atakmap.commoncommo.protobuf.v${version}.TakMessage`)
 
         if (opts?.resetFlow) {
-            if (cot.raw.event.detail && cot.raw.event.detail['_flow-tags_']) {
-                cot.raw.event.detail['_flow-tags_'] = {}
-                cot.raw.event.detail['_flow-tags_'][`NodeCoT-${pkg.version}`] = new Date().toISOString()
-            }
+            resetFlowTags(cot);
         }
 
         // The spread operator is important to make sure the delete doesn't modify the underlying detail object
