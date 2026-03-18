@@ -218,7 +218,7 @@ export async function to_geojson(cot: CoT): Promise<Static<typeof Feature>> {
             }, {} as Record<string, string>);
 
         const visibleFlow = Object.entries(flow).reduce((acc, [key, value]) => {
-            if (!key.startsWith(INTERNAL_FLOW_PREFIX)) {
+            if (!key.startsWith(INTERNAL_FLOW_PREFIX) && typeof value === 'string') {
                 acc[key] = value;
             }
 
