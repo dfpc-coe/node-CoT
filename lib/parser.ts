@@ -15,6 +15,7 @@ import type {
 import {
     InputFeature,
 } from './types/feature.js';
+import { normalizeBooleanAttributeValues } from './parser-normalize.js';
 import JSONCoT, { Detail } from './types/types.js'
 import CoT from './cot.js';
 import type { CoTOptions } from './cot.js';
@@ -157,8 +158,11 @@ export class CoTParser {
         raw: Buffer | string,
         opts: CoTOptions = {}
    ): CoT {
+        const parsed = xml2js(String(raw), { compact: true }) as Static<typeof JSONCoT>;
+        normalizeBooleanAttributeValues(parsed);
+
         const cot = new CoT(
-            xml2js(String(raw), { compact: true }) as Static<typeof JSONCoT>,
+            parsed,
             opts
         );
 
@@ -249,6 +253,7 @@ export class CoTParser {
         for (const key in msg.cotEvent.detail) {
             if (key === 'xmlDetail') {
                 const parsed: any = xml2js(`<detail>${msg.cotEvent.detail.xmlDetail}</detail>`, { compact: true });
+                normalizeBooleanAttributeValues(parsed);
                 Object.assign(detail, parsed.detail);
 
                 if (detail.metadata) {
