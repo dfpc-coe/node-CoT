@@ -228,8 +228,8 @@ export const Track = Type.Object({
 
 export const ShapePolyLineAttributes = Type.Object({
     closed: Type.Optional(Type.Boolean()),
-    fillColor: Type.Optional(Type.String()),
-    color: Type.Optional(Type.String()),
+    fillColor: Type.Optional(Type.Union([Type.String(), Type.Number()])),
+    color: Type.Optional(Type.Union([Type.String(), Type.Number()])),
 })
 
 export const VertexAttribute = Type.Object({

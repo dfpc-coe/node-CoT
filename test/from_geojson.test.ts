@@ -55,7 +55,7 @@ test('CoTParser.from_geojson - Polygon', async (t) => {
     });
 
     t.equals(geo.raw.event._attributes.version, '2.0');
-    t.equals(geo.raw.event._attributes.type, 'u-d-f');
+    t.equals(geo.raw.event._attributes.type, 'b-m-p-s-p-i');
     t.equals(geo.raw.event._attributes.how, 'm-g');
     t.equals(geo.raw.event._attributes.uid.length, 36);
     t.equals(geo.raw.event._attributes.time.length, 24);
@@ -74,13 +74,17 @@ test('CoTParser.from_geojson - Polygon', async (t) => {
 
         t.deepEquals(geo.raw.event.detail, {
             contact: { _attributes: { callsign: 'UNKNOWN' } },
-            link: [
-                { _attributes: { point: '39.098,-108.587' } },
-                { _attributes: { point: '39.032,-108.587' } },
-                { _attributes: { point: '39.032,-108.505' } },
-                { _attributes: { point: '39.098,-108.505' } },
-                { _attributes: { point: '39.098,-108.587' } },
-            ],
+            shape: {
+                polyline: {
+                    _attributes: { closed: true, color: -2130706688, fillColor: -2130706688 },
+                    vertex: [
+                        { _attributes: { lat: 39.098, lon: -108.587 } },
+                        { _attributes: { lat: 39.032, lon: -108.587 } },
+                        { _attributes: { lat: 39.032, lon: -108.505 } },
+                        { _attributes: { lat: 39.098, lon: -108.505 } },
+                    ]
+                }
+            },
             labels_on: { _attributes: { value: false } },
             tog: { _attributes: { enabled: '0' } },
             strokeColor: { _attributes: { value: -2130706688 } },
@@ -111,7 +115,7 @@ test('CoTParser.from_geojson - LineString', async (t) => {
     });
 
     t.equals(geo.raw.event._attributes.version, '2.0');
-    t.equals(geo.raw.event._attributes.type, 'u-d-f');
+    t.equals(geo.raw.event._attributes.type, 'b-m-p-s-p-i');
     t.equals(geo.raw.event._attributes.how, 'm-g');
     t.equals(geo.raw.event._attributes.uid.length, 36);
     t.equals(geo.raw.event._attributes.time.length, 24);
@@ -130,13 +134,18 @@ test('CoTParser.from_geojson - LineString', async (t) => {
 
         t.deepEquals(geo.raw.event.detail, {
             contact: { _attributes: { callsign: 'UNKNOWN' } },
-            link: [
-                { _attributes: { point: '39.098,-108.587' } },
-                { _attributes: { point: '39.032,-108.587' } },
-                { _attributes: { point: '39.032,-108.505' } },
-                { _attributes: { point: '39.098,-108.505' } },
-                { _attributes: { point: '39.098,-108.587' } }
-            ],
+            shape: {
+                polyline: {
+                    _attributes: { color: -2130706688 },
+                    vertex: [
+                        { _attributes: { lat: 39.098, lon: -108.587 } },
+                        { _attributes: { lat: 39.032, lon: -108.587 } },
+                        { _attributes: { lat: 39.032, lon: -108.505 } },
+                        { _attributes: { lat: 39.098, lon: -108.505 } },
+                        { _attributes: { lat: 39.098, lon: -108.587 } }
+                    ]
+                }
+            },
             labels_on: { _attributes: { value: false } },
             tog: { _attributes: { enabled: '0' } },
             strokeColor: { _attributes: { value: -2130706688 } },

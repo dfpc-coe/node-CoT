@@ -454,7 +454,6 @@ export async function to_geojson(
         feat.properties.shape = {};
         feat.properties.shape.ellipse = ellipse;
     } else if (raw.event._attributes.type.startsWith('b-m-p-s-p-i')) {
-        // TODO: Currently the "shape" tag is only parsed here - asking ARA for clarification if it is a general use tag
         if (raw.event.detail.shape && raw.event.detail.shape.polyline && raw.event.detail.shape.polyline.vertex) {
             const coordinates = [];
 

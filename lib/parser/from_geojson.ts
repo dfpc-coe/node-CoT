@@ -413,31 +413,30 @@ export async function from_geojson(
                 });
             }
         } else if (feature.geometry.type === 'LineString') {
-            cot.event._attributes.type = 'u-d-f';
+            cot.event._attributes.type = 'b-m-p-s-p-i';
 
-            if (!cot.event.detail.link) {
-                cot.event.detail.link = [];
-            } else if (!Array.isArray(cot.event.detail.link)) {
-                cot.event.detail.link = [cot.event.detail.link]
-            }
-
-            for (const coord of feature.geometry.coordinates) {
-                cot.event.detail.link.push({
-                    _attributes: { point: `${coord[1]},${coord[0]}` }
-                });
-            }
+            if (!cot.event.detail.shape) cot.event.detail.shape = {};
+            cot.event.detail.shape.polyline = {
+                _attributes: { color: stroke.as_32bit() },
+                vertex: feature.geometry.coordinates.map((coord) => ({
+                    _attributes: { lat: coord[1], lon: coord[0] }
+                }))
+            };
         } else if (feature.geometry.type === 'Polygon') {
-            cot.event._attributes.type = 'u-d-f';
+            cot.event._attributes.type = 'b-m-p-s-p-i';
 
-            if (!cot.event.detail.link) cot.event.detail.link = [];
-            else if (!Array.isArray(cot.event.detail.link)) cot.event.detail.link = [cot.event.detail.link]
+            const polyFill = new Color(feature.properties.fill || -1761607936);
+            polyFill.a = feature.properties['fill-opacity'] !== undefined ? feature.properties['fill-opacity'] * 255 : 128;
 
+            if (!cot.event.detail.shape) cot.event.detail.shape = {};
             // Inner rings are not yet supported
-            for (const coord of feature.geometry.coordinates[0]) {
-                cot.event.detail.link.push({
-                    _attributes: { point: `${coord[1]},${coord[0]}` }
-                });
-            }
+            // GeoJSON polygons repeat first coord at end; omit it since closed=true closes the ring
+            cot.event.detail.shape.polyline = {
+                _attributes: { closed: true, color: stroke.as_32bit(), fillColor: polyFill.as_32bit() },
+                vertex: feature.geometry.coordinates[0].slice(0, -1).map((coord) => ({
+                    _attributes: { lat: coord[1], lon: coord[0] }
+                }))
+            };
         }
 
         if (feature.properties.labels) {
