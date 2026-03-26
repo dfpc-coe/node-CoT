@@ -12,6 +12,11 @@
 
 ### Pending Fixed
 
+### v14.31.0 - 2025-03-26
+
+- :tada: Introduce basic validation CLI
+- :rocket: Normalize `False`/`True` boolean values to actual booleans when parsing XML
+
 ### v14.30.1 - 2025-03-18
 
 - :tada: Retain Non-TAK Server Flow Tags
