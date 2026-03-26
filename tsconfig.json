@@ -22,7 +22,8 @@
         }
     },
     "include": [
-        "index.ts", 
+        "index.ts",
+        "cli.ts",
         "test/**/*",
         "lib/*.ts",
         "lib/xml/*.ts",

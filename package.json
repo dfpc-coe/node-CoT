@@ -5,6 +5,9 @@
     "description": "Lightweight JavaScript library for parsing and manipulating TAK messages",
     "author": "Nick Ingalls <nick@ingalls.ca>",
     "types": "index.ts",
+    "bin": {
+        "cot": "./cli.ts"
+    },
     "exports": {
         ".": {
             "types": "./dist/index.d.ts",
