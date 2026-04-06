@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.32.0 - 2025-04-06
+
+- :arrow_up: Update to TypeScript@6
+
 ### v14.31.0 - 2025-03-26
 
 - :tada: Introduce basic validation CLI

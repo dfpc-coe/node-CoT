@@ -64,7 +64,7 @@
         "tape": "^5.6.1",
         "tsx": "^4.20.3",
         "typedoc": "^0.28.0",
-        "typescript": "^5.7.0",
+        "typescript": "^6.0.0",
         "typescript-eslint": "^8.0.0"
     },
     "repository": {
