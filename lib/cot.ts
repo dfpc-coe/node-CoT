@@ -265,7 +265,7 @@ export default class CoT {
         creator?: {
             uid: string,
             type: string,
-            callsign: string,
+            callsign?: string,
             time: Date | string | undefined,
         }
     ): Static<typeof CreatorAttributes> | undefined {

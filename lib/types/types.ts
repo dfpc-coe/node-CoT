@@ -543,9 +543,9 @@ export const CreatorAttributes = Type.Object({
     uid: Type.String({
         description: 'The Unique ID of the creator of the CoT'
     }),
-    callsign: Type.String({
+    callsign: Type.Optional(Type.String({
         description: 'The Callsign of the creator of the CoT'
-    }),
+    })),
     time: Type.Optional(Type.String({
         description: 'Time at which the CoT was created by the creator'
     })),

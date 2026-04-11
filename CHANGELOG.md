@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.33.0 - 2025-04-11
+
+- :rocket: `creator.callsign` property is optional
+
 ### v14.32.0 - 2025-04-06
 
 - :arrow_up: Update to TypeScript@6
