@@ -1,7 +1,8 @@
-import test from 'tape';
+import assert from 'node:assert/strict';
+import test from 'node:test';
 import CoT, { CoTParser } from '../index.js';
 
-test('Decode Range & Bearing', async (t) => {
+test('Decode Range & Bearing', async () => {
     const cot = new CoT({
         "event": {
             "_attributes": {
@@ -69,12 +70,12 @@ test('Decode Range & Bearing', async (t) => {
     })
 
     if (!cot.raw.event.detail) {
-        t.fail('No Detail Section')
+        assert.fail('No Detail Section')
     } else {
-        t.ok(cot.raw.event.detail['_flow-tags_']);
+        assert.ok(cot.raw.event.detail['_flow-tags_']);
         delete cot.raw.event.detail['_flow-tags_'];
 
-        t.deepEquals(await CoTParser.to_geojson(cot), {
+        assert.deepEqual(await CoTParser.to_geojson(cot), {
             id: 'ebbf42a7-ea71-43a1-baf6-e259c3d115bf',
             type: 'Feature',
             path: '/',
@@ -109,6 +110,4 @@ test('Decode Range & Bearing', async (t) => {
             }
         });
     }
-
-    t.end();
 });

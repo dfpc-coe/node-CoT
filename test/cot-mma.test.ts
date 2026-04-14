@@ -1,16 +1,17 @@
-import test from 'tape';
+import assert from 'node:assert/strict';
+import test from 'node:test';
 import CoT, { CoTParser } from '../index.js';
 
-test('Decode MultiMissionAircraft CoTs', async (t) => {
+test('Decode MultiMissionAircraft CoTs', async () => {
     const cot = new CoT({"event":{"_attributes":{"version":"2.0","uid":"CO-DFPC-WLD27_CO-DFPC-WLD27-SPI","time":"2024-07-01T22:06:41Z","start":"2024-07-01T22:06:38Z","stale":"2024-07-01T22:06:58Z","type":"b-m-p-s-p-i","how":"m-g-n"},"point":{"_attributes":{"lat":40.066418,"lon":-108.322413,"hae":1899.427151,"ce":9999999,"le":9999999}},"detail":{"precisionlocation":{"_attributes":{"geopointsrc":"CALC","altsrc":"CALC"}},"contact":{"_attributes":{"name":"CO-DFPC-WLD27-SPI","callsign":"CO-DFPC-WLD27-SPI"}},"link":{"_attributes":{"uid":"CO-DFPC-WLD27_CO-DFPC-WLD27","relation":"p-p"}},"shape":{"polyline":{"_attributes":{"closed":true,"fillColor":"0","color":"-1"},"vertex":[{"_attributes":{"lat":40.059445,"lon":-108.328368}},{"_attributes":{"lat":40.061846,"lon":-108.314776}},{"_attributes":{"lat":40.075499,"lon":-108.315566}},{"_attributes":{"lat":40.071252,"lon":-108.330782}}]}},"__group":{},"_flow-tags_":{"_attributes":{"TAK-Server-e87a0e02420b44a08f6032bcf1877745":"2024-07-01T22:06:41Z"}}}}});
 
     if (!cot.raw.event.detail) {
-        t.fail('No Detail Section')
+        assert.fail('No Detail Section')
     } else {
-        t.ok(cot.raw.event.detail['_flow-tags_']);
+        assert.ok(cot.raw.event.detail['_flow-tags_']);
         delete cot.raw.event.detail['_flow-tags_'];
 
-        t.deepEquals({
+        assert.deepEqual({
             "event":{
                 "_attributes":{
                     "version":"2.0",
@@ -69,7 +70,7 @@ test('Decode MultiMissionAircraft CoTs', async (t) => {
             }
         }, cot.raw);
 
-        t.deepEquals({
+        assert.deepEqual({
             id: 'CO-DFPC-WLD27_CO-DFPC-WLD27-SPI',
             type: 'Feature',
             path: '/',
@@ -110,6 +111,4 @@ test('Decode MultiMissionAircraft CoTs', async (t) => {
             }
         }, await CoTParser.to_geojson(cot));
     }
-
-    t.end();
 });

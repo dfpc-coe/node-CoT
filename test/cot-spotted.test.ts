@@ -1,7 +1,8 @@
-import test from 'tape';
+import assert from 'node:assert/strict';
+import test from 'node:test';
 import { CoTParser } from '../index.js';
 
-test('Parse b-m-p-s-m (Spotted)', async (t) => {
+test('Parse b-m-p-s-m (Spotted)', async () => {
     const cot = CoTParser.from_xml(`
         <event version='2.0' uid='9405e320-9356-41c4-8449-f46990aa17f8' type='b-m-p-s-m' time='2020-12-16T19:59:34.913Z' start='2020-12-16T19:59:34.913Z' stale='2021-01-02T20:40:03.841Z' how='h-g-i-g-o'>
             <point lat='38.85606343062312' lon='-77.0563755018233' hae='9999999.0' ce='9999999.0' le='9999999.0' />
@@ -19,7 +20,7 @@ test('Parse b-m-p-s-m (Spotted)', async (t) => {
         </event>
     `);
 
-    t.deepEquals(await CoTParser.to_geojson(cot), {
+    assert.deepEqual(await CoTParser.to_geojson(cot), {
         id: '9405e320-9356-41c4-8449-f46990aa17f8',
         type: 'Feature',
         path: '/',
@@ -50,11 +51,9 @@ test('Parse b-m-p-s-m (Spotted)', async (t) => {
             coordinates: [ -77.0563755018233, 38.85606343062312, 9999999 ]
         },
     });
-
-    t.end();
 });
 
-test('Parse b-m-p-s-m (Spotted)', async (t) => {
+test('Parse b-m-p-s-m (Spotted)', async () => {
     const cot = CoTParser.from_xml(`
         <event version='2.0' uid='a7b52383-85be-42a1-a672-c32696029ff9' type='b-m-p-s-m' time='2026-02-03T19:54:05.000Z' start='2026-02-03T19:54:05.000Z' stale='2027-02-03T19:54:05.000Z' how='h-g-i-g-o' access='Undefined'>
             <point lat='37.4' lon='-121.9' hae='-29.1' ce='9999999.0' le='9999999.0' />
@@ -73,7 +72,7 @@ test('Parse b-m-p-s-m (Spotted)', async (t) => {
         </event>
     `);
 
-    t.deepEquals(await CoTParser.to_geojson(cot), {
+    assert.deepEqual(await CoTParser.to_geojson(cot), {
         id: 'a7b52383-85be-42a1-a672-c32696029ff9',
         type: 'Feature',
         path: '/',
@@ -104,6 +103,4 @@ test('Parse b-m-p-s-m (Spotted)', async (t) => {
             coordinates: [ -121.9, 37.4, -29.1 ]
         },
     });
-
-    t.end();
 });

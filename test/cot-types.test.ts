@@ -1,8 +1,9 @@
 import { CoTTypes } from '../index.js'
 import { StandardIdentity, Domain } from '../lib/utils/2525.js'
-import test from 'tape';
+import assert from 'node:assert/strict';
+import test from 'node:test';
 
-test(`CoTTypes Parsing`, async (t) => {
+test(`CoTTypes Parsing`, async () => {
     const types = await CoTTypes.default.load();
 
     const typed = types.types(StandardIdentity.FRIEND, {
@@ -11,7 +12,7 @@ test(`CoTTypes Parsing`, async (t) => {
 
     for (const type of typed) {
         if (type.cot === 'a-f-G-E-V-E-B') {
-            t.deepEquals(type, {
+            assert.deepEqual(type, {
                 cot: 'a-f-G-E-V-E-B',
                 full: 'Gnd/Equip/Vehic/Bridge',
                 desc: 'BRIDGE',
@@ -19,6 +20,4 @@ test(`CoTTypes Parsing`, async (t) => {
             });
         }
     }
-
-    t.end();
 });

@@ -1,7 +1,8 @@
-import test from 'tape';
+import assert from 'node:assert/strict';
+import test from 'node:test';
 import { CoTParser } from '../index.js';
 
-test('COT Emergency - Troops in Contact', async (t) => {
+test('COT Emergency - Troops in Contact', async () => {
     const cot = await CoTParser.from_geojson({
         id: '6da80127-44d4-4bf0-89bd-ecd326afaef1',
         type: 'Feature',
@@ -17,23 +18,21 @@ test('COT Emergency - Troops in Contact', async (t) => {
     })
 
     if (!cot.raw.event.detail) {
-        t.fail('No Detail Section')
+        assert.fail('No Detail Section')
     } else {
-        t.ok(cot.raw.event.detail['_flow-tags_']);
+        assert.ok(cot.raw.event.detail['_flow-tags_']);
         delete cot.raw.event.detail['_flow-tags_'];
 
-        t.deepEquals(cot.type(), 'b-a-o-opn', 'Type should be b-a-o-opn');
+        assert.deepEqual(cot.type(), 'b-a-o-opn', 'Type should be b-a-o-opn');
 
-        t.deepEquals(cot.raw.event.detail.emergency, {
+        assert.deepEqual(cot.raw.event.detail.emergency, {
             _attributes: { type: 'Troops In Contact' },
             _text: 'Example Emergency'
         }, 'Detail should match expected values');
     }
-
-    t.end();
 });
 
-test('COT Emergency - Troops in Contact - No Callsign', async (t) => {
+test('COT Emergency - Troops in Contact - No Callsign', async () => {
     const cot = await CoTParser.from_geojson({
         id: '6da80127-44d4-4bf0-89bd-ecd326afaef1',
         type: 'Feature',
@@ -48,23 +47,21 @@ test('COT Emergency - Troops in Contact - No Callsign', async (t) => {
     })
 
     if (!cot.raw.event.detail) {
-        t.fail('No Detail Section')
+        assert.fail('No Detail Section')
     } else {
-        t.ok(cot.raw.event.detail['_flow-tags_']);
+        assert.ok(cot.raw.event.detail['_flow-tags_']);
         delete cot.raw.event.detail['_flow-tags_'];
 
-        t.deepEquals(cot.type(), 'b-a-o-opn', 'Type should be b-a-o-opn');
+        assert.deepEqual(cot.type(), 'b-a-o-opn', 'Type should be b-a-o-opn');
 
-        t.deepEquals(cot.raw.event.detail.emergency, {
+        assert.deepEqual(cot.raw.event.detail.emergency, {
             _attributes: { type: 'Troops In Contact' },
             _text: 'UNKNOWN'
         }, 'Detail should match expected values');
     }
-
-    t.end();
 });
 
-test('COT Emergency - 911 Alert', async (t) => {
+test('COT Emergency - 911 Alert', async () => {
     const cot = await CoTParser.from_geojson({
         id: '6da80127-44d4-4bf0-89bd-ecd326afaef1',
         type: 'Feature',
@@ -80,23 +77,21 @@ test('COT Emergency - 911 Alert', async (t) => {
     })
 
     if (!cot.raw.event.detail) {
-        t.fail('No Detail Section')
+        assert.fail('No Detail Section')
     } else {
-        t.ok(cot.raw.event.detail['_flow-tags_']);
+        assert.ok(cot.raw.event.detail['_flow-tags_']);
         delete cot.raw.event.detail['_flow-tags_'];
 
-        t.deepEquals(cot.type(), 'b-a-o-tbl', 'Type should be b-a-o-tbl');
+        assert.deepEqual(cot.type(), 'b-a-o-tbl', 'Type should be b-a-o-tbl');
 
-        t.deepEquals(cot.raw.event.detail.emergency, {
+        assert.deepEqual(cot.raw.event.detail.emergency, {
             _attributes: { type: '911 Alert' },
             _text: 'Example Emergency'
         }, 'Detail should match expected values');
     }
-
-    t.end();
 });
 
-test('COT Emergency - 911 Alert - No Callsign', async (t) => {
+test('COT Emergency - 911 Alert - No Callsign', async () => {
     const cot = await CoTParser.from_geojson({
         id: '6da80127-44d4-4bf0-89bd-ecd326afaef1',
         type: 'Feature',
@@ -111,23 +106,21 @@ test('COT Emergency - 911 Alert - No Callsign', async (t) => {
     })
 
     if (!cot.raw.event.detail) {
-        t.fail('No Detail Section')
+        assert.fail('No Detail Section')
     } else {
-        t.ok(cot.raw.event.detail['_flow-tags_']);
+        assert.ok(cot.raw.event.detail['_flow-tags_']);
         delete cot.raw.event.detail['_flow-tags_'];
 
-        t.deepEquals(cot.type(), 'b-a-o-tbl', 'Type should be b-a-o-tbl');
+        assert.deepEqual(cot.type(), 'b-a-o-tbl', 'Type should be b-a-o-tbl');
 
-        t.deepEquals(cot.raw.event.detail.emergency, {
+        assert.deepEqual(cot.raw.event.detail.emergency, {
             _attributes: { type: '911 Alert' },
             _text: 'UNKNOWN'
         }, 'Detail should match expected values');
     }
-
-    t.end();
 });
 
-test('COT Emergency - Cancel', async (t) => {
+test('COT Emergency - Cancel', async () => {
     const cot = await CoTParser.from_geojson({
         id: '6da80127-44d4-4bf0-89bd-ecd326afaef1',
         type: 'Feature',
@@ -143,23 +136,21 @@ test('COT Emergency - Cancel', async (t) => {
     })
 
     if (!cot.raw.event.detail) {
-        t.fail('No Detail Section')
+        assert.fail('No Detail Section')
     } else {
-        t.ok(cot.raw.event.detail['_flow-tags_']);
+        assert.ok(cot.raw.event.detail['_flow-tags_']);
         delete cot.raw.event.detail['_flow-tags_'];
 
-        t.deepEquals(cot.type(), 'b-a-o-can', 'Type should be b-a-o-can');
+        assert.deepEqual(cot.type(), 'b-a-o-can', 'Type should be b-a-o-can');
 
-        t.deepEquals(cot.raw.event.detail.emergency, {
+        assert.deepEqual(cot.raw.event.detail.emergency, {
             _attributes: { cancel: true },
             _text: 'Example Emergency'
         }, 'Detail should match expected values');
     }
-
-    t.end();
 });
 
-test('COT Emergency - Cancel - No Callsign', async (t) => {
+test('COT Emergency - Cancel - No Callsign', async () => {
     const cot = await CoTParser.from_geojson({
         id: '6da80127-44d4-4bf0-89bd-ecd326afaef1',
         type: 'Feature',
@@ -174,23 +165,21 @@ test('COT Emergency - Cancel - No Callsign', async (t) => {
     })
 
     if (!cot.raw.event.detail) {
-        t.fail('No Detail Section')
+        assert.fail('No Detail Section')
     } else {
-        t.ok(cot.raw.event.detail['_flow-tags_']);
+        assert.ok(cot.raw.event.detail['_flow-tags_']);
         delete cot.raw.event.detail['_flow-tags_'];
 
-        t.deepEquals(cot.type(), 'b-a-o-can', 'Type should be b-a-o-can');
+        assert.deepEqual(cot.type(), 'b-a-o-can', 'Type should be b-a-o-can');
 
-        t.deepEquals(cot.raw.event.detail.emergency, {
+        assert.deepEqual(cot.raw.event.detail.emergency, {
             _attributes: { cancel: true },
             _text: 'UNKNOWN'
         }, 'Detail should match expected values');
     }
-
-    t.end();
 });
 
-test('COT Emergency - Ring The Bell', async (t) => {
+test('COT Emergency - Ring The Bell', async () => {
     const cot = await CoTParser.from_geojson({
         id: '6da80127-44d4-4bf0-89bd-ecd326afaef1',
         type: 'Feature',
@@ -206,23 +195,21 @@ test('COT Emergency - Ring The Bell', async (t) => {
     })
 
     if (!cot.raw.event.detail) {
-        t.fail('No Detail Section')
+        assert.fail('No Detail Section')
     } else {
-        t.ok(cot.raw.event.detail['_flow-tags_']);
+        assert.ok(cot.raw.event.detail['_flow-tags_']);
         delete cot.raw.event.detail['_flow-tags_'];
 
-        t.deepEquals(cot.type(), 'b-a-o-pan', 'Type should be b-a-o-pan');
+        assert.deepEqual(cot.type(), 'b-a-o-pan', 'Type should be b-a-o-pan');
 
-        t.deepEquals(cot.raw.event.detail.emergency, {
+        assert.deepEqual(cot.raw.event.detail.emergency, {
             _attributes: { type: 'Ring The Bell' },
             _text: 'Example Emergency'
         }, 'Detail should match expected values');
     }
-
-    t.end();
 });
 
-test('COT Emergency - Ring The Bell - No Callsign', async (t) => {
+test('COT Emergency - Ring The Bell - No Callsign', async () => {
     const cot = await CoTParser.from_geojson({
         id: '6da80127-44d4-4bf0-89bd-ecd326afaef1',
         type: 'Feature',
@@ -237,23 +224,21 @@ test('COT Emergency - Ring The Bell - No Callsign', async (t) => {
     })
 
     if (!cot.raw.event.detail) {
-        t.fail('No Detail Section')
+        assert.fail('No Detail Section')
     } else {
-        t.ok(cot.raw.event.detail['_flow-tags_']);
+        assert.ok(cot.raw.event.detail['_flow-tags_']);
         delete cot.raw.event.detail['_flow-tags_'];
 
-        t.deepEquals(cot.type(), 'b-a-o-pan', 'Type should be b-a-o-pan');
+        assert.deepEqual(cot.type(), 'b-a-o-pan', 'Type should be b-a-o-pan');
 
-        t.deepEquals(cot.raw.event.detail.emergency, {
+        assert.deepEqual(cot.raw.event.detail.emergency, {
             _attributes: { type: 'Ring The Bell' },
             _text: 'UNKNOWN'
         }, 'Detail should match expected values');
     }
-
-    t.end();
 });
 
-test('COT Emergency - GeoFence Breached', async (t) => {
+test('COT Emergency - GeoFence Breached', async () => {
     const cot = await CoTParser.from_geojson({
         id: '6da80127-44d4-4bf0-89bd-ecd326afaef1',
         type: 'Feature',
@@ -269,23 +254,21 @@ test('COT Emergency - GeoFence Breached', async (t) => {
     })
 
     if (!cot.raw.event.detail) {
-        t.fail('No Detail Section')
+        assert.fail('No Detail Section')
     } else {
-        t.ok(cot.raw.event.detail['_flow-tags_']);
+        assert.ok(cot.raw.event.detail['_flow-tags_']);
         delete cot.raw.event.detail['_flow-tags_'];
 
-        t.deepEquals(cot.type(), 'b-a-g', 'Type should be b-a-g');
+        assert.deepEqual(cot.type(), 'b-a-g', 'Type should be b-a-g');
 
-        t.deepEquals(cot.raw.event.detail.emergency, {
+        assert.deepEqual(cot.raw.event.detail.emergency, {
             _attributes: { type: 'Geo-fence Breached' },
             _text: 'Example Emergency'
         }, 'Detail should match expected values');
     }
-
-    t.end();
 });
 
-test('COT Emergency - GeoFence Breached - No Callsign', async (t) => {
+test('COT Emergency - GeoFence Breached - No Callsign', async () => {
     const cot = await CoTParser.from_geojson({
         id: '6da80127-44d4-4bf0-89bd-ecd326afaef1',
         type: 'Feature',
@@ -300,23 +283,21 @@ test('COT Emergency - GeoFence Breached - No Callsign', async (t) => {
     })
 
     if (!cot.raw.event.detail) {
-        t.fail('No Detail Section')
+        assert.fail('No Detail Section')
     } else {
-        t.ok(cot.raw.event.detail['_flow-tags_']);
+        assert.ok(cot.raw.event.detail['_flow-tags_']);
         delete cot.raw.event.detail['_flow-tags_'];
 
-    t.deepEquals(cot.type(), 'b-a-g', 'Type should be b-a-g');
+    assert.deepEqual(cot.type(), 'b-a-g', 'Type should be b-a-g');
 
-        t.deepEquals(cot.raw.event.detail.emergency, {
+        assert.deepEqual(cot.raw.event.detail.emergency, {
             _attributes: { type: 'Geo-fence Breached' },
             _text: 'UNKNOWN'
         }, 'Detail should match expected values');
     }
-
-    t.end();
 });
 
-test('COT Emergency - WearOS', async (t) => {
+test('COT Emergency - WearOS', async () => {
     const cot = await CoTParser.from_xml(`
          <event version='2.0' uid='17eaa1c4-e137-4328-b5e4-294d2a7fd01d' type='b-a-o' time='2026-02-04T13:40:15.895Z' start='2026-02-04T13:40:15.895Z' stale='2026-02-04T13:55:15.895Z' how='h-e' access='Undefined'>
              <point lat='41.8838397' lon='-87.6590334' hae='155.50001525878906' ce='17.75' le='0.9278001' />
@@ -330,7 +311,7 @@ test('COT Emergency - WearOS', async (t) => {
          </event>
     `)
 
-    t.deepEquals(await CoTParser.to_geojson(cot), {
+    assert.deepEqual(await CoTParser.to_geojson(cot), {
         id: '17eaa1c4-e137-4328-b5e4-294d2a7fd01d',
         type: 'Feature',
         path: '/',

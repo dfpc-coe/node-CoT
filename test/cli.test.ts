@@ -2,7 +2,8 @@ import fs from 'node:fs/promises'
 import os from 'node:os'
 import path from 'node:path'
 import { spawn } from 'node:child_process'
-import test from 'tape'
+import assert from 'node:assert/strict';
+import test from 'node:test';
 import { CoTParser, DataPackage } from '../index.js'
 
 interface CLIResult {
@@ -43,7 +44,7 @@ async function runCLI(args: string[]): Promise<CLIResult> {
     });
 }
 
-test('cli feature convert geojson to cot xml', async (t) => {
+test('cli feature convert geojson to cot xml', async () => {
     const tmpdir = await fs.mkdtemp(path.join(os.tmpdir(), 'node-cot-cli-'));
 
     try {
@@ -63,20 +64,18 @@ test('cli feature convert geojson to cot xml', async (t) => {
 
         const result = await runCLI(['feature', 'convert', geojsonPath]);
 
-        t.equal(result.code, 0);
-        t.equal(result.stderr, '');
+        assert.equal(result.code, 0);
+        assert.equal(result.stderr, '');
 
         const cot = CoTParser.from_xml(result.stdout);
-        t.equal(cot.uid(), 'cli-feature-1');
-        t.equal(cot.raw.event._attributes.type, 'a-f-G-U-C');
+        assert.equal(cot.uid(), 'cli-feature-1');
+        assert.equal(cot.raw.event._attributes.type, 'a-f-G-U-C');
     } finally {
         await fs.rm(tmpdir, { recursive: true, force: true });
     }
-
-    t.end();
 });
 
-test('cli feature convert cot xml to geojson', async (t) => {
+test('cli feature convert cot xml to geojson', async () => {
     const tmpdir = await fs.mkdtemp(path.join(os.tmpdir(), 'node-cot-cli-'));
 
     try {
@@ -98,40 +97,36 @@ test('cli feature convert cot xml to geojson', async (t) => {
 
         const result = await runCLI(['feature', 'convert', cotPath]);
 
-        t.equal(result.code, 0);
-        t.equal(result.stderr, '');
+        assert.equal(result.code, 0);
+        assert.equal(result.stderr, '');
 
         const feature = JSON.parse(result.stdout);
-        t.equal(feature.type, 'Feature');
-        t.equal(feature.id, 'cli-feature-2');
-        t.equal(feature.properties.callsign, 'CLI Feature 2');
+        assert.equal(feature.type, 'Feature');
+        assert.equal(feature.id, 'cli-feature-2');
+        assert.equal(feature.properties.callsign, 'CLI Feature 2');
     } finally {
         await fs.rm(tmpdir, { recursive: true, force: true });
     }
-
-    t.end();
 });
 
-test('cli package validate valid package', async (t) => {
+test('cli package validate valid package', async () => {
     const result = await runCLI([
         'package',
         'validate',
         new URL('./packages/QuickPic.zip', import.meta.url).pathname
     ]);
 
-    t.equal(result.code, 0);
-    t.equal(result.stderr, '');
+    assert.equal(result.code, 0);
+    assert.equal(result.stderr, '');
 
     const output = JSON.parse(result.stdout);
-    t.equal(output.valid, true);
-    t.equal(output.counts.cots, 1);
-    t.equal(output.counts.attachments, 1);
-    t.equal(output.counts.files, 0);
-
-    t.end();
+    assert.equal(output.valid, true);
+    assert.equal(output.counts.cots, 1);
+    assert.equal(output.counts.attachments, 1);
+    assert.equal(output.counts.files, 0);
 });
 
-test('cli package validate reports embedded cot uid and schema error', async (t) => {
+test('cli package validate reports embedded cot uid and schema error', async () => {
     const pkg = new DataPackage();
 
     try {
@@ -162,16 +157,14 @@ test('cli package validate reports embedded cot uid and schema error', async (t)
         const zipPath = await pkg.finalize();
         const result = await runCLI(['package', 'validate', zipPath]);
 
-        t.equal(result.code, 1);
-        t.equal(result.stdout, '');
+        assert.equal(result.code, 1);
+        assert.equal(result.stdout, '');
 
         const output = JSON.parse(result.stderr);
-        t.equal(output.valid, false);
-        t.equal(output.errors[0].uid, 'broken-cot-1');
-        t.ok(String(output.errors[0].error).includes('must have required property'));
+        assert.equal(output.valid, false);
+        assert.equal(output.errors[0].uid, 'broken-cot-1');
+        assert.ok(String(output.errors[0].error).includes('must have required property'));
     } finally {
         await pkg.destroy();
     }
-
-    t.end();
 });

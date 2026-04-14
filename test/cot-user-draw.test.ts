@@ -1,7 +1,8 @@
-import test from 'tape';
+import assert from 'node:assert/strict';
+import test from 'node:test';
 import { CoTParser } from '../index.js';
 
-test('Parse u-d-c-c (Circle - Transparent)', async (t) => {
+test('Parse u-d-c-c (Circle - Transparent)', async () => {
     const cot = CoTParser.from_xml(`
         <event
           version='2.0'
@@ -63,7 +64,7 @@ test('Parse u-d-c-c (Circle - Transparent)', async (t) => {
         </event>
     `);
 
-    t.deepEquals(await CoTParser.to_geojson(cot), {
+    assert.deepEqual(await CoTParser.to_geojson(cot), {
         id: '32c312f0-e146-42ee-86b3-ad357d1b76fd',
         type: 'Feature', 
         properties: { 
@@ -172,12 +173,10 @@ test('Parse u-d-c-c (Circle - Transparent)', async (t) => {
         },
         path: '/'
     });
-
-    t.end();
 });
 
 
-test('Parse u-d-c-c (Circle - Filled)', async (t) => {
+test('Parse u-d-c-c (Circle - Filled)', async () => {
     const cot = CoTParser.from_xml(`
 <?xml version='1.0' encoding='UTF-8' standalone='yes' ?>
 <event
@@ -241,7 +240,7 @@ test('Parse u-d-c-c (Circle - Filled)', async (t) => {
 
     `);
 
-    t.deepEquals(await CoTParser.to_geojson(cot), {
+    assert.deepEqual(await CoTParser.to_geojson(cot), {
         id: 'dd80d848-4614-412c-9890-9e7157450a6b', 
         type: 'Feature', 
         properties: { 
@@ -350,6 +349,4 @@ test('Parse u-d-c-c (Circle - Filled)', async (t) => {
         },
         path: '/'
     });
-
-    t.end();
 });

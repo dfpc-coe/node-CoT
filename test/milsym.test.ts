@@ -1,7 +1,8 @@
-import test from 'tape';
+import assert from 'node:assert/strict';
+import test from 'node:test';
 import { CoTParser } from '../index.js';
 
-test('Parse Creator', (t) => {
+test('Parse Creator', () => {
     const cot = CoTParser.from_xml(`
         <event version="2.0" uid="a471cec4-4d18-41b4-a1c5-d79e52b5a678" type="a-n-G" time="2025-04-24T15:23:11.088Z" start="2025-04-24T15:23:11.088Z" stale="2026-04-24T15:23:11.088Z" how="h-g-i-g-o" access="Undefined">
             <point lat="39.0664644" lon="-108.4328957" hae="1402.385" ce="9999999.0" le="9999999.0"/>
@@ -26,9 +27,9 @@ test('Parse Creator', (t) => {
 
     const detail = cot.detail();
 
-    if (!detail.__milsym) t.fail();
+    if (!detail.__milsym) assert.fail();
 
-    t.deepEquals(detail.__milsym, {
+    assert.deepEqual(detail.__milsym, {
         _attributes: { id: 'SNGX-----------' },
         unitmodifier: [
             { _attributes: { code: 'Z' } },
@@ -45,6 +46,4 @@ test('Parse Creator', (t) => {
             { _attributes: { code: 'AH' }, _text: 'true' }
         ]
     });
-
-    t.end();
 });

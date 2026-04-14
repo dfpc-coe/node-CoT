@@ -1,20 +1,21 @@
-import test from 'tape';
+import assert from 'node:assert/strict';
+import test from 'node:test';
 import { ForceDelete } from '../index.js';
 
-test('ForceDelete - Basic', (t) => {
+test('ForceDelete - Basic', () => {
     const cot = new ForceDelete('delete-uid');
 
     if (!cot.raw.event.detail) {
-        t.fail('No Detail Section')
+        assert.fail('No Detail Section')
     } else {
-        t.equals(typeof cot.raw.event._attributes.time, 'string');
+        assert.equal(typeof cot.raw.event._attributes.time, 'string');
         cot.raw.event._attributes.time = '2024-04-01'
-        t.equals(typeof cot.raw.event._attributes.start, 'string');
+        assert.equal(typeof cot.raw.event._attributes.start, 'string');
         cot.raw.event._attributes.start = '2024-04-01'
-        t.equals(typeof cot.raw.event._attributes.stale, 'string');
+        assert.equal(typeof cot.raw.event._attributes.stale, 'string');
         cot.raw.event._attributes.stale = '2024-04-01'
 
-        t.deepEquals(cot.raw, {
+        assert.deepEqual(cot.raw, {
             event: {
                 _attributes: {
                     uid: 'delete-uid',
@@ -42,6 +43,4 @@ test('ForceDelete - Basic', (t) => {
             }
         });
     }
-
-    t.end();
 });

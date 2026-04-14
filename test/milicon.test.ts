@@ -1,7 +1,8 @@
-import test from 'tape';
+import assert from 'node:assert/strict';
+import test from 'node:test';
 import { CoTParser } from '../index.js';
 
-test('MilIcon Augmentation - a-n-G', (t) => {
+test('MilIcon Augmentation - a-n-G', () => {
     const cot = CoTParser.from_xml(`
         <event
             version="2.0"
@@ -22,15 +23,13 @@ test('MilIcon Augmentation - a-n-G', (t) => {
         }
     });
 
-    t.deepEquals(cot.raw.event.detail!.__milicon, {
+    assert.deepEqual(cot.raw.event.detail!.__milicon, {
         _attributes: { id: '12041000000000000000' },
     });
-
-    t.end();
 });
 
 // TAK Aware generated uppercase battle dimension, handle this
-test('MilIcon Augmentation - a-U-G', (t) => {
+test('MilIcon Augmentation - a-U-G', () => {
     const cot = CoTParser.from_xml(`
         <event
             version="2.0"
@@ -51,14 +50,12 @@ test('MilIcon Augmentation - a-U-G', (t) => {
         }
     });
 
-    t.deepEquals(cot.raw.event.detail!.__milicon, {
+    assert.deepEqual(cot.raw.event.detail!.__milicon, {
         _attributes: { id: '12011000000000000000' },
     });
-
-    t.end();
 });
 
-test('MilSym Augmentation - a-f-G-E-V-C', (t) => {
+test('MilSym Augmentation - a-f-G-E-V-C', () => {
     const cot = CoTParser.from_xml(`
         <event
             version="2.0"
@@ -79,9 +76,7 @@ test('MilSym Augmentation - a-f-G-E-V-C', (t) => {
         }
     });
 
-    t.deepEquals(cot.raw.event.detail!.__milicon, {
+    assert.deepEqual(cot.raw.event.detail!.__milicon, {
         _attributes: { id: '10031500001601000000' },
     });
-
-    t.end();
 });

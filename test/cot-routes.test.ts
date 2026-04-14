@@ -1,7 +1,8 @@
-import test from 'tape';
+import assert from 'node:assert/strict';
+import test from 'node:test';
 import CoT, { CoTParser, Route } from '../index.js';
 
-test('Decode Route', async (t) => {
+test('Decode Route', async () => {
     const cot = new CoT({
         "event": {
             "_attributes": {
@@ -391,12 +392,12 @@ test('Decode Route', async (t) => {
     })
 
     if (!cot.raw.event.detail) {
-        t.fail('No Detail Section')
+        assert.fail('No Detail Section')
     } else {
-        t.ok(cot.raw.event.detail['_flow-tags_']);
+        assert.ok(cot.raw.event.detail['_flow-tags_']);
         delete cot.raw.event.detail['_flow-tags_'];
 
-        t.deepEquals({
+        assert.deepEqual({
             id: '6da80127-44d4-4bf0-89bd-ecd326afaef1',
             type: 'Feature',
             path: '/',
@@ -463,11 +464,9 @@ test('Decode Route', async (t) => {
             }
         }, await CoTParser.to_geojson(cot));
     }
-
-    t.end();
 });
 
-test('Parser from LineString', async (t) => {
+test('Parser from LineString', async () => {
     const cot = await CoTParser.from_geojson({
         id: '6da80127-44d4-4bf0-89bd-ecd326afaef1',
         type: 'Feature',
@@ -488,9 +487,9 @@ test('Parser from LineString', async (t) => {
     });
 
     if (!cot.raw.event.detail) {
-        t.fail('No Detail Section');
+        assert.fail('No Detail Section');
     } else {
-        t.ok(cot.raw.event.detail['_flow-tags_']);
+        assert.ok(cot.raw.event.detail['_flow-tags_']);
         delete cot.raw.event.detail['_flow-tags_'];
 
         if (cot.raw.event.detail.link && Array.isArray(cot.raw.event.detail.link)) {
@@ -499,7 +498,7 @@ test('Parser from LineString', async (t) => {
             });
         }
 
-        t.deepEquals(cot.raw.event.detail, {
+        assert.deepEqual(cot.raw.event.detail, {
             contact: {
                 _attributes: { callsign: 'Walking Alt Route 5' }
             },
@@ -518,11 +517,9 @@ test('Parser from LineString', async (t) => {
             tog: { _attributes: { enabled: '0' } }
         });
     }
-
-    t.end();
 });
 
-test('Decode Route (5.4 Additions)', async (t) => {
+test('Decode Route (5.4 Additions)', async () => {
     const cot = await CoTParser.from_xml(`
 <event version="2.0" uid="9bb32cff-9eb2-4330-a9ba-a92ba01e9eb7" type="b-m-r" time="2025-06-26T00:03:05.328Z" start="2025-06-26T00:03:05.328Z" stale="2025-06-27T00:03:05.328Z" how="h-e" access="Undefined">
   <point lat="0.0" lon="0.0" hae="9999999.0" ce="9999999.0" le="9999999.0"/>
@@ -568,11 +565,9 @@ test('Decode Route (5.4 Additions)', async (t) => {
     `)
 
     new Route(cot);
-
-    t.end();
 });
 
-test('Decode Route - Empty NavCues', async (t) => {
+test('Decode Route - Empty NavCues', async () => {
     const cot = await CoTParser.from_xml(`
 <event version="2.0" uid="9bb32cff-9eb2-4330-a9ba-a92ba01e9eb7" type="b-m-r" time="2025-06-26T00:03:05.328Z" start="2025-06-26T00:03:05.328Z" stale="2025-06-27T00:03:05.328Z" how="h-e" access="Undefined">
   <point lat="0.0" lon="0.0" hae="9999999.0" ce="9999999.0" le="9999999.0"/>
@@ -605,6 +600,4 @@ test('Decode Route - Empty NavCues', async (t) => {
     `)
 
     new Route(cot);
-
-    t.end();
 });

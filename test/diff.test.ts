@@ -1,7 +1,8 @@
-import test from 'tape';
+import assert from 'node:assert/strict';
+import test from 'node:test';
 import { CoTParser } from '../index.js';
 
-test('CoT.diff - no diff - ignored date & meta', async (t) => {
+test('CoT.diff - no diff - ignored date & meta', async () => {
     const a = await CoTParser.from_geojson({
         id: 'C94B9215-9BD4-4DBE-BDE1-83625F09153F',
         type: 'Feature',
@@ -38,12 +39,10 @@ test('CoT.diff - no diff - ignored date & meta', async (t) => {
         }
     });
 
-    t.equals(await CoTParser.isDiff(a, b), false);
-
-    t.end();
+    assert.equal(await CoTParser.isDiff(a, b), false);
 });
 
-test('CoT.diff - simple diff', async (t) => {
+test('CoT.diff - simple diff', async () => {
     const a = await CoTParser.from_geojson({
         id: 'D94B9215-9BD4-4DBE-BDE1-83625F09153F',
         type: 'Feature',
@@ -74,7 +73,5 @@ test('CoT.diff - simple diff', async (t) => {
         }
     });
 
-    t.equals(await CoTParser.isDiff(a, b), true);
-
-    t.end();
+    assert.equal(await CoTParser.isDiff(a, b), true);
 });

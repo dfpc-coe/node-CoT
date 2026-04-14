@@ -1,7 +1,8 @@
-import test from 'tape';
+import assert from 'node:assert/strict';
+import test from 'node:test';
 import { DirectChat, MissionChat, CoTParser } from '../index.js';
 
-test('MissionChat - GeoJSON output', async (t) => {
+test('MissionChat - GeoJSON output', async () => {
     const messageId = '6c19bcd5-c632-4c59-95e2-ae8c76c8feab';
 
     const cot = new MissionChat({
@@ -32,7 +33,7 @@ test('MissionChat - GeoJSON output', async (t) => {
     cot.raw.event.point._attributes.lat = 39.078503;
     cot.raw.event.point._attributes.hae = 1393.296;
 
-    t.deepEquals(await CoTParser.to_geojson(cot), {
+    assert.deepEqual(await CoTParser.to_geojson(cot), {
         id: `GeoChat.ANDROID-764679f74013dfe2.ops.cotak.gov-8443-ssl-Test Attachments.${messageId}`,
         type: 'Feature',
         path: '/',
@@ -73,11 +74,9 @@ test('MissionChat - GeoJSON output', async (t) => {
             coordinates: [ -108.537452, 39.078503, 1393.296 ]
         }
     });
-
-    t.end();
 });
 
-test('DirectChat - Basic', (t) => {
+test('DirectChat - Basic', () => {
     const cot = new DirectChat({
         to: {
             uid: '123456',
@@ -90,36 +89,36 @@ test('DirectChat - Basic', (t) => {
         message: 'Direct Message Test'
     });
 
-    t.equals(cot.is_chat(), true);
+    assert.equal(cot.is_chat(), true);
 
-    t.ok(cot.raw.event._attributes.uid);
+    assert.ok(cot.raw.event._attributes.uid);
     cot.raw.event._attributes.uid = '123';
 
     if (!cot.raw.event.detail) {
-        t.fail('No Detail Section')
+        assert.fail('No Detail Section')
     } else {
-        t.equals(typeof cot.raw.event._attributes.time, 'string');
+        assert.equal(typeof cot.raw.event._attributes.time, 'string');
         cot.raw.event._attributes.time = '2024-04-01'
-        t.equals(typeof cot.raw.event._attributes.start, 'string');
+        assert.equal(typeof cot.raw.event._attributes.start, 'string');
         cot.raw.event._attributes.start = '2024-04-01'
-        t.equals(typeof cot.raw.event._attributes.stale, 'string');
+        assert.equal(typeof cot.raw.event._attributes.stale, 'string');
         cot.raw.event._attributes.stale = '2024-04-01'
 
         if (!cot.raw.event.detail.__chat) {
-            t.fail('No Chat Section')
+            assert.fail('No Chat Section')
         } else {
-            t.equals(typeof cot.raw.event.detail.__chat._attributes.messageId, 'string');
+            assert.equal(typeof cot.raw.event.detail.__chat._attributes.messageId, 'string');
             cot.raw.event.detail.__chat._attributes.messageId = '123';
         }
 
         if (!cot.raw.event.detail.remarks || !cot.raw.event.detail.remarks._attributes) {
-            t.fail('No Remarks Section')
+            assert.fail('No Remarks Section')
         } else {
-            t.equals(typeof cot.raw.event.detail.remarks._attributes.time, 'string');
+            assert.equal(typeof cot.raw.event.detail.remarks._attributes.time, 'string');
             cot.raw.event.detail.remarks._attributes.time = '123';
         }
 
-        t.deepEquals(cot.raw, {
+        assert.deepEqual(cot.raw, {
             event: {
                 _attributes: {
                     uid: '123',
@@ -178,6 +177,4 @@ test('DirectChat - Basic', (t) => {
             }
         });
     }
-
-    t.end();
 });

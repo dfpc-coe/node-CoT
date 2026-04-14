@@ -1,7 +1,8 @@
-import test from 'tape';
+import assert from 'node:assert/strict';
+import test from 'node:test';
 import { CoTParser } from '../index.js';
 
-test('COT.callsign', async (t) => {
+test('COT.callsign', async () => {
     const cot = await CoTParser.from_geojson({
         "id": "123",
         "type": "Feature",
@@ -22,14 +23,12 @@ test('COT.callsign', async (t) => {
         }
     });
 
-    t.equals(cot.callsign(), 'BasicTest');
-    t.equals(cot.callsign('Reassign'), 'Reassign');
-    t.equals(cot.callsign(), 'Reassign');
-
-    t.end();
+    assert.equal(cot.callsign(), 'BasicTest');
+    assert.equal(cot.callsign('Reassign'), 'Reassign');
+    assert.equal(cot.callsign(), 'Reassign');
 });
 
-test('COT.type', async (t) => {
+test('COT.type', async () => {
     const cot = await CoTParser.from_geojson({
         "id": "123",
         "type": "Feature",
@@ -50,14 +49,12 @@ test('COT.type', async (t) => {
         }
     });
 
-    t.equals(cot.type(), 'a-f-G');
-    t.equals(cot.type('u-d-f'), 'u-d-f');
-    t.equals(cot.type(), 'u-d-f');
-
-    t.end();
+    assert.equal(cot.type(), 'a-f-G');
+    assert.equal(cot.type('u-d-f'), 'u-d-f');
+    assert.equal(cot.type(), 'u-d-f');
 });
 
-test('COT.archived', async (t) => {
+test('COT.archived', async () => {
     const cot = await CoTParser.from_geojson({
         "id": "123",
         "type": "Feature",
@@ -78,17 +75,15 @@ test('COT.archived', async (t) => {
         }
     });
 
-    t.equals(cot.archived(), false);
-    t.equals(cot.archived(true), true);
+    assert.equal(cot.archived(), false);
+    assert.equal(cot.archived(true), true);
 
-    t.equals((await CoTParser.to_geojson(cot)).properties.archived, true)
+    assert.equal((await CoTParser.to_geojson(cot)).properties.archived, true)
 
-    t.equals(cot.archived(), true);
-    t.equals(cot.archived(false), false);
-    t.equals(cot.archived(), false);
+    assert.equal(cot.archived(), true);
+    assert.equal(cot.archived(false), false);
+    assert.equal(cot.archived(), false);
 
-    t.equals((await CoTParser.to_geojson(cot)).properties.archived, undefined)
-
-    t.end();
+    assert.equal((await CoTParser.to_geojson(cot)).properties.archived, undefined)
 });
 
