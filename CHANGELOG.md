@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.35.1 - 2025-04-14
+
+- :bug: Fix TS Build Error
+
 ### v14.35.0 - 2025-04-14
 
 - :rocket: Add support for additional Ellipse Types

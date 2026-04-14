@@ -394,11 +394,16 @@ export async function to_geojson(
             || !raw.event.detail.shape.ellipse._attributes
         ) throw new Err(400, null, `${raw.event._attributes.type} (Circle) must define ellipse shape value`)
 
-        const ellipse = {
+        const ellipse: {
+            major: number;
+            minor: number;
+            angle: number;
+            swapAxis?: boolean;
+        } = {
             major: Number(raw.event.detail.shape.ellipse._attributes.major),
             minor: Number(raw.event.detail.shape.ellipse._attributes.minor),
             angle: Number(raw.event.detail.shape.ellipse._attributes.angle)
-        } as Static<typeof Feature>['properties']['shape']['ellipse']
+        }
 
         if (raw.event.detail.shape.ellipse._attributes.swapAxis !== undefined) {
             ellipse.swapAxis = Boolean(raw.event.detail.shape.ellipse._attributes.swapAxis);
