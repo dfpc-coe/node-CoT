@@ -16,6 +16,8 @@ import JSONCoT from '../types/types.js'
 import CoT from '../cot.js';
 import type { CoTOptions } from '../cot.js';
 
+const ELLIPSE_TYPES = new Set(['u-d-c-c', 'u-r-b-c-c', 'u-d-c-e']);
+
 /**
  * Return an CoT Message given a GeoJSON Feature
  *
@@ -354,7 +356,7 @@ export async function from_geojson(
             }
         }
 
-        if (feature.geometry.type === 'Polygon' && feature.properties.type && ['u-d-c-c', 'u-r-b-c-c'].includes(feature.properties.type)) {
+        if (feature.geometry.type === 'Polygon' && feature.properties.type && ELLIPSE_TYPES.has(feature.properties.type)) {
             if (!feature.properties.shape || !feature.properties.shape.ellipse) {
                 throw new Err(400, null, `${feature.properties.type} (Circle) must define a feature.properties.shape.ellipse property`)
             }

@@ -292,3 +292,74 @@ test('Basic Circle', async () => {
         });
     }
 });
+
+test('Parse u-d-c-e (Ellipse)', async () => {
+    const cot = CoTParser.from_xml(`
+        <?xml version='1.0' encoding='UTF-8' standalone='yes'?>
+        <event version='2.0' uid='b76cb411-a36d-4308-be55-506729eace92' type='u-d-c-e' time='2026-04-14T19:02:19.212Z' start='2026-04-14T19:02:19.212Z' stale='2026-04-15T19:02:19.212Z' how='h-e' access='Undefined'>
+            <point lat='39.9127697' lon='-102.7876738' hae='1287.178' ce='9999999.0' le='9999999.0' />
+            <detail>
+                <shape>
+                    <ellipse major='1659.789905685972' minor='1350.724238139261' swapAxis='true' angle='118.71278427072082'/>
+                    <link uid='b76cb411-a36d-4308-be55-506729eace92.Style' type='b-x-KmlStyle' relation='p-c'>
+                        <Style>
+                            <LineStyle>
+                                <color>ffffffff</color>
+                                <width>4.0</width>
+                            </LineStyle>
+                            <PolyStyle>
+                                <color>96ffffff</color>
+                            </PolyStyle>
+                        </Style>
+                    </link>
+                </shape>
+                <__shapeExtras cpvis='true' editable='true'/>
+                <precisionlocation altsrc='DTED2'/>
+                <creator uid='ANDROID-764679f74013dfe2' callsign='COTAK Admin Ingalls' time='2026-04-14T18:51:00.613Z' type='a-f-G-E-V-C'/>
+                <labels_on value='false'/>
+                <contact callsign='Ellipse 1'/>
+                <strokeColor value='-1'/>
+                <strokeWeight value='4.0'/>
+                <strokeStyle value='solid'/>
+                <fillColor value='-1761607681'/>
+                <archive/>
+                <remarks></remarks>
+            </detail>
+        </event>
+    `);
+
+    const feat = await CoTParser.to_geojson(cot);
+
+    assert.equal(feat.properties.callsign, 'Ellipse 1');
+    assert.deepEqual(feat.properties.center, [ -102.7876738, 39.9127697, 1287.178 ]);
+    assert.deepEqual(feat.properties.shape, {
+        ellipse: {
+            major: 1659.789905685972,
+            minor: 1350.724238139261,
+            angle: 118.71278427072082,
+            swapAxis: true
+        }
+    });
+
+    if (feat.geometry.type !== 'Polygon') {
+        assert.fail(`Expected Polygon geometry, received ${feat.geometry.type}`);
+    }
+
+    assert.ok(feat.geometry.coordinates[0].length > 20);
+    assert.notDeepEqual(feat.geometry.coordinates[0][0].slice(0, 2), feat.properties.center.slice(0, 2));
+
+    const parsedCoT = await CoTParser.from_geojson(feat);
+
+    assert.equal(parsedCoT.raw.event._attributes.type, 'u-d-c-e');
+
+    if (!parsedCoT.raw.event.detail?.shape?.ellipse?._attributes) {
+        assert.fail('Expected ellipse metadata in round-tripped CoT detail.shape');
+    }
+
+    assert.deepEqual(parsedCoT.raw.event.detail.shape.ellipse._attributes, {
+        major: 1659.789905685972,
+        minor: 1350.724238139261,
+        angle: 118.71278427072082,
+        swapAxis: true
+    });
+});

@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.35.0 - 2025-04-14
+
+- :rocket: Add support for additional Ellipse Types
+
 ### v14.34.0 - 2025-04-13
 
 - :arrow_up: Remove `tape` in favor of `node:test` for unit tests

@@ -259,6 +259,9 @@ export const ShapeEllipseAttributes = Type.Object({
     angle: Type.Number({
         description: 'The angle of the ellipse in degrees'
     }),
+    swapAxis: Type.Optional(Type.Boolean({
+        description: 'Whether the ellipse axes should be swapped when rendered by TAK clients'
+    }))
 })
 
 export const ShapeEllipse = Type.Object({

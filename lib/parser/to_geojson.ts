@@ -23,6 +23,7 @@ import CoT from '../cot.js';
 
 // GeoJSON Geospatial ops will truncate to the below
 const COORDINATE_PRECISION = 6;
+const ELLIPSE_TYPE_PREFIXES = ['u-d-c-c', 'u-r-b-c-c', 'u-d-c-e'];
 
 /**
  * Return a GeoJSON Feature from an XML CoT message
@@ -385,7 +386,7 @@ export async function to_geojson(
                 coordinates
             }
         }
-    } else if (raw.event._attributes.type.startsWith('u-d-c-c') || raw.event._attributes.type.startsWith('u-r-b-c-c')) {
+    } else if (ELLIPSE_TYPE_PREFIXES.some((prefix) => raw.event._attributes.type.startsWith(prefix))) {
         if (!raw.event.detail.shape) throw new Err(400, null, `${raw.event._attributes.type} (Circle) must define shape value`)
 
         if (
@@ -397,6 +398,10 @@ export async function to_geojson(
             major: Number(raw.event.detail.shape.ellipse._attributes.major),
             minor: Number(raw.event.detail.shape.ellipse._attributes.minor),
             angle: Number(raw.event.detail.shape.ellipse._attributes.angle)
+        } as Static<typeof Feature>['properties']['shape']['ellipse']
+
+        if (raw.event.detail.shape.ellipse._attributes.swapAxis !== undefined) {
+            ellipse.swapAxis = Boolean(raw.event.detail.shape.ellipse._attributes.swapAxis);
         }
 
         if (
