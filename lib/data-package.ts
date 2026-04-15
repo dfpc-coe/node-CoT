@@ -78,6 +78,37 @@ const checkManifest = (new AJV({
 }))
     .compile(Manifest);
 
+async function materializeDataPackageInput(
+    input: string | URL | Buffer | Readable,
+    name?: string,
+): Promise<{
+    path: string;
+    parsedName: string;
+}> {
+    if (typeof input === 'string' || input instanceof URL) {
+        const resolved = input instanceof URL ? path.normalize(decodeURIComponent(input.pathname)) : input;
+
+        return {
+            path: resolved,
+            parsedName: path.parse(name || resolved).name,
+        };
+    }
+
+    const ext = path.parse(name || 'package.zip').ext || '.zip';
+    const inputPath = path.resolve(os.tmpdir(), `${randomUUID()}${ext}`);
+
+    if (input instanceof Buffer) {
+        await fsp.writeFile(inputPath, input);
+    } else {
+        await pipeline(input, fs.createWriteStream(inputPath));
+    }
+
+    return {
+        path: inputPath,
+        parsedName: path.parse(name || inputPath).name,
+    };
+}
+
 /**
  * Helper class for creating and parsing static Data Packages
  * @class
@@ -213,27 +244,30 @@ export class DataPackage {
      * Return a DataPackage version of a raw Data Package Zip
      *
      * @public
-     * @param input path to zipped DataPackage on disk
+     * @param input path, URL, Buffer, or ReadableStream containing a zipped DataPackage
      * @param [opts] Parser Options
      * @param [opts.strict] By default the DataPackage must contain a manifest file, turning strict mode off will generate a manifest based on the contents of the file
-     * @param [opts.cleanup] If the Zip is parsed as a DataSync successfully, remove the initial zip file
+     * @param [opts.cleanup] If the Zip is parsed as a DataSync successfully, remove the initial zip file or temporary upload materialization
+     * @param [opts.name] Optional input filename used for manifest-less archives when parsing from in-memory data
      */
     static async parse(
-        input: string | URL,
+        input: string | URL | Buffer | Readable,
         opts?: {
             strict?: boolean
             cleanup?: boolean
+            name?: string
         }
     ): Promise<DataPackage> {
-        input = input instanceof URL ? path.normalize(decodeURIComponent(input.pathname)) : input;
         if (!opts) opts = {};
         if (opts.strict === undefined) opts.strict = true;
         if (opts.cleanup === undefined) opts.cleanup = true;
 
+        const source = await materializeDataPackageInput(input, opts.name);
+
         const pkg = new DataPackage();
 
         const zip = new StreamZip.async({
-            file: input,
+            file: source.path,
             skipEntryNameValidation: true
         });
 
@@ -275,8 +309,8 @@ export class DataPackage {
                 pkg.unknown[key] = value;
             }
         } else {
-            pkg.settings.name = path.parse(input).name;
-            pkg.settings.uid = await this.hash(input);
+            pkg.settings.name = source.parsedName;
+            pkg.settings.uid = await this.hash(source.path);
             pkg.setEphemeral();
 
             for (const [key, value] of Object.entries(preentries)) {
@@ -290,7 +324,7 @@ export class DataPackage {
 
         await zip.close();
         if (opts.cleanup) {
-            await fsp.unlink(input);
+            await fsp.unlink(source.path);
         }
 
         return pkg;

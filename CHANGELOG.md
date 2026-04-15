@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.36.0 - 2025-04-14
+
+- :bug: Allow buffer input to Data Package
+
 ### v14.35.1 - 2025-04-14
 
 - :bug: Fix TS Build Error

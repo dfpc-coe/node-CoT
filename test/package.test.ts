@@ -1,6 +1,7 @@
 import { DataPackage, CoTParser } from '../index.js'
 import stream2buffer from './stream.js';
 import fs from 'node:fs';
+import fsp from 'node:fs/promises';
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
@@ -63,6 +64,45 @@ test(`DataPackage CoT Parsing: GrandJunctionAOI.zip`, async () => {
 
     const files = await pkg.files();
     assert.equal(files.size, 1)
+
+    await pkg.destroy();
+});
+
+test(`DataPackage CoT Parsing: Buffer Input`, async () => {
+    const input = await fsp.readFile(new URL('./packages/CameraCOTs.zip', import.meta.url));
+    const pkg = await DataPackage.parse(input);
+
+    assert.equal(pkg.version, '2');
+    assert.deepEqual(pkg.settings, {
+        uid: 'fd4310f2-e34a-455d-b1c2-15c06b740a04',
+        name: '2024 streaming cameras - not for iTAK'
+    });
+
+    const cots = await pkg.cots();
+    assert.equal(cots.length, 1);
+
+    await pkg.destroy();
+});
+
+test(`DataPackage File Parsing: Readable Input`, async () => {
+    const pkg = await DataPackage.parse(
+        fs.createReadStream(new URL('./packages/Iconset-FalconView.zip', import.meta.url).pathname),
+        {
+            strict: false,
+            name: 'Iconset-FalconView.zip'
+        }
+    );
+
+    assert.equal(pkg.version, '2');
+    assert.deepEqual(pkg.settings, {
+        uid: '53622c90841d2ef66b3b508412be0ecd33f90f1cd7887295ab0c3a31ee2e7315',
+        name: 'Iconset-FalconView',
+        onReceiveImport: true,
+        onReceiveDelete: true
+    });
+
+    const files = await pkg.files();
+    assert.ok(files.has('iconset.xml'));
 
     await pkg.destroy();
 });
