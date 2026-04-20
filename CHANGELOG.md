@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.37.0 - 2025-04-20
+
+- :arrow_up: Update all Core Deps
+
 ### v14.36.0 - 2025-04-14
 
 - :bug: Allow buffer input to Data Package
