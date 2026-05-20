@@ -4,7 +4,7 @@ import { rimraf } from 'rimraf'
 import type { Static } from '@sinclair/typebox'
 import { Type } from '@sinclair/typebox'
 import Err from '@openaddresses/batch-error';
-import archiver from 'archiver';
+import { ZipArchive } from '@archiver/archiver';
 import StreamZip from 'node-stream-zip'
 import { Readable } from 'node:stream';
 import { v4 as randomUUID } from 'uuid';
@@ -580,7 +580,7 @@ export class DataPackage {
         await fsp.writeFile(this.path + '/raw/MANIFEST/manifest.xml', this.manifest());
 
         return new Promise((resolve) => {
-            const archive = archiver('zip', { zlib: { level: 9 } });
+            const archive = new ZipArchive({ zlib: { level: 9 } });
             const output = fs.createWriteStream(this.path + `/${this.settings.uid}.zip`)
             archive.pipe(output);
             output.on('close', () => {

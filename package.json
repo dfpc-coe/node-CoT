@@ -30,6 +30,7 @@
         "node": ">= 22"
     },
     "dependencies": {
+        "@archiver/archiver": "^0.0.9",
         "@openaddresses/batch-error": "^2.4.0",
         "@orbat-mapper/convert-symbology": "^1.0.2",
         "@sinclair/typebox": "^0.34.0",
@@ -39,10 +40,8 @@
         "@turf/point-on-feature": "^7.0.0",
         "@turf/sector": "^7.1.0",
         "@turf/truncate": "^7.0.0",
-        "@types/archiver": "^7.0.0",
         "@types/geojson": "^7946.0.14",
         "ajv": "^8.12.0",
-        "archiver": "^7.0.1",
         "color": "^5.0.0",
         "geomagnetism": "^0.2.0",
         "json-diff-ts": "^4.0.1",
