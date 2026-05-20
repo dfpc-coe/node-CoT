@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.38.0 - 2025-05-20
+
+- :arrow_up: Update to strongly typed archiver library
+
 ### v14.37.2 - 2025-05-03
 
 - :arrow_up: Update all Core Deps
