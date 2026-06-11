@@ -696,7 +696,9 @@ export const ForceDelete = Type.Object({})
 
 export const ShapeExtras = Type.Object({
     _attributes: Type.Object({
-        cpvis: Type.Optional(Type.Boolean()),
+        cpvis: Type.Optional(Type.Boolean({
+            description: 'Determines if the center point & callsign are visible when the shape is rendered in TAK clients'
+        })),
         editable: Type.Optional(Type.Boolean()),
     })
 });
@@ -727,6 +729,7 @@ export const Detail = Type.Object({
     archive: Type.Optional(Type.Union([GenericStringAttributes, Type.Array(GenericStringAttributes)])),
     strokeWeight: Type.Optional(GenericNumberAttributes),
     strokeStyle: Type.Optional(GenericStringAttributes),
+    // Controls the display of distance calculation labels on the edge of line/polygon features
     labels_on: Type.Optional(GenericBooleanAttributes),
     fillColor: Type.Optional(GenericIntegerAttributes),
     mission: Type.Optional(Mission),
