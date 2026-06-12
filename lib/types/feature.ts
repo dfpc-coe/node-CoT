@@ -27,7 +27,9 @@ import {
     ChemDetectionAttributes,
     BioSensorDataAttributes,
     BioMeasurementAttributes,
-    BioMeasurementLevelAttributes
+    BioMeasurementLevelAttributes,
+    SpatialAttitudeAttributes,
+    SpatialSpinAttributes
 } from './types.js';
 
 export const Position = Type.Array(Type.Number(), {
@@ -122,6 +124,12 @@ export const FeaturePropertyBioSensorDetail = Type.Object({
     measurement: Type.Optional(Type.Array(FeaturePropertyBioMeasurement))
 });
 
+export const FeaturePropertySpatial = Type.Object({
+    version: Type.Optional(Type.Number()),
+    attitude: SpatialAttitudeAttributes,
+    spin: SpatialSpinAttributes
+});
+
 export const Properties = Type.Object({
     callsign: Type.String({ default: 'UNKNOWN' }),
     type: Type.String({ default: 'a-f-G' }),
@@ -196,6 +204,7 @@ export const Properties = Type.Object({
     radsensordetail: Type.Optional(FeaturePropertyRadSensorDetail),
     chemsensordetail: Type.Optional(FeaturePropertyChemSensorDetail),
     biosensordetail: Type.Optional(FeaturePropertyBioSensorDetail),
+    spatial: Type.Optional(FeaturePropertySpatial),
 })
 
 export const Point = Type.Object({

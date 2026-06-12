@@ -394,6 +394,66 @@ export const Sensor = Type.Object({
     _attributes: SensorAttributes
 })
 
+export const SpatialAttitudeAttributes = Type.Object({
+    roll: Type.Number({
+        description: 'Roll of entity in degrees. Positive indicates listing to the right.'
+    }),
+    pitch: Type.Number({
+        description: 'Pitch of entity in degrees. Positive indicates nose point up.'
+    }),
+    yaw: Type.Optional(Type.Number({
+        description: 'Yaw of entity in degrees. Positive indicates turned to the right.'
+    })),
+    eRoll: Type.Optional(Type.Number({
+        description: '1-sigma error of roll with respect to a zero mean normal Gaussian distribution.'
+    })),
+    ePitch: Type.Optional(Type.Number({
+        description: '1-sigma error of pitch with respect to a zero mean normal Gaussian distribution.'
+    })),
+    eYaw: Type.Optional(Type.Number({
+        description: '1-sigma error of yaw with respect to a zero mean normal Gaussian distribution.'
+    }))
+});
+
+export const SpatialAttitude = Type.Object({
+    _attributes: SpatialAttitudeAttributes
+});
+
+export const SpatialSpinAttributes = Type.Object({
+    roll: Type.Number({
+        description: 'Degrees per second with positive indicating to the pilots right'
+    }),
+    pitch: Type.Number({
+        description: 'Degrees per second with positive indicating nose up.'
+    }),
+    yaw: Type.Optional(Type.Number({
+        description: 'Degrees per second with positive indicating right.'
+    })),
+    eRoll: Type.Optional(Type.Number({
+        description: '1-sigma error of roll with respect to a zero mean normal Gaussian distribution.'
+    })),
+    ePitch: Type.Optional(Type.Number({
+        description: '1-sigma error of pitch with respect to a zero mean normal Gaussian distribution.'
+    })),
+    eYaw: Type.Optional(Type.Number({
+        description: '1-sigma error of yaw with respect to a zero mean normal Gaussian distribution.'
+    }))
+});
+
+export const SpatialSpin = Type.Object({
+    _attributes: SpatialSpinAttributes
+});
+
+export const Spatial = Type.Object({
+    _attributes: Type.Optional(Type.Object({
+        version: Type.Optional(Type.Number({
+            description: 'Version tag for this sub schema.'
+        }))
+    })),
+    attitude: SpatialAttitude,
+    spin: SpatialSpin
+});
+
 export const VideoAttributes = Type.Object({
     uid: Type.Optional(Type.String()),
     sensor: Type.Optional(Type.String()),
@@ -1210,7 +1270,10 @@ export const Detail = Type.Object({
     // CBRN Sensor Details
     radsensordetail: Type.Optional(RadSensorDetail),
     chemsensordetail: Type.Optional(ChemSensorDetail),
-    biosensordetail: Type.Optional(BioSensorDetail)
+    biosensordetail: Type.Optional(BioSensorDetail),
+
+    // Spatial information
+    spatial: Type.Optional(Spatial)
 })
 
 export const Point = Type.Object({

@@ -264,6 +264,18 @@ export async function from_geojson(
         }
     }
 
+    if (feature.properties.spatial) {
+        const spatial = feature.properties.spatial;
+        cot.event.detail.spatial = {
+            attitude: { _attributes: { ...spatial.attitude } },
+            spin: { _attributes: { ...spatial.spin } }
+        };
+
+        if (spatial.version !== undefined) {
+            cot.event.detail.spatial._attributes = { version: spatial.version };
+        }
+    }
+
     if (feature.properties.ackrequest) {
         cot.event.detail.ackrequest = { _attributes: { ...feature.properties.ackrequest } };
     }
