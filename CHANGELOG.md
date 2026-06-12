@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.40.1 - 2025-06-11
+
+- :arrow_up: Update Core Deps
+
 ### v14.40.0 - 2025-06-11
 
 - :rocket: Introduce BiDirectional Support for CBRN Data
