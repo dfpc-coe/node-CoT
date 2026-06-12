@@ -3,6 +3,12 @@ import { v4 as randomUUID } from 'uuid';
 import type { Static } from '@sinclair/typebox';
 import type {
     LinkAttributes,
+    RadMeasurementAttributes,
+    RadPhysicalModuleAttributes,
+    RadSpectrumAttributes,
+    RadIsotopeAttributes,
+    ChemDetectionAttributes,
+    BioMeasurementLevelAttributes,
 } from '../types/types.js'
 import {
     InputFeature,
@@ -192,6 +198,82 @@ export async function from_geojson(
 
     if (feature.properties.sensor) {
         cot.event.detail.sensor = { _attributes: { ...feature.properties.sensor } };
+    }
+
+    if (feature.properties.radsensordetail) {
+        const rad = feature.properties.radsensordetail;
+        cot.event.detail.radsensordetail = {
+            sensor_data: { _attributes: { ...rad.sensor_data } }
+        };
+
+        if (rad.radmeasurement) {
+            cot.event.detail.radsensordetail.radmeasurement = rad.radmeasurement.map((m: Static<typeof RadMeasurementAttributes>) => ({ _attributes: { ...m } }));
+        }
+
+        if (rad.physical_module) {
+            cot.event.detail.radsensordetail.physical_module = rad.physical_module.map((m: Static<typeof RadPhysicalModuleAttributes>) => ({ _attributes: { ...m } }));
+        }
+
+        if (rad.search_algorithm) {
+            cot.event.detail.radsensordetail.search_algorithm = { _attributes: { ...rad.search_algorithm } };
+        }
+
+        if (rad.spectrum) {
+            cot.event.detail.radsensordetail.spectrum = rad.spectrum.map((s: Static<typeof RadSpectrumAttributes>) => ({ _attributes: { ...s } }));
+        }
+
+        if (rad.isotope) {
+            cot.event.detail.radsensordetail.isotope = rad.isotope.map((i: Static<typeof RadIsotopeAttributes>) => ({ _attributes: { ...i } }));
+        }
+
+        if (rad.data_permissions) {
+            cot.event.detail.radsensordetail.data_permissions = { _attributes: { ...rad.data_permissions } };
+        }
+
+        if (rad.command_permissions) {
+            cot.event.detail.radsensordetail.command_permissions = { _attributes: { ...rad.command_permissions } };
+        }
+    }
+
+    if (feature.properties.chemsensordetail) {
+        const chem = feature.properties.chemsensordetail;
+        cot.event.detail.chemsensordetail = {
+            sensor_data: { _attributes: { ...chem.sensor_data } }
+        };
+
+        if (chem.detection) {
+            cot.event.detail.chemsensordetail.detection = chem.detection.map((d: Static<typeof ChemDetectionAttributes>) => ({ _attributes: { ...d } }));
+        }
+    }
+
+    if (feature.properties.biosensordetail) {
+        const bio = feature.properties.biosensordetail;
+        cot.event.detail.biosensordetail = {
+            sensor_data: { _attributes: { ...bio.sensor_data } }
+        };
+
+        if (bio.measurement) {
+            cot.event.detail.biosensordetail.measurement = bio.measurement.map((m) => {
+                const { level, ...attrs } = m;
+                const measurement: { _attributes: typeof attrs; level?: Array<{ _attributes: Static<typeof BioMeasurementLevelAttributes> }> } = { _attributes: { ...attrs } };
+                if (level) {
+                    measurement.level = level.map((l: Static<typeof BioMeasurementLevelAttributes>) => ({ _attributes: { ...l } }));
+                }
+                return measurement;
+            });
+        }
+    }
+
+    if (feature.properties.spatial) {
+        const spatial = feature.properties.spatial;
+        cot.event.detail.spatial = {
+            attitude: { _attributes: { ...spatial.attitude } },
+            spin: { _attributes: { ...spatial.spin } }
+        };
+
+        if (spatial.version !== undefined) {
+            cot.event.detail.spatial._attributes = { version: spatial.version };
+        }
     }
 
     if (feature.properties.ackrequest) {

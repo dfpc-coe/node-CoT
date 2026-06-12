@@ -128,16 +128,16 @@ test('Decode iTAK COT UAS Message', async () => {
                     "spatial": {
                         "attitude": {
                             "_attributes": {
-                                "roll": "-0.2",
-                                "pitch": "3.8",
-                                "yaw": "140.8"
+                                "roll": -0.2,
+                                "pitch": 3.8,
+                                "yaw": 140.8
                             }
                         },
                         "spin": {
                             "_attributes": {
-                                "roll": "0",
-                                "pitch": "0.0896860987",
-                                "yaw": "0"
+                                "roll": 0,
+                                "pitch": 0.0896860987,
+                                "yaw": 0
                             }
                         }
                     },
@@ -233,6 +233,18 @@ test('Decode iTAK COT UAS Message', async () => {
                     type: 'r-e',
                     version: '0.6'
                 },
+                spatial: {
+                    attitude: {
+                        roll: -0.2,
+                        pitch: 3.8,
+                        yaw: 140.8
+                    },
+                    spin: {
+                        roll: 0,
+                        pitch: 0.0896860987,
+                        yaw: 0
+                    }
+                },
                 course: 140.8,
                 slope: 0,
                 speed: 0,
@@ -280,6 +292,18 @@ test('Decode iTAK COT UAS Message 2', async () => {
                     model: 'M30T',
                     type: 'r-e',
                     version: '0.6'
+                },
+                spatial: {
+                    attitude: {
+                        roll: 0.2,
+                        pitch: -4.2,
+                        yaw: -108.9
+                    },
+                    spin: {
+                        roll: 0,
+                        pitch: 0,
+                        yaw: 0
+                    }
                 },
                 links: [{
                     uid: "ANDROID-c283321be77c8ec9",

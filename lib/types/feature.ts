@@ -15,7 +15,21 @@ import {
     TrackAttributes,
     LinkAttributes,
     SensorAttributes,
-    VideoAttributes
+    VideoAttributes,
+    RadSensorDataAttributes,
+    RadMeasurementAttributes,
+    RadPhysicalModuleAttributes,
+    RadSearchAlgorithmAttributes,
+    RadSpectrumAttributes,
+    RadIsotopeAttributes,
+    RadPermissionsAttributes,
+    ChemSensorDataAttributes,
+    ChemDetectionAttributes,
+    BioSensorDataAttributes,
+    BioMeasurementAttributes,
+    BioMeasurementLevelAttributes,
+    SpatialAttitudeAttributes,
+    SpatialSpinAttributes
 } from './types.js';
 
 export const Position = Type.Array(Type.Number(), {
@@ -73,6 +87,47 @@ export const FeaturePropertyMission = Type.Object({
     authorUid: Type.Optional(Type.String()),
     missionLayer: Type.Optional(FeaturePropertyMissionLayer),
     missionChanges: Type.Optional(Type.Array(FeaturePropertyMissionChange))
+});
+
+// === CBRN Sensor GeoJSON Types (flattened - no _attributes wrapper) ===
+
+export const FeaturePropertyRadSensorDetail = Type.Object({
+    sensor_data: RadSensorDataAttributes,
+    radmeasurement: Type.Optional(Type.Array(RadMeasurementAttributes)),
+    physical_module: Type.Optional(Type.Array(RadPhysicalModuleAttributes)),
+    search_algorithm: Type.Optional(RadSearchAlgorithmAttributes),
+    spectrum: Type.Optional(Type.Array(RadSpectrumAttributes)),
+    isotope: Type.Optional(Type.Array(RadIsotopeAttributes)),
+    data_permissions: Type.Optional(RadPermissionsAttributes),
+    command_permissions: Type.Optional(RadPermissionsAttributes)
+});
+
+export const FeaturePropertyChemSensorDetail = Type.Object({
+    sensor_data: ChemSensorDataAttributes,
+    detection: Type.Optional(Type.Array(ChemDetectionAttributes))
+});
+
+export const FeaturePropertyBioMeasurementLevel = Type.Object({
+    levelName: Type.String(),
+    levelValue: Type.String()
+});
+
+export const FeaturePropertyBioMeasurement = Type.Composite([
+    BioMeasurementAttributes,
+    Type.Object({
+        level: Type.Optional(Type.Array(BioMeasurementLevelAttributes))
+    })
+]);
+
+export const FeaturePropertyBioSensorDetail = Type.Object({
+    sensor_data: BioSensorDataAttributes,
+    measurement: Type.Optional(Type.Array(FeaturePropertyBioMeasurement))
+});
+
+export const FeaturePropertySpatial = Type.Object({
+    version: Type.Optional(Type.Number()),
+    attitude: SpatialAttitudeAttributes,
+    spin: SpatialSpinAttributes
 });
 
 export const Properties = Type.Object({
@@ -146,6 +201,10 @@ export const Properties = Type.Object({
     status: Type.Optional(StatusAttributes),
     precisionlocation: Type.Optional(PrecisionLocationAttributes),
     flow: Type.Optional(Type.Record(Type.String(), Type.String())),
+    radsensordetail: Type.Optional(FeaturePropertyRadSensorDetail),
+    chemsensordetail: Type.Optional(FeaturePropertyChemSensorDetail),
+    biosensordetail: Type.Optional(FeaturePropertyBioSensorDetail),
+    spatial: Type.Optional(FeaturePropertySpatial),
 })
 
 export const Point = Type.Object({
