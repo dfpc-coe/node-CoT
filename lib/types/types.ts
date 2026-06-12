@@ -703,6 +703,449 @@ export const ShapeExtras = Type.Object({
     })
 });
 
+// === CBRN Sensor Schemas (RadCoT, ChemCoT, BioCoT) ===
+
+// RadCoT Enums
+export const RadMeasurementType = Type.Enum({
+    alpha: 'alpha',
+    beta: 'beta',
+    gamma: 'gamma',
+    neutron: 'neutron',
+    doserate: 'doserate'
+});
+
+export const RadDistanceToSource = Type.Enum({
+    MOVE_MUCH_CLOSER: 'MOVE_MUCH_CLOSER',
+    MOVE_CLOSER: 'MOVE_CLOSER',
+    OPTIMAL: 'OPTIMAL',
+    MOVE_AWAY: 'MOVE_AWAY',
+    MOVE_FAR_AWAY: 'MOVE_FAR_AWAY'
+});
+
+export const RadModuleLocation = Type.Enum({
+    FRONT_LEFT: 'FRONT_LEFT',
+    FRONT_RIGHT: 'FRONT_RIGHT',
+    REAR_LEFT: 'REAR_LEFT',
+    REAR_RIGHT: 'REAR_RIGHT',
+    CAB: 'CAB'
+});
+
+// RadCoT Sensor Data Attributes
+export const RadSensorDataAttributes = Type.Object({
+    time: Type.String({
+        description: 'epoch time in Long format'
+    }),
+    model: Type.String({
+        description: 'The model of sensor (Micro Detective, IdentiFINDER 2, etc.) in string format'
+    }),
+    neutronstatus: Type.String({
+        description: 'The neutron detector status (Full, Reduced or Unknown). Not available for most sensors, default to Unknown'
+    }),
+    gammastatus: Type.String({
+        description: 'The gamma detector status (Full, Reduced or Unknown). Not available for most sensors, default to Unknown'
+    }),
+    manufacturer: Type.String({
+        description: 'The Manufacturer of the sensor (Ortec, Nucsafe, etc.) in string format'
+    }),
+    callsign: Type.Optional(Type.String({
+        description: 'The name of the given sensor in string format'
+    })),
+    serialnumber: Type.String({
+        description: 'The Serial Number of the Sensor in string format'
+    }),
+    batterylevel: Type.Optional(Type.Number({
+        description: 'The battery level as a percentage, float value'
+    })),
+    id_algorithm: Type.Optional(Type.String({
+        description: 'The ID algorithm used to ID isotopes (ex. GADRAS)'
+    })),
+    search_algorithm: Type.Optional(Type.String({
+        description: 'The search algorithm used (ex. RDAK, SAMBA)'
+    })),
+    alarm_algorithm: Type.Optional(Type.String({
+        description: 'The alarm algorithm used (ex. RDAK, SAMBA)'
+    })),
+    ordinal: Type.Optional(Type.Integer({
+        description: 'Used internally by the CBRN plugin'
+    })),
+    subchannel: Type.Optional(Type.String({
+        description: 'Identifier of this subchannel, if this event is a report from a subchannel of a master sensor'
+    })),
+    measurement_ref: Type.Optional(Type.Integer({
+        description: 'Used to align subchannels'
+    })),
+    master_sensor_manufacturer: Type.Optional(Type.String({
+        description: 'Name of the master sensor, if this event is a report from a subchannel'
+    })),
+    master_sensor_serial: Type.Optional(Type.String({
+        description: 'Serial number of the master sensor, if this event is a report from a subchannel'
+    })),
+    source_bearing: Type.Optional(Type.Integer({
+        description: 'A bearing in positive degrees if the sensor reports back a direction for the detected source, -1 otherwise'
+    })),
+    source_strength: Type.Optional(Type.Number({
+        description: 'A scale from 0 - 0.5 giving the magnitude of the source strength in the direction of source_bearing'
+    })),
+    relay_type: Type.Optional(Type.String({
+        description: 'Used for sensors that can relay data from other sensors, or that can be relayed in that way'
+    })),
+    module_location: Type.Optional(Type.String({
+        description: 'The location of the sensor where it\'s being worn on the vest'
+    })),
+    detector_number: Type.Optional(Type.Integer({
+        description: 'The number from the sensor needed in order to retrieve any specific algorithm calculated data'
+    })),
+    mission_total_mR: Type.Optional(Type.Integer({
+        description: 'The total mR configured for the sensor\'s current mission'
+    })),
+    mission_stay_time_sec: Type.Optional(Type.Integer({
+        description: 'The total seconds remaining of mission time based on current configuration of sensor and acquired dose'
+    })),
+    mission_acquired_uR: Type.Optional(Type.Integer({
+        description: 'The total uR acquired by the sensor for the current mission'
+    })),
+    sensor_temp_deg_c: Type.Optional(Type.Number({
+        description: 'The temperature of the sensor in degrees celsius'
+    })),
+    heading: Type.Optional(Type.Number({
+        description: 'The current directional heading of the sensor'
+    })),
+    source_distance: Type.Optional(RadDistanceToSource),
+    attachedUid: Type.Optional(Type.String({
+        description: 'The UID of the TAK marker that this sensor is attached to'
+    })),
+    simulated: Type.Optional(Type.Boolean({
+        description: 'Is the data in this element representative of a simulated sensor'
+    }))
+});
+
+export const RadSensorData = Type.Object({
+    _attributes: RadSensorDataAttributes
+});
+
+// RadCoT Measurement
+export const RadMeasurementAttributes = Type.Object({
+    nalarmstddev: Type.Integer({
+        description: 'Defines the alarm level, could be standard deviations above background. Will default to 0 (no alarm)'
+    }),
+    alarm: Type.Integer({
+        description: 'Alarm flag for the measurement. 1 = alarmed, 0 = not alarmed'
+    }),
+    measurement: Type.Number({
+        description: 'The measurement value as a float. A/B/G/N will be interpreted as CPS. Dose Rate will be interpreted as mR/Hr'
+    }),
+    name: RadMeasurementType
+});
+
+export const RadMeasurement = Type.Object({
+    _attributes: RadMeasurementAttributes
+});
+
+// RadCoT Physical Module
+export const RadPhysicalModuleAttributes = Type.Object({
+    location: RadModuleLocation,
+    gamma_cps: Type.Number({
+        description: 'Gamma counts per second'
+    }),
+    gamma_alarm: Type.Integer({
+        description: 'Alarm level for the measurement. 0 = not alarmed, > 0 = alarm level'
+    }),
+    gamma_dose_rate: Type.Number({
+        description: 'The gamma dose rate. Will be interpreted as uR/Hr'
+    })
+});
+
+export const RadPhysicalModule = Type.Object({
+    _attributes: RadPhysicalModuleAttributes
+});
+
+// RadCoT Search Algorithm
+export const RadSearchAlgorithmAttributes = Type.Object({
+    neutron_loc: Type.Number({
+        description: 'The Neutron localization value'
+    }),
+    gamma_loc: Type.Number({
+        description: 'The Gamma localization value'
+    }),
+    neutron_loc_alarm_value: Type.Number({
+        description: 'The Neutron localization alarm level'
+    }),
+    gamma_loc_alarm_value: Type.Number({
+        description: 'The Gamma localization alarm level'
+    }),
+    neutron_loc_alarm: Type.Integer({
+        description: 'Alarm flag for the neutron localization value. 1 = alarmed, 0 = not alarmed'
+    }),
+    gamma_loc_alarm: Type.Integer({
+        description: 'Alarm flag for the gamma localization value. 1 = alarmed, 0 = not alarmed'
+    })
+});
+
+export const RadSearchAlgorithm = Type.Object({
+    _attributes: RadSearchAlgorithmAttributes
+});
+
+// RadCoT Spectrum
+export const RadSpectrumAttributes = Type.Object({
+    zerocompression: Type.Integer({
+        description: 'Flag for zero compression. 1 = zero compressed, 0 = not compressed'
+    }),
+    type: Type.String({
+        description: 'FOREGROUND or BACKGROUND'
+    }),
+    livetime_ms: Type.String({
+        description: 'Spectrum live time in epoch time (ms)'
+    }),
+    realtime_ms: Type.String({
+        description: 'Spectrum real time in epoch time (ms)'
+    }),
+    channeldata: Type.String({
+        description: 'The spectral channel data'
+    }),
+    crystal_id: Type.Optional(Type.String({
+        description: 'The ID of the crystal reporting the channel data'
+    }))
+});
+
+export const RadSpectrum = Type.Object({
+    _attributes: RadSpectrumAttributes
+});
+
+// RadCoT Isotope
+export const RadIsotopeAttributes = Type.Object({
+    confidence: Type.Number({
+        description: 'The confidence value as a float representation of a percentage (88.5 NOT 0.885)'
+    }),
+    name: Type.String({
+        description: 'The name of the isotope'
+    }),
+    type: Type.String({
+        description: 'The type of the isotope'
+    })
+});
+
+export const RadIsotope = Type.Object({
+    _attributes: RadIsotopeAttributes
+});
+
+// RadCoT Permissions
+export const RadPermissionsAttributes = Type.Object({
+    all: Type.Boolean({
+        description: 'All is true if all users should have access/permission'
+    }),
+    contact_list: Type.String({
+        description: 'The list of ATAK UIDs that should have access/permission'
+    })
+});
+
+export const RadDataPermissions = Type.Object({
+    _attributes: RadPermissionsAttributes
+});
+
+export const RadCommandPermissions = Type.Object({
+    _attributes: RadPermissionsAttributes
+});
+
+// RadCoT Main Element
+export const RadSensorDetail = Type.Object({
+    sensor_data: RadSensorData,
+    radmeasurement: Type.Optional(Type.Union([RadMeasurement, Type.Array(RadMeasurement)])),
+    physical_module: Type.Optional(Type.Union([RadPhysicalModule, Type.Array(RadPhysicalModule)])),
+    search_algorithm: Type.Optional(RadSearchAlgorithm),
+    spectrum: Type.Optional(Type.Union([RadSpectrum, Type.Array(RadSpectrum)])),
+    isotope: Type.Optional(Type.Union([RadIsotope, Type.Array(RadIsotope)])),
+    data_permissions: Type.Optional(RadDataPermissions),
+    command_permissions: Type.Optional(RadCommandPermissions)
+});
+
+// ChemCoT Sensor Data Attributes
+export const ChemSensorDataAttributes = Type.Object({
+    manufacturer: Type.String({
+        description: 'The Manufacturer of the sensor in string format'
+    }),
+    model: Type.String({
+        description: 'The model of sensor in string format'
+    }),
+    serialnumber: Type.String({
+        description: 'The Serial Number of the Sensor in string format'
+    }),
+    batterylevel: Type.Optional(Type.Number({
+        description: 'The battery level as a percentage, float value'
+    })),
+    callsign: Type.Optional(Type.String({
+        description: 'The name of the given sensor in string format. Default name is Manufacturer+SerialNum'
+    })),
+    revision: Type.Optional(Type.Number({
+        description: 'The revision of the ChemCoT format, at writing this is "7"'
+    })),
+    status: Type.Optional(Type.String({
+        description: 'General sensor health status'
+    })),
+    ordinal: Type.Optional(Type.Integer({
+        description: 'Used internally by the CBRN plugin'
+    })),
+    attachedUid: Type.Optional(Type.String({
+        description: 'The UID of the TAK marker that this sensor is attached to'
+    })),
+    simulated: Type.Optional(Type.Boolean({
+        description: 'Is the data in this element representative of a simulated sensor'
+    }))
+});
+
+export const ChemSensorData = Type.Object({
+    _attributes: ChemSensorDataAttributes
+});
+
+// ChemCoT Detection
+export const ChemDetectionAttributes = Type.Object({
+    time: Type.String({
+        description: 'Timestamp for the detection, epoch time (ms)'
+    }),
+    agent: Type.String({
+        description: 'Chemical Name in string format'
+    }),
+    quantity: Type.Number({
+        description: 'Amount of chemical detected as a float. Could be mass, density, bars etc.'
+    }),
+    quantityunits: Type.String({
+        description: 'The units used to describe the quantity'
+    }),
+    concentration: Type.Optional(Type.Number({
+        description: 'Concentration of chemical in Kg/m^3'
+    })),
+    alarm: Type.Number({
+        description: 'Alarm state of the sensor. 1 = alarm, 0 = no alarm'
+    }),
+    confidence: Type.Optional(Type.Number({
+        description: 'The confidence of the detection from the sensor as a percentage'
+    })),
+    massfraction: Type.Optional(Type.Number({
+        description: 'The mass fraction of the detection from the sensor in ppm'
+    })),
+    percent: Type.Optional(Type.Number({
+        description: 'The percentage of the detection from the sensor in percent from 0-100'
+    })),
+    class: Type.Optional(Type.String({
+        description: 'The class of chemical detected. Nerve, Blood, TIC, etc.'
+    })),
+    id: Type.Optional(Type.Integer({
+        description: 'The ID number of the detection'
+    }))
+});
+
+export const ChemDetection = Type.Object({
+    _attributes: ChemDetectionAttributes
+});
+
+// ChemCoT Main Element
+export const ChemSensorDetail = Type.Object({
+    sensor_data: ChemSensorData,
+    detection: Type.Optional(Type.Union([ChemDetection, Type.Array(ChemDetection)]))
+});
+
+// BioCoT Sensor Data Attributes
+export const BioSensorDataAttributes = Type.Object({
+    manufacturer: Type.String({
+        description: 'The Manufacturer of the sensor in string format'
+    }),
+    model: Type.String({
+        description: 'The model of sensor in string format'
+    }),
+    serialnumber: Type.String({
+        description: 'The Serial Number of the Sensor in string format'
+    }),
+    batterylevel: Type.Optional(Type.Number({
+        description: 'The battery level as a percentage, float value'
+    })),
+    callsign: Type.Optional(Type.String({
+        description: 'The name of the given sensor in string format. Default name is Manufacturer+SerialNum'
+    })),
+    revision: Type.Optional(Type.Number({
+        description: 'The revision of the BioCoT format'
+    })),
+    status: Type.Optional(Type.String({
+        description: 'General sensor health status'
+    })),
+    ordinal: Type.Optional(Type.Integer({
+        description: 'Used internally by the CBRN plugin'
+    })),
+    attachedUid: Type.Optional(Type.String({
+        description: 'The UID of the TAK marker that this sensor is attached to'
+    })),
+    simulated: Type.Optional(Type.Boolean({
+        description: 'Is the data in this element representative of a simulated sensor'
+    }))
+});
+
+export const BioSensorData = Type.Object({
+    _attributes: BioSensorDataAttributes
+});
+
+// BioCoT Measurement Level
+export const BioMeasurementLevelAttributes = Type.Object({
+    levelName: Type.String({
+        description: 'The name of this measurement level'
+    }),
+    levelValue: Type.String({
+        description: 'The value of this measurement level'
+    })
+});
+
+export const BioMeasurementLevel = Type.Object({
+    _attributes: BioMeasurementLevelAttributes
+});
+
+// BioCoT Measurement
+export const BioMeasurementAttributes = Type.Object({
+    time: Type.String({
+        description: 'Timestamp for the measurement, epoch time (ms)'
+    }),
+    bioClass: Type.Optional(Type.String({
+        description: 'Biological class'
+    })),
+    type: Type.Optional(Type.String({
+        description: 'Biological type'
+    })),
+    channel: Type.Optional(Type.Integer({
+        description: 'Channel identifier'
+    })),
+    harmful: Type.Optional(Type.Boolean({
+        description: 'Is this bio measurement harmful'
+    })),
+    doseTime: Type.Optional(Type.Integer({
+        description: 'Dose Time'
+    })),
+    dose: Type.Number({
+        description: 'Amount of dose'
+    }),
+    confidence: Type.Optional(Type.Number({
+        description: 'The confidence of the measurement from the sensor as a percentage'
+    })),
+    confirmationLevel: Type.Optional(Type.String({
+        description: 'Confirmation level'
+    })),
+    concentration: Type.Optional(Type.Number({
+        description: 'Concentration'
+    })),
+    sampleId: Type.Optional(Type.String({
+        description: 'Sample ID of this measurement'
+    })),
+    persistency: Type.Optional(Type.String({
+        description: 'Persistency'
+    }))
+});
+
+export const BioMeasurement = Type.Object({
+    _attributes: BioMeasurementAttributes,
+    level: Type.Optional(Type.Union([BioMeasurementLevel, Type.Array(BioMeasurementLevel)]))
+});
+
+// BioCoT Main Element
+export const BioSensorDetail = Type.Object({
+    sensor_data: BioSensorData,
+    measurement: Type.Optional(Type.Union([BioMeasurement, Type.Array(BioMeasurement)]))
+});
+
 export const Detail = Type.Object({
     contact: Type.Optional(Contact),
     tog: Type.Optional(TogAttributes),
@@ -762,7 +1205,12 @@ export const Detail = Type.Object({
         TakResponse: Type.Optional(TakResponseAttributes),
         TakProtocolSupport: Type.Optional(ProtocolSupportAttributes),
         TakServerVersionInfo: Type.Optional(ServerVersionAttributes)
-    }))
+    })),
+
+    // CBRN Sensor Details
+    radsensordetail: Type.Optional(RadSensorDetail),
+    chemsensordetail: Type.Optional(ChemSensorDetail),
+    biosensordetail: Type.Optional(BioSensorDetail)
 })
 
 export const Point = Type.Object({

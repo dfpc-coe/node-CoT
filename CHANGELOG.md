@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.39.0 - 2025-06-11
+
+- :tada: Introduce CBRN Data Types
+
 ### v14.38.0 - 2025-05-20
 
 - :arrow_up: Update to strongly typed archiver library
