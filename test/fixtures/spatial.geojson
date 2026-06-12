@@ -1,0 +1,38 @@
+{
+    "id": "test-spatial-001",
+    "type": "Feature",
+    "path": "/",
+    "properties": {
+        "type": "a-f-G",
+        "how": "m-g",
+        "callsign": "SPATIAL-TEST",
+        "center": [-122.4194, 37.7749, 0],
+        "time": "2024-01-01T00:00:00.000Z",
+        "start": "2024-01-01T00:00:00.000Z",
+        "stale": "2024-01-01T00:01:00.000Z",
+        "spatial": {
+            "version": 1.0,
+            "attitude": {
+                "roll": 15.5,
+                "pitch": -3.2,
+                "yaw": 45.0,
+                "eRoll": 0.1,
+                "ePitch": 0.1,
+                "eYaw": 0.5
+            },
+            "spin": {
+                "roll": 0.5,
+                "pitch": -0.1,
+                "yaw": 2.3,
+                "eRoll": 0.01,
+                "ePitch": 0.01,
+                "eYaw": 0.05
+            }
+        },
+        "metadata": {}
+    },
+    "geometry": {
+        "type": "Point",
+        "coordinates": [-122.4194, 37.7749, 0]
+    }
+}
