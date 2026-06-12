@@ -12,6 +12,11 @@
 
 ### Pending Fixed
 
+### v14.40.0 - 2025-06-11
+
+- :rocket: Introduce BiDirectional Support for CBRN Data
+- :rocket: Introdice BiDirectional Support for `spatial` attribute - Closes: https://github.com/dfpc-coe/node-CoT/issues/130
+
 ### v14.39.0 - 2025-06-11
 
 - :tada: Introduce CBRN Data Types
