@@ -350,3 +350,92 @@ test('Parse u-d-c-c (Circle - Filled)', async () => {
         path: '/'
     });
 });
+
+test('Parse u-d-f (Polygon - Transparent Fill - Shape 338)', async () => {
+    const cot = CoTParser.from_xml(`
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?><event version='2.0' uid='8B1868AD-6175-43CE-A240-B924431A6884' type='u-d-f' time='2026-06-12T16:53:44.458Z' start='2026-06-12T16:53:44.458Z' stale='2026-06-13T16:53:44.458Z' how='h-e' access='Undefined'><point lat='38.3689249' lon='-104.6749594' hae='1498.801' ce='9999999.0' le='9999999.0' /><detail><link point='38.370053,-104.6769122'/><link point='38.3700864,-104.6730388'/><link point='38.3677968,-104.6730067'/><link point='38.3677634,-104.6768801'/><link point='38.370053,-104.6769122'/><__shapeExtras cpvis='true' editable='true'/><strokeColor value='-48571'/><strokeWeight value='3.0'/><strokeStyle value='solid'/><fillColor value='0'/><remarks></remarks><color value='-48571'/><archive/><labels_on value='false'/><contact callsign='Shape 338'/></detail></event>
+    `);
+
+    assert.deepEqual(await CoTParser.to_geojson(cot), {
+        id: '8B1868AD-6175-43CE-A240-B924431A6884',
+        type: 'Feature',
+        properties: {
+            callsign: 'Shape 338',
+            center: [-104.6749594, 38.3689249, 1498.801],
+            type: 'u-d-f',
+            how: 'h-e',
+            time: '2026-06-12T16:53:44.458Z',
+            start: '2026-06-12T16:53:44.458Z',
+            stale: '2026-06-13T16:53:44.458Z',
+            labels: false,
+            archived: true,
+            stroke: '#FF4245',
+            'stroke-opacity': 1,
+            'stroke-width': 3,
+            'stroke-style': 'solid',
+            'fill-opacity': 0,
+            fill: '#000000',
+            metadata: {}
+        },
+        geometry: {
+            type: 'Polygon',
+            coordinates: [
+                [
+                    [-104.6769122, 38.370053],
+                    [-104.6730388, 38.3700864],
+                    [-104.6730067, 38.3677968],
+                    [-104.6768801, 38.3677634],
+                    [-104.6769122, 38.370053]
+                ]
+            ]
+        },
+        path: '/'
+    });
+});
+
+test('Parse u-d-f (Polygon - Transparent Fill - Shape 287)', async () => {
+    const cot = CoTParser.from_xml(`
+<?xml version='1.0' encoding='UTF-8' standalone='yes'?><event version='2.0' uid='5BE43454-9B05-4F95-A19B-DB847DA6F4AD' type='u-d-f' time='2026-06-12T16:53:44.454Z' start='2026-06-12T16:53:44.454Z' stale='2026-06-13T16:53:44.454Z' how='h-e' access='Undefined'><point lat='38.3707822' lon='-104.6673224' hae='1499.609' ce='9999999.0' le='9999999.0' /><detail><link point='38.3691075,-104.6697754'/><link point='38.3706203,-104.667562'/><link point='38.3723111,-104.6705274'/><link point='38.3740798,-104.6675053'/><link point='38.3721554,-104.6668384'/><link point='38.3714212,-104.6643271'/><link point='38.3694968,-104.664923'/><link point='38.3682732,-104.6674202'/><link point='38.3695747,-104.6670229'/><link point='38.3691075,-104.6697754'/><__shapeExtras cpvis='true' editable='true'/><strokeColor value='-8773218'/><strokeWeight value='3.0'/><strokeStyle value='solid'/><fillColor value='0'/><remarks></remarks><color value='-8773218'/><archive/><labels_on value='false'/><contact callsign='Shape 287'/></detail></event>
+    `);
+
+    assert.deepEqual(await CoTParser.to_geojson(cot), {
+        id: '5BE43454-9B05-4F95-A19B-DB847DA6F4AD',
+        type: 'Feature',
+        properties: {
+            callsign: 'Shape 287',
+            center: [-104.6673224, 38.3707822, 1499.609],
+            type: 'u-d-f',
+            how: 'h-e',
+            time: '2026-06-12T16:53:44.454Z',
+            start: '2026-06-12T16:53:44.454Z',
+            stale: '2026-06-13T16:53:44.454Z',
+            labels: false,
+            archived: true,
+            stroke: '#7A219E',
+            'stroke-opacity': 1,
+            'stroke-width': 3,
+            'stroke-style': 'solid',
+            'fill-opacity': 0,
+            fill: '#000000',
+            metadata: {}
+        },
+        geometry: {
+            type: 'Polygon',
+            coordinates: [
+                [
+                    [-104.6697754, 38.3691075],
+                    [-104.667562, 38.3706203],
+                    [-104.6705274, 38.3723111],
+                    [-104.6675053, 38.3740798],
+                    [-104.6668384, 38.3721554],
+                    [-104.6643271, 38.3714212],
+                    [-104.664923, 38.3694968],
+                    [-104.6674202, 38.3682732],
+                    [-104.6670229, 38.3695747],
+                    [-104.6697754, 38.3691075]
+                ]
+            ]
+        },
+        path: '/'
+    });
+});
