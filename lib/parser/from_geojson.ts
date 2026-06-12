@@ -3,6 +3,12 @@ import { v4 as randomUUID } from 'uuid';
 import type { Static } from '@sinclair/typebox';
 import type {
     LinkAttributes,
+    RadMeasurementAttributes,
+    RadPhysicalModuleAttributes,
+    RadSpectrumAttributes,
+    RadIsotopeAttributes,
+    ChemDetectionAttributes,
+    BioMeasurementLevelAttributes,
 } from '../types/types.js'
 import {
     InputFeature,
@@ -201,11 +207,11 @@ export async function from_geojson(
         };
 
         if (rad.radmeasurement) {
-            cot.event.detail.radsensordetail.radmeasurement = rad.radmeasurement.map((m: any) => ({ _attributes: { ...m } }));
+            cot.event.detail.radsensordetail.radmeasurement = rad.radmeasurement.map((m: Static<typeof RadMeasurementAttributes>) => ({ _attributes: { ...m } }));
         }
 
         if (rad.physical_module) {
-            cot.event.detail.radsensordetail.physical_module = rad.physical_module.map((m: any) => ({ _attributes: { ...m } }));
+            cot.event.detail.radsensordetail.physical_module = rad.physical_module.map((m: Static<typeof RadPhysicalModuleAttributes>) => ({ _attributes: { ...m } }));
         }
 
         if (rad.search_algorithm) {
@@ -213,11 +219,11 @@ export async function from_geojson(
         }
 
         if (rad.spectrum) {
-            cot.event.detail.radsensordetail.spectrum = rad.spectrum.map((s: any) => ({ _attributes: { ...s } }));
+            cot.event.detail.radsensordetail.spectrum = rad.spectrum.map((s: Static<typeof RadSpectrumAttributes>) => ({ _attributes: { ...s } }));
         }
 
         if (rad.isotope) {
-            cot.event.detail.radsensordetail.isotope = rad.isotope.map((i: any) => ({ _attributes: { ...i } }));
+            cot.event.detail.radsensordetail.isotope = rad.isotope.map((i: Static<typeof RadIsotopeAttributes>) => ({ _attributes: { ...i } }));
         }
 
         if (rad.data_permissions) {
@@ -236,7 +242,7 @@ export async function from_geojson(
         };
 
         if (chem.detection) {
-            cot.event.detail.chemsensordetail.detection = chem.detection.map((d: any) => ({ _attributes: { ...d } }));
+            cot.event.detail.chemsensordetail.detection = chem.detection.map((d: Static<typeof ChemDetectionAttributes>) => ({ _attributes: { ...d } }));
         }
     }
 
@@ -247,11 +253,11 @@ export async function from_geojson(
         };
 
         if (bio.measurement) {
-            cot.event.detail.biosensordetail.measurement = bio.measurement.map((m: any) => {
-                const measurement: any = { _attributes: { ...m } };
-                if (m.level) {
-                    delete measurement._attributes.level;
-                    measurement.level = m.level.map((l: any) => ({ _attributes: { ...l } }));
+            cot.event.detail.biosensordetail.measurement = bio.measurement.map((m) => {
+                const { level, ...attrs } = m;
+                const measurement: { _attributes: typeof attrs; level?: Array<{ _attributes: Static<typeof BioMeasurementLevelAttributes> }> } = { _attributes: { ...attrs } };
+                if (level) {
+                    measurement.level = level.map((l: Static<typeof BioMeasurementLevelAttributes>) => ({ _attributes: { ...l } }));
                 }
                 return measurement;
             });

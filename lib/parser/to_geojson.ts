@@ -13,6 +13,13 @@ import type {
     Link,
     LinkAttributes,
     ColorAttributes,
+    RadMeasurement,
+    RadPhysicalModule,
+    RadSpectrum,
+    RadIsotope,
+    ChemDetection,
+    BioMeasurement,
+    BioMeasurementLevel,
 } from '../types/types.js'
 import Ellipse from '@turf/ellipse';
 import Truncate from '@turf/truncate';
@@ -99,12 +106,12 @@ export async function to_geojson(
 
         if (rad.radmeasurement) {
             const measurements = Array.isArray(rad.radmeasurement) ? rad.radmeasurement : [rad.radmeasurement];
-            feat.properties.radsensordetail.radmeasurement = measurements.map((m: any) => ({ ...m._attributes }));
+            feat.properties.radsensordetail.radmeasurement = measurements.map((m: Static<typeof RadMeasurement>) => ({ ...m._attributes }));
         }
 
         if (rad.physical_module) {
             const modules = Array.isArray(rad.physical_module) ? rad.physical_module : [rad.physical_module];
-            feat.properties.radsensordetail.physical_module = modules.map((m: any) => ({ ...m._attributes }));
+            feat.properties.radsensordetail.physical_module = modules.map((m: Static<typeof RadPhysicalModule>) => ({ ...m._attributes }));
         }
 
         if (rad.search_algorithm) {
@@ -113,12 +120,12 @@ export async function to_geojson(
 
         if (rad.spectrum) {
             const spectra = Array.isArray(rad.spectrum) ? rad.spectrum : [rad.spectrum];
-            feat.properties.radsensordetail.spectrum = spectra.map((s: any) => ({ ...s._attributes }));
+            feat.properties.radsensordetail.spectrum = spectra.map((s: Static<typeof RadSpectrum>) => ({ ...s._attributes }));
         }
 
         if (rad.isotope) {
             const isotopes = Array.isArray(rad.isotope) ? rad.isotope : [rad.isotope];
-            feat.properties.radsensordetail.isotope = isotopes.map((i: any) => ({ ...i._attributes }));
+            feat.properties.radsensordetail.isotope = isotopes.map((i: Static<typeof RadIsotope>) => ({ ...i._attributes }));
         }
 
         if (rad.data_permissions) {
@@ -138,7 +145,7 @@ export async function to_geojson(
 
         if (chem.detection) {
             const detections = Array.isArray(chem.detection) ? chem.detection : [chem.detection];
-            feat.properties.chemsensordetail.detection = detections.map((d: any) => ({ ...d._attributes }));
+            feat.properties.chemsensordetail.detection = detections.map((d: Static<typeof ChemDetection>) => ({ ...d._attributes }));
         }
     }
 
@@ -150,11 +157,11 @@ export async function to_geojson(
 
         if (bio.measurement) {
             const measurements = Array.isArray(bio.measurement) ? bio.measurement : [bio.measurement];
-            feat.properties.biosensordetail.measurement = measurements.map((m: any) => {
-                const measurement: any = { ...m._attributes };
+            feat.properties.biosensordetail.measurement = measurements.map((m: Static<typeof BioMeasurement>) => {
+                const measurement: { level?: Array<Static<typeof BioMeasurementLevelAttributes>> } & typeof m._attributes = { ...m._attributes };
                 if (m.level) {
                     const levels = Array.isArray(m.level) ? m.level : [m.level];
-                    measurement.level = levels.map((l: any) => ({ ...l._attributes }));
+                    measurement.level = levels.map((l: Static<typeof BioMeasurementLevel>) => ({ ...l._attributes }));
                 }
                 return measurement;
             });
