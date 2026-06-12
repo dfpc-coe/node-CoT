@@ -20,6 +20,7 @@ import type {
     ChemDetection,
     BioMeasurement,
     BioMeasurementLevel,
+    BioMeasurementLevelAttributes,
 } from '../types/types.js'
 import Ellipse from '@turf/ellipse';
 import Truncate from '@turf/truncate';
