@@ -543,7 +543,7 @@ export async function to_geojson(
             Number(ellipse.major) / 1000,
             Number(ellipse.minor) / 1000,
             {
-                angle: ellipse.angle
+                angle: 90 - ellipse.angle
             }
         ), {
             precision: COORDINATE_PRECISION,
