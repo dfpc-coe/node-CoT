@@ -1,0 +1,53 @@
+{
+    "id": "rad-sensor-123",
+    "type": "Feature",
+    "path": "/",
+    "properties": {
+        "type": "a-f-G",
+        "how": "m-g",
+        "callsign": "RadSensor1",
+        "center": [ -77.0364, 38.8951, 0 ],
+        "time": "2023-08-04T15:17:43.649Z",
+        "start": "2023-08-04T15:17:43.649Z",
+        "stale": "2023-08-04T15:17:43.649Z",
+        "radsensordetail": {
+            "sensor_data": {
+                "time": "1691162263649",
+                "model": "Micro Detective",
+                "neutronstatus": "Unknown",
+                "gammastatus": "Full",
+                "manufacturer": "Ortec",
+                "callsign": "RadSensor1",
+                "serialnumber": "SN12345",
+                "batterylevel": 85.5
+            },
+            "radmeasurement": [
+                {
+                    "nalarmstddev": 0,
+                    "alarm": 0,
+                    "measurement": 12.5,
+                    "name": "gamma"
+                },
+                {
+                    "nalarmstddev": 0,
+                    "alarm": 0,
+                    "measurement": 0.8,
+                    "name": "neutron"
+                }
+            ],
+            "search_algorithm": {
+                "neutron_loc": 0.5,
+                "gamma_loc": 0.7,
+                "neutron_loc_alarm_value": 2.0,
+                "gamma_loc_alarm_value": 1.5,
+                "neutron_loc_alarm": 0,
+                "gamma_loc_alarm": 0
+            }
+        },
+        "metadata": {}
+    },
+    "geometry": {
+        "type": "Point",
+        "coordinates": [-77.0364, 38.8951, 0]
+    }
+}

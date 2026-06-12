@@ -194,6 +194,70 @@ export async function from_geojson(
         cot.event.detail.sensor = { _attributes: { ...feature.properties.sensor } };
     }
 
+    if (feature.properties.radsensordetail) {
+        const rad = feature.properties.radsensordetail;
+        cot.event.detail.radsensordetail = {
+            sensor_data: { _attributes: { ...rad.sensor_data } }
+        };
+
+        if (rad.radmeasurement) {
+            cot.event.detail.radsensordetail.radmeasurement = rad.radmeasurement.map((m: any) => ({ _attributes: { ...m } }));
+        }
+
+        if (rad.physical_module) {
+            cot.event.detail.radsensordetail.physical_module = rad.physical_module.map((m: any) => ({ _attributes: { ...m } }));
+        }
+
+        if (rad.search_algorithm) {
+            cot.event.detail.radsensordetail.search_algorithm = { _attributes: { ...rad.search_algorithm } };
+        }
+
+        if (rad.spectrum) {
+            cot.event.detail.radsensordetail.spectrum = rad.spectrum.map((s: any) => ({ _attributes: { ...s } }));
+        }
+
+        if (rad.isotope) {
+            cot.event.detail.radsensordetail.isotope = rad.isotope.map((i: any) => ({ _attributes: { ...i } }));
+        }
+
+        if (rad.data_permissions) {
+            cot.event.detail.radsensordetail.data_permissions = { _attributes: { ...rad.data_permissions } };
+        }
+
+        if (rad.command_permissions) {
+            cot.event.detail.radsensordetail.command_permissions = { _attributes: { ...rad.command_permissions } };
+        }
+    }
+
+    if (feature.properties.chemsensordetail) {
+        const chem = feature.properties.chemsensordetail;
+        cot.event.detail.chemsensordetail = {
+            sensor_data: { _attributes: { ...chem.sensor_data } }
+        };
+
+        if (chem.detection) {
+            cot.event.detail.chemsensordetail.detection = chem.detection.map((d: any) => ({ _attributes: { ...d } }));
+        }
+    }
+
+    if (feature.properties.biosensordetail) {
+        const bio = feature.properties.biosensordetail;
+        cot.event.detail.biosensordetail = {
+            sensor_data: { _attributes: { ...bio.sensor_data } }
+        };
+
+        if (bio.measurement) {
+            cot.event.detail.biosensordetail.measurement = bio.measurement.map((m: any) => {
+                const measurement: any = { _attributes: { ...m } };
+                if (m.level) {
+                    delete measurement._attributes.level;
+                    measurement.level = m.level.map((l: any) => ({ _attributes: { ...l } }));
+                }
+                return measurement;
+            });
+        }
+    }
+
     if (feature.properties.ackrequest) {
         cot.event.detail.ackrequest = { _attributes: { ...feature.properties.ackrequest } };
     }

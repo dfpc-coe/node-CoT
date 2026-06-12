@@ -91,6 +91,76 @@ export async function to_geojson(
         feat.properties.sensor = raw.event.detail.sensor._attributes;
     }
 
+    if (raw.event.detail.radsensordetail) {
+        const rad = raw.event.detail.radsensordetail;
+        feat.properties.radsensordetail = {
+            sensor_data: { ...rad.sensor_data._attributes }
+        };
+
+        if (rad.radmeasurement) {
+            const measurements = Array.isArray(rad.radmeasurement) ? rad.radmeasurement : [rad.radmeasurement];
+            feat.properties.radsensordetail.radmeasurement = measurements.map((m: any) => ({ ...m._attributes }));
+        }
+
+        if (rad.physical_module) {
+            const modules = Array.isArray(rad.physical_module) ? rad.physical_module : [rad.physical_module];
+            feat.properties.radsensordetail.physical_module = modules.map((m: any) => ({ ...m._attributes }));
+        }
+
+        if (rad.search_algorithm) {
+            feat.properties.radsensordetail.search_algorithm = { ...rad.search_algorithm._attributes };
+        }
+
+        if (rad.spectrum) {
+            const spectra = Array.isArray(rad.spectrum) ? rad.spectrum : [rad.spectrum];
+            feat.properties.radsensordetail.spectrum = spectra.map((s: any) => ({ ...s._attributes }));
+        }
+
+        if (rad.isotope) {
+            const isotopes = Array.isArray(rad.isotope) ? rad.isotope : [rad.isotope];
+            feat.properties.radsensordetail.isotope = isotopes.map((i: any) => ({ ...i._attributes }));
+        }
+
+        if (rad.data_permissions) {
+            feat.properties.radsensordetail.data_permissions = { ...rad.data_permissions._attributes };
+        }
+
+        if (rad.command_permissions) {
+            feat.properties.radsensordetail.command_permissions = { ...rad.command_permissions._attributes };
+        }
+    }
+
+    if (raw.event.detail.chemsensordetail) {
+        const chem = raw.event.detail.chemsensordetail;
+        feat.properties.chemsensordetail = {
+            sensor_data: { ...chem.sensor_data._attributes }
+        };
+
+        if (chem.detection) {
+            const detections = Array.isArray(chem.detection) ? chem.detection : [chem.detection];
+            feat.properties.chemsensordetail.detection = detections.map((d: any) => ({ ...d._attributes }));
+        }
+    }
+
+    if (raw.event.detail.biosensordetail) {
+        const bio = raw.event.detail.biosensordetail;
+        feat.properties.biosensordetail = {
+            sensor_data: { ...bio.sensor_data._attributes }
+        };
+
+        if (bio.measurement) {
+            const measurements = Array.isArray(bio.measurement) ? bio.measurement : [bio.measurement];
+            feat.properties.biosensordetail.measurement = measurements.map((m: any) => {
+                const measurement: any = { ...m._attributes };
+                if (m.level) {
+                    const levels = Array.isArray(m.level) ? m.level : [m.level];
+                    measurement.level = levels.map((l: any) => ({ ...l._attributes }));
+                }
+                return measurement;
+            });
+        }
+    }
+
     if (raw.event.detail.range) {
         feat.properties.range = raw.event.detail.range._attributes.value;
     }
