@@ -12,6 +12,11 @@
 
 ### Pending Fixed
 
+### v14.41.0 - 2025-06-13
+
+- :bug: Fix Opacity bug in Polygon Features created via ATAK
+- :bug: Fix ellipse orientation in ATAK created Ellipse Features
+
 ### v14.40.1 - 2025-06-11
 
 - :arrow_up: Update Core Deps
