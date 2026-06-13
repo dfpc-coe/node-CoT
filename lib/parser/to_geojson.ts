@@ -72,13 +72,13 @@ export async function to_geojson(
         feat.properties.creator = cot.creator();
     }
 
-    if (raw.event.detail.remarks && raw.event.detail.remarks._text) {
+    if (raw.event.detail.remarks?._text) {
         feat.properties.remarks = raw.event.detail.remarks._text;
     }
 
     if (raw.event.detail.fileshare) {
         feat.properties.fileshare = raw.event.detail.fileshare._attributes;
-        if (feat.properties.fileshare && typeof feat.properties.fileshare.sizeInBytes === 'string') {
+        if (typeof feat.properties.fileshare?.sizeInBytes === 'string') {
             feat.properties.fileshare.sizeInBytes = parseInt(feat.properties.fileshare.sizeInBytes)
         }
     }
@@ -201,11 +201,11 @@ export async function to_geojson(
         feat.properties.maxzoom = raw.event.detail.display._attributes.maxzoom;
     }
 
-    if (raw.event.detail.labels_on && raw.event.detail.labels_on._attributes && raw.event.detail.labels_on._attributes.value !== undefined) {
+    if (raw.event.detail.labels_on?._attributes?.value !== undefined) {
         feat.properties.labels = raw.event.detail.labels_on._attributes.value;
     }
 
-    if (raw.event.detail.__video && raw.event.detail.__video._attributes) {
+    if (raw.event.detail.__video?._attributes) {
         feat.properties.video = raw.event.detail.__video._attributes;
 
         if (raw.event.detail.__video.ConnectionEntry) {
@@ -257,7 +257,7 @@ export async function to_geojson(
         }
     }
 
-    if (raw.event.detail.track && raw.event.detail.track._attributes) {
+    if (raw.event.detail.track?._attributes) {
         if (raw.event.detail.track._attributes.course) feat.properties.course = Number(raw.event.detail.track._attributes.course);
         if (raw.event.detail.track._attributes.slope) feat.properties.slope = Number(raw.event.detail.track._attributes.slope);
         if (raw.event.detail.track._attributes.course) feat.properties.speed = Number(raw.event.detail.track._attributes.speed);
@@ -286,32 +286,32 @@ export async function to_geojson(
         feat.properties.icon = raw.event.detail.usericon._attributes.iconsetpath;
     }
 
-    if (raw.event.detail.uid && raw.event.detail.uid._attributes && raw.event.detail.uid._attributes.Droid) {
+    if (raw.event.detail.uid?._attributes?.Droid) {
         feat.properties.droid = raw.event.detail.uid._attributes.Droid;
     }
 
-    if (raw.event.detail.takv && raw.event.detail.takv._attributes) {
+    if (raw.event.detail.takv?._attributes) {
         feat.properties.takv = raw.event.detail.takv._attributes;
     }
 
-    if (raw.event.detail.__group && raw.event.detail.__group._attributes) {
+    if (raw.event.detail.__group?._attributes) {
         feat.properties.group = raw.event.detail.__group._attributes;
     }
 
-    if (raw.event.detail['_flow-tags_'] && raw.event.detail['_flow-tags_']._attributes) {
+    if (raw.event.detail['_flow-tags_']?._attributes) {
         feat.properties.flow = raw.event.detail['_flow-tags_']._attributes;
     }
 
-    if (raw.event.detail.status && raw.event.detail.status._attributes) {
+    if (raw.event.detail.status?._attributes) {
         feat.properties.status = raw.event.detail.status._attributes;
     }
 
-    if (raw.event.detail.mission && raw.event.detail.mission._attributes) {
+    if (raw.event.detail.mission?._attributes) {
         const mission: Static<typeof FeaturePropertyMission> = {
             ...raw.event.detail.mission._attributes
         };
 
-        if (raw.event.detail.mission && raw.event.detail.mission.MissionChanges) {
+        if (raw.event.detail.mission.MissionChanges) {
             const changes =
                 Array.isArray(raw.event.detail.mission.MissionChanges)
                     ? raw.event.detail.mission.MissionChanges
@@ -357,19 +357,19 @@ export async function to_geojson(
         }
 
 
-        if (raw.event.detail.mission && raw.event.detail.mission.missionLayer) {
+        if (raw.event.detail.mission.missionLayer) {
             const missionLayer: Static<typeof FeaturePropertyMissionLayer> = {};
 
-            if (raw.event.detail.mission.missionLayer.name && raw.event.detail.mission.missionLayer.name._text) {
+            if (raw.event.detail.mission.missionLayer.name?._text) {
                 missionLayer.name = raw.event.detail.mission.missionLayer.name._text;
             }
-            if (raw.event.detail.mission.missionLayer.parentUid && raw.event.detail.mission.missionLayer.parentUid._text) {
+            if (raw.event.detail.mission.missionLayer.parentUid?._text) {
                 missionLayer.parentUid = raw.event.detail.mission.missionLayer.parentUid._text;
             }
-            if (raw.event.detail.mission.missionLayer.type && raw.event.detail.mission.missionLayer.type._text) {
+            if (raw.event.detail.mission.missionLayer.type?._text) {
                 missionLayer.type = raw.event.detail.mission.missionLayer.type._text;
             }
-            if (raw.event.detail.mission.missionLayer.uid && raw.event.detail.mission.missionLayer.uid._text) {
+            if (raw.event.detail.mission.missionLayer.uid?._text) {
                 missionLayer.uid = raw.event.detail.mission.missionLayer.uid._text;
             }
 
@@ -379,21 +379,21 @@ export async function to_geojson(
         feat.properties.mission = mission;
     }
 
-    if (raw.event.detail.precisionlocation && raw.event.detail.precisionlocation._attributes) {
+    if (raw.event.detail.precisionlocation?._attributes) {
         feat.properties.precisionlocation = raw.event.detail.precisionlocation._attributes;
     }
 
-    if (raw.event.detail.strokeColor && raw.event.detail.strokeColor._attributes && raw.event.detail.strokeColor._attributes.value) {
+    if (raw.event.detail.strokeColor?._attributes?.value !== undefined) {
         const stroke = new Color(Number(raw.event.detail.strokeColor._attributes.value));
         feat.properties.stroke = stroke.as_hex();
         feat.properties['stroke-opacity'] = stroke.as_opacity() / 255;
     }
 
-    if (raw.event.detail.strokeWeight && raw.event.detail.strokeWeight._attributes && raw.event.detail.strokeWeight._attributes.value) {
+    if (raw.event.detail.strokeWeight?._attributes?.value) {
         feat.properties['stroke-width'] = Number(raw.event.detail.strokeWeight._attributes.value);
     }
 
-    if (raw.event.detail.strokeStyle && raw.event.detail.strokeStyle._attributes && raw.event.detail.strokeStyle._attributes.value) {
+    if (raw.event.detail.strokeStyle?._attributes?.value) {
         feat.properties['stroke-style'] = raw.event.detail.strokeStyle._attributes.value;
     }
 
@@ -415,7 +415,7 @@ export async function to_geojson(
             color = raw.event.detail.color;
         }
 
-        if (color && color._attributes && color._attributes.argb) {
+        if (color?._attributes?.argb) {
             const parsedColor = new Color(Number(color._attributes.argb));
             feat.properties['marker-color'] = parsedColor.as_hex();
             feat.properties['marker-opacity'] = parsedColor.as_opacity() / 255;
@@ -465,7 +465,7 @@ export async function to_geojson(
                 coordinates: [coordinates]
             }
 
-            if (raw.event.detail.fillColor && raw.event.detail.fillColor._attributes && raw.event.detail.fillColor._attributes.value) {
+            if (raw.event.detail.fillColor?._attributes?.value !== undefined) {
                 const fill = new Color(Number(raw.event.detail.fillColor._attributes.value));
                 feat.properties['fill-opacity'] = fill.as_opacity() / 255;
                 feat.properties['fill'] = fill.as_hex();
@@ -543,7 +543,7 @@ export async function to_geojson(
             Number(ellipse.major) / 1000,
             Number(ellipse.minor) / 1000,
             {
-                angle: ellipse.angle
+                angle: 90 - ellipse.angle
             }
         ), {
             precision: COORDINATE_PRECISION,
@@ -555,7 +555,7 @@ export async function to_geojson(
         feat.properties.shape.ellipse = ellipse;
     } else if (raw.event._attributes.type.startsWith('b-m-p-s-p-i')) {
         // TODO: Currently the "shape" tag is only parsed here - asking ARA for clarification if it is a general use tag
-        if (raw.event.detail.shape && raw.event.detail.shape.polyline && raw.event.detail.shape.polyline.vertex) {
+        if (raw.event.detail.shape?.polyline?.vertex) {
             const coordinates = [];
 
             const vertices = Array.isArray(raw.event.detail.shape.polyline.vertex) ? raw.event.detail.shape.polyline.vertex : [raw.event.detail.shape.polyline.vertex];
@@ -565,7 +565,7 @@ export async function to_geojson(
 
             if (coordinates.length === 1) {
                 feat.geometry = { type: 'Point', coordinates: coordinates[0] }
-            } else if (raw.event.detail.shape.polyline._attributes && raw.event.detail.shape.polyline._attributes.closed === true) {
+            } else if (raw.event.detail.shape.polyline._attributes?.closed === true) {
                 coordinates.push(coordinates[0]);
                 feat.geometry = { type: 'Polygon', coordinates: [coordinates] }
             } else {
@@ -573,11 +573,7 @@ export async function to_geojson(
             }
         }
 
-        if (
-            raw.event.detail.shape
-            && raw.event.detail.shape.polyline
-            && raw.event.detail.shape.polyline._attributes
-        ) {
+        if (raw.event.detail.shape?.polyline?._attributes) {
             if (raw.event.detail.shape.polyline._attributes.fillColor) {
                 const fill = new Color(Number(raw.event.detail.shape.polyline._attributes.fillColor));
                 feat.properties['fill-opacity'] = fill.as_opacity() / 255;
