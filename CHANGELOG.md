@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.42.0 - 2025-06-24
+
+- :bug: Ensure empty track.slope doesn't result in a parsing error
+
 ### v14.41.0 - 2025-06-13
 
 - :bug: Fix Opacity bug in Polygon Features created via ATAK

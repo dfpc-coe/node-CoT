@@ -258,9 +258,16 @@ export async function to_geojson(
     }
 
     if (raw.event.detail.track?._attributes) {
-        if (raw.event.detail.track._attributes.course) feat.properties.course = Number(raw.event.detail.track._attributes.course);
-        if (raw.event.detail.track._attributes.slope) feat.properties.slope = Number(raw.event.detail.track._attributes.slope);
-        if (raw.event.detail.track._attributes.course) feat.properties.speed = Number(raw.event.detail.track._attributes.speed);
+        const track = raw.event.detail.track._attributes;
+
+        const course = Number(track.course);
+        if (track.course !== undefined && track.course !== '' && !isNaN(course)) feat.properties.course = course;
+
+        const slope = Number(track.slope);
+        if (track.slope !== undefined && track.slope !== '' && !isNaN(slope)) feat.properties.slope = slope;
+
+        const speed = Number(track.speed);
+        if (track.speed !== undefined && track.speed !== '' && !isNaN(speed)) feat.properties.speed = speed;
     }
 
     if (raw.event.detail.marti) {
