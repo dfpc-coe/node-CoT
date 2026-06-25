@@ -50,7 +50,6 @@
         "milsymbol": "^3.0.2",
         "node-stream-zip": "^1.15.0",
         "protobufjs": "^8.0.0",
-        "rimraf": "^6.0.0",
         "uuid": "^14.0.0",
         "xml-js": "^1.6.11"
     },

@@ -1,6 +1,5 @@
 import { createHash } from 'node:crypto';
 import { pipeline } from 'stream/promises';
-import { rimraf } from 'rimraf'
 import type { Static } from '@sinclair/typebox'
 import { Type } from '@sinclair/typebox'
 import Err from '@openaddresses/batch-error';
@@ -564,7 +563,7 @@ export class DataPackage {
      * Destory the underlying FS resources and prevent further mutation
      */
     async destroy(): Promise<void> {
-        await rimraf(this.path);
+        await fsp.rm(this.path, { recursive: true, force: true });
         this.destroyed = true;
     }
 
