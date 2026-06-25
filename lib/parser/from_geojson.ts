@@ -1,5 +1,4 @@
 import Err from '@openaddresses/batch-error';
-import { v4 as randomUUID } from 'uuid';
 import type { Static } from '@sinclair/typebox';
 import type {
     LinkAttributes,
@@ -68,7 +67,7 @@ export async function from_geojson(
     if (feature.id) {
         cot.event._attributes.uid = String(feature.id);
     } else {
-        cot.event._attributes.uid = randomUUID();
+        cot.event._attributes.uid = crypto.randomUUID();
     }
 
     if (!cot.event.detail) cot.event.detail = {};
@@ -490,7 +489,7 @@ export async function from_geojson(
                 cot.event.detail.link.push({
                     _attributes: {
                         type: 'b-m-p-c',
-                        uid: randomUUID(),
+                        uid: crypto.randomUUID(),
                         callsign: "",
                         point: `${coord[1]},${coord[0]}`
                     }

@@ -1,5 +1,4 @@
 import Err from '@openaddresses/batch-error';
-import { v4 as randomUUID } from 'uuid';
 import type { Static } from '@sinclair/typebox';
 import { coordEach } from "@turf/meta";
 import TypeValidator from '../type.js';
@@ -24,7 +23,7 @@ export async function normalize_geojson(
     }
 
     if (!feature.id) {
-        feature.id = randomUUID();
+        feature.id = crypto.randomUUID();
     }
 
     const props = feature.properties;

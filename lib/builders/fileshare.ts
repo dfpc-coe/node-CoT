@@ -1,5 +1,4 @@
 import Util from '../utils/util.js'
-import { v4 as randomUUID } from 'uuid';
 import CoT from '../cot.js';
 import type JSONCoT from '../types/types.js';
 import type { FileShareAttributes } from '../types/types.js';
@@ -17,7 +16,7 @@ export class FileShare extends CoT {
                     },
                     ackrequest: {
                         _attributes: {
-                            uid: randomUUID(),
+                            uid: crypto.randomUUID(),
                             tag: 'transfer',
                             ackrequested: true
                         }

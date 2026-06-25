@@ -6,7 +6,6 @@ import Err from '@openaddresses/batch-error';
 import { ZipArchive } from '@archiver/archiver';
 import StreamZip from 'node-stream-zip'
 import { Readable } from 'node:stream';
-import { v4 as randomUUID } from 'uuid';
 import CoT from './cot.js';
 import { CoTParser } from './parser.js';
 import xmljs from 'xml-js';
@@ -94,7 +93,7 @@ async function materializeDataPackageInput(
     }
 
     const ext = path.parse(name || 'package.zip').ext || '.zip';
-    const inputPath = path.resolve(os.tmpdir(), `${randomUUID()}${ext}`);
+    const inputPath = path.resolve(os.tmpdir(), `${crypto.randomUUID()}${ext}`);
 
     if (input instanceof Buffer) {
         await fsp.writeFile(inputPath, input);
@@ -150,7 +149,7 @@ export class DataPackage {
         if (opts && opts.path) {
             this.path = opts.path;
         } else {
-            this.path = os.tmpdir() + '/' + randomUUID();
+            this.path = os.tmpdir() + '/' + crypto.randomUUID();
         }
 
         this.destroyed = false;
@@ -160,7 +159,7 @@ export class DataPackage {
         this.version = '2';
         this.unknown = {};
         this.settings = {
-            uid: uid ?? randomUUID(),
+            uid: uid ?? crypto.randomUUID(),
             name: name ?? 'New Data Package'
         };
         this.contents = [];
@@ -535,7 +534,7 @@ export class DataPackage {
         if (this.destroyed) throw new Err(400, null, 'Attempt to access Data Package after it has been destroyed');
         if (!opts.ignore) opts.ignore = false;
 
-        const uid = opts.uid ?? randomUUID();
+        const uid = opts.uid ?? crypto.randomUUID();
 
         this.#addContent(`${uid}/${opts.name}`, opts.attachment || uid, opts.name, opts.ignore);
         await fsp.mkdir(`${this.path}/raw/${uid}/`, { recursive: true });
