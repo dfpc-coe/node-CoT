@@ -30,7 +30,7 @@
         "node": ">= 22"
     },
     "dependencies": {
-        "@archiver/archiver": "^0.0.9",
+        "@archiver/archiver": "^0.1.0",
         "@openaddresses/batch-error": "^2.4.0",
         "@orbat-mapper/convert-symbology": "^1.0.2",
         "@sinclair/typebox": "^0.34.0",
@@ -55,7 +55,7 @@
     },
     "devDependencies": {
         "@eslint/js": "^10.0.1",
-        "@types/node": "^25.0.0",
+        "@types/node": "^26.0.0",
         "c8": "^11.0.0",
         "eslint": "^10.0.0",
         "tsx": "^4.20.3",

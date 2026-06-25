@@ -12,6 +12,11 @@
 
 ### Pending Fixed
 
+### v14.42.1 - 2025-06-25
+
+- :arrow_up: Remove `rimraf` now that `node.fsp.rm` is available
+- :arrow_up: Update Core Deps
+
 ### v14.42.0 - 2025-06-24
 
 - :bug: Ensure empty track.slope doesn't result in a parsing error
