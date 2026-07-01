@@ -12,6 +12,11 @@
 
 ### Pending Fixed
 
+### v14.43.0 - 2025-07-01
+
+- :arrow_up: Migrate to `@tak-ps/xml-js` which is a fill TypeScript port of `xml-js`
+- :bug: Fix attribute escaping in `xml-js` to ensure callsigns with `&` are properly escaped
+
 ### v14.42.1 - 2025-06-25
 
 - :arrow_up: Remove `rimraf` now that `node.fsp.rm` is available
