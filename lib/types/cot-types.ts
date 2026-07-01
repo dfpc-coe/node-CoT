@@ -1,5 +1,5 @@
 import fsp from 'node:fs/promises';
-import xmljs from 'xml-js';
+import xmljs from '@tak-ps/xml-js';
 import type { Static } from '@sinclair/typebox';
 import TypeValidator from '../utils/type.js';
 import MilSymType, { StandardIdentity, Domain } from '../utils/2525.js';

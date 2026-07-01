@@ -1,6 +1,6 @@
 import protobuf from 'protobufjs';
 import Err from '@openaddresses/batch-error';
-import { xml2js, js2xml } from 'xml-js';
+import { xml2js, js2xml } from '@tak-ps/xml-js';
 import { diff } from 'json-diff-ts';
 import type { Static } from '@sinclair/typebox';
 import { from_geojson } from './parser/from_geojson.js';
