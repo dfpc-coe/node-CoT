@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.43.1 - 2025-07-02
+
+- :rocket: Include error logging if the XML is invalid
+
 ### v14.43.0 - 2025-07-01
 
 - :arrow_up: Migrate to `@tak-ps/xml-js` which is a fill TypeScript port of `xml-js`
