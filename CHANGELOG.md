@@ -12,6 +12,11 @@
 
 ### Pending Fixed
 
+- :tada: Add support for parsing Chat Receipt CoTs (`b-t-f-d`, `b-t-f-r`, `b-t-f-p`, `b-t-f-s`) - the ATAK style `__chatreceipt` detail is now included in the `Detail` schema and populates `properties.chat` in `to_geojson`
+- :tada: Add `DirectChatReceipt` builder for generating Chat Receipt CoTs
+- :tada: Add `CoT.is_chat_receipt()` helper
+- :white_check_mark: Add tests for ATAK (`__chatreceipt`) & WinTAK (`__chat`) style Chat Receipts
+
 ### v14.43.2 - 2025-07-03
 
 - :arrow_up: Update protobuf
