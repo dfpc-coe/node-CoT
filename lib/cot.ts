@@ -327,11 +327,14 @@ export default class CoT {
 
     /**
      * Determines if the CoT message represents a Chat Message
+     * Note: Chat Receipts are excluded even when they reuse the `__chat`
+     * detail element (WinTAK style) - see `is_chat_receipt()`
      *
      * @return {boolean}
      */
     is_chat(): boolean {
-        return !!(this.raw.event.detail && this.raw.event.detail.__chat);
+        return !!(this.raw.event.detail && this.raw.event.detail.__chat)
+            && !this.is_chat_receipt();
     }
 
     /**

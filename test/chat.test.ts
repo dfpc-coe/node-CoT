@@ -228,6 +228,7 @@ test('DirectChatReceipt - Parse WinTAK style __chat receipt', async () => {
         </event>
     `);
 
+    assert.equal(cot.is_chat(), false);
     assert.equal(cot.is_chat_receipt(), true);
 
     const feat = await CoTParser.to_geojson(cot);
@@ -268,11 +269,11 @@ test('DirectChatReceipt - Builder', async () => {
     assert.equal(cot.is_chat_receipt(), true);
 
     assert.equal(typeof cot.raw.event._attributes.time, 'string');
-    cot.raw.event._attributes.time = '2024-04-01'
+    cot.raw.event._attributes.time = '2024-04-01';
     assert.equal(typeof cot.raw.event._attributes.start, 'string');
-    cot.raw.event._attributes.start = '2024-04-01'
+    cot.raw.event._attributes.start = '2024-04-01';
     assert.equal(typeof cot.raw.event._attributes.stale, 'string');
-    cot.raw.event._attributes.stale = '2024-04-01'
+    cot.raw.event._attributes.stale = '2024-04-01';
 
     assert.deepEqual(cot.raw, {
         event: {
