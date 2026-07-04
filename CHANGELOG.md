@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.43.2 - 2025-07-03
+
+- :arrow_up: Update protobuf
+
 ### v14.43.1 - 2025-07-02
 
 - :rocket: Include error logging if the XML is invalid
