@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { DirectChat, MissionChat, CoTParser } from '../index.js';
+import { DirectChat, DirectChatReceipt, MissionChat, CoTParser } from '../index.js';
 
 test('MissionChat - GeoJSON output', async () => {
     const messageId = '6c19bcd5-c632-4c59-95e2-ae8c76c8feab';
@@ -177,4 +177,152 @@ test('DirectChat - Basic', () => {
             }
         });
     }
+});
+
+test('DirectChatReceipt - Parse ATAK style __chatreceipt', async () => {
+    const cot = CoTParser.from_xml(`
+        <event version="2.0" uid="f77dae64-3573-4dae-8447-c0c7a0219d7a.d" type="b-t-f-d" how="h-g-i-g-o" time="2026-07-02T16:19:11Z" start="2026-07-02T16:19:15Z" stale="2026-07-03T16:19:15Z">
+            <point lat="49.2695677890608" lon="-123.112677849291" hae="-11.93099513512" ce="9999999" le="9999999"/>
+            <detail>
+                <__chatreceipt parent="RootContactGroup" groupOwner="false" messageId="f77dae64-3573-4dae-8447-c0c7a0219d7a" chatroom="DFPC Ingalls" id="ANDROID-CloudTAK-admin" senderCallsign="TR-SSC">
+                    <chatgrp uid0="ANDROID-121345" uid1="ANDROID-CloudTAK-admin" id="ANDROID-CloudTAK-admin"/>
+                </__chatreceipt>
+                <link uid="ANDROID-121345" type="a-f-G-U-C-I" relation="p-p"/>
+            </detail>
+        </event>
+    `);
+
+    assert.equal(cot.is_chat(), false);
+    assert.equal(cot.is_chat_receipt(), true);
+
+    const feat = await CoTParser.to_geojson(cot);
+
+    assert.equal(feat.properties.type, 'b-t-f-d');
+    assert.deepEqual(feat.properties.chat, {
+        parent: 'RootContactGroup',
+        groupOwner: 'false',
+        messageId: 'f77dae64-3573-4dae-8447-c0c7a0219d7a',
+        chatroom: 'DFPC Ingalls',
+        id: 'ANDROID-CloudTAK-admin',
+        senderCallsign: 'TR-SSC',
+        chatgrp: {
+            _attributes: {
+                uid0: 'ANDROID-121345',
+                uid1: 'ANDROID-CloudTAK-admin',
+                id: 'ANDROID-CloudTAK-admin'
+            }
+        }
+    });
+});
+
+test('DirectChatReceipt - Parse WinTAK style __chat receipt', async () => {
+    const cot = CoTParser.from_xml(`
+        <event version="2.0" uid="f77dae64-3573-4dae-8447-c0c7a0219d7a" type="b-t-f-r" how="h-g-i-g-o" time="2026-07-02T16:19:28Z" start="2026-07-02T16:19:31Z" stale="2026-07-03T16:19:31Z" access="Undefined">
+            <point lat="49.2695677890608" lon="-123.112677849291" hae="-11.93099513512" ce="9999999" le="9999999"/>
+            <detail>
+                <__chat id="ANDROID-CloudTAK-admin" chatroom="DFPC Ingalls" senderCallsign="TR-SSC" groupOwner="false" messageId="f77dae64-3573-4dae-8447-c0c7a0219d7a">
+                    <chatgrp id="ANDROID-CloudTAK-admin" uid0="ANDROID-121345" uid1="ANDROID-CloudTAK-admin"/>
+                </__chat>
+                <link uid="ANDROID-121345" type="a-f-G-U-C-I" relation="p-p"/>
+            </detail>
+        </event>
+    `);
+
+    assert.equal(cot.is_chat(), false);
+    assert.equal(cot.is_chat_receipt(), true);
+
+    const feat = await CoTParser.to_geojson(cot);
+
+    assert.equal(feat.properties.type, 'b-t-f-r');
+    assert.equal(feat.properties.remarks, undefined);
+    assert.deepEqual(feat.properties.chat, {
+        groupOwner: 'false',
+        messageId: 'f77dae64-3573-4dae-8447-c0c7a0219d7a',
+        chatroom: 'DFPC Ingalls',
+        id: 'ANDROID-CloudTAK-admin',
+        senderCallsign: 'TR-SSC',
+        chatgrp: {
+            _attributes: {
+                id: 'ANDROID-CloudTAK-admin',
+                uid0: 'ANDROID-121345',
+                uid1: 'ANDROID-CloudTAK-admin'
+            }
+        }
+    });
+});
+
+test('DirectChatReceipt - Builder', async () => {
+    const cot = new DirectChatReceipt({
+        to: {
+            uid: '123456',
+            callsign: 'Alpha Operator'
+        },
+        from: {
+            uid: '654321',
+            callsign: 'Bravo Operator'
+        },
+        status: 'read',
+        messageId: 'c0dfa5d7-27c2-4f4a-a4d6-a4d0d4d9b3c1'
+    });
+
+    assert.equal(cot.is_chat(), false);
+    assert.equal(cot.is_chat_receipt(), true);
+
+    assert.equal(typeof cot.raw.event._attributes.time, 'string');
+    cot.raw.event._attributes.time = '2024-04-01';
+    assert.equal(typeof cot.raw.event._attributes.start, 'string');
+    cot.raw.event._attributes.start = '2024-04-01';
+    assert.equal(typeof cot.raw.event._attributes.stale, 'string');
+    cot.raw.event._attributes.stale = '2024-04-01';
+
+    assert.deepEqual(cot.raw, {
+        event: {
+            _attributes: {
+                uid: 'c0dfa5d7-27c2-4f4a-a4d6-a4d0d4d9b3c1',
+                version: '2.0',
+                type: 'b-t-f-r',
+                how: 'h-g-i-g-o',
+
+                time: '2024-04-01',
+                stale: '2024-04-01',
+                start: '2024-04-01'
+            },
+            point: {
+                _attributes: { lat: 0.000000, lon: 0.000000, hae: 0.0, ce: 9999999.0, le: 9999999.0 }
+            },
+            detail: {
+                __chatreceipt: {
+                    _attributes: {
+                        parent: 'RootContactGroup',
+                        groupOwner: 'false',
+                        messageId: 'c0dfa5d7-27c2-4f4a-a4d6-a4d0d4d9b3c1',
+                        chatroom: 'Alpha Operator',
+                        id: '123456',
+                        senderCallsign: 'Bravo Operator'
+                    },
+                    chatgrp: {
+                        _attributes: {
+                            uid0: '654321',
+                            uid1: '123456',
+                            id: '123456'
+                        }
+                    }
+                },
+                marti: {
+                    dest: [{
+                        _attributes: {
+                            uid: '123456',
+                        }
+                    }],
+                },
+                link: {
+                    _attributes: {
+                        uid: '654321',
+                        type: 'a-f-G',
+                        relation: 'p-p'
+                    }
+                }
+            }
+        }
+    });
 });

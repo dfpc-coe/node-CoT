@@ -327,11 +327,26 @@ export default class CoT {
 
     /**
      * Determines if the CoT message represents a Chat Message
+     * Note: Chat Receipts are excluded even when they reuse the `__chat`
+     * detail element (WinTAK style) - see `is_chat_receipt()`
      *
      * @return {boolean}
      */
     is_chat(): boolean {
-        return !!(this.raw.event.detail && this.raw.event.detail.__chat);
+        return !!(this.raw.event.detail && this.raw.event.detail.__chat)
+            && !this.is_chat_receipt();
+    }
+
+    /**
+     * Determines if the CoT message represents a Chat Receipt
+     * Note: ATAK sends receipts with a `__chatreceipt` detail element, while
+     * WinTAK reuses the `__chat` element - the CoT type is authoritative
+     *
+     * @return {boolean}
+     */
+    is_chat_receipt(): boolean {
+        return !!(this.raw.event.detail && this.raw.event.detail.__chatreceipt)
+            || ['b-t-f-d', 'b-t-f-r', 'b-t-f-p', 'b-t-f-s'].includes(this.raw.event._attributes.type);
     }
 
     /**

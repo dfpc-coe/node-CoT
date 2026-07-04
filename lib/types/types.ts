@@ -1211,6 +1211,7 @@ export const Detail = Type.Object({
     tog: Type.Optional(TogAttributes),
     '__group': Type.Optional(Group),
     '__chat': Type.Optional(Chat),
+    '__chatreceipt': Type.Optional(Chat),
     '__video': Type.Optional(Video),
     '__geofence': Type.Optional(Geofence),
     '__milsym': Type.Optional(Milsym),
