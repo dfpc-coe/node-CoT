@@ -277,7 +277,7 @@ test('DirectChatReceipt - Builder', async () => {
     assert.deepEqual(cot.raw, {
         event: {
             _attributes: {
-                uid: 'c0dfa5d7-27c2-4f4a-a4d6-a4d0d4d9b3c1.r',
+                uid: 'c0dfa5d7-27c2-4f4a-a4d6-a4d0d4d9b3c1',
                 version: '2.0',
                 type: 'b-t-f-r',
                 how: 'h-g-i-g-o',

@@ -143,7 +143,9 @@ export class DirectChatReceipt extends CoT {
             }
         }
 
-        cot.event._attributes.uid = `${receipt.messageId}.${type.slice(-1)}`;
+        // ATAK & WinTAK set the receipt Event UID to the original messageId and
+        // ATAK looks the original message up by the receipt's Event UID on receive
+        cot.event._attributes.uid = receipt.messageId;
 
         if (!cot.event.detail) cot.event.detail = {};
 
