@@ -185,7 +185,7 @@ export const Properties = Type.Object({
         groupOwner: Type.Optional(Type.String()),
         messageId: Type.Optional(Type.String()),
         chatroom: Type.String(),
-        id: Type.String(),
+        id: Type.Optional(Type.String()),
         senderCallsign: Type.String(),
         chatgrp: Type.Any()
     })),

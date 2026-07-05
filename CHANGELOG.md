@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.44.1 - 2025-07-05
+
+- :rocket: Make Chat.ID Optional
+
 ### v14.44.0 - 2025-07-03
 
 - :tada: Add support for parsing Chat Receipt CoTs (`b-t-f-d`, `b-t-f-r`, `b-t-f-p`, `b-t-f-s`) - the ATAK style `__chatreceipt` detail is now included in the `Detail` schema and populates `properties.chat` in `to_geojson`
