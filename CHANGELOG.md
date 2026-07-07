@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.44.2 - 2025-07-07
+
+- :arrow_up: Update Core Deps
+
 ### v14.44.1 - 2025-07-05
 
 - :rocket: Make Chat.ID Optional
