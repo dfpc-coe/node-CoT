@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.44.3 - 2025-07-07
+
+- :bug: Hanle `hae` as `NaN`
+
 ### v14.44.2 - 2025-07-07
 
 - :arrow_up: Update Core Deps

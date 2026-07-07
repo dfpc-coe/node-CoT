@@ -104,3 +104,20 @@ test('await CoTParser.from_xml - Case-insensitive boolean attributes', async () 
     const feature = await CoTParser.to_geojson(cot);
     assert.equal(feature.properties.labels, false, 'normalized boolean attributes remain booleans in GeoJSON output');
 });
+
+test('CoTParser.from_xml - point with NaN hae/ce/le', async () => {
+    const cot = CoTParser.from_xml(`<event version="2.0" uid="ANDROID-7514a125ae2c2e8f" type="b-f-t-a" how="m-g" time="2026-07-07T21:28:06Z" start="2026-07-07T21:28:06Z" stale="2026-07-07T21:28:16Z" access="Undefined"><point lat="0.0" lon="0.0" hae="NaN" ce="NaN" le="NaN"/><detail><ackresponse uid="" senderUid="ANDROID-7514a125ae2c2e8f" success="true" tag="KEPD Jensen KE600.07.152550" reason="File transferred successfully" sha256="974d18ebc748b15af39bbf0b16de3d50af6485bbd4483feb41d0cd14a6d15980" sizeInBytes="7290448"/><marti><dest callsign="KEPD Jensen KE600"/></marti></detail></event>`);
+
+    assert.deepEqual(cot.raw.event.point._attributes, {
+        lat: 0,
+        lon: 0,
+        hae: 'NaN',
+        ce: 'NaN',
+        le: 'NaN'
+    });
+
+    const feature = await CoTParser.to_geojson(cot);
+    assert.equal(feature.geometry.type, 'Point');
+    assert.deepEqual(feature.geometry.coordinates.slice(0, 2), [0, 0]);
+    assert.ok(Number.isNaN(feature.geometry.coordinates[2]), 'elevation is NaN, not a validation failure');
+});

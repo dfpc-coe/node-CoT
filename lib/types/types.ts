@@ -1281,8 +1281,8 @@ export const Point = Type.Object({
     _attributes: Type.Object({
         lat: Type.Number(),
         lon: Type.Number(),
-        hae: Type.Number(),
         // Are Occasionally seen as "NaN"
+        hae: Type.Union([Type.Number(), Type.String()]),
         ce: Type.Union([Type.Number(), Type.String()]),
         le: Type.Union([Type.Number(), Type.String()])
     })
