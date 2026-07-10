@@ -8,7 +8,7 @@ import StreamZip from 'node-stream-zip'
 import { Readable } from 'node:stream';
 import CoT from './cot.js';
 import { CoTParser } from './parser.js';
-import xmljs from 'xml-js';
+import xmljs from '@tak-ps/xml-js';
 import os from 'node:os';
 import fs from 'node:fs';
 import fsp from 'node:fs/promises';

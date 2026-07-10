@@ -1,6 +1,6 @@
 import Err from '@openaddresses/batch-error';
 import type { ValidateFunction } from 'ajv';
-import xmljs from 'xml-js';
+import xmljs, { type Element } from '@tak-ps/xml-js';
 
 /**
  * Core XML Document support used for XML fortatted DataPackages documents
@@ -23,6 +23,6 @@ export default class XMLDocument<T> {
     }
 
     to_xml(): string {
-        return xmljs.js2xml(this.raw as xmljs.Element, { compact: true });
+        return xmljs.js2xml(this.raw as Element, { compact: true });
     }
 }

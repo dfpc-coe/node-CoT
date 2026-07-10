@@ -88,6 +88,82 @@ export type DirectChatMember = {
     callsign: string;
 }
 
+export const DirectChatReceiptStatus = {
+    delivered: 'b-t-f-d',
+    read: 'b-t-f-r',
+    pending: 'b-t-f-p',
+    failed: 'b-t-f-s'
+} as const;
+
+export type DirectChatReceiptInput = {
+    to: DirectChatMember;
+    from: DirectChatMember;
+
+    status: keyof typeof DirectChatReceiptStatus;
+    messageId: string;
+
+    parent?: string;
+    chatroom?: string;
+    groupOwner?: boolean;
+}
+
+/**
+ * Delivery/Read Receipt for a DirectChat message
+ * The `to` member is the sender of the original message that the receipt
+ * refers to and `messageId` is the original message's messageId
+ */
+export class DirectChatReceipt extends CoT {
+    constructor(receipt: DirectChatReceiptInput) {
+        const type = DirectChatReceiptStatus[receipt.status];
+
+        const cot: Static<typeof JSONCoT> = {
+            event: {
+                _attributes: Util.cot_event_attr(type, 'h-g-i-g-o'),
+                point: Util.cot_point(),
+                detail: {
+                    __chatreceipt: {
+                        _attributes: {
+                            parent: receipt.parent || 'RootContactGroup',
+                            groupOwner: receipt.groupOwner ? 'true' : 'false',
+                            messageId: receipt.messageId,
+                            chatroom: receipt.chatroom || receipt.to.callsign,
+                            id: receipt.to.uid,
+                            senderCallsign: receipt.from.callsign
+                        },
+                        chatgrp: {
+                            _attributes: {
+                                uid0: receipt.from.uid,
+                                uid1: receipt.to.uid,
+                                id: receipt.to.uid
+                            }
+                        }
+                    },
+                }
+            }
+        }
+
+        // ATAK & WinTAK set the receipt Event UID to the original messageId and
+        // ATAK looks the original message up by the receipt's Event UID on receive
+        cot.event._attributes.uid = receipt.messageId;
+
+        if (!cot.event.detail) cot.event.detail = {};
+
+        cot.event.detail.link = {
+            _attributes: {
+                uid: receipt.from.uid,
+                type: 'a-f-G',
+                relation: 'p-p'
+            }
+        }
+
+        super(cot)
+
+        this.addDest({
+            uid: receipt.to.uid
+        })
+    }
+}
+
 export type DirectChatInput = {
     to: DirectChatMember;
     from: DirectChatMember;

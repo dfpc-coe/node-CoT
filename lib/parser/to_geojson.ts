@@ -255,6 +255,11 @@ export async function to_geojson(
             ...raw.event.detail.__chat._attributes,
             chatgrp: raw.event.detail.__chat.chatgrp
         }
+    } else if (raw.event.detail.__chatreceipt) {
+        feat.properties.chat = {
+            ...raw.event.detail.__chatreceipt._attributes,
+            chatgrp: raw.event.detail.__chatreceipt.chatgrp
+        }
     }
 
     if (raw.event.detail.track?._attributes) {

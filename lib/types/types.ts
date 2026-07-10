@@ -530,7 +530,7 @@ export const Chat = Type.Object({
         groupOwner: Type.Optional(Type.String()),
         messageId: Type.Optional(Type.String()),
         chatroom: Type.String(),
-        id: Type.String(),
+        id: Type.Optional(Type.String()),
         senderCallsign: Type.String()
     }),
     chatgrp: Type.Any()
@@ -1211,6 +1211,7 @@ export const Detail = Type.Object({
     tog: Type.Optional(TogAttributes),
     '__group': Type.Optional(Group),
     '__chat': Type.Optional(Chat),
+    '__chatreceipt': Type.Optional(Chat),
     '__video': Type.Optional(Video),
     '__geofence': Type.Optional(Geofence),
     '__milsym': Type.Optional(Milsym),
@@ -1280,8 +1281,8 @@ export const Point = Type.Object({
     _attributes: Type.Object({
         lat: Type.Number(),
         lon: Type.Number(),
-        hae: Type.Number(),
         // Are Occasionally seen as "NaN"
+        hae: Type.Union([Type.Number(), Type.String()]),
         ce: Type.Union([Type.Number(), Type.String()]),
         le: Type.Union([Type.Number(), Type.String()])
     })

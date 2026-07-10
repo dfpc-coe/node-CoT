@@ -12,6 +12,38 @@
 
 ### Pending Fixed
 
+### v14.44.3 - 2025-07-07
+
+- :bug: Hanle `hae` as `NaN`
+
+### v14.44.2 - 2025-07-07
+
+- :arrow_up: Update Core Deps
+
+### v14.44.1 - 2025-07-05
+
+- :rocket: Make Chat.ID Optional
+
+### v14.44.0 - 2025-07-03
+
+- :tada: Add support for parsing Chat Receipt CoTs (`b-t-f-d`, `b-t-f-r`, `b-t-f-p`, `b-t-f-s`) - the ATAK style `__chatreceipt` detail is now included in the `Detail` schema and populates `properties.chat` in `to_geojson`
+- :tada: Add `DirectChatReceipt` builder for generating Chat Receipt CoTs
+- :tada: Add `CoT.is_chat_receipt()` helper
+- :white_check_mark: Add tests for ATAK (`__chatreceipt`) & WinTAK (`__chat`) style Chat Receipts
+
+### v14.43.2 - 2025-07-03
+
+- :arrow_up: Update protobuf
+
+### v14.43.1 - 2025-07-02
+
+- :rocket: Include error logging if the XML is invalid
+
+### v14.43.0 - 2025-07-01
+
+- :arrow_up: Migrate to `@tak-ps/xml-js` which is a fill TypeScript port of `xml-js`
+- :bug: Fix attribute escaping in `xml-js` to ensure callsigns with `&` are properly escaped
+
 ### v14.42.1 - 2025-06-25
 
 - :arrow_up: Remove `rimraf` now that `node.fsp.rm` is available

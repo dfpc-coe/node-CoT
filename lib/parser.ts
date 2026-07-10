@@ -1,6 +1,6 @@
 import protobuf from 'protobufjs';
 import Err from '@openaddresses/batch-error';
-import { xml2js, js2xml } from 'xml-js';
+import { xml2js, js2xml } from '@tak-ps/xml-js';
 import { diff } from 'json-diff-ts';
 import type { Static } from '@sinclair/typebox';
 import { from_geojson } from './parser/from_geojson.js';
@@ -158,7 +158,16 @@ export class CoTParser {
         raw: Buffer | string,
         opts: CoTOptions = {}
    ): CoT {
-        const parsed = xml2js(String(raw), { compact: true }) as Static<typeof JSONCoT>;
+        const str = String(raw);
+
+        let parsed: Static<typeof JSONCoT>;
+        try {
+            parsed = xml2js(str, { compact: true }) as Static<typeof JSONCoT>;
+        } catch (err) {
+            console.error(`Failed to parse CoT XML: ${str}`);
+            throw err;
+        }
+
         normalizeBooleanAttributeValues(parsed);
 
         const cot = new CoT(

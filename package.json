@@ -1,7 +1,7 @@
 {
     "name": "@tak-ps/node-cot",
     "type": "module",
-    "version": "14.42.1",
+    "version": "14.44.3",
     "description": "Lightweight JavaScript library for parsing and manipulating TAK messages",
     "author": "Nick Ingalls <nick@ingalls.ca>",
     "types": "index.ts",
@@ -50,7 +50,7 @@
         "milsymbol": "^3.0.2",
         "node-stream-zip": "^1.15.0",
         "protobufjs": "^8.0.0",
-        "xml-js": "^1.6.11"
+        "@tak-ps/xml-js": "^2.0.0"
     },
     "devDependencies": {
         "@eslint/js": "^10.0.1",
