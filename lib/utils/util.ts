@@ -1,4 +1,3 @@
-import { v4 as randomUUID } from 'uuid';
 import type { Static } from '@sinclair/typebox';
 import type {
     EventAttributes,
@@ -73,7 +72,7 @@ export default class Util {
      * Generate a random UUID
      */
     static cot_uuid(): string {
-        return randomUUID()
+        return crypto.randomUUID()
     }
 
     /**

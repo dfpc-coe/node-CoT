@@ -2,7 +2,6 @@ import Util from '../utils/util.js'
 import CoT from '../cot.js';
 import type JSONCoT from '../types/types.js';
 import type { Static } from '@sinclair/typebox';
-import { v4 as randomUUID } from 'uuid';
 
 export type MissionChatMember = {
     uid: string;
@@ -27,7 +26,7 @@ export type MissionChatInput = {
 
 export class MissionChat extends CoT {
     constructor(chat: MissionChatInput) {
-        const messageId = chat.messageId || randomUUID();
+        const messageId = chat.messageId || crypto.randomUUID();
 
         const cot: Static<typeof JSONCoT> = {
             event: {
@@ -189,7 +188,7 @@ export class DirectChat extends CoT {
                         _attributes: {
                             parent: chat.parent || 'RootContactGroup',
                             groupOwner: chat.groupOwner ? 'true' : 'false',
-                            messageId: chat.messageId || randomUUID(),
+                            messageId: chat.messageId || crypto.randomUUID(),
                             chatroom: chat.chatroom || chat.to.callsign,
                             id: chat.to.uid,
                             senderCallsign: chat.from.callsign
@@ -206,7 +205,7 @@ export class DirectChat extends CoT {
             }
         }
 
-        cot.event._attributes.uid = `GeoChat.${chat.from.uid}.${chat.to.uid}.${randomUUID()}`;
+        cot.event._attributes.uid = `GeoChat.${chat.from.uid}.${chat.to.uid}.${crypto.randomUUID()}`;
 
         if (!cot.event.detail) cot.event.detail = {};
 
