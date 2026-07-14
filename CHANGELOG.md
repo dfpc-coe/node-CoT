@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.45.0 - 2025-07-14
+
+- :arrow_up: Remove the need for `uuid` by using `crypto.randomUUID()` which is available in Node 18+
+
 ### v14.44.3 - 2025-07-07
 
 - :bug: Hanle `hae` as `NaN`
