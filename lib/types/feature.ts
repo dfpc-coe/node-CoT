@@ -160,6 +160,9 @@ export const Properties = Type.Object({
     archived: Type.Optional(Type.Boolean({
         description: 'Presence of the detail.archive tag - instructs the TAK client to locally archive this feature'
     })),
+    forcedelete: Type.Optional(Type.Boolean({
+        description: 'Presence of the detail.__forcedelete tag - on a t-x-d-d tasking, instructs the TAK client to remove the linked CoT immediately rather than marking it stale'
+    })),
     geofence: Type.Optional(GeofenceAttributes),
     contact: Type.Optional(ContactAttributes),
     shape: Type.Optional(Type.Object({

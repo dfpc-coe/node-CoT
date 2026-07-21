@@ -80,6 +80,10 @@ export async function from_geojson(
         cot.event.detail.archive = { _attributes: { } };
     }
 
+    if (feature.properties.forcedelete) {
+        cot.event.detail.__forcedelete = {};
+    }
+
     if (feature.properties.links) {
         if (!cot.event.detail.link) {
             cot.event.detail.link = [];

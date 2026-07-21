@@ -250,6 +250,10 @@ export async function to_geojson(
         feat.properties.archived = true;
     }
 
+    if (raw.event.detail.__forcedelete) {
+        feat.properties.forcedelete = true;
+    }
+
     if (raw.event.detail.__chat) {
         feat.properties.chat = {
             ...raw.event.detail.__chat._attributes,

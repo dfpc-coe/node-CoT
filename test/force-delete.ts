@@ -1,6 +1,6 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
-import { ForceDelete } from '../index.js';
+import { CoTParser, ForceDelete } from '../index.js';
 
 test('ForceDelete - Basic', () => {
     const cot = new ForceDelete('delete-uid');
@@ -42,5 +42,27 @@ test('ForceDelete - Basic', () => {
                 }
             }
         });
+    }
+});
+
+test('ForceDelete - GeoJSON Round Trip', async () => {
+    const cot = new ForceDelete('delete-uid');
+
+    const feat = await CoTParser.to_geojson(cot);
+
+    assert.equal(feat.properties.type, 't-x-d-d');
+    assert.equal(feat.properties.forcedelete, true);
+    assert.deepEqual(feat.properties.links, [{
+        uid: 'delete-uid',
+        type: 'none',
+        relation: 'none'
+    }]);
+
+    const back = await CoTParser.from_geojson(feat);
+
+    if (!back.raw.event.detail) {
+        assert.fail('No Detail Section')
+    } else {
+        assert.deepEqual(back.raw.event.detail.__forcedelete, {});
     }
 });

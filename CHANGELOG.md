@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.46.0 - 2025-07-21
+
+- :rocket: Differentiate between force delete and force stale
+
 ### v14.45.1 - 2025-07-17
 
 - :bug: Make uid attributes optional
