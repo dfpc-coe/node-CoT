@@ -305,3 +305,72 @@ test('CoTParser.from_geojson - Remarks', async () => {
         }, 'track');
     }
 });
+
+test('CoTParser.from_geojson - 2525D/E SIDC as type', async () => {
+    const geo = await CoTParser.from_geojson({
+        type: 'Feature',
+        properties: {
+            type: '13061500000000000000'
+        },
+        geometry: {
+            type: 'Point',
+            coordinates: [1.1, 2.2]
+        }
+    });
+
+    assert.equal(geo.raw.event._attributes.type, 'a-h-G');
+
+    if (!geo.raw.event.detail) {
+        assert.fail('No Detail Section');
+    } else {
+        assert.deepEqual(geo.raw.event.detail.__milicon, {
+            _attributes: { id: '13061500000000000000' }
+        });
+    }
+
+    const feat = await CoTParser.to_geojson(geo);
+    assert.equal(feat.properties.type, 'a-h-G');
+    assert.deepEqual(feat.properties.milicon, { id: '13061500000000000000' });
+});
+
+test('CoTParser.from_geojson - SIDC type does not clobber explicit milicon', async () => {
+    const geo = await CoTParser.from_geojson({
+        type: 'Feature',
+        properties: {
+            type: '10031000001211000000',
+            milicon: {
+                id: '10031000001211000001'
+            }
+        },
+        geometry: {
+            type: 'Point',
+            coordinates: [1.1, 2.2]
+        }
+    });
+
+    assert.equal(geo.raw.event._attributes.type, 'a-f-G');
+
+    if (!geo.raw.event.detail) {
+        assert.fail('No Detail Section');
+    } else {
+        assert.deepEqual(geo.raw.event.detail.__milicon, {
+            _attributes: { id: '10031000001211000001' }
+        });
+    }
+});
+
+test('CoTParser.from_geojson - Traditional CoT type is unchanged', async () => {
+    const geo = await CoTParser.from_geojson({
+        type: 'Feature',
+        properties: {
+            type: 'a-h-A-M-F'
+        },
+        geometry: {
+            type: 'Point',
+            coordinates: [1.1, 2.2]
+        }
+    });
+
+    assert.equal(geo.raw.event._attributes.type, 'a-h-A-M-F');
+    assert.equal(geo.raw.event.detail!.__milicon, undefined);
+});

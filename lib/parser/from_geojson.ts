@@ -14,6 +14,7 @@ import {
 } from '../types/feature.js';
 import type { AllGeoJSON } from "@turf/helpers";
 import TypeValidator from '../type.js';
+import Type2525 from '../utils/2525.js';
 import PointOnFeature from '@turf/point-on-feature';
 import Util from '../utils/util.js';
 import Color from '../utils/color.js';
@@ -42,12 +43,15 @@ export async function from_geojson(
         throw new Err(400, null, `Validation Error: ${err}`);
     }
 
-    if (!isNaN(Number(feature.properties.type)) && feature.properties.type?.startsWith('13')) {
-        feature.properties.milicon = {
-            id: feature.properties.type
-        };
+    // The type property can either be a traditional CoT Type or a numeric 2525D/2525E SIDC
+    if (feature.properties.type && Type2525.isNumericSIDCConvertable(feature.properties.type)) {
+        if (!feature.properties.milicon) {
+            feature.properties.milicon = {
+                id: feature.properties.type
+            };
+        }
 
-        // Perform Very Basic MilIcon to CoT Type Mapping
+        feature.properties.type = Type2525.fromNumericSIDC(feature.properties.type);
     }
 
     const cot: Static<typeof JSONCoT> = {
