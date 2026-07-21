@@ -59,6 +59,43 @@ export const DIM_MAP: Record<string, string> = {
     X: '10'  // Unknown
 }
 
+export const SID_REVERSE_MAP: Record<string, string> = {
+    '00': 'p', // pending
+    '01': 'u', // unknown
+    '02': 'a', // assumed friend
+    '03': 'f', // friend
+    '04': 'n', // neutral
+    '05': 's', // suspect
+    '06': 'h', // hostile
+    '10': 'p', // exercise pending
+    '11': 'u', // exercise unknown
+    '12': 'a', // exercise assumed friend
+    '13': 'f', // exercise friend
+    '14': 'n', // exercise neutral
+    '15': 'j', // joker
+    '16': 'k', // faker
+};
+
+export const SYMBOL_SET_DIM_MAP: Record<string, string> = {
+    '01': 'A', // Air
+    '02': 'A', // Air Missile
+    '05': 'P', // Space
+    '06': 'P', // Space Missile
+    '10': 'G', // Land Unit
+    '11': 'G', // Land Civilian Unit/Organization
+    '15': 'G', // Land Equipment
+    '20': 'G', // Land Installation
+    '27': 'G', // Dismounted Individual
+    '30': 'S', // Sea Surface
+    '35': 'U', // Sea Subsurface
+    '36': 'U', // Mine Warfare
+    '50': 'P', // Signals Intelligence - Space
+    '51': 'A', // Signals Intelligence - Air
+    '52': 'G', // Signals Intelligence - Land
+    '53': 'S', // Signals Intelligence - Surface
+    '54': 'U', // Signals Intelligence - Subsurface
+};
+
 /**
  * @class
  *
@@ -151,6 +188,32 @@ export default class Type2525 {
                 : "------";
 
         return `S${m2525bAffiliation}${m2525bBattleDim}P${m2525bFuncId}-----`;
+    }
+
+    /**
+     * Check a given numeric SIDC (2525D/2525E) to see if it is compatible with conversion to CoT Type
+     *
+     * @param sidc - Numeric SIDC to test
+     */
+    static isNumericSIDCConvertable(sidc: string): boolean {
+        return !!sidc.match(/^1[0-3]\d{18}$/);
+    }
+
+    /**
+     * Given a numeric SIDC (2525D/2525E), return a basic CoT Atom Type
+     * in the form a-<affiliation>-<battle dimension>
+     *
+     * @param sidc - Numeric SIDC to convert
+     */
+    static fromNumericSIDC(sidc: string): string {
+        if (!this.isNumericSIDCConvertable(sidc)) {
+            throw new Error("Numeric SIDC to CoT can only be applied to well-formed 2525D/2525E SIDCs.");
+        }
+
+        const affiliation = SID_REVERSE_MAP[sidc.substring(2, 4)] || 'u';
+        const dimension = SYMBOL_SET_DIM_MAP[sidc.substring(4, 6)] || 'G';
+
+        return `a-${affiliation}-${dimension}`;
     }
 
     /**
