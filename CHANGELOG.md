@@ -12,6 +12,8 @@
 
 ### Pending Fixed
 
+### v14.47.0 - 2025-07-21
+
 - :tada: Allow a numeric 2525D/2525E SIDC to be provided on the GeoJSON `type` property - it is mapped to a basic CoT Atom type (`a-<affiliation>-<battle dimension>`) and the SIDC is placed in the `milicon` property
 
 ### v14.46.0 - 2025-07-21
