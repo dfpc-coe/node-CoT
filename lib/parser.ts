@@ -6,6 +6,8 @@ import type { Static } from '@sinclair/typebox';
 import { from_geojson } from './parser/from_geojson.js';
 import { normalize_geojson } from './parser/normalize_geojson.js';
 import { to_geojson } from './parser/to_geojson.js';
+import type { ToGeoJSONOptions } from './parser/to_geojson.js';
+export type { ToGeoJSONOptions } from './parser/to_geojson.js';
 import type {
     Feature,
 } from './types/feature.js';
@@ -238,8 +240,8 @@ export class CoTParser {
     /**
      * Return a GeoJSON Feature from an XML CoT message
      */
-    static async to_geojson(cot: CoT): Promise<Static<typeof Feature>> {
-        return await to_geojson(cot);
+    static async to_geojson(cot: CoT, opts: ToGeoJSONOptions = {}): Promise<Static<typeof Feature>> {
+        return await to_geojson(cot, opts);
     }
 
     /**

@@ -26,6 +26,7 @@ import Ellipse from '@turf/ellipse';
 import Truncate from '@turf/truncate';
 import { destination } from '@turf/destination';
 import Color from '../utils/color.js';
+import Type2525 from '../utils/2525.js';
 import JSONCoT from '../types/types.js'
 import CoT from '../cot.js';
 
@@ -33,11 +34,20 @@ import CoT from '../cot.js';
 const COORDINATE_PRECISION = 6;
 const ELLIPSE_TYPE_PREFIXES = ['u-d-c-c', 'u-r-b-c-c', 'u-d-c-e'];
 
+export interface ToGeoJSONOptions {
+    /**
+     * If a numeric 2525D/E SIDC is present in the milicon detail, surface it
+     * as the GeoJSON type property in place of a generic CoT Atom type
+     */
+    normalize2525?: boolean;
+}
+
 /**
  * Return a GeoJSON Feature from an XML CoT message
  */
 export async function to_geojson(
-    cot: CoT
+    cot: CoT,
+    opts: ToGeoJSONOptions = {}
 ): Promise<Static<typeof Feature>> {
     const raw: Static<typeof JSONCoT> = JSON.parse(JSON.stringify(cot.raw));
     if (!raw.event.detail) raw.event.detail = {};
@@ -92,6 +102,17 @@ export async function to_geojson(
     if (raw.event.detail.__milicon) {
         feat.properties.milicon = {
             id: raw.event.detail.__milicon._attributes.id
+        }
+
+        // The milsym augment stores a numeric SIDC in the milicon detail - surface
+        // it as the GeoJSON type as both consumers & from_geojson treat a
+        // 2525D/E SIDC on the type property as first-class
+        if (
+            opts.normalize2525
+            && feat.properties.type.startsWith('a-')
+            && Type2525.isNumericSIDCConvertable(feat.properties.milicon.id)
+        ) {
+            feat.properties.type = feat.properties.milicon.id;
         }
     }
 
