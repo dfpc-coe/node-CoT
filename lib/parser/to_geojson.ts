@@ -536,13 +536,25 @@ export async function to_geojson(
             ellipse.swapAxis = Boolean(raw.event.detail.shape.ellipse._attributes.swapAxis);
         }
 
-        if (
-            !Array.isArray(raw.event.detail.shape.link)
-            && raw.event.detail.shape.link?._attributes.type === 'b-x-KmlStyle'
-            && raw.event.detail.shape.link?.Style
-        ) {
-            if (raw.event.detail.shape.link.Style.LineStyle?.color) {
-                let rawColor = raw.event.detail.shape.link.Style.LineStyle.color._text;
+        // ATAK puts circle fill in detail.fillColor; KML PolyStyle (below) may override.
+        if (raw.event.detail.fillColor?._attributes?.value !== undefined) {
+            const fill = new Color(Number(raw.event.detail.fillColor._attributes.value));
+            feat.properties['fill-opacity'] = fill.as_opacity() / 255;
+            feat.properties['fill'] = fill.as_hex();
+        }
+
+        const styleLinks = raw.event.detail.shape.link
+            ? (Array.isArray(raw.event.detail.shape.link)
+                ? raw.event.detail.shape.link
+                : [raw.event.detail.shape.link])
+            : [];
+        const styleLink = styleLinks.find((link) => (
+            link?._attributes?.type === 'b-x-KmlStyle' && link.Style
+        ));
+
+        if (styleLink?.Style) {
+            if (styleLink.Style.LineStyle?.color) {
+                let rawColor = styleLink.Style.LineStyle.color._text;
                 if (rawColor.startsWith('#')) rawColor = rawColor.substring(1);
 
                 const a = parseInt(rawColor.substring(0, 2), 16);
@@ -556,12 +568,12 @@ export async function to_geojson(
                 feat.properties['stroke-opacity'] = strokeColor.as_opacity() / 255;
             }
 
-            if (raw.event.detail.shape.link.Style.LineStyle?.width) {
-                feat.properties['stroke-width'] = Number(raw.event.detail.shape.link.Style.LineStyle.width._text);
+            if (styleLink.Style.LineStyle?.width) {
+                feat.properties['stroke-width'] = Number(styleLink.Style.LineStyle.width._text);
             }
 
-            if (raw.event.detail.shape.link.Style.PolyStyle?.color) {
-                let rawColor = raw.event.detail.shape.link.Style.PolyStyle.color._text;
+            if (styleLink.Style.PolyStyle?.color) {
+                let rawColor = styleLink.Style.PolyStyle.color._text;
                 if (rawColor.startsWith('#')) rawColor = rawColor.substring(1);
 
                 const a = parseInt(rawColor.substring(0, 2), 16);

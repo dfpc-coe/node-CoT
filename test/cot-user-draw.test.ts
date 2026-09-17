@@ -351,6 +351,43 @@ test('Parse u-d-c-c (Circle - Filled)', async () => {
     });
 });
 
+test('Parse u-d-c-c (Circle - fillColor without PolyStyle)', async () => {
+    // ATAK always emits detail.fillColor; some producers omit the KML Style link.
+    // fillColor must still map to fill / fill-opacity (ARGB alpha → 0-1).
+    const cot = CoTParser.from_xml(`
+        <event
+          version='2.0'
+          uid='circle-fillcolor-only'
+          type='u-d-c-c'
+          time='2026-09-17T00:00:00.000Z'
+          start='2026-09-17T00:00:00.000Z'
+          stale='2026-09-17T01:00:00.000Z'
+          how='h-g-i-g-o'
+        >
+          <point lat='39.1' lon='-104.8' hae='0.0' ce='9999999.0' le='9999999.0'/>
+          <detail>
+            <contact callsign='FillOnly'/>
+            <shape>
+              <ellipse major='100' minor='100' angle='360'/>
+            </shape>
+            <strokeColor value='-35072'/>
+            <strokeWeight value='3.0'/>
+            <strokeStyle value='solid'/>
+            <fillColor value='-2130771968'/>
+          </detail>
+        </event>
+    `);
+
+    const feat = await CoTParser.to_geojson(cot);
+
+    assert.equal(feat.properties.type, 'u-d-c-c');
+    assert.equal(feat.geometry.type, 'Polygon');
+    assert.equal(feat.properties.stroke, '#FF7700');
+    assert.equal(feat.properties['stroke-opacity'], 1);
+    assert.equal(feat.properties.fill, '#FF0000');
+    assert.equal(feat.properties['fill-opacity'], 0x80 / 255);
+});
+
 test('Parse u-d-f (Polygon - Transparent Fill - Shape 338)', async () => {
     const cot = CoTParser.from_xml(`
 <?xml version='1.0' encoding='UTF-8' standalone='yes'?><event version='2.0' uid='8B1868AD-6175-43CE-A240-B924431A6884' type='u-d-f' time='2026-06-12T16:53:44.458Z' start='2026-06-12T16:53:44.458Z' stale='2026-06-13T16:53:44.458Z' how='h-e' access='Undefined'><point lat='38.3689249' lon='-104.6749594' hae='1498.801' ce='9999999.0' le='9999999.0' /><detail><link point='38.370053,-104.6769122'/><link point='38.3700864,-104.6730388'/><link point='38.3677968,-104.6730067'/><link point='38.3677634,-104.6768801'/><link point='38.370053,-104.6769122'/><__shapeExtras cpvis='true' editable='true'/><strokeColor value='-48571'/><strokeWeight value='3.0'/><strokeStyle value='solid'/><fillColor value='0'/><remarks></remarks><color value='-48571'/><archive/><labels_on value='false'/><contact callsign='Shape 338'/></detail></event>

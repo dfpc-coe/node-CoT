@@ -12,6 +12,9 @@
 
 ### Pending Fixed
 
+- :bug: Apply `detail.fillColor` for ellipse types (`u-d-c-c`, etc.) — ATAK circles that omit KML `PolyStyle` previously lost fill colour and opacity
+- :bug: Resolve KML style from `shape.link` when it is an array (multiple links under `<shape>`)
+
 ### v14.52.1 - 2026-08-28
 
 - :rocket: `pathName` => `fileURLToPathname` for better windows support
