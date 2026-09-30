@@ -70,6 +70,12 @@ export const FeaturePropertyMissionChange = Type.Object({
         tool: Type.Optional(Type.String()),
         uid: Type.String(),
     })),
+    missionProperty: Type.Optional(Type.Object({
+        key: Type.String(),
+        value: Type.String()
+    }, {
+        description: 'Mission Key/Value Property that was set (ADD_CONTENT) or removed (REMOVE_CONTENT) - TAK Server 5.9+'
+    })),
     details: Type.Optional(Type.Object({
         type: Type.String(),
         callsign: Type.String(),
