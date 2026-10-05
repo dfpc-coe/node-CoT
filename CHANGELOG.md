@@ -12,6 +12,8 @@
 
 ### Pending Fixed
 
+### v14.53.0 - 2026-10-05
+
 - :tada: Parse TAK Server 5.9+ Mission Property changes (`t-x-m-c-p`) - `MissionChange.content.MissionProperty` is now retained and exposed as `missionChanges[].missionProperty` (`{ key, value }`)
 
 ### v14.52.2 - 2026-09-17
