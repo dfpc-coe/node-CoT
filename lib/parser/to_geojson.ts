@@ -380,6 +380,14 @@ export async function to_geojson(
                     };
                 }
 
+                if (change.MissionChange.content?.MissionProperty) {
+                    const mp = change.MissionChange.content.MissionProperty;
+                    mc.missionProperty = {
+                        key: mp.key._text,
+                        value: mp.value?._text ?? '',
+                    };
+                }
+
                 if (change.MissionChange.details) {
                     mc.details = {
                         ...change.MissionChange.details._attributes,

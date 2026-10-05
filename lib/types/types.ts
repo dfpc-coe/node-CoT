@@ -347,6 +347,15 @@ export const MissionChangeContentResource = Type.Object({
     uid: GenericText
 });
 
+export const MissionChangeMissionProperty = Type.Object({
+    key: GenericText,
+    value: GenericOptionalText
+});
+
+export const MissionChangeContent = Type.Object({
+    MissionProperty: Type.Optional(MissionChangeMissionProperty)
+});
+
 export const MissionChange = Type.Object({
     contentUid: Type.Optional(GenericText),
     creatorUid: GenericOptionalText,
@@ -356,6 +365,7 @@ export const MissionChange = Type.Object({
     timestamp: GenericText,
     type: GenericText,
     contentResource: Type.Optional(MissionChangeContentResource),
+    content: Type.Optional(MissionChangeContent),
     details: Type.Optional(MissionChangeDetails)
 })
 

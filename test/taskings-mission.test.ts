@@ -269,3 +269,48 @@ test('Decode MissionChange ContentResource', async () => {
         }, await CoTParser.to_geojson(cot));
     }
 });
+
+test('Decode MissionChange CoTs - Mission Property Set (TAK Server 5.9+)', async () => {
+    const cot = CoTParser.from_xml('<?xml version="1.0" encoding="UTF-8"?><event how="h-g-i-g-o" type="t-x-m-c-p" version="2.0" uid="0954e5d0-01b3-4dd5-998c-42e700b5cf66" start="2026-09-28T04:28:57.129Z" time="2026-09-28T04:28:57.129Z" stale="2026-09-28T04:29:17.129Z"><point ce="9999999" le="9999999" hae="0" lat="0" lon="0"/><detail><mission type="CHANGE" tool="public" name="kv-test" guid="9ba05e1d-970f-49e1-a153-7216fecf5279" authorUid="test-plugin"><MissionChanges><MissionChange><creatorUid>test-plugin</creatorUid><isFederatedChange>false</isFederatedChange><missionGuid>9ba05e1d-970f-49e1-a153-7216fecf5279</missionGuid><missionName>kv-test</missionName><timestamp>2026-09-28T04:28:57.127Z</timestamp><type>ADD_CONTENT</type><content><MissionProperty><key>test.live</key><value>3</value></MissionProperty></content></MissionChange></MissionChanges></mission></detail></event>');
+
+    const feat = await CoTParser.to_geojson(cot);
+
+    assert.equal(feat.properties.type, 't-x-m-c-p');
+    assert.deepEqual(feat.properties.mission, {
+        type: 'CHANGE',
+        tool: 'public',
+        name: 'kv-test',
+        guid: '9ba05e1d-970f-49e1-a153-7216fecf5279',
+        authorUid: 'test-plugin',
+        missionChanges: [{
+            contentUid: undefined,
+            creatorUid: 'test-plugin',
+            isFederatedChange: false,
+            missionName: 'kv-test',
+            timestamp: '2026-09-28T04:28:57.127Z',
+            type: 'ADD_CONTENT',
+            missionProperty: {
+                key: 'test.live',
+                value: '3'
+            }
+        }]
+    });
+});
+
+test('Decode MissionChange CoTs - Mission Property Removed (TAK Server 5.9+)', async () => {
+    const cot = CoTParser.from_xml('<?xml version="1.0" encoding="UTF-8"?><event how="h-g-i-g-o" type="t-x-m-c-p" version="2.0" uid="d347662c-7c67-4333-9398-1f9546ecce35" start="2026-09-28T04:28:57.164Z" time="2026-09-28T04:28:57.164Z" stale="2026-09-28T04:29:17.164Z"><point ce="9999999" le="9999999" hae="0" lat="0" lon="0"/><detail><mission type="CHANGE" tool="public" name="kv-test" guid="9ba05e1d-970f-49e1-a153-7216fecf5279" authorUid="test-plugin"><MissionChanges><MissionChange><creatorUid>test-plugin</creatorUid><isFederatedChange>false</isFederatedChange><missionGuid>9ba05e1d-970f-49e1-a153-7216fecf5279</missionGuid><missionName>kv-test</missionName><timestamp>2026-09-28T04:28:57.163Z</timestamp><type>REMOVE_CONTENT</type><content><MissionProperty><key>test.live</key><value>3</value></MissionProperty></content></MissionChange></MissionChanges></mission></detail></event>');
+
+    const feat = await CoTParser.to_geojson(cot);
+    const change = feat.properties.mission?.missionChanges?.[0];
+
+    assert.equal(change?.type, 'REMOVE_CONTENT');
+    assert.deepEqual(change?.missionProperty, { key: 'test.live', value: '3' });
+});
+
+test('Decode MissionChange CoTs - Mission Property with an empty value', async () => {
+    const cot = CoTParser.from_xml('<?xml version="1.0" encoding="UTF-8"?><event how="h-g-i-g-o" type="t-x-m-c-p" version="2.0" uid="a1b2c3d4-0000-0000-0000-000000000000" start="2026-09-28T04:28:57.129Z" time="2026-09-28T04:28:57.129Z" stale="2026-09-28T04:29:17.129Z"><point ce="9999999" le="9999999" hae="0" lat="0" lon="0"/><detail><mission type="CHANGE" tool="public" name="kv-test" guid="9ba05e1d-970f-49e1-a153-7216fecf5279" authorUid="test-plugin"><MissionChanges><MissionChange><creatorUid>test-plugin</creatorUid><isFederatedChange>false</isFederatedChange><missionName>kv-test</missionName><timestamp>2026-09-28T04:28:57.127Z</timestamp><type>ADD_CONTENT</type><content><MissionProperty><key>test.empty</key><value></value></MissionProperty></content></MissionChange></MissionChanges></mission></detail></event>');
+
+    const feat = await CoTParser.to_geojson(cot);
+
+    assert.deepEqual(feat.properties.mission?.missionChanges?.[0].missionProperty, { key: 'test.empty', value: '' });
+});

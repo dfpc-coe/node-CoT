@@ -12,6 +12,8 @@
 
 ### Pending Fixed
 
+- :tada: Parse TAK Server 5.9+ Mission Property changes (`t-x-m-c-p`) - `MissionChange.content.MissionProperty` is now retained and exposed as `missionChanges[].missionProperty` (`{ key, value }`)
+
 ### v14.52.2 - 2026-09-17
 
 - :bug: Apply `detail.fillColor` for ellipse types (`u-d-c-c`, etc.) — ATAK circles that omit KML `PolyStyle` previously lost fill colour and opacity
