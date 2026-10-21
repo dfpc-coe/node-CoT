@@ -316,6 +316,13 @@ export async function from_geojson(
         cot.event.detail.attachment_list = { _attributes: { hashes: JSON.stringify(feature.properties.attachments) } };
     }
 
+    if (feature.properties.image) {
+        cot.event.detail.image = {
+            _attributes: feature.properties.image.mime ? { mime: feature.properties.image.mime } : {},
+            _text: feature.properties.image.data
+        };
+    }
+
     if (feature.properties.contact) {
         cot.event.detail.contact = {
             _attributes: {

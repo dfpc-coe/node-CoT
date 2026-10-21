@@ -246,6 +246,13 @@ export async function to_geojson(
         feat.properties.attachments = JSON.parse(raw.event.detail.attachment_list._attributes.hashes);
     }
 
+    if (raw.event.detail.image) {
+        feat.properties.image = {
+            ...(raw.event.detail.image._attributes || {}),
+            data: raw.event.detail.image._text
+        };
+    }
+
     if (raw.event.detail.link) {
         if (!Array.isArray(raw.event.detail.link)) raw.event.detail.link = [raw.event.detail.link];
 

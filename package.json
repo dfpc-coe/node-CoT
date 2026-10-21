@@ -32,8 +32,9 @@
     "dependencies": {
         "@archiver/archiver": "^0.3.0",
         "@openaddresses/batch-error": "^2.4.0",
-        "@orbat-mapper/convert-symbology": "^1.0.2",
+        "@orbat-mapper/convert-symbology": "^2.0.0",
         "@sinclair/typebox": "^0.34.0",
+        "@tak-ps/xml-js": "^2.0.0",
         "@turf/destination": "^7.2.0",
         "@turf/ellipse": "^7.0.0",
         "@turf/helpers": "^7.0.0",
@@ -49,8 +50,7 @@
         "milstandard-e": "^0.2.14",
         "milsymbol": "^3.0.2",
         "node-stream-zip": "^1.15.0",
-        "protobufjs": "^8.0.0",
-        "@tak-ps/xml-js": "^2.0.0"
+        "protobufjs": "^8.0.0"
     },
     "devDependencies": {
         "@eslint/js": "^10.0.1",

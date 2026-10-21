@@ -57,6 +57,11 @@ export const LinkAttributes = Type.Object({
     // the url of the Event - Should always be a GUID
     event: Type.Optional(Type.String()),
 
+    // Custom CloudTAK Attribute marking the CoT as the projection of a
+    // CloudTAK Core Device - present on a `p` (parent) relation Link alongside
+    // the url of the Device - Should always be a GUID
+    device: Type.Optional(Type.String()),
+
     // URL Style Links
     url: Type.Optional(Type.String()),
     mime: Type.Optional(Type.String()),
@@ -100,6 +105,16 @@ export const Emergency = Type.Object({
 export const Link = Type.Object({
     _attributes: LinkAttributes
 })
+
+// Inline base64 image - ATAK writes it to the attachments folder for the event UID
+export const ImageAttributes = Type.Object({
+    mime: Type.Optional(Type.String())
+});
+
+export const Image = Type.Object({
+    _attributes: Type.Optional(ImageAttributes),
+    _text: Type.String()
+});
 
 // Ref: https://git.tak.gov/standards/takcot/-/blob/master/xsd/Route.xsd
 export const LinkAttrRouteFil = Type.Enum({
@@ -1267,6 +1282,7 @@ export const Detail = Type.Object({
     takv: Type.Optional(TakVersion),
     marti: Type.Optional(Marti),
     attachment_list: Type.Optional(Attachment),
+    image: Type.Optional(Image),
 
     // Range & Bearing
     range: Type.Optional(Range),

@@ -318,7 +318,8 @@ test('CoTParser.from_geojson - 2525D/E SIDC as type', async () => {
         }
     });
 
-    assert.equal(geo.raw.event._attributes.type, 'a-h-G');
+    // Symbol Set 15 (Land Equipment) with no Function ID maps to Ground Equipment
+    assert.equal(geo.raw.event._attributes.type, 'a-h-G-E');
 
     if (!geo.raw.event.detail) {
         assert.fail('No Detail Section');
@@ -334,7 +335,7 @@ test('CoTParser.from_geojson - 2525D/E SIDC as type', async () => {
     }
 
     const feat = await CoTParser.to_geojson(geo);
-    assert.equal(feat.properties.type, 'a-h-G');
+    assert.equal(feat.properties.type, 'a-h-G-E');
     assert.deepEqual(feat.properties.milicon, { id: '13061500000000000000' });
     assert.deepEqual(feat.properties.milsym, { id: '13061500000000000000' });
 });

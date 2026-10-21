@@ -12,6 +12,16 @@
 
 ### Pending Fixed
 
+### v14.55.0 - 2026-10-20
+
+- :tada: Add `device` Link attribute marking a CoT as the projection of a CloudTAK Core Device
+- :arrow_up: Update `@orbat-mapper/convert-symbology` to 2.0.0 (ESM only; frame-only numeric SIDCs now convert to a 2525B symbol)
+
+### v14.54.0 - 2026-10-19
+
+- :tada: Add `image` detail type for inline base64 images
+- :rocket: Round trip `image` detail through GeoJSON `properties.image`
+
 ### v14.53.1 - 2026-10-05
 
 - :arrow_up: Update Core Deps

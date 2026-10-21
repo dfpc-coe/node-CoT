@@ -181,6 +181,10 @@ export const Properties = Type.Object({
     fileshare: Type.Optional(FileShareAttributes),
     ackrequest: Type.Optional(ACKRequestAttributes),
     attachments: Type.Optional(Type.Array(Type.String())),
+    image: Type.Optional(Type.Object({
+        mime: Type.Optional(Type.String()),
+        data: Type.String({ description: 'Base64 encoded image bytes' })
+    })),
     sensor: Type.Optional(SensorAttributes),
     video: Type.Optional(Type.Composite([
         VideoAttributes,
