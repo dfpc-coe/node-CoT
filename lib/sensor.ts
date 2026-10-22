@@ -15,16 +15,26 @@ export default class Sensor {
         this.sensor = sensor;
     }
 
+    /**
+     * Ground footprint of the sensor cone, centred on the azimuth.
+     * `range` is a slant range so it is projected to the ground via the elevation
+     */
     to_geojson(): Static<typeof Polygon> | null {
         if (!this.sensor.range) return null;
-        if (!this.sensor.azimuth) return null;
+        if (typeof this.sensor.azimuth !== 'number') return null;
         if (!this.sensor.fov) return null;
+
+        const elevation = this.sensor.elevation || 0;
+        const ground = this.sensor.range * Math.cos(elevation * Math.PI / 180);
+        if (ground < 1) return null;
+
+        const half = this.sensor.fov / 2;
 
         return sector(
             this.center,
-            this.sensor.range / 1000,
-            this.sensor.azimuth,
-            this.sensor.azimuth + this.sensor.fov,
+            ground / 1000,
+            this.sensor.azimuth - half,
+            this.sensor.azimuth + half,
         ).geometry;
     }
 }

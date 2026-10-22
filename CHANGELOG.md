@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.56.0 - 2026-10-22
+
+- :bug: More closely mirror ATAK's sensor math for consistent sensor display
+
 ### v14.55.0 - 2026-10-20
 
 - :tada: Add `device` Link attribute marking a CoT as the projection of a CloudTAK Core Device
