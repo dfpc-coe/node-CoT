@@ -169,6 +169,8 @@ export default class CoT {
      * Add a given Dest tag to a CoT
      */
     addDest(dest: Static<typeof MartiDestAttributes>): CoT {
+        if (typeof dest.mission === 'string') dest.mission = dest.mission.trim();
+
         const detail = this.detail();
 
         if (!detail.marti) detail.marti = {};

@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.57.0 - 2026-11-08
+
+- :bug: `CoT.addDest` trims the `mission` name - TAK Server stores mission names trimmed but matches the `<dest mission>` attribute exactly, so a padded name silently fails to file the CoT into the mission
+
 ### v14.56.0 - 2026-10-22
 
 - :bug: More closely mirror ATAK's sensor math for consistent sensor display
