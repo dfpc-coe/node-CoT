@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.58.1 - 2026-11-09
+
+- :bug: `to_proto`/`from_proto` map `<precisionlocation>` to the `precisionLocation` protobuf field - the element was previously dropped entirely in both directions over TAK Protocol
+
 ### v14.58.0 - 2026-11-09
 
 - :tada: A Polygon or LineString feature with an explicit marker `type` (anything other than `u-*` drawing types or `b-m-r`) now becomes a marker CoT carrying the geometry as `shape/polyline`, which ATAK removes together with the marker when it goes stale, unlike standalone `u-d-f` shapes (#97)

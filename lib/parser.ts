@@ -84,6 +84,19 @@ function resetFlowTags(cot: CoT): void {
  *
  * @prop raw Raw XML-JS representation of CoT
  */
+// XML detail element => first-class TakMessage Detail field
+const PROTO_DETAIL_FIELDS: Record<string, string> = {
+    contact: 'contact',
+    precisionlocation: 'precisionLocation',
+    status: 'status',
+    takv: 'takv',
+    track: 'track'
+};
+
+const PROTO_DETAIL_ELEMENTS: Record<string, string> = Object.fromEntries(
+    Object.entries(PROTO_DETAIL_FIELDS).map(([element, field]) => [field, element])
+);
+
 export class CoTParser {
     static validate(
         cot: CoT,
@@ -276,8 +289,9 @@ export class CoTParser {
 
         let key: keyof Static<typeof Detail>;
         for (key in detail) {
-            if(['contact', 'group', 'precisionlocation', 'status', 'takv', 'track'].includes(key)) {
-                msg.cotEvent.detail[key] = detail[key]._attributes;
+            const field = PROTO_DETAIL_FIELDS[key];
+            if (field) {
+                msg.cotEvent.detail[field] = detail[key]._attributes;
                 delete detail[key]
             }
         }
@@ -330,9 +344,9 @@ export class CoTParser {
                 if (msg.cotEvent.detail[key]) {
                     detail.__group = { _attributes: msg.cotEvent.detail[key] };
                 }
-            } else if (['contact', 'precisionlocation', 'status', 'takv', 'track'].includes(key)) {
+            } else if (PROTO_DETAIL_ELEMENTS[key]) {
                 if (msg.cotEvent.detail[key]) {
-                    detail[key] = { _attributes: msg.cotEvent.detail[key] };
+                    detail[PROTO_DETAIL_ELEMENTS[key]] = { _attributes: msg.cotEvent.detail[key] };
                 }
             }
         }
