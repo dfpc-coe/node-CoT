@@ -12,6 +12,8 @@
 
 ### Pending Fixed
 
+### v14.57.1 - 2026-11-09
+
 - :bug: `from_geojson` emits `<marti archive="false">` for `marti_archive: false` instead of dropping it, and `to_geojson` preserves the `false` value (#140)
 
 ### v14.57.0 - 2026-11-08
