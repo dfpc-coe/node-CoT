@@ -308,8 +308,8 @@ export async function to_geojson(
     }
 
     if (raw.event.detail.marti) {
-        if (raw.event.detail.marti._attributes?.archive) {
-            feat.properties.marti_archive = true;
+        if (raw.event.detail.marti._attributes?.archive !== undefined) {
+            feat.properties.marti_archive = raw.event.detail.marti._attributes.archive;
         }
 
         if (raw.event.detail.marti.dest) {

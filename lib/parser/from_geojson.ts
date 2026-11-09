@@ -100,11 +100,11 @@ export async function from_geojson(
         }))
     }
 
-    if (feature.properties.dest || feature.properties.marti_archive) {
+    if (feature.properties.dest || feature.properties.marti_archive !== undefined) {
         cot.event.detail.marti = {};
 
-        if (feature.properties.marti_archive) {
-            cot.event.detail.marti._attributes = { archive: true };
+        if (feature.properties.marti_archive !== undefined) {
+            cot.event.detail.marti._attributes = { archive: feature.properties.marti_archive };
         }
 
         if (feature.properties.dest) {
