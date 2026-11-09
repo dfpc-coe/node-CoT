@@ -357,6 +357,10 @@ export async function from_geojson(
         cot.event.detail.status = { _attributes: { ...feature.properties.status } }
     }
 
+    if (feature.properties.address) {
+        cot.event.detail.__address = { _attributes: { ...feature.properties.address } }
+    }
+
     if (feature.properties.precisionlocation) {
         cot.event.detail.precisionlocation = { _attributes: { ...feature.properties.precisionlocation } }
     }

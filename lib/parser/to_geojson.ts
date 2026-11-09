@@ -435,6 +435,10 @@ export async function to_geojson(
         feat.properties.precisionlocation = raw.event.detail.precisionlocation._attributes;
     }
 
+    if (raw.event.detail.__address?._attributes?.text) {
+        feat.properties.address = raw.event.detail.__address._attributes;
+    }
+
     if (raw.event.detail.strokeColor?._attributes?.value !== undefined) {
         const stroke = new Color(Number(raw.event.detail.strokeColor._attributes.value));
         feat.properties.stroke = stroke.as_hex();

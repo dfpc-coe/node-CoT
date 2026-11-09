@@ -1,0 +1,24 @@
+{
+    "id": "address",
+    "type": "Feature",
+    "path": "/",
+    "properties": {
+        "callsign": "Station 1",
+        "center": [-104.9903, 39.7392, 0],
+        "type": "a-f-G",
+        "how": "m-g",
+        "time": "2026-01-01T00:00:00.000Z",
+        "start": "2026-01-01T00:00:00.000Z",
+        "stale": "2026-01-01T00:05:00.000Z",
+        "address": {
+            "text": "1437 Bannock St, Denver, CO 80202",
+            "geocoder": "Nominatim",
+            "time": "2026-01-01T00:00:00.000Z"
+        },
+        "metadata": {}
+    },
+    "geometry": {
+        "type": "Point",
+        "coordinates": [-104.9903, 39.7392, 0]
+    }
+}

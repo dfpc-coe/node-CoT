@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.59.0 - 2026-11-09
+
+- :tada: Add `__address` detail (`text`, `geocoder`, `time`) and the matching `address` GeoJSON property - ATAK shows it in the point details panel
+
 ### v14.58.1 - 2026-11-09
 
 - :bug: `to_proto`/`from_proto` map `<precisionlocation>` to the `precisionLocation` protobuf field - the element was previously dropped entirely in both directions over TAK Protocol

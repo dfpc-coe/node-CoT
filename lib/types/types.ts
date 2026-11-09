@@ -779,6 +779,22 @@ export const PrecisionLocationAttributes = Type.Object({
     altsrc: Type.Optional(Type.String())
 })
 
+export const AddressAttributes = Type.Object({
+    text: Type.String({
+        description: 'Geocoded street address shown in the ATAK point details panel'
+    }),
+    geocoder: Type.Optional(Type.String({
+        description: 'Name of the geocoder that produced the address'
+    })),
+    time: Type.Optional(Type.String({
+        description: 'Lookup time of the address'
+    })),
+});
+
+export const Address = Type.Object({
+    _attributes: AddressAttributes
+});
+
 export const PrecisionLocation = Type.Object({
     _attributes: PrecisionLocationAttributes
 })
@@ -1246,6 +1262,7 @@ export const BioSensorDetail = Type.Object({
 export const Detail = Type.Object({
     contact: Type.Optional(Contact),
     tog: Type.Optional(TogAttributes),
+    '__address': Type.Optional(Address),
     '__group': Type.Optional(Group),
     '__chat': Type.Optional(Chat),
     '__chatreceipt': Type.Optional(Chat),
