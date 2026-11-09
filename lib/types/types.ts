@@ -247,14 +247,21 @@ export const Track = Type.Object({
 })
 
 export const ShapePolyLineAttributes = Type.Object({
-    closed: Type.Optional(Type.Boolean()),
-    fillColor: Type.Optional(Type.String()),
-    color: Type.Optional(Type.String()),
+    closed: Type.Optional(Type.Boolean({
+        description: 'Close the polyline into a filled polygon'
+    })),
+    fillColor: Type.Optional(Type.String({
+        description: 'Fill colour as #AARRGGBB, #RRGGBB or a signed 32bit ARGB integer'
+    })),
+    color: Type.Optional(Type.String({
+        description: 'Stroke colour as #AARRGGBB, #RRGGBB or a signed 32bit ARGB integer'
+    })),
 })
 
 export const VertexAttribute = Type.Object({
     lat: Type.Number(),
     lon: Type.Number(),
+    hae: Type.Optional(Type.Number()),
 })
 
 export const ShapePolyLine = Type.Object({

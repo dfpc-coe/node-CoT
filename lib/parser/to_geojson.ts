@@ -617,35 +617,38 @@ export async function to_geojson(
 
         feat.properties.shape = {};
         feat.properties.shape.ellipse = ellipse;
-    } else if (raw.event._attributes.type.startsWith('b-m-p-s-p-i')) {
-        // TODO: Currently the "shape" tag is only parsed here - asking ARA for clarification if it is a general use tag
-        if (raw.event.detail.shape?.polyline?.vertex) {
-            const coordinates = [];
+    } else if (raw.event.detail.shape?.polyline?.vertex) {
+        // Marker with a companion shape - the marker position is retained as properties.center
+        const coordinates = [];
 
-            const vertices = Array.isArray(raw.event.detail.shape.polyline.vertex) ? raw.event.detail.shape.polyline.vertex : [raw.event.detail.shape.polyline.vertex];
-            for (const v of vertices) {
-                coordinates.push([Number(v._attributes.lon), Number(v._attributes.lat)]);
-            }
+        const vertices = Array.isArray(raw.event.detail.shape.polyline.vertex) ? raw.event.detail.shape.polyline.vertex : [raw.event.detail.shape.polyline.vertex];
+        for (const v of vertices) {
+            const coord = [Number(v._attributes.lon), Number(v._attributes.lat)];
+            if (v._attributes.hae !== undefined) coord.push(Number(v._attributes.hae));
+            coordinates.push(coord);
+        }
 
-            if (coordinates.length === 1) {
-                feat.geometry = { type: 'Point', coordinates: coordinates[0] }
-            } else if (raw.event.detail.shape.polyline._attributes?.closed === true) {
-                coordinates.push(coordinates[0]);
-                feat.geometry = { type: 'Polygon', coordinates: [coordinates] }
-            } else {
-                feat.geometry = { type: 'LineString', coordinates }
-            }
+        if (coordinates.length === 1) {
+            feat.geometry = { type: 'Point', coordinates: coordinates[0] }
+        } else if (raw.event.detail.shape.polyline._attributes?.closed === true) {
+            const first = coordinates[0];
+            const last = coordinates[coordinates.length - 1];
+            if (first[0] !== last[0] || first[1] !== last[1]) coordinates.push(first);
+
+            feat.geometry = { type: 'Polygon', coordinates: [coordinates] }
+        } else {
+            feat.geometry = { type: 'LineString', coordinates }
         }
 
         if (raw.event.detail.shape?.polyline?._attributes) {
             if (raw.event.detail.shape.polyline._attributes.fillColor) {
-                const fill = new Color(Number(raw.event.detail.shape.polyline._attributes.fillColor));
+                const fill = Color.from_attribute(raw.event.detail.shape.polyline._attributes.fillColor);
                 feat.properties['fill-opacity'] = fill.as_opacity() / 255;
                 feat.properties['fill'] = fill.as_hex();
             }
 
             if (raw.event.detail.shape.polyline._attributes.color) {
-                const stroke = new Color(Number(raw.event.detail.shape.polyline._attributes.color));
+                const stroke = Color.from_attribute(raw.event.detail.shape.polyline._attributes.color);
                 feat.properties.stroke = stroke.as_hex();
                 feat.properties['stroke-opacity'] = stroke.as_opacity() / 255;
             }

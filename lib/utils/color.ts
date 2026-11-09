@@ -35,6 +35,26 @@ export default class Color {
         }
     }
 
+    /**
+     * Parse a colour attribute as ATAK does: a signed 32bit ARGB integer,
+     * #AARRGGBB, #RRGGBB or a CSS colour name
+     */
+    static from_attribute(value: string | number): Color {
+        if (!isNaN(Number(value))) return new Color(Number(value));
+
+        const hex = String(value).replace(/^#/, '');
+
+        if (/^[0-9a-f]{8}$/i.test(hex)) {
+            return new Color([0, 2, 4, 6].map((i) => parseInt(hex.slice(i, i + 2), 16)));
+        } else if (/^[0-9a-f]{6}$/i.test(hex)) {
+            return new Color([255, ...[0, 2, 4].map((i) => parseInt(hex.slice(i, i + 2), 16))]);
+        }
+
+        const color = new Color(String(value));
+        color.a = Math.round(color.a * 255);
+        return color;
+    }
+
     as_hex(): string {
         return _color({
             r: this.r,

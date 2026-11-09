@@ -1,0 +1,53 @@
+{
+    "id": "marker-polyline",
+    "type": "Feature",
+    "properties": {
+        "callsign": "Alert Zone",
+        "center": [
+            -108.45,
+            39.05,
+            0
+        ],
+        "type": "a-f-G",
+        "how": "m-g",
+        "time": "2024-01-01T12:00:00.000Z",
+        "start": "2024-01-01T12:00:00.000Z",
+        "stale": "2024-01-01T13:00:00.000Z",
+        "labels": true,
+        "stroke": "#000000",
+        "stroke-opacity": 1,
+        "stroke-width": 3,
+        "stroke-style": "solid",
+        "fill-opacity": 0.4,
+        "fill": "#FF0000",
+        "metadata": {}
+    },
+    "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+            [
+                [
+                    -108.4,
+                    39.1
+                ],
+                [
+                    -108.5,
+                    39.1
+                ],
+                [
+                    -108.5,
+                    39
+                ],
+                [
+                    -108.4,
+                    39
+                ],
+                [
+                    -108.4,
+                    39.1
+                ]
+            ]
+        ]
+    },
+    "path": "/"
+}

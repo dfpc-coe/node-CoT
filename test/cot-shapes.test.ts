@@ -363,3 +363,140 @@ test('Parse u-d-c-e (Ellipse)', async () => {
         swapAxis: true
     });
 });
+
+test('Marker polygon - from_geojson emits shape/polyline', async () => {
+    const cot = await CoTParser.from_geojson({
+        id: 'expiring-polygon-123',
+        type: 'Feature',
+        properties: {
+            type: 'a-f-G',
+            callsign: 'Alert Zone',
+            time: '2024-01-01T12:00:00Z',
+            start: '2024-01-01T12:00:00Z',
+            stale: '2024-01-01T13:00:00Z',
+            center: [-108.45, 39.05, 5],
+            stroke: '#000000',
+            'stroke-opacity': 1,
+            fill: '#FF0000',
+            'fill-opacity': 0.4
+        },
+        geometry: {
+            type: 'Polygon',
+            coordinates: [[
+                [-108.4, 39.1],
+                [-108.5, 39.1, 10],
+                [-108.5, 39.0],
+                [-108.4, 39.0],
+                [-108.4, 39.1]
+            ]]
+        }
+    });
+
+    assert.equal(cot.raw.event._attributes.type, 'a-f-G');
+    assert.deepEqual(cot.raw.event.point._attributes, { lat: 39.05, lon: -108.45, hae: 5, ce: 9999999, le: 9999999 });
+    assert.equal(cot.raw.event.detail?.link, undefined);
+    assert.deepEqual(cot.raw.event.detail?.shape, {
+        polyline: {
+            _attributes: { closed: true, color: '-16777216', fillColor: '1727987712' },
+            vertex: [
+                { _attributes: { lat: 39.1, lon: -108.4 } },
+                { _attributes: { lat: 39.1, lon: -108.5, hae: 10 } },
+                { _attributes: { lat: 39.0, lon: -108.5 } },
+                { _attributes: { lat: 39.0, lon: -108.4 } },
+                { _attributes: { lat: 39.1, lon: -108.4 } }
+            ]
+        }
+    });
+
+    const xml = CoTParser.to_xml(cot);
+    assert.ok(xml.includes('<shape><polyline closed="true" color="-16777216" fillColor="1727987712"><vertex lat="39.1" lon="-108.4"/><vertex lat="39.1" lon="-108.5" hae="10"/>'));
+});
+
+test('Marker linestring - from_geojson emits open shape/polyline', async () => {
+    const cot = await CoTParser.from_geojson({
+        id: 'track',
+        type: 'Feature',
+        properties: { type: 'a-h-G', stroke: '#00FF00', 'stroke-opacity': 1 },
+        geometry: { type: 'LineString', coordinates: [[-108.4, 39.1], [-108.5, 39.1], [-108.5, 39.0]] }
+    });
+
+    assert.equal(cot.raw.event._attributes.type, 'a-h-G');
+    assert.deepEqual(cot.raw.event.detail?.shape?.polyline?._attributes, { closed: false, color: '-16711936' });
+
+    const feat = await CoTParser.to_geojson(cot);
+    assert.deepEqual(feat.geometry, { type: 'LineString', coordinates: [[-108.4, 39.1], [-108.5, 39.1], [-108.5, 39.0]] });
+    assert.equal(feat.properties.stroke, '#00FF00');
+});
+
+test('Polygon without a marker type still becomes u-d-f', async () => {
+    const geometry = { type: 'Polygon' as const, coordinates: [[[-108.4, 39.1], [-108.5, 39.1], [-108.5, 39.0], [-108.4, 39.1]]] };
+
+    const untyped = await CoTParser.from_geojson({ id: 'a', type: 'Feature', properties: {}, geometry });
+    assert.equal(untyped.raw.event._attributes.type, 'u-d-f');
+    assert.equal(untyped.raw.event.detail?.shape, undefined);
+    assert.ok(Array.isArray(untyped.raw.event.detail?.link));
+
+    const drawn = await CoTParser.from_geojson({ id: 'b', type: 'Feature', properties: { type: 'u-d-f' }, geometry });
+    assert.equal(drawn.raw.event._attributes.type, 'u-d-f');
+    assert.equal(drawn.raw.event.detail?.shape, undefined);
+});
+
+test('Marker polygon - to_geojson outputs Polygon geometry and round trips', async () => {
+    const cot = await CoTParser.from_xml(`
+        <event version="2.0" uid="expiring-polygon-123" type="a-f-G" how="m-g" time="2024-01-01T12:00:00Z" start="2024-01-01T12:00:00Z" stale="2024-01-01T13:00:00Z">
+            <point lat="39.05" lon="-108.45" hae="0.0" ce="9999999.0" le="9999999.0"/>
+            <detail>
+                <contact callsign="Alert Zone"/>
+                <shape>
+                    <polyline closed="true" fillColor="#80FF0000" color="#FF000000">
+                        <vertex lat="39.1" lon="-108.4"/>
+                        <vertex lat="39.1" lon="-108.5" hae="10"/>
+                        <vertex lat="39.0" lon="-108.5"/>
+                        <vertex lat="39.0" lon="-108.4"/>
+                        <vertex lat="39.1" lon="-108.4"/>
+                    </polyline>
+                </shape>
+            </detail>
+        </event>
+    `);
+
+    const feat = await CoTParser.to_geojson(cot);
+
+    assert.equal(feat.properties.type, 'a-f-G');
+    assert.deepEqual(feat.properties.center, [-108.45, 39.05, 0]);
+    assert.equal(feat.properties.shape, undefined);
+    assert.equal(feat.properties.fill, '#FF0000');
+    assert.equal(feat.properties['fill-opacity'], 128 / 255);
+    assert.equal(feat.properties.stroke, '#000000');
+    assert.equal(feat.properties['stroke-opacity'], 1);
+    assert.deepEqual(feat.geometry, {
+        type: 'Polygon',
+        coordinates: [[
+            [-108.4, 39.1],
+            [-108.5, 39.1, 10],
+            [-108.5, 39.0],
+            [-108.4, 39.0],
+            [-108.4, 39.1]
+        ]]
+    });
+
+    const parsed = await CoTParser.from_geojson(feat);
+    assert.equal(parsed.raw.event._attributes.type, 'a-f-G');
+    assert.deepEqual(parsed.raw.event.point._attributes, cot.raw.event.point._attributes);
+    assert.deepEqual(parsed.raw.event.detail?.shape?.polyline?.vertex, cot.raw.event.detail?.shape?.polyline?.vertex);
+    assert.equal(parsed.raw.event.detail?.shape?.polyline?._attributes?.closed, true);
+});
+
+test('Single vertex polyline outputs Point geometry', async () => {
+    const cot = await CoTParser.from_xml(`
+        <event version="2.0" uid="single" type="a-f-G" how="m-g" time="2024-01-01T12:00:00Z" start="2024-01-01T12:00:00Z" stale="2024-01-01T13:00:00Z">
+            <point lat="39.05" lon="-108.45" hae="0.0" ce="9999999.0" le="9999999.0"/>
+            <detail>
+                <shape><polyline><vertex lat="39.1" lon="-108.4"/></polyline></shape>
+            </detail>
+        </event>
+    `);
+
+    const feat = await CoTParser.to_geojson(cot);
+    assert.deepEqual(feat.geometry, { type: 'Point', coordinates: [-108.4, 39.1] });
+});

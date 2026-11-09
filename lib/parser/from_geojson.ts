@@ -8,6 +8,7 @@ import type {
     RadIsotopeAttributes,
     ChemDetectionAttributes,
     BioMeasurementLevelAttributes,
+    ShapePolyLine,
 } from '../types/types.js'
 import {
     InputFeature,
@@ -35,6 +36,8 @@ export async function from_geojson(
     feature: Static<typeof InputFeature>,
     opts: CoTOptions = {}
 ): Promise<CoT> {
+    const explicitType = typeof feature.properties?.type === 'string';
+
     try {
         feature = await TypeValidator.type(InputFeature, feature, {
             verbose: opts.verbose
@@ -517,6 +520,33 @@ export async function from_geojson(
                     }
                 });
             }
+        } else if (explicitType && feature.properties.type && !feature.properties.type.startsWith('u-') && feature.properties.type !== 'b-m-r') {
+            // Marker with a companion shape - ATAK removes the shape with the marker when it goes stale
+            const coordinates = feature.geometry.type === 'Polygon'
+                ? feature.geometry.coordinates[0]
+                : feature.geometry.coordinates;
+
+            const polyline: Static<typeof ShapePolyLine> = {
+                _attributes: {
+                    closed: feature.geometry.type === 'Polygon',
+                    color: String(stroke.as_32bit())
+                },
+                vertex: coordinates.map((coord) => ({
+                    _attributes: {
+                        lat: coord[1],
+                        lon: coord[0],
+                        ...(coord.length > 2 ? { hae: coord[2] } : {})
+                    }
+                }))
+            };
+
+            if (feature.geometry.type === 'Polygon' && polyline._attributes) {
+                const fill = new Color(feature.properties.fill || -1761607936);
+                fill.a = feature.properties['fill-opacity'] !== undefined ? feature.properties['fill-opacity'] * 255 : 128;
+                polyline._attributes.fillColor = String(fill.as_32bit());
+            }
+
+            cot.event.detail.shape = { polyline };
         } else if (feature.geometry.type === 'LineString') {
             cot.event._attributes.type = 'u-d-f';
 
