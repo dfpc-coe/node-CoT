@@ -85,12 +85,14 @@ export async function normalize_geojson(
         feature.properties.remarks = '';
     }
 
-    feature.properties.time = new Date().toISOString();
-    feature.properties.start = new Date().toISOString();
+    // Keep caller supplied times, only fill in the ones that are missing
+    const now = new Date();
+    feature.properties.time = valid_date(props.time) || now.toISOString();
+    feature.properties.start = valid_date(props.start) || now.toISOString();
 
-    const stale = new Date();
+    const stale = new Date(now);
     stale.setHours(stale.getHours() + 1);
-    feature.properties.stale = stale;
+    feature.properties.stale = valid_date(props.stale) || stale.toISOString();
 
     feature.properties.center = PointOnFeature(feature).geometry.coordinates.slice(0, 3);
 
@@ -101,4 +103,15 @@ export async function normalize_geojson(
     });
 
     return feature as Static<typeof Feature>;
+}
+
+/**
+ * Return the given value if it is a parseable date string
+ */
+function valid_date(value: unknown): string | undefined {
+    if (typeof value === 'string' && !isNaN(Date.parse(value))) {
+        return value;
+    }
+
+    return undefined;
 }
