@@ -1,0 +1,277 @@
+:root {
+    color-scheme: light dark;
+
+    --bg: #f6f7f9;
+    --surface: #ffffff;
+    --border: #d5d9e0;
+    --text: #1a1f29;
+    --muted: #5d6675;
+    --accent: #1f6feb;
+    --valid: #116329;
+    --valid-bg: #dafbe1;
+    --invalid: #a40e26;
+    --invalid-bg: #ffebe9;
+    --syntax-tag: #8250df;
+    --syntax-name: #0550ae;
+    --syntax-string: #0a6b3d;
+    --syntax-number: #953800;
+    --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --bg: #0f1218;
+        --surface: #171b23;
+        --border: #2c3340;
+        --text: #e6e9ef;
+        --muted: #98a1b0;
+        --accent: #6ea8fe;
+        --valid: #56d364;
+        --valid-bg: #12281a;
+        --invalid: #ff8182;
+        --invalid-bg: #2d1416;
+        --syntax-tag: #d2a8ff;
+        --syntax-name: #79c0ff;
+        --syntax-string: #7ee787;
+        --syntax-number: #ffa657;
+    }
+}
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--text);
+    font: 15px/1.5 system-ui, -apple-system, 'Segoe UI', sans-serif;
+}
+
+.page {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 24px 16px;
+}
+
+.header h1 {
+    margin: 0;
+    font-size: 22px;
+}
+
+.header p {
+    margin: 4px 0 0;
+    color: var(--muted);
+}
+
+.toolbar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+}
+
+.spacer {
+    flex: 1;
+}
+
+button {
+    padding: 4px 10px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background: var(--surface);
+    color: var(--text);
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+}
+
+button:hover:not(:disabled) {
+    border-color: var(--accent);
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: default;
+}
+
+button:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 1px;
+}
+
+.status {
+    padding: 4px 12px;
+    border: 1px solid var(--border);
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 600;
+}
+
+.status.idle {
+    color: var(--muted);
+    font-weight: 400;
+}
+
+.status.valid {
+    border-color: var(--valid);
+    background: var(--valid-bg);
+    color: var(--valid);
+}
+
+.status.invalid {
+    border-color: var(--invalid);
+    background: var(--invalid-bg);
+    color: var(--invalid);
+}
+
+.editor {
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+    overflow: hidden;
+}
+
+.editor:focus-within {
+    border-color: var(--accent);
+}
+
+.editor .cm-editor {
+    min-height: 60vh;
+    max-height: 75vh;
+    background: var(--surface);
+    color: var(--text);
+}
+
+.editor .cm-editor.cm-focused {
+    outline: none;
+}
+
+.editor .cm-scroller {
+    font: 13px/1.6 var(--mono);
+}
+
+.editor .cm-content {
+    caret-color: var(--text);
+}
+
+.editor .cm-cursor {
+    border-left-color: var(--text);
+}
+
+.editor .cm-gutters {
+    border-right: 1px solid var(--border);
+    background: var(--bg);
+    color: var(--muted);
+}
+
+.editor .cm-activeLine,
+.editor .cm-activeLineGutter {
+    background: color-mix(in srgb, var(--accent) 8%, transparent);
+}
+
+.editor .cm-editor > .cm-scroller > .cm-selectionLayer .cm-selectionBackground,
+.editor .cm-editor.cm-focused > .cm-scroller > .cm-selectionLayer .cm-selectionBackground {
+    background: color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+.editor .cm-placeholder {
+    color: var(--muted);
+}
+
+.editor .cm-line.issue-line {
+    background: color-mix(in srgb, var(--invalid) 12%, transparent);
+    box-shadow: inset 3px 0 0 var(--invalid);
+}
+
+.issue-rows {
+    border-bottom: 1px solid color-mix(in srgb, var(--invalid) 35%, transparent);
+    background: var(--invalid-bg);
+    box-shadow: inset 3px 0 0 var(--invalid);
+    font: 13px/1.5 system-ui, -apple-system, 'Segoe UI', sans-serif;
+    user-select: none;
+}
+
+.issue-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    gap: 4px 10px;
+    padding: 4px 12px;
+    color: var(--invalid);
+}
+
+.issue-stage {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.issue-message {
+    font-weight: 600;
+}
+
+.issue-path {
+    color: var(--muted);
+    font: 12px var(--mono);
+    overflow-wrap: anywhere;
+}
+
+.tok-tagName,
+.tok-keyword {
+    color: var(--syntax-tag);
+}
+
+.tok-propertyName,
+.tok-attributeName {
+    color: var(--syntax-name);
+}
+
+.tok-string,
+.tok-attributeValue {
+    color: var(--syntax-string);
+}
+
+.tok-number,
+.tok-bool,
+.tok-atom {
+    color: var(--syntax-number);
+}
+
+.tok-comment,
+.tok-meta {
+    color: var(--muted);
+}
+
+.icon-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px;
+}
+
+.icon-button svg {
+    width: 16px;
+    height: 16px;
+}
+
+.converted summary {
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.output {
+    margin: 8px 0 0;
+    padding: 12px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background: var(--surface);
+    font: 13px/1.5 var(--mono);
+    tab-size: 4;
+    overflow: auto;
+    max-height: 50vh;
+}
