@@ -33,77 +33,136 @@ export enum StandardIdentity {
 }
 
 export const SID_MAP: Record<string, string> = {
-    P: "00", // pending
-    U: "01", // unknown
-    A: "02", // assumed friend
-    F: "03", // friend
-    N: "04", // neutral
-    S: "05", // suspect
-    H: "06", // hostile
-    G: "10", // exercise pending
-    W: "11", // exercise unknown
-    M: "12", // exercise assumed friend
-    D: "13", // exercise friend
-    L: "14", // exercise neutral
-    J: "15", // joker
-    K: "16", // faker
+    // pending
+    P: "00",
+    // unknown
+    U: "01",
+    // assumed friend
+    A: "02",
+    // friend
+    F: "03",
+    // neutral
+    N: "04",
+    // suspect
+    S: "05",
+    // hostile
+    H: "06",
+    // exercise pending
+    G: "10",
+    // exercise unknown
+    W: "11",
+    // exercise assumed friend
+    M: "12",
+    // exercise friend
+    D: "13",
+    // exercise neutral
+    L: "14",
+    // joker
+    J: "15",
+    // faker
+    K: "16",
 };
 
 export const STATUS_MAP: Record<string, string> = {
-    P: "0", // present
-    A: "1", // anticipated/planned
-    C: "2", // present fully capable
-    D: "3", // present damaged
-    X: "4", // present destroyed
-    F: "5", // present full to capacity
+    // present
+    P: "0",
+    // anticipated/planned
+    A: "1",
+    // present fully capable
+    C: "2",
+    // present damaged
+    D: "3",
+    // present destroyed
+    X: "4",
+    // present full to capacity
+    F: "5",
 };
 
 export const DIM_MAP: Record<string, string> = {
-    P: '05', // Space
-    A: '01', // Air
-    G: '10', // Ground
-    S: '30', // SeaSurface
-    U: '35', // SubSurface
-    F: '10', // SOF
-    Z: '10', // Unknown
-    X: '10'  // Unknown
+    // Space
+    P: '05',
+    // Air
+    A: '01',
+    // Ground
+    G: '10',
+    // SeaSurface
+    S: '30',
+    // SubSurface
+    U: '35',
+    // SOF
+    F: '10',
+    // Unknown
+    Z: '10',
+    // Unknown
+    X: '10'
 }
 
 export const SID_REVERSE_MAP: Record<string, string> = {
-    '00': 'p', // pending
-    '01': 'u', // unknown
-    '02': 'a', // assumed friend
-    '03': 'f', // friend
-    '04': 'n', // neutral
-    '05': 's', // suspect
-    '06': 'h', // hostile
-    '10': 'p', // exercise pending
-    '11': 'u', // exercise unknown
-    '12': 'a', // exercise assumed friend
-    '13': 'f', // exercise friend
-    '14': 'n', // exercise neutral
-    '15': 'j', // joker
-    '16': 'k', // faker
+    // pending
+    '00': 'p',
+    // unknown
+    '01': 'u',
+    // assumed friend
+    '02': 'a',
+    // friend
+    '03': 'f',
+    // neutral
+    '04': 'n',
+    // suspect
+    '05': 's',
+    // hostile
+    '06': 'h',
+    // exercise pending
+    '10': 'p',
+    // exercise unknown
+    '11': 'u',
+    // exercise assumed friend
+    '12': 'a',
+    // exercise friend
+    '13': 'f',
+    // exercise neutral
+    '14': 'n',
+    // joker
+    '15': 'j',
+    // faker
+    '16': 'k',
 };
 
 export const SYMBOL_SET_DIM_MAP: Record<string, string> = {
-    '01': 'A', // Air
-    '02': 'A', // Air Missile
-    '05': 'P', // Space
-    '06': 'P', // Space Missile
-    '10': 'G', // Land Unit
-    '11': 'G', // Land Civilian Unit/Organization
-    '15': 'G', // Land Equipment
-    '20': 'G', // Land Installation
-    '27': 'G', // Dismounted Individual
-    '30': 'S', // Sea Surface
-    '35': 'U', // Sea Subsurface
-    '36': 'U', // Mine Warfare
-    '50': 'P', // Signals Intelligence - Space
-    '51': 'A', // Signals Intelligence - Air
-    '52': 'G', // Signals Intelligence - Land
-    '53': 'S', // Signals Intelligence - Surface
-    '54': 'U', // Signals Intelligence - Subsurface
+    // Air
+    '01': 'A',
+    // Air Missile
+    '02': 'A',
+    // Space
+    '05': 'P',
+    // Space Missile
+    '06': 'P',
+    // Land Unit
+    '10': 'G',
+    // Land Civilian Unit/Organization
+    '11': 'G',
+    // Land Equipment
+    '15': 'G',
+    // Land Installation
+    '20': 'G',
+    // Dismounted Individual
+    '27': 'G',
+    // Sea Surface
+    '30': 'S',
+    // Sea Subsurface
+    '35': 'U',
+    // Mine Warfare
+    '36': 'U',
+    // Signals Intelligence - Space
+    '50': 'P',
+    // Signals Intelligence - Air
+    '51': 'A',
+    // Signals Intelligence - Land
+    '52': 'G',
+    // Signals Intelligence - Surface
+    '53': 'S',
+    // Signals Intelligence - Subsurface
+    '54': 'U',
 };
 
 /**
@@ -120,18 +179,16 @@ export default class Type2525 {
      * @param cotType - Cursor On Target Type to test
      */
     static is2525BConvertable(cotType: string): boolean {
-        return !!cotType.match(/^a-[PUAFNSHJKOXpuafnshjkox]-[PAGSUFXZ](-\w+)*$/);
+        return /^a-[PUAFNSHJKOXpuafnshjkox]-[PAGSUFXZ](-\w+)*$/.test(cotType);
     }
 
     static domain(cotType: string): Domain {
         const unknownDomain = cotType.split('-')[0];
 
         const d = enumFromStringValue<Domain>(Domain, unknownDomain);
-        if (d) {
-            return d;
-        } else {
-            throw new Error('Domain could not be determined');
-        }
+        if (d === undefined) throw new Error('Domain could not be determined');
+
+        return d;
     }
 
     static standardIdentity(cotType: string): StandardIdentity {
@@ -142,11 +199,7 @@ export default class Type2525 {
 
         const si = enumFromStringValue(StandardIdentity, unknownIdentity);
 
-        if (si) {
-            return si;
-        } else {
-            return StandardIdentity.NONE;
-        }
+        return si ?? StandardIdentity.NONE;
     }
 
     /**
@@ -158,21 +211,21 @@ export default class Type2525 {
         const str_sidc = this.to2525B(cotType);
 
         // Handle Short Codes Manually
-        if (str_sidc.match(/^S[A-Z]{3}-{11}/)) {
+        if (/^S[A-Z]{3}-{11}/.test(str_sidc)) {
             const AFF = str_sidc[1].toUpperCase()
             const DIM = str_sidc[2].toUpperCase()
             const STS = str_sidc[3].toUpperCase()
 
             return VERSION_2525D + SID_MAP[AFF] + DIM_MAP[DIM] + STATUS_MAP[STS] + '0000000000000';
-        } else {
-            const convert = convertLetterSidc2NumberSidc(str_sidc);
-
-            if (!convert.sidc) {
-                throw new Error(`Could not convert 2525B SIDC to 2525D`);
-            }
-
-            return convert.sidc;
         }
+
+        const convert = convertLetterSidc2NumberSidc(str_sidc);
+
+        if (!convert.sidc) {
+            throw new Error(`Could not convert 2525B SIDC to 2525D`);
+        }
+
+        return convert.sidc;
     }
 
     /**
@@ -185,17 +238,17 @@ export default class Type2525 {
             throw new TypeError("CoT to 2525B can only be applied to well-formed Atom type CoT Events.")
         }
 
-        const m2525bChars = cotType.substring(4).replace(/[^A-Z0-9]+/g, "");
-        const m2525bBattleDim = m2525bChars.substring(0, 1);
+        const m2525bChars = cotType.slice(4).replaceAll(/[^A-Z0-9]+/g, "");
+        const m2525bBattleDim = m2525bChars[0];
 
-        const cotAffiliation = cotType.substring(2, 3);
+        const cotAffiliation = cotType[2];
         const m2525bAffiliation = (cotAffiliation === "o" || cotAffiliation === "x")
             ? "U"
             : cotAffiliation.toUpperCase();
 
-            const m2525bFuncId = m2525bChars.length > 1
-                ? m2525bChars.substring(1).padEnd(6, "-").substring(0, 6)
-                : "------";
+        const m2525bFuncId = m2525bChars.length > 1
+            ? m2525bChars.slice(1).padEnd(6, "-").slice(0, 6)
+            : "------";
 
         return `S${m2525bAffiliation}${m2525bBattleDim}P${m2525bFuncId}-----`;
     }
@@ -206,7 +259,7 @@ export default class Type2525 {
      * @param sidc - Numeric SIDC to test
      */
     static isNumericSIDCConvertable(sidc: string): boolean {
-        return !!sidc.match(/^1[0-3]\d{18}$/);
+        return /^1[0-3]\d{18}$/.test(sidc);
     }
 
     /**
@@ -220,8 +273,8 @@ export default class Type2525 {
             throw new Error("Numeric SIDC to CoT can only be applied to well-formed 2525D/2525E SIDCs.");
         }
 
-        const affiliation = SID_REVERSE_MAP[sidc.substring(2, 4)] || 'u';
-        const dimension = SYMBOL_SET_DIM_MAP[sidc.substring(4, 6)] || 'G';
+        const affiliation = SID_REVERSE_MAP[sidc.slice(2, 4)] || 'u';
+        const dimension = SYMBOL_SET_DIM_MAP[sidc.slice(4, 6)] || 'G';
 
         return `a-${affiliation}-${dimension}`;
     }
@@ -267,7 +320,7 @@ export default class Type2525 {
      * @param sidc - SIDC to test
      */
     static isTypeConvertable(sidc: string): boolean {
-        return !!sidc.match(/^S[PUAFNSHGWMDLJK-][PAGSUFXZ-][AP-][A-Z0-9-]{10}[AECGNS-]$/)
+        return /^S[PUAFNSHGWMDLJK-][PAGSUFXZ-][AP-][A-Z0-9-]{10}[AECGNS-]$/.test(sidc)
     }
 
     /**
@@ -280,24 +333,22 @@ export default class Type2525 {
             throw new Error("2525B to CoT can only be applied to well-formed warfighting 2525B SIDCs.");
         }
 
-        const m2525bAffiliation = sidc.substring(1, 2);
+        const m2525bAffiliation = sidc[1];
         const cotAffiliation = ["G", "W", "M", "D", "L"].includes(m2525bAffiliation)
             ? "f"
             : m2525bAffiliation === "-"
                 ? "o"
                 : m2525bAffiliation.toLowerCase();
 
-                const cotBattleDim = sidc.substring(2, 3);
-                const cotFuncId = Array.from(sidc.substring(4, 10).replace(/[^A-Z0-9]+/g, ""))
-                .map((x) => `-${x}`)
-                .join("");
+        const cotBattleDim = sidc[2];
+        const cotFuncId = Array.from(sidc.slice(4, 10).replaceAll(/[^A-Z0-9]+/g, ""))
+            .map((x) => `-${x}`)
+            .join("");
 
         return `a-${cotAffiliation}-${cotBattleDim}${cotFuncId}`;
     }
 }
 
-function enumFromStringValue<T> (enm: { [s: string]: T}, value: string): T | undefined {
-    return (Object.values(enm) as unknown as string[]).includes(value)
-        ? value as unknown as T
-        : undefined;
+function enumFromStringValue<T extends string> (enm: Record<string, T>, value: string): T | undefined {
+    return Object.values(enm).find((v) => v === value);
 }

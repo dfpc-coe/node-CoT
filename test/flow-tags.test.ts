@@ -4,8 +4,13 @@ import { CoTParser } from '../index.js';
 import fs from 'node:fs';
 import CoT from '../index.js';
 
+interface FlowTags {
+    _attributes?: Record<string, unknown>;
+    [key: string]: unknown;
+}
+
 test('FlowTags - Basic', async () => {
-    const pkg = JSON.parse(String(fs.readFileSync(new URL('../package.json', import.meta.url))));
+    const pkg = JSON.parse(String(fs.readFileSync(new URL('../package.json', import.meta.url)))) as { version: string };
 
     const cot = await CoTParser.from_geojson({
         "id": "123",
@@ -27,15 +32,17 @@ test('FlowTags - Basic', async () => {
         }
     });
 
-    if (!cot.raw.event.detail || !cot.raw.event.detail['_flow-tags_']) {
+    const flowTags = cot.raw.event.detail?.['_flow-tags_'] as FlowTags | undefined;
+
+    if (!flowTags) {
         assert.fail('No Detail Section')
     } else {
-        assert.equal(typeof cot.raw.event.detail['_flow-tags_'][`NodeCoT-${pkg.version}`], 'string');
+        assert.equal(typeof flowTags[`NodeCoT-${pkg.version}`], 'string');
     }
 });
 
 test('FlowTags - resetFlow only removes TAK-Server tags in XML', async () => {
-    const pkg = JSON.parse(String(fs.readFileSync(new URL('../package.json', import.meta.url))));
+    const pkg = JSON.parse(String(fs.readFileSync(new URL('../package.json', import.meta.url)))) as { version: string };
     const cot = new CoT({
         event: {
             _attributes: {
@@ -70,11 +77,11 @@ test('FlowTags - resetFlow only removes TAK-Server tags in XML', async () => {
     });
 
     const xml = CoTParser.to_xml(cot, { resetFlow: true });
-    const flowTags = cot.raw.event.detail?.['_flow-tags_'];
+    const flowTags = cot.raw.event.detail?.['_flow-tags_'] as FlowTags | undefined;
 
-    assert.ok(!(flowTags?._attributes?.['TAK-Server-attr']), 'removes TAK-Server attribute flow tags');
+    assert.equal(flowTags?._attributes?.['TAK-Server-attr'], undefined, 'removes TAK-Server attribute flow tags');
     assert.equal(flowTags?._attributes?.['custom-attr'], 'keep-me', 'preserves custom attribute flow tags');
-    assert.ok(!(flowTags?.['TAK-Server-node']), 'removes TAK-Server node flow tags');
+    assert.equal(flowTags?.['TAK-Server-node'], undefined, 'removes TAK-Server node flow tags');
     assert.equal(flowTags?.['custom-node'], 'keep-me-too', 'preserves custom node flow tags');
     assert.equal(typeof flowTags?.[`NodeCoT-${pkg.version}`], 'string', 'adds current NodeCoT flow tag');
     assert.ok(!(xml.includes('TAK-Server-attr')), 'serialized XML omits TAK-Server attribute flow tags');
@@ -84,7 +91,7 @@ test('FlowTags - resetFlow only removes TAK-Server tags in XML', async () => {
 });
 
 test('FlowTags - resetFlow only removes TAK-Server tags in Proto', async () => {
-    const pkg = JSON.parse(String(fs.readFileSync(new URL('../package.json', import.meta.url))));
+    const pkg = JSON.parse(String(fs.readFileSync(new URL('../package.json', import.meta.url)))) as { version: string };
     const cot = new CoT({
         event: {
             _attributes: {
@@ -120,11 +127,11 @@ test('FlowTags - resetFlow only removes TAK-Server tags in Proto', async () => {
 
     const proto = await CoTParser.to_proto(cot, 1, { resetFlow: true });
     const output = await CoTParser.from_proto(proto);
-    const flowTags = output.raw.event.detail?.['_flow-tags_'];
+    const flowTags = output.raw.event.detail?.['_flow-tags_'] as FlowTags | undefined;
 
-    assert.ok(!(flowTags?._attributes?.['TAK-Server-attr']), 'protobuf omits TAK-Server attribute flow tags');
+    assert.equal(flowTags?._attributes?.['TAK-Server-attr'], undefined, 'protobuf omits TAK-Server attribute flow tags');
     assert.equal(flowTags?._attributes?.['custom-attr'], 'keep-me', 'protobuf preserves custom attribute flow tags');
-    assert.ok(!(flowTags?.['TAK-Server-node']), 'protobuf omits TAK-Server node flow tags');
-    assert.equal(flowTags?.['custom-node']?._text, 'keep-me-too', 'protobuf preserves custom node flow tags');
+    assert.equal(flowTags?.['TAK-Server-node'], undefined, 'protobuf omits TAK-Server node flow tags');
+    assert.equal((flowTags?.['custom-node'] as { _text?: string } | undefined)?._text, 'keep-me-too', 'protobuf preserves custom node flow tags');
     assert.equal(typeof flowTags?.[`NodeCoT-${pkg.version}`], 'string', 'protobuf retains a current NodeCoT flow tag');
 });

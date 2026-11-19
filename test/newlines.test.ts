@@ -11,12 +11,12 @@ Status: Dispatched
 Jurisdiction: Golden PD
 Speed: 1</remarks><_flow-tags_ TAK-Server-e87a0e02420b44a08f6032bcf1877745="2024-06-07T15:28:48Z"><NodeCoT-8.1.0>2024-06-07T15:28:48.669Z</NodeCoT-8.1.0></_flow-tags_></detail></event>`
 
-    const cot = await CoTParser.from_xml(packet);
+    const cot = CoTParser.from_xml(packet);
 
     if (!cot.raw.event.detail) {
         assert.fail('No Detail Section')
     } else {
-        assert.ok(cot.raw.event.detail['_flow-tags_']);
+        assert.ok(Boolean(cot.raw.event.detail['_flow-tags_']));
         delete cot.raw.event.detail['_flow-tags_'];
 
         assert.deepEqual({

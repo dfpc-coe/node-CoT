@@ -10,6 +10,18 @@ import type {
  * Helper functions for generating CoT data
  * @class
  */
+export function jsonClone<T>(value: T): T {
+    // oxlint-disable-next-line typescript/no-unsafe-return
+    return JSON.parse(JSON.stringify(value));
+}
+
+/**
+ * Coerce numeric values that may not have passed through schema coercion
+ */
+export function toNumber(value: number | string): number {
+    return typeof value === 'number' ? value : Number(value);
+}
+
 export default class Util {
     /**
      * Return an event._attributes object with as many defaults as possible
@@ -61,9 +73,9 @@ export default class Util {
     static cot_track_attr(course?: number, speed?: number, slope?: number): Static<typeof TrackAttributes> {
         const attr: Static<typeof TrackAttributes> = {};
 
-        if (course) attr.course = String(course);
-        if (speed) attr.speed = String(speed);
-        if (slope) attr.slope = String(slope);
+        if (course !== undefined && course !== 0) attr.course = String(course);
+        if (speed !== undefined && speed !== 0) attr.speed = String(speed);
+        if (slope !== undefined && slope !== 0) attr.slope = String(slope);
 
         return attr;
     }
@@ -117,24 +129,28 @@ export default class Util {
     } {
         const now = Date.now();
 
+        const dates = {
+            time: (new Date(time === '' ? now : time ?? now)).toISOString(),
+            start: (new Date(start === '' ? now : start ?? now)).toISOString()
+        };
+
         if (stale === undefined || stale === null) {
             return {
-                time: (new Date(time || now)).toISOString(),
-                start: (new Date(start || now)).toISOString(),
+                ...dates,
                 stale: (new Date(new Date(now).getTime() + 20 * 1000)).toISOString()
             };
-        } else if (typeof stale === 'number') {
+        }
+
+        if (typeof stale === 'number') {
             return {
-                time: (new Date(time || now)).toISOString(),
-                start: (new Date(start || now)).toISOString(),
-                stale: (new Date(new Date(now).getTime() + Number(stale))).toISOString()
-            };
-        } else {
-            return {
-                time: (new Date(time || now)).toISOString(),
-                start: (new Date(start || now)).toISOString(),
-                stale: String(stale)
+                ...dates,
+                stale: (new Date(new Date(now).getTime() + stale)).toISOString()
             };
         }
+
+        return {
+            ...dates,
+            stale: String(stale)
+        };
     }
 }

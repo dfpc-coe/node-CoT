@@ -56,7 +56,7 @@ export class MissionChat extends CoT {
 
         cot.event._attributes.uid = `GeoChat.${chat.from.uid}.${chat.mission.id}.${messageId}`;
 
-        if (!cot.event.detail) cot.event.detail = {};
+        cot.event.detail ??= {};
 
         cot.event.detail.link = {
             _attributes: {
@@ -146,7 +146,7 @@ export class DirectChatReceipt extends CoT {
         // ATAK looks the original message up by the receipt's Event UID on receive
         cot.event._attributes.uid = receipt.messageId;
 
-        if (!cot.event.detail) cot.event.detail = {};
+        cot.event.detail ??= {};
 
         cot.event.detail.link = {
             _attributes: {
@@ -207,7 +207,7 @@ export class DirectChat extends CoT {
 
         cot.event._attributes.uid = `GeoChat.${chat.from.uid}.${chat.to.uid}.${crypto.randomUUID()}`;
 
-        if (!cot.event.detail) cot.event.detail = {};
+        cot.event.detail ??= {};
 
         cot.event.detail.link = {
             _attributes: {

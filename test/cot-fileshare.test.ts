@@ -8,7 +8,7 @@ test('FileShare COT', async () => {
     if (!cot.raw.event.detail) {
         assert.fail('No Detail Section')
     } else {
-        assert.ok(cot.raw.event.detail['_flow-tags_']);
+        assert.ok(Boolean(cot.raw.event.detail['_flow-tags_']));
         delete cot.raw.event.detail['_flow-tags_'];
 
         assert.deepEqual({
@@ -103,7 +103,7 @@ test('FileShare DataPackage', async () => {
 
     const pkg = new DataPackage();
 
-    pkg.addCoT(fileshare);
+    await pkg.addCoT(fileshare);
 
     const path = await pkg.finalize();
 

@@ -111,7 +111,7 @@ test(`DataPackage File Parsing: Readable Input`, async () => {
 test(`DataPackage CoT Writing`, async () => {
     const pkg = new DataPackage();
 
-    pkg.addCoT(await CoTParser.from_geojson({
+    await pkg.addCoT(await CoTParser.from_geojson({
         id: '123',
         type: 'Feature',
         properties: {
@@ -160,7 +160,7 @@ test(`DataPackage CoT Writing`, async () => {
 test(`DataPackage CoT Writing`, async () => {
     const pkg = new DataPackage();
 
-    pkg.addCoT(await CoTParser.from_geojson({
+    await pkg.addCoT(await CoTParser.from_geojson({
         id: '123',
         type: 'Feature',
         properties: {
@@ -273,7 +273,7 @@ test(`DataPackage CoT Parsing: addFile,getFile`, async () => {
 
     const buff = await stream2buffer(await pkg.getFile('123/package.json'));
 
-    assert.equal(JSON.parse(buff.toString()).name, '@tak-ps/node-cot');
+    assert.equal((JSON.parse(buff.toString()) as { name: string }).name, '@tak-ps/node-cot');
 
     const cots = await pkg.cots();
 

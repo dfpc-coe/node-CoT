@@ -65,7 +65,7 @@ test('CoTParser.to_xml - remarks with ampersand are escaped in text node', async
 
     const xml = CoTParser.to_xml(cot);
     assert.ok(xml.includes('&amp;'), `remarks ampersand must be escaped as &amp; in XML text, got: ${xml}`);
-    assert.ok(!xml.match(/>.*Heading north & east/), 'remarks must not contain a raw & in text node');
+    assert.ok(!/>.*Heading north & east/.test(xml), 'remarks must not contain a raw & in text node');
 });
 
 test('CoTParser.to_xml - callsign round-trips correctly through XML with special chars', async () => {
@@ -82,7 +82,7 @@ test('CoTParser.to_xml - callsign round-trips correctly through XML with special
 
 test('await CoTParser.from_xml - Invalid', async () => {
     try {
-        await CoTParser.from_xml('<not-cot-xml test="1"/>');
+        CoTParser.from_xml('<not-cot-xml test="1"/>');
         assert.fail('Shoult not parse invalid CoT XML');
     } catch (err) {
         assert.ok(String(err).includes('Cannot read properties of undefined'));
@@ -90,7 +90,7 @@ test('await CoTParser.from_xml - Invalid', async () => {
 });
 
 test('await CoTParser.from_xml - Case-insensitive boolean attributes', async () => {
-    const cot = await CoTParser.from_xml(`
+    const cot = CoTParser.from_xml(`
 <event version="2.0" uid="case-insensitive-bool" type="u-d-f" time="2026-03-26T00:00:00Z" start="2026-03-26T00:00:00Z" stale="2026-03-27T00:00:00Z" how="h-g-i-g-o">
   <point lat="0" lon="0" hae="0" ce="9999999.0" le="9999999.0"/>
   <detail>

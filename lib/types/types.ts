@@ -95,11 +95,11 @@ export const RouteInfo = Type.Object({
 })
 
 export const Emergency = Type.Object({
-    _attributes: Type.Object({
+    _attributes: Type.Optional(Type.Object({
         cancel: Type.Optional(Type.Boolean()),
         type: Type.Optional(Type.String())
-    }),
-    _text: Type.String()
+    })),
+    _text: Type.Optional(Type.String())
 });
 
 export const Link = Type.Object({
@@ -214,6 +214,20 @@ export const GenericNumberAttributes = Type.Object({
     _attributes: Type.Optional(Type.Object({
         value: Type.Optional(Type.Number())
     }))
+})
+
+export const Height = Type.Object({
+    _attributes: Type.Optional(Type.Object({
+        value: Type.Optional(Type.Number())
+    })),
+    _text: Type.Optional(Type.Number())
+})
+
+export const HeightUnit = Type.Object({
+    _attributes: Type.Optional(Type.Object({
+        value: Type.Optional(Type.Integer())
+    })),
+    _text: Type.Optional(Type.Integer())
 })
 
 export const GenericOptionalText = Type.Object({
@@ -1290,6 +1304,9 @@ export const Detail = Type.Object({
     // Controls the display of distance calculation labels on the edge of line/polygon features
     labels_on: Type.Optional(GenericBooleanAttributes),
     fillColor: Type.Optional(GenericIntegerAttributes),
+    height: Type.Optional(Height),
+    height_unit: Type.Optional(HeightUnit),
+    extrudeMode: Type.Optional(GenericStringAttributes),
     mission: Type.Optional(Mission),
     shape: Type.Optional(Shape),
 

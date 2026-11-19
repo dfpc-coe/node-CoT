@@ -72,7 +72,7 @@ test('Decode Range & Bearing', async () => {
     if (!cot.raw.event.detail) {
         assert.fail('No Detail Section')
     } else {
-        assert.ok(cot.raw.event.detail['_flow-tags_']);
+        assert.ok(Boolean(cot.raw.event.detail['_flow-tags_']));
         delete cot.raw.event.detail['_flow-tags_'];
 
         assert.deepEqual(await CoTParser.to_geojson(cot), {

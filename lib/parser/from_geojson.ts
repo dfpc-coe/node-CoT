@@ -13,11 +13,10 @@ import type {
 import {
     InputFeature,
 } from '../types/feature.js';
-import type { AllGeoJSON } from "@turf/helpers";
 import TypeValidator from '../type.js';
 import Type2525 from '../utils/2525.js';
 import PointOnFeature from '@turf/point-on-feature';
-import Util from '../utils/util.js';
+import Util, { jsonClone } from '../utils/util.js';
 import Color from '../utils/color.js';
 import JSONCoT from '../types/types.js'
 import CoT from '../cot.js';
@@ -39,20 +38,18 @@ export async function from_geojson(
     const explicitType = typeof feature.properties?.type === 'string';
 
     try {
-        feature = await TypeValidator.type(InputFeature, feature, {
+        feature = TypeValidator.type(InputFeature, feature, {
             verbose: opts.verbose
         });
     } catch (err) {
-        throw new Err(400, null, `Validation Error: ${err}`);
+        throw new Err(400, null, `Validation Error: ${String(err)}`);
     }
 
     // The type property can either be a traditional CoT Type or a numeric 2525D/2525E SIDC
     if (feature.properties.type && Type2525.isNumericSIDCConvertable(feature.properties.type)) {
-        if (!feature.properties.milicon) {
-            feature.properties.milicon = {
-                id: feature.properties.type
-            };
-        }
+        feature.properties.milicon ??= {
+            id: feature.properties.type
+        };
 
         feature.properties.type = Type2525.cotTypeFromNumericSIDC(feature.properties.type);
     }
@@ -72,12 +69,12 @@ export async function from_geojson(
     };
 
     if (feature.id) {
-        cot.event._attributes.uid = String(feature.id);
+        cot.event._attributes.uid = feature.id;
     } else {
         cot.event._attributes.uid = crypto.randomUUID();
     }
 
-    if (!cot.event.detail) cot.event.detail = {};
+    cot.event.detail ??= {};
 
     if (feature.properties.droid) {
         cot.event.detail.uid = { _attributes: { Droid: feature.properties.droid } };
@@ -113,8 +110,8 @@ export async function from_geojson(
         if (feature.properties.dest) {
             const dest = !Array.isArray(feature.properties.dest) ? [ feature.properties.dest ] : feature.properties.dest;
 
-            cot.event.detail.marti.dest = dest.map((dest) => {
-                return { _attributes: { ...dest } };
+            cot.event.detail.marti.dest = dest.map((d) => {
+                return { _attributes: { ...d } };
             });
         }
     }
@@ -165,7 +162,7 @@ export async function from_geojson(
         || feature.properties.maxzoom !== undefined
         || feature.properties.rotate !== undefined
     ) {
-        if (!cot.event.detail.display || !cot.event.detail.display._attributes) {
+        if (!cot.event.detail.display?._attributes) {
             cot.event.detail.display = { _attributes: {} };
         }
 
@@ -299,9 +296,9 @@ export async function from_geojson(
 
     if (feature.properties.video) {
         if (feature.properties.video.connection) {
-            const video = JSON.parse(JSON.stringify(feature.properties.video));
+            const video = jsonClone(feature.properties.video);
 
-            const connection = video.connection;
+            const connection = jsonClone(feature.properties.video.connection);
             delete video.connection;
 
             cot.event.detail.__video = {
@@ -413,9 +410,7 @@ export async function from_geojson(
 
     cot.event.detail.remarks = { _attributes: { }, _text: feature.properties.remarks || '' };
 
-    if (!feature.geometry) {
-        throw new Err(400, null, 'Must have Geometry');
-    } else if (!['Point', 'Polygon', 'LineString'].includes(feature.geometry.type)) {
+    if (!['Point', 'Polygon', 'LineString'].includes(feature.geometry.type)) {
         throw new Err(400, null, 'Unsupported Geometry Type');
     }
 
@@ -441,9 +436,11 @@ export async function from_geojson(
         stroke.a = feature.properties['stroke-opacity'] !== undefined ? feature.properties['stroke-opacity'] * 255 : 128;
         cot.event.detail.strokeColor = { _attributes: { value: stroke.as_32bit() } };
 
-        if (!feature.properties['stroke-width']) feature.properties['stroke-width'] = 3;
+        let strokeWidth = feature.properties['stroke-width'] ?? 0;
+        if (strokeWidth === 0) strokeWidth = 3;
+        feature.properties['stroke-width'] = strokeWidth;
         cot.event.detail.strokeWeight = { _attributes: {
-            value: feature.properties['stroke-width']
+            value: strokeWidth
         } };
 
         if (!feature.properties['stroke-style']) feature.properties['stroke-style'] = 'solid';
@@ -455,15 +452,13 @@ export async function from_geojson(
             const fill = new Color(feature.properties.fill || -1761607936);
             fill.a = feature.properties['fill-opacity'] !== undefined ? feature.properties['fill-opacity'] * 255 : 128;
             cot.event.detail.fillColor = { _attributes: { value: fill.as_32bit() } };
-        } else if (feature.geometry.type === 'LineString') {
+        } else if (feature.geometry.type === 'LineString' && feature.properties.type !== 'b-m-r') {
             // Ensure fill is fully transparent for LineStrings so that if Node treats the
             // feature as a polygon (when first/last coordinates coincide), no fill is rendered.
             // Exclude b-m-r (route) types as they are not user-drawn line features.
-            if (feature.properties.type !== 'b-m-r') {
-                const fill = new Color(feature.properties.fill || -1761607936);
-                fill.a = 0;
-                cot.event.detail.fillColor = { _attributes: { value: fill.as_32bit() } };
-            }
+            const fill = new Color(feature.properties.fill || -1761607936);
+            fill.a = 0;
+            cot.event.detail.fillColor = { _attributes: { value: fill.as_32bit() } };
         }
 
         if (feature.geometry.type === 'Polygon' && feature.properties.type && ELLIPSE_TYPES.has(feature.properties.type)) {
@@ -490,7 +485,7 @@ export async function from_geojson(
                     Style: {
                         LineStyle: {
                             color: { _text: strokeColor.as_kml() },
-                            width: { _text: cot.event.detail.strokeWeight?._attributes?.value ? cot.event.detail.strokeWeight._attributes.value : 3 }
+                            width: { _text: strokeWidth }
                         },
                         PolyStyle: {
                             color: { _text: fillColor.as_kml() },
@@ -597,7 +592,7 @@ export async function from_geojson(
                 cot.event.point._attributes.hae = 0.0;
             }
         } else {
-            const centre = PointOnFeature(feature as AllGeoJSON);
+            const centre = PointOnFeature(feature);
             cot.event.point._attributes.lon = centre.geometry.coordinates[0];
             cot.event.point._attributes.lat = centre.geometry.coordinates[1];
             cot.event.point._attributes.hae = 0.0;

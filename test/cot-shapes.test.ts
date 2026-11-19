@@ -100,7 +100,7 @@ test('En-decode 0-length polyline', async () => {
 });
 
 test('Basic Circle', async () => {
-    const cot = await CoTParser.from_xml(`
+    const cot = CoTParser.from_xml(`
        <event version="2.0" uid="96bba41c-e6fd-44d5-be90-8d816c6b873b" type="u-r-b-c-c" how="h-e" time="2025-07-10T16:49:54Z" start="2025-07-10T16:49:43Z" stale="2025-07-11T16:49:43Z" access="Undefined">
             <point lat="41.8988499" lon="-113.9094586" hae="2040.381" ce="9999999.0" le="9999999.0"/>
             <detail>
@@ -250,7 +250,7 @@ test('Basic Circle', async () => {
     if (!parsedCoT.raw.event.detail) {
         assert.fail('No Detail Section')
     } else {
-        assert.ok(parsedCoT.raw.event.detail['_flow-tags_']);
+        assert.ok(Boolean(parsedCoT.raw.event.detail['_flow-tags_']));
         delete parsedCoT.raw.event.detail['_flow-tags_'];
 
         assert.deepEqual(parsedCoT.raw.event, {
@@ -442,7 +442,7 @@ test('Polygon without a marker type still becomes u-d-f', async () => {
 });
 
 test('Marker polygon - to_geojson outputs Polygon geometry and round trips', async () => {
-    const cot = await CoTParser.from_xml(`
+    const cot = CoTParser.from_xml(`
         <event version="2.0" uid="expiring-polygon-123" type="a-f-G" how="m-g" time="2024-01-01T12:00:00Z" start="2024-01-01T12:00:00Z" stale="2024-01-01T13:00:00Z">
             <point lat="39.05" lon="-108.45" hae="0.0" ce="9999999.0" le="9999999.0"/>
             <detail>
@@ -488,7 +488,7 @@ test('Marker polygon - to_geojson outputs Polygon geometry and round trips', asy
 });
 
 test('Single vertex polyline outputs Point geometry', async () => {
-    const cot = await CoTParser.from_xml(`
+    const cot = CoTParser.from_xml(`
         <event version="2.0" uid="single" type="a-f-G" how="m-g" time="2024-01-01T12:00:00Z" start="2024-01-01T12:00:00Z" stale="2024-01-01T13:00:00Z">
             <point lat="39.05" lon="-108.45" hae="0.0" ce="9999999.0" le="9999999.0"/>
             <detail>

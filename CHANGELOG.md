@@ -12,6 +12,11 @@
 
 ### Pending Fixed
 
+### v14.60.0 - 2026-11-19
+
+- :tada: Introduce NodeCoT Online Validator
+- :rocket: Add extrusion details to schema
+
 ### v14.59.0 - 2026-11-09
 
 - :tada: Add `__address` detail (`text`, `geocoder`, `time`) and the matching `address` GeoJSON property - ATAK shows it in the point details panel

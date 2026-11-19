@@ -51,30 +51,32 @@ function isJSONInput(inputPath: string, raw: string): boolean {
     return raw.trimStart().startsWith('{');
 }
 
+function isRecord(input: unknown): input is Record<string, unknown> {
+    return typeof input === 'object' && input !== null && !Array.isArray(input);
+}
+
 function normalizeGeoJSON(input: unknown): Record<string, unknown> {
-    if (!input || typeof input !== 'object' || Array.isArray(input)) {
+    if (!isRecord(input)) {
         throw new Error('GeoJSON input must be an object');
     }
 
-    const geojson = input as Record<string, unknown>;
-
-    if (geojson.type === 'Feature') {
-        return geojson;
+    if (input.type === 'Feature') {
+        return input;
     }
 
-    if (geojson.type === 'FeatureCollection') {
-        const features = geojson.features;
+    if (input.type === 'FeatureCollection') {
+        const features = input.features;
 
         if (!Array.isArray(features) || features.length !== 1) {
             throw new Error('FeatureCollection input must contain exactly one feature');
         }
 
-        const [feature] = features;
-        if (!feature || typeof feature !== 'object' || Array.isArray(feature)) {
+        const feature: unknown = features[0];
+        if (!isRecord(feature)) {
             throw new Error('FeatureCollection contains an invalid feature');
         }
 
-        return feature as Record<string, unknown>;
+        return feature;
     }
 
     throw new Error('GeoJSON input must be a Feature or a single-feature FeatureCollection');
@@ -85,12 +87,10 @@ async function validatePackage(inputPath: string): Promise<void> {
     let pkg: DataPackage | undefined;
 
     try {
-        pkg = await withoutConsoleWarn(async () => {
-            return await DataPackage.parse(resolved, {
-                cleanup: false,
-                strict: true
-            });
-        });
+        pkg = await withoutConsoleWarn(() => DataPackage.parse(resolved, {
+            cleanup: false,
+            strict: true
+        }));
 
         const issues: PackageIssue[] = [];
 
@@ -112,7 +112,7 @@ async function validatePackage(inputPath: string): Promise<void> {
             }
         }
 
-        if (issues.length) {
+        if (issues.length > 0) {
             console.error(JSON.stringify({
                 valid: false,
                 package: resolved,
@@ -163,9 +163,8 @@ async function convertFeature(inputPath: string): Promise<void> {
 
     if (isJSONInput(resolved, raw)) {
         const feature = normalizeGeoJSON(JSON.parse(raw));
-        const cot = await withoutConsoleWarn(async () => {
-            return await CoTParser.from_geojson(feature as never);
-        });
+        // oxlint-disable-next-line typescript/no-unsafe-type-assertion
+        const cot = await withoutConsoleWarn(() => CoTParser.from_geojson(feature as never));
         const xml = CoTParser.to_xml(cot);
 
         await withoutConsoleWarn(() => CoTParser.from_xml(xml));
@@ -179,7 +178,7 @@ async function convertFeature(inputPath: string): Promise<void> {
     process.stdout.write(`${JSON.stringify(feature, null, 4)}\n`);
 }
 
-const commands: Record<string, CommandHandler> = {
+const commands: Partial<Record<string, CommandHandler>> = {
     'package validate': async (args) => {
         if (args.length !== 1) {
             throw new Error('package validate requires a single .zip file path');
@@ -199,7 +198,7 @@ const commands: Record<string, CommandHandler> = {
 try {
     const args = process.argv.slice(2);
 
-    if (!args.length || args.includes('--help') || args.includes('-h')) {
+    if (args.length === 0 || args.includes('--help') || args.includes('-h')) {
         console.log(usage());
         process.exit(0);
     }

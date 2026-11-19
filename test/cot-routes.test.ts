@@ -394,7 +394,7 @@ test('Decode Route', async () => {
     if (!cot.raw.event.detail) {
         assert.fail('No Detail Section')
     } else {
-        assert.ok(cot.raw.event.detail['_flow-tags_']);
+        assert.ok(Boolean(cot.raw.event.detail['_flow-tags_']));
         delete cot.raw.event.detail['_flow-tags_'];
 
         assert.deepEqual({
@@ -489,7 +489,7 @@ test('Parser from LineString', async () => {
     if (!cot.raw.event.detail) {
         assert.fail('No Detail Section');
     } else {
-        assert.ok(cot.raw.event.detail['_flow-tags_']);
+        assert.ok(Boolean(cot.raw.event.detail['_flow-tags_']));
         delete cot.raw.event.detail['_flow-tags_'];
 
         if (cot.raw.event.detail.link && Array.isArray(cot.raw.event.detail.link)) {
@@ -520,7 +520,7 @@ test('Parser from LineString', async () => {
 });
 
 test('Decode Route (5.4 Additions)', async () => {
-    const cot = await CoTParser.from_xml(`
+    const cot = CoTParser.from_xml(`
 <event version="2.0" uid="9bb32cff-9eb2-4330-a9ba-a92ba01e9eb7" type="b-m-r" time="2025-06-26T00:03:05.328Z" start="2025-06-26T00:03:05.328Z" stale="2025-06-27T00:03:05.328Z" how="h-e" access="Undefined">
   <point lat="0.0" lon="0.0" hae="9999999.0" ce="9999999.0" le="9999999.0"/>
   <detail>
@@ -564,11 +564,11 @@ test('Decode Route (5.4 Additions)', async () => {
 </event>
     `)
 
-    new Route(cot);
+    assert.doesNotThrow(() => new Route(cot));
 });
 
 test('Decode Route - Empty NavCues', async () => {
-    const cot = await CoTParser.from_xml(`
+    const cot = CoTParser.from_xml(`
 <event version="2.0" uid="9bb32cff-9eb2-4330-a9ba-a92ba01e9eb7" type="b-m-r" time="2025-06-26T00:03:05.328Z" start="2025-06-26T00:03:05.328Z" stale="2025-06-27T00:03:05.328Z" how="h-e" access="Undefined">
   <point lat="0.0" lon="0.0" hae="9999999.0" ce="9999999.0" le="9999999.0"/>
   <detail>
@@ -599,5 +599,5 @@ test('Decode Route - Empty NavCues', async () => {
 </event>
     `)
 
-    new Route(cot);
+    assert.doesNotThrow(() => new Route(cot));
 });

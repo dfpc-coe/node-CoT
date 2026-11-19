@@ -17,19 +17,23 @@ import type {
 import {
     InputFeature,
 } from './types/feature.js';
-import { normalizeBooleanAttributeValues } from './parser-normalize.js';
+import { hasUnclosedElements, normalizeBooleanAttributeValues } from './parser-normalize.js';
 import JSONCoT, { Detail } from './types/types.js'
 import CoT from './cot.js';
 import type { CoTOptions } from './cot.js';
 import AJV from 'ajv';
 import fs from 'fs';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 
-const protoPath = path.join(path.dirname(fileURLToPath(import.meta.url)), 'proto', 'takmessage.proto');
+const protoPath = path.join(import.meta.dirname, 'proto', 'takmessage.proto');
 const RootMessage = await protobuf.load(protoPath);
 
-const pkg = JSON.parse(String(fs.readFileSync(new URL('../package.json', import.meta.url))));
+function isObject(input: unknown): input is Record<string, unknown> {
+    return typeof input === 'object' && input !== null;
+}
+
+const pkg: unknown = JSON.parse(String(fs.readFileSync(new URL('../package.json', import.meta.url))));
+const pkgVersion = isObject(pkg) ? String(pkg.version) : 'undefined';
 
 const checkXML = (new AJV({
     allErrors: true,
@@ -47,33 +51,51 @@ export interface CoTParseError {
     event: unknown;
 }
 
-function resetFlowTags(cot: CoT): void {
-    const flowTags = cot.raw.event.detail?.['_flow-tags_'];
+interface ProtoLong {
+    toNumber: () => number;
+}
 
-    if (!flowTags || typeof flowTags !== 'object' || Array.isArray(flowTags)) {
+function isProtoLong(input: unknown): input is ProtoLong {
+    return isObject(input) && typeof input.toNumber === 'function';
+}
+
+function protoTime(input: unknown): string {
+    if (!isProtoLong(input)) throw new Err(400, null, 'Invalid cotEvent Time');
+    return new Date(input.toNumber()).toISOString();
+}
+
+function toArray(input: unknown): unknown[] {
+    if (Array.isArray(input)) return input;
+    return [input];
+}
+
+function unvalidated(input: unknown): Static<typeof JSONCoT> {
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion
+    return input as Static<typeof JSONCoT>;
+}
+
+function stripServerFlowTags(tags: Record<string, unknown>): void {
+    for (const key of Object.keys(tags)) {
+        if (key !== '_attributes' && key.startsWith('TAK-Server')) {
+            delete tags[key];
+        }
+    }
+}
+
+function resetFlowTags(cot: CoT): void {
+    const flowTags: unknown = cot.raw.event.detail?.['_flow-tags_'];
+
+    if (!isObject(flowTags) || Array.isArray(flowTags)) {
         return;
     }
 
-    const stripServerFlowTags = (tags: Record<string, unknown>): void => {
-        for (const key of Object.keys(tags)) {
-            if (key !== '_attributes' && key.startsWith('TAK-Server')) {
-                delete tags[key];
-            }
-        }
-    };
+    stripServerFlowTags(flowTags);
 
-    stripServerFlowTags(flowTags as Record<string, unknown>);
-
-    if (
-        '_attributes' in flowTags
-        && flowTags._attributes
-        && typeof flowTags._attributes === 'object'
-        && !Array.isArray(flowTags._attributes)
-    ) {
-        stripServerFlowTags(flowTags._attributes as Record<string, unknown>);
+    if (isObject(flowTags._attributes) && !Array.isArray(flowTags._attributes)) {
+        stripServerFlowTags(flowTags._attributes);
     }
 
-    flowTags[`NodeCoT-${pkg.version}`] = new Date().toISOString();
+    flowTags[`NodeCoT-${pkgVersion}`] = new Date().toISOString();
 }
 
 /**
@@ -100,27 +122,23 @@ const PROTO_DETAIL_ELEMENTS: Record<string, string> = Object.fromEntries(
 export class CoTParser {
     static validate(
         cot: CoT,
-        opts: {
+        opts?: {
             flow: boolean
-        } = {
-            flow: true
         }
     ): CoT {
-        if (opts.flow === undefined) opts.flow = true;
-
         checkXML(cot.raw);
         if (checkXML.errors) {
             throw new Err(400, null, `${checkXML.errors[0].message} (${checkXML.errors[0].instancePath})`);
         }
 
-        if (opts.flow) {
-            if (!cot.raw.event.detail) cot.raw.event.detail = {};
+        if (opts?.flow ?? true) {
+            cot.raw.event.detail ??= {};
 
-            if (!cot.raw.event.detail['_flow-tags_']) {
-                cot.raw.event.detail['_flow-tags_'] = {};
-            }
+            const existing: unknown = cot.raw.event.detail['_flow-tags_'];
+            const flowTags = isObject(existing) ? existing : {};
+            cot.raw.event.detail['_flow-tags_'] = flowTags;
 
-            cot.raw.event.detail['_flow-tags_'][`NodeCoT-${pkg.version}`] = new Date().toISOString()
+            flowTags[`NodeCoT-${pkgVersion}`] = new Date().toISOString()
         }
 
         return cot;
@@ -134,32 +152,32 @@ export class CoTParser {
     static async isDiff(
         aCoT: CoT,
         bCoT: CoT,
-        opts = {
-            diffMetadata: false,
-            diffStaleStartTime: false,
-            diffDest: false,
-            diffFlow: false
+        opts?: {
+            diffMetadata: boolean,
+            diffStaleStartTime: boolean,
+            diffDest: boolean,
+            diffFlow: boolean
         }
     ): Promise<boolean> {
         const a = await this.to_geojson(aCoT) as Static<typeof InputFeature>;
         const b = await this.to_geojson(bCoT) as Static<typeof InputFeature>;
 
-        if (!opts.diffDest) {
+        if (!opts?.diffDest) {
             delete a.properties.dest;
             delete b.properties.dest;
         }
 
-        if (!opts.diffMetadata) {
+        if (!opts?.diffMetadata) {
             delete a.properties.metadata;
             delete b.properties.metadata;
         }
 
-        if (!opts.diffFlow) {
+        if (!opts?.diffFlow) {
             delete a.properties.flow;
             delete b.properties.flow;
         }
 
-        if (!opts.diffStaleStartTime) {
+        if (!opts?.diffStaleStartTime) {
             delete a.properties.time;
             delete a.properties.stale;
             delete a.properties.start;
@@ -180,18 +198,22 @@ export class CoTParser {
    ): CoT {
         const str = String(raw);
 
-        let parsed: Static<typeof JSONCoT>;
+        let parsed: unknown;
         try {
-            parsed = xml2js(str, { compact: true }) as Static<typeof JSONCoT>;
+            parsed = xml2js(str, { compact: true });
         } catch (err) {
             console.error(`Failed to parse CoT XML: ${str}`);
             throw err;
         }
 
+        if (hasUnclosedElements(parsed)) {
+            throw new Err(400, null, 'Malformed XML: unclosed element');
+        }
+
         normalizeBooleanAttributeValues(parsed);
 
         const cot = new CoT(
-            parsed,
+            unvalidated(parsed),
             opts
         );
 
@@ -207,22 +229,28 @@ export class CoTParser {
     } {
         const str = String(raw);
 
-        let parsed: any;
+        let parsed: unknown;
         try {
-            parsed = xml2js(str, { compact: true }) as Record<string, unknown>;
+            parsed = xml2js(str, { compact: true });
         } catch (err) {
             console.error(`Failed to parse CoT XML Document: ${str}`);
             throw err;
         }
 
+        if (hasUnclosedElements(parsed)) {
+            throw new Err(400, null, 'Malformed XML: unclosed element');
+        }
+
         normalizeBooleanAttributeValues(parsed);
 
         let events: unknown[] = [];
-        if (parsed && typeof parsed === 'object') {
-            if (parsed.events && parsed.events.event) {
-                events = Array.isArray(parsed.events.event) ? parsed.events.event : [parsed.events.event];
-            } else if (parsed.event) {
-                events = Array.isArray(parsed.event) ? parsed.event : [parsed.event];
+        if (isObject(parsed)) {
+            const hasEvent = Boolean(parsed.event);
+
+            if (isObject(parsed.events) && Boolean(parsed.events.event)) {
+                events = toArray(parsed.events.event);
+            } else if (hasEvent) {
+                events = toArray(parsed.event);
             }
         }
 
@@ -232,7 +260,7 @@ export class CoTParser {
         for (const event of events) {
             try {
                 cots.push(this.validate(
-                    new CoT({ event: structuredClone(event) } as Static<typeof JSONCoT>, opts),
+                    new CoT(unvalidated({ event: structuredClone(event) }), opts),
                     { flow: false }
                 ));
             } catch (err) {
@@ -265,7 +293,7 @@ export class CoTParser {
         version = 1,
         opts?: SerializerOptions
     ): Promise<Uint8Array> {
-        if (version < 1 || version > 1) throw new Err(400, null, `Unsupported Proto Version: ${version}`);
+        if (version !== 1) throw new Err(400, null, `Unsupported Proto Version: ${version}`);
         const ProtoMessage = RootMessage.lookupType(`atakmap.commoncommo.protobuf.v${version}.TakMessage`)
 
         if (opts?.resetFlow) {
@@ -274,16 +302,17 @@ export class CoTParser {
 
         // The spread operator is important to make sure the delete doesn't modify the underlying detail object
         const detail = { ...cot.raw.event.detail };
-        const msg: any = {
+        const protoDetail: Record<string, unknown> = {
+            xmlDetail: ''
+        };
+        const msg = {
             cotEvent: {
                 ...cot.raw.event._attributes,
                 sendTime: new Date(cot.raw.event._attributes.time).getTime(),
                 startTime: new Date(cot.raw.event._attributes.start).getTime(),
                 staleTime: new Date(cot.raw.event._attributes.stale).getTime(),
                 ...cot.raw.event.point._attributes,
-                detail: {
-                    xmlDetail: ''
-                }
+                detail: protoDetail
             }
         };
 
@@ -291,12 +320,13 @@ export class CoTParser {
         for (key in detail) {
             const field = PROTO_DETAIL_FIELDS[key];
             if (field) {
-                msg.cotEvent.detail[field] = detail[key]._attributes;
+                const element: unknown = detail[key];
+                protoDetail[field] = isObject(element) ? element._attributes : undefined;
                 delete detail[key]
             }
         }
 
-        msg.cotEvent.detail.xmlDetail = js2xml({
+        protoDetail.xmlDetail = js2xml({
             ...detail,
             metadata: cot.metadata
         }, { compact: true });
@@ -308,7 +338,7 @@ export class CoTParser {
      * Return a GeoJSON Feature from an XML CoT message
      */
     static async to_geojson(cot: CoT, opts: ToGeoJSONOptions = {}): Promise<Static<typeof Feature>> {
-        return await to_geojson(cot, opts);
+        return to_geojson(cot, opts);
     }
 
     /**
@@ -321,58 +351,57 @@ export class CoTParser {
     ): Promise<CoT> {
         const ProtoMessage = RootMessage.lookupType(`atakmap.commoncommo.protobuf.v${version}.TakMessage`)
 
-        // TODO Type this
-        const msg: any = ProtoMessage.decode(raw);
+        const cotEvent: unknown = ProtoMessage.decode(raw).cotEvent;
 
-        if (!msg.cotEvent) throw new Err(400, null, 'No cotEvent Data');
+        if (!isObject(cotEvent)) throw new Err(400, null, 'No cotEvent Data');
 
-        const detail: Record<string, any> = {};
+        const protoDetail = isObject(cotEvent.detail) ? cotEvent.detail : {};
+
+        const detail: Record<string, unknown> = {};
         const metadata: Record<string, unknown> = {};
-        for (const key in msg.cotEvent.detail) {
+        for (const key in protoDetail) {
             if (key === 'xmlDetail') {
-                const parsed: any = xml2js(`<detail>${msg.cotEvent.detail.xmlDetail}</detail>`, { compact: true });
+                const xmlDetail = typeof protoDetail.xmlDetail === 'string' ? protoDetail.xmlDetail : '';
+                const parsed: unknown = xml2js(`<detail>${xmlDetail}</detail>`, { compact: true });
                 normalizeBooleanAttributeValues(parsed);
-                Object.assign(detail, parsed.detail);
+                if (isObject(parsed)) Object.assign(detail, parsed.detail);
 
-                if (detail.metadata) {
-                    for (const key in detail.metadata) {
-                        metadata[key] = detail.metadata[key]._text;
+                if (isObject(detail.metadata)) {
+                    for (const metadataKey in detail.metadata) {
+                        const entry = detail.metadata[metadataKey];
+                        metadata[metadataKey] = isObject(entry) ? entry._text : undefined;
                     }
                     delete detail.metadata;
                 }
-            } else if (key === 'group') {
-                if (msg.cotEvent.detail[key]) {
-                    detail.__group = { _attributes: msg.cotEvent.detail[key] };
-                }
-            } else if (PROTO_DETAIL_ELEMENTS[key]) {
-                if (msg.cotEvent.detail[key]) {
-                    detail[PROTO_DETAIL_ELEMENTS[key]] = { _attributes: msg.cotEvent.detail[key] };
-                }
+            } else if (key === 'group' && Boolean(protoDetail[key])) {
+                detail.__group = { _attributes: protoDetail[key] };
+            } else if (PROTO_DETAIL_ELEMENTS[key] && Boolean(protoDetail[key])) {
+                detail[PROTO_DETAIL_ELEMENTS[key]] = { _attributes: protoDetail[key] };
             }
         }
 
-        const cot = new CoT({
+        const cot = new CoT(unvalidated({
             event: {
                 _attributes: {
                     version: '2.0',
-                    uid: msg.cotEvent.uid, type: msg.cotEvent.type, how: msg.cotEvent.how,
-                    qos: msg.cotEvent.qos, opex: msg.cotEvent.opex, access: msg.cotEvent.access,
-                    time: new Date(msg.cotEvent.sendTime.toNumber()).toISOString(),
-                    start: new Date(msg.cotEvent.startTime.toNumber()).toISOString(),
-                    stale: new Date(msg.cotEvent.staleTime.toNumber()).toISOString(),
+                    uid: cotEvent.uid, type: cotEvent.type, how: cotEvent.how,
+                    qos: cotEvent.qos, opex: cotEvent.opex, access: cotEvent.access,
+                    time: protoTime(cotEvent.sendTime),
+                    start: protoTime(cotEvent.startTime),
+                    stale: protoTime(cotEvent.staleTime),
                 },
                 detail,
                 point: {
                     _attributes: {
-                        lat: msg.cotEvent.lat,
-                        lon: msg.cotEvent.lon,
-                        hae: msg.cotEvent.hae,
-                        le: msg.cotEvent.le,
-                        ce: msg.cotEvent.ce,
+                        lat: cotEvent.lat,
+                        lon: cotEvent.lon,
+                        hae: cotEvent.hae,
+                        le: cotEvent.le,
+                        ce: cotEvent.ce,
                     },
                 }
             }
-        }, opts);
+        }), opts);
 
         cot.metadata = metadata;
 

@@ -8,7 +8,7 @@ import StreamZip from 'node-stream-zip'
 import { Readable } from 'node:stream';
 import CoT from './cot.js';
 import { CoTParser } from './parser.js';
-import xmljs from '@tak-ps/xml-js';
+import { xml2js, js2xml } from '@tak-ps/xml-js';
 import os from 'node:os';
 import fs from 'node:fs';
 import fsp from 'node:fs/promises';
@@ -74,7 +74,7 @@ const checkManifest = (new AJV({
     coerceTypes: true,
     allowUnionTypes: true
 }))
-    .compile(Manifest);
+    .compile<Static<typeof Manifest>>(Manifest);
 
 async function materializeDataPackageInput(
     input: string | URL | Buffer | Readable,
@@ -146,7 +146,7 @@ export class DataPackage {
             path?: string
         } = {}
     ) {
-        if (opts && opts.path) {
+        if (opts?.path) {
             this.path = opts.path;
         } else {
             this.path = os.tmpdir() + '/' + crypto.randomUUID();
@@ -199,13 +199,14 @@ export class DataPackage {
         };
 
         for (const key in this.settings) {
-            if (!this.settings[key]) continue;
+            const value = this.settings[key];
+            if (value === undefined || value === false || value === '') continue;
             manifest.MissionPackageManifest.Configuration.Parameter.push({
-                _attributes: { name: key, value: String(this.settings[key]) }
+                _attributes: { name: key, value: String(value) }
             })
         }
 
-        const xml = `<?xml version="1.0" encoding="UTF-8"?>\n${xmljs.js2xml(manifest, { compact: true })}`;
+        const xml = `<?xml version="1.0" encoding="UTF-8"?>\n${js2xml(manifest, { compact: true })}`;
 
         return xml;
     }
@@ -215,15 +216,15 @@ export class DataPackage {
      * Return true if the DataPackage is a MissionSync Archive
      */
     isMissionArchive(): boolean {
-        return !!(this.settings.mission_guid && this.settings.mission_name);
+        return Boolean(this.settings.mission_guid) && Boolean(this.settings.mission_name);
     }
 
     /**
      * When DataPackages are uploaded to TAK Server they generally use an EUD
      * calculated Hash
      */
-    static async hash(path: string): Promise<string> {
-        const input = fs.createReadStream(path);
+    static async hash(file: string): Promise<string> {
+        const input = fs.createReadStream(file);
         const hash = createHash('sha256');
         await pipeline(input, hash);
         return hash.digest('hex');
@@ -234,7 +235,7 @@ export class DataPackage {
      * calculated Hash
      */
     async hash(entry: string): Promise<string> {
-        return await DataPackage.hash(this.path + '/raw/' + entry);
+        return DataPackage.hash(this.path + '/raw/' + entry);
     }
 
 
@@ -256,9 +257,9 @@ export class DataPackage {
             name?: string
         }
     ): Promise<DataPackage> {
-        if (!opts) opts = {};
-        if (opts.strict === undefined) opts.strict = true;
-        if (opts.cleanup === undefined) opts.cleanup = true;
+        opts ??= {};
+        opts.strict ??= true;
+        opts.cleanup ??= true;
 
         const source = await materializeDataPackageInput(input, opts.name);
 
@@ -270,20 +271,22 @@ export class DataPackage {
         });
 
         const preentries = await zip.entries();
+        const manifestEntry: unknown = preentries['MANIFEST/manifest.xml'];
 
-        if (opts.strict && !preentries['MANIFEST/manifest.xml']) {
+        if (opts.strict && manifestEntry === undefined) {
             throw new Err(400, null, 'No MANIFEST/manifest.xml found in Data Package');
         }
 
         await fsp.mkdir(pkg.path + '/raw', { recursive: true });
         await zip.extract(null, pkg.path + '/raw/');
 
-        if (preentries['MANIFEST/manifest.xml']) {
-            const xml = xmljs.xml2js(String(await fsp.readFile(pkg.path + '/raw/MANIFEST/manifest.xml')), { compact: true })
+        if (manifestEntry !== undefined) {
+            const manifest: unknown = xml2js(String(await fsp.readFile(pkg.path + '/raw/MANIFEST/manifest.xml')), { compact: true })
 
-            checkManifest(xml);
-            if (checkManifest.errors) throw new Err(400, null, `${checkManifest.errors[0].message} (${checkManifest.errors[0].instancePath})`);
-            const manifest = xml as Static<typeof Manifest>;
+            if (!checkManifest(manifest)) {
+                const [error] = checkManifest.errors ?? [];
+                throw new Err(400, null, `${error?.message} (${error?.instancePath})`);
+            }
 
             pkg.version = manifest.MissionPackageManifest._attributes.version;
 
@@ -295,7 +298,7 @@ export class DataPackage {
 
             for (const param of manifest.MissionPackageManifest.Configuration.Parameter) {
                 if (['onReceiveImport', 'onReceiveDelete'].includes(param._attributes.name) && typeof param._attributes.value === 'string') {
-                    pkg.settings[param._attributes.name] = param._attributes.value === 'false' ? false : true;
+                    pkg.settings[param._attributes.name] = param._attributes.value !== 'false';
                 } else {
                     pkg.settings[param._attributes.name] = param._attributes.value;
                 }
@@ -331,7 +334,7 @@ export class DataPackage {
     #addContent(zipEntry: string, uid: string, name?: string, ignore = false): void {
         if (this.destroyed) throw new Err(400, null, 'Attempt to access Data Package after it has been destroyed');
 
-        // TODO: Seen in the wild but not currently implemented here:
+        // Seen in the wild but not currently implemented here:
         // <Parameter name="contentType" value="KML"/>
         // <Parameter name="visible" value="false"/>
 
@@ -353,20 +356,21 @@ export class DataPackage {
          other attachment actions do not automatically populate this field other than the link
          provided between a CoT and it's attachment in the MANIFEST file
      */
-    async cots(opts = {
-        respectIgnore: true,
-        parseAttachments: true
+    async cots(opts?: {
+        respectIgnore: boolean,
+        parseAttachments: boolean
     }): Promise<Array<CoT>> {
         if (this.destroyed) throw new Err(400, null, 'Attempt to access Data Package after it has been destroyed');
+
+        const respectIgnore = opts ? opts.respectIgnore : true;
+        const parseAttachments = opts ? opts.parseAttachments : true;
 
         const cotsMap: Map<string, CoT> = new Map();
 
         const cots: CoT[] = [];
         for (const content of this.contents) {
-            if (!content) continue;
-
             if (path.parse(content._attributes.zipEntry).ext !== '.cot') continue;
-            if (opts.respectIgnore && content._attributes.ignore) continue;
+            if (respectIgnore && content._attributes.ignore) continue;
 
             const cot = CoTParser.from_xml(await fsp.readFile(this.path + '/raw/' + content._attributes.zipEntry));
 
@@ -375,27 +379,22 @@ export class DataPackage {
             cots.push(cot);
         }
 
-        if (opts.parseAttachments) {
-            const attachments = this.#attachments(cotsMap, {
-                respectIgnore: opts.respectIgnore
-            });
+        if (parseAttachments) {
+            const attachments = this.#attachments(cotsMap, { respectIgnore });
 
             for (const cot of cots) {
-                if (!cot.raw.event.detail) {
-                    cot.raw.event.detail = {};
-                }
+                cot.raw.event.detail ??= {};
 
                 const attaches = attachments.get(cot.uid());
                 if (!attaches) continue;
 
                 for (const attach of attaches) {
-                    if (!cot.raw.event.detail.attachment_list) {
-                        cot.raw.event.detail.attachment_list = {
-                            _attributes: { hashes: '[]' }
-                        };
-                    }
+                    cot.raw.event.detail.attachment_list ??= {
+                        _attributes: { hashes: '[]' }
+                    };
 
-                    const hashes: string[] = JSON.parse(cot.raw.event.detail.attachment_list._attributes.hashes)
+                    const hashes: unknown = JSON.parse(cot.raw.event.detail.attachment_list._attributes.hashes)
+                    if (!Array.isArray(hashes)) throw new Err(400, null, 'attachment_list hashes must be a JSON Array');
 
                     // Until told otherwise the FileHash appears to always be the directory name
                     const hash = await this.hash(attach._attributes.zipEntry);
@@ -413,29 +412,26 @@ export class DataPackage {
         return cots;
     }
 
-    #attachments(cots: Map<string, CoT>, opts = { respectIgnore: true }): Map<string, Array<Static<typeof ManifestContent>>> {
+    #attachments(cots: Map<string, CoT>, opts: { respectIgnore: boolean }): Map<string, Array<Static<typeof ManifestContent>>> {
         const attachments: Map<string, Array<Static<typeof ManifestContent>>> = new Map();
 
         for (const content of this.contents) {
-            if (!content) continue;
-
             if (path.parse(content._attributes.zipEntry).ext === '.cot') continue;
             if (opts.respectIgnore && content._attributes.ignore) continue;
+            if (!content.Parameter) continue;
 
-            if (content.Parameter) {
-                const params = Array.isArray(content.Parameter) ? content.Parameter : [content.Parameter];
+            const params = Array.isArray(content.Parameter) ? content.Parameter : [content.Parameter];
 
-                for (const param of params) {
-                    if (param._attributes.name === 'uid' && cots.has(param._attributes.value)) {
-                        const existing = attachments.get(param._attributes.value);
-                        if (existing) {
-                            existing.push(content);
-                        } else {
-                            attachments.set(param._attributes.value, [content]);
-                        }
-                        break;
-                    }
+            for (const param of params) {
+                if (param._attributes.name !== 'uid' || !cots.has(param._attributes.value)) continue;
+
+                const existing = attachments.get(param._attributes.value);
+                if (existing) {
+                    existing.push(content);
+                } else {
+                    attachments.set(param._attributes.value, [content]);
                 }
+                break;
             }
         }
 
@@ -446,8 +442,9 @@ export class DataPackage {
      * Return a list of files that are NOT attachments or CoT markers
      * The Set returned has a list of file paths that can be passed to getFile(path)
      */
-    async files(opts = { respectIgnore: true }): Promise<Set<string>> {
-        const attachments = await this.attachments(opts);
+    async files(opts?: { respectIgnore: boolean }): Promise<Set<string>> {
+        const respectIgnore = opts ? opts.respectIgnore : true;
+        const attachments = await this.attachments({ respectIgnore });
         const files: Set<string> = new Set();
 
         const attachment_entries = new Set<string>();
@@ -458,9 +455,8 @@ export class DataPackage {
         }
 
         for (const content of this.contents) {
-            if (!content) continue;
             if (path.parse(content._attributes.zipEntry).ext === '.cot') continue;
-            if (opts.respectIgnore && content._attributes.ignore) continue;
+            if (respectIgnore && content._attributes.ignore) continue;
 
             if (attachment_entries.has(content._attributes.zipEntry)) {
                 continue;
@@ -476,43 +472,45 @@ export class DataPackage {
      * Return attachments that are associated in the Manifest with a given CoT
      * Note: this does not return files that are NOT associated with a CoT
      */
-    async attachments(opts = { respectIgnore: true }): Promise<Map<string, Array<Static<typeof ManifestContent>>>> {
+    async attachments(opts?: { respectIgnore: boolean }): Promise<Map<string, Array<Static<typeof ManifestContent>>>> {
+        const respectIgnore = opts ? opts.respectIgnore : true;
+
         const cots: Map<string, CoT> = new Map();
         for (const cot of await this.cots({
-            respectIgnore: opts.respectIgnore,
+            respectIgnore,
             parseAttachments: false
         })) {
             cots.set(cot.uid(), cot);
         }
 
-        return this.#attachments(cots, opts);
+        return this.#attachments(cots, { respectIgnore });
     }
 
-    async getFileBuffer(path: string): Promise<Buffer> {
+    async getFileBuffer(file: string): Promise<Buffer> {
         if (this.destroyed) throw new Err(400, null, 'Attempt to access Data Package after it has been destroyed');
 
         try {
-            await fsp.access(`${this.path}/raw/${path}`)
+            await fsp.access(`${this.path}/raw/${file}`)
         } catch (err) {
             throw new Err(400, err instanceof Error ? err : new Error(String(err)), 'Could not access file in Data Package');
         }
 
-        return await fsp.readFile(`${this.path}/raw/${path}`);
+        return fsp.readFile(`${this.path}/raw/${file}`);
     }
 
     /**
      * Get any file from a Package
      */
-    async getFile(path: string): Promise<Readable> {
+    async getFile(file: string): Promise<Readable> {
         if (this.destroyed) throw new Err(400, null, 'Attempt to access Data Package after it has been destroyed');
 
         try {
-            await fsp.access(`${this.path}/raw/${path}`)
+            await fsp.access(`${this.path}/raw/${file}`)
         } catch (err) {
             throw new Err(400, err instanceof Error ? err : new Error(String(err)), 'Could not access file in Data Package');
         }
 
-        return fs.createReadStream(`${this.path}/raw/${path}`)
+        return fs.createReadStream(`${this.path}/raw/${file}`)
     }
 
     /**
@@ -532,7 +530,7 @@ export class DataPackage {
         attachment?: string;
     }): Promise<void> {
         if (this.destroyed) throw new Err(400, null, 'Attempt to access Data Package after it has been destroyed');
-        if (!opts.ignore) opts.ignore = false;
+        opts.ignore ??= false;
 
         const uid = opts.uid ?? crypto.randomUUID();
 
@@ -544,16 +542,14 @@ export class DataPackage {
     /**
      * Add a CoT marker to the Package
      */
-    async addCoT(cot: CoT, opts: {
+    async addCoT(cot: CoT, opts?: {
         ignore: boolean
-    } = {
-        ignore: false
     }): Promise<void> {
         if (this.destroyed) throw new Err(400, null, 'Attempt to access Data Package after it has been destroyed');
 
         const name = cot.callsign();
 
-        this.#addContent(`${cot.raw.event._attributes.uid}/${cot.raw.event._attributes.uid}.cot`, cot.raw.event._attributes.uid, name, opts.ignore);
+        this.#addContent(`${cot.raw.event._attributes.uid}/${cot.raw.event._attributes.uid}.cot`, cot.raw.event._attributes.uid, name, opts?.ignore);
         await fsp.mkdir(`${this.path}/raw/${cot.raw.event._attributes.uid}/`, { recursive: true });
         await fsp.writeFile(`${this.path}/raw/${cot.raw.event._attributes.uid}/${cot.raw.event._attributes.uid}.cot`, CoTParser.to_xml(cot))
     }
@@ -582,10 +578,10 @@ export class DataPackage {
             const output = fs.createWriteStream(this.path + `/${this.settings.uid}.zip`)
             archive.pipe(output);
             output.on('close', () => {
-                return resolve(this.path + `/${this.settings.uid}.zip`);
+                resolve(this.path + `/${this.settings.uid}.zip`);
             });
             archive.directory(this.path + '/raw/', '/');
-            archive.finalize()
+            void archive.finalize()
         });
     }
 }

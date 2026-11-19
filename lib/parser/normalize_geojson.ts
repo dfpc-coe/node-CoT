@@ -17,9 +17,9 @@ export async function normalize_geojson(
     feature: Static<typeof GeoJSONFeature>,
 ): Promise<Static<typeof Feature>> {
     try {
-        feature = await TypeValidator.type(GeoJSONFeature, feature);
+        feature = TypeValidator.type(GeoJSONFeature, feature);
     } catch (err) {
-        throw new Err(400, null, `Validation Error: ${err}`);
+        throw new Err(400, null, `Validation Error: ${String(err)}`);
     }
 
     if (!feature.id) {
@@ -29,7 +29,7 @@ export async function normalize_geojson(
     const props = feature.properties;
 
     feature.properties = {
-        metadata: props || {}
+        metadata: props
     }
 
     if (feature.geometry.type === 'Point') {
@@ -43,47 +43,42 @@ export async function normalize_geojson(
     }
 
     for (const color of ['marker-color', 'stroke', 'fill']) {
-        if (
-            props[color]
-            && typeof props[color] === 'string'
-            && /^#?[0-9a-fA-F]{6}$/.test(props[color])
-        ) {
-            feature.properties[color] = props[color].startsWith('#') ? props[color] : `#${props[color]}`;
+        const value = props[color];
+        if (typeof value === 'string' && /^#?[0-9a-fA-F]{6}$/.test(value)) {
+            feature.properties[color] = value.startsWith('#') ? value : `#${value}`;
         }
     }
 
     for (const number of ['marker-opacity', 'stroke-opacity', 'stroke-width', 'fill-opacity']) {
-        if (
-            props[number]
-            && typeof props[number] === 'number'
-        ) {
-            feature.properties[number] = props[number];
+        const value = props[number];
+        if (typeof value === 'number' && value) {
+            feature.properties[number] = value;
         }
     }
 
     // Callsign Options
-    for (const callsign of ['callsign', 'title', 'name']) {
-        if (props[callsign] && typeof props[callsign] === 'string') {
-            feature.properties.callsign = props[callsign];
+    let callsign = 'New Feature';
+    for (const key of ['callsign', 'title', 'name']) {
+        const value = props[key];
+        if (typeof value === 'string' && value) {
+            callsign = value;
             break;
         }
     }
 
-    if (!feature.properties.callsign) {
-        feature.properties.callsign = 'New Feature';
-    }
+    feature.properties.callsign = callsign;
 
     // Remarks Options
-    for (const remarks of ['remarks', 'description']) {
-        if (props[remarks] && typeof props[remarks] === 'string') {
-            feature.properties.remarks = props[remarks];
+    let remarks = '';
+    for (const key of ['remarks', 'description']) {
+        const value = props[key];
+        if (typeof value === 'string' && value) {
+            remarks = value;
             break;
         }
     }
 
-    if (!feature.properties.remarks) {
-        feature.properties.remarks = '';
-    }
+    feature.properties.remarks = remarks;
 
     feature.properties.time = new Date().toISOString();
     feature.properties.start = new Date().toISOString();
@@ -100,5 +95,6 @@ export async function normalize_geojson(
         coord.splice(3);
     });
 
+    // oxlint-disable-next-line typescript/no-unsafe-type-assertion
     return feature as Static<typeof Feature>;
 }

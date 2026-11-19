@@ -18,7 +18,7 @@ export default class Color {
 
             this.r = (color >> 16) & 255;
             this.g = (color >>  8) & 255;
-            this.b = (color >> 0) & 255;
+            this.b = color & 255;
             this.a = ((color >> 24) & 255);
         } else if (Array.isArray(color)) {
             this.a = color[0];

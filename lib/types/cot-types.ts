@@ -1,5 +1,5 @@
 import fsp from 'node:fs/promises';
-import xmljs from '@tak-ps/xml-js';
+import { xml2js } from '@tak-ps/xml-js';
 import type { Static } from '@sinclair/typebox';
 import TypeValidator from '../utils/type.js';
 import MilSymType, { StandardIdentity, Domain } from '../utils/2525.js';
@@ -82,7 +82,7 @@ export default class CoTTypes {
     }
 
     static async load(): Promise<CoTTypes> {
-        const xml = xmljs.xml2js(String(await fsp.readFile(new URL('cot-types.xml', import.meta.url))), { compact: true })
+        const xml = xml2js(String(await fsp.readFile(new URL('cot-types.xml', import.meta.url))), { compact: true })
 
         const types = TypeValidator.type(TypeFormat, xml);
 
@@ -125,13 +125,13 @@ export default class CoTTypes {
         const filtered: Set<Static<typeof AugmentedType>> = new Set();
 
         for (const cot of this.cots.values()) {
-            if (opts.domain) {
+            if (opts.domain !== undefined) {
                 if (!cot.cot.startsWith(`${opts.domain}-`)) {
                     continue;
                 };
             }
 
-            if (cot.cot.match(/^a-.-/)) {
+            if (/^a-.-/.test(cot.cot)) {
                 const type = cot.cot.replace(/^a-.-/, `a-${si}-`);
 
                 filtered.add({

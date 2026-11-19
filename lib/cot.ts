@@ -15,7 +15,7 @@ import type {
     VideoConnectionEntryAttributes,
 } from './types/types.js'
 import Sensor from './sensor.js';
-import Util from './utils/util.js';
+import Util, { toNumber } from './utils/util.js';
 import util2525 from './utils/2525.js'
 import JSONCoT, { Detail } from './types/types.js'
 
@@ -64,7 +64,7 @@ export default class CoT {
             this.raw.event._attributes.uid = Util.cot_uuid();
         }
 
-        if (!this.raw.event.detail) this.raw.event.detail = {};
+        this.raw.event.detail ??= {};
 
         if (this.raw.event.detail.archive && Object.keys(this.raw.event.detail.archive).length === 0) {
             this.raw.event.detail.archive = { _attributes: {} };
@@ -83,21 +83,20 @@ export default class CoT {
             opts.milsym?.augment
             && !this.raw.event.detail.__milsym
             && !this.raw.event.detail.__milicon
+            && util2525.is2525BConvertable(this.raw.event._attributes.type)
         ) {
-            if (util2525.is2525BConvertable(this.raw.event._attributes.type)) {
-                try {
-                    this.raw.event.detail.__milicon = {
-                        _attributes: {
-                            id: util2525.to2525D(this.raw.event._attributes.type)
-                        }
+            try {
+                this.raw.event.detail.__milicon = {
+                    _attributes: {
+                        id: util2525.to2525D(this.raw.event._attributes.type)
                     }
-                } catch (err) {
-                    console.warn(`Failed to augment CoT (${this.raw.event._attributes.type}) with 2525D MilIcon ID`, err);
                 }
+            } catch (err) {
+                console.warn(`Failed to augment CoT (${this.raw.event._attributes.type}) with 2525D MilIcon ID`, err);
             }
         }
 
-        if (process.env.DEBUG_COTS) console.log(JSON.stringify(this.raw))
+        if (typeof process !== 'undefined' && process.env.DEBUG_COTS) console.log(JSON.stringify(this.raw))
     }
 
     /**
@@ -150,18 +149,16 @@ export default class CoT {
             detail.contact._attributes.callsign = callsign;
         }
 
-        if (detail.contact && detail.contact._attributes && typeof detail.contact._attributes.callsign === 'string') {
-            return detail.contact._attributes.callsign;
-        } else {
-            return 'UNKNOWN'
-        }
+        const current: unknown = detail.contact?._attributes?.callsign;
+
+        return typeof current === 'string' ? current : 'UNKNOWN';
     }
 
     /**
      * Return Detail Object of CoT or create one if it doesn't yet exist and pass a reference
      */
     detail(): Static<typeof Detail> {
-        if (!this.raw.event.detail) this.raw.event.detail = {};
+        this.raw.event.detail ??= {};
         return this.raw.event.detail;
     }
 
@@ -173,7 +170,7 @@ export default class CoT {
 
         const detail = this.detail();
 
-        if (!detail.marti) detail.marti = {};
+        detail.marti ??= {};
 
         let destArr: Array<Static<typeof MartiDest>> = [];
         if (detail.marti.dest && !Array.isArray(detail.marti.dest)) {
@@ -242,8 +239,8 @@ export default class CoT {
         }
 
         return [
-            Number(this.raw.event.point._attributes.lon),
-            Number(this.raw.event.point._attributes.lat)
+            toNumber(this.raw.event.point._attributes.lon),
+            toNumber(this.raw.event.point._attributes.lat)
         ];
     }
 
@@ -256,7 +253,7 @@ export default class CoT {
             }
         }
 
-        if (!detail.sensor || !detail.sensor._attributes) {
+        if (!detail.sensor?._attributes) {
             return null;
         }
 
@@ -277,9 +274,11 @@ export default class CoT {
         const detail = this.detail();
 
         if (creator) {
+            const hasTime = creator.time instanceof Date || Boolean(creator.time);
+
             this.addLink({
                 uid: creator.uid,
-                production_time: creator.time ? new Date(creator.time).toISOString() : new Date().toISOString(),
+                production_time: hasTime && creator.time !== undefined ? new Date(creator.time).toISOString() : new Date().toISOString(),
                 type: creator.type,
                 parent_callsign: creator.callsign,
                 relation: 'p-p'
@@ -288,16 +287,12 @@ export default class CoT {
             detail.creator = {
                 _attributes: {
                     ...creator,
-                    time: creator.time ? new Date(creator.time).toISOString() : new Date().toISOString(),
+                    time: hasTime && creator.time !== undefined ? new Date(creator.time).toISOString() : new Date().toISOString(),
                 }
             };
         }
 
-        if (detail.creator) {
-            return detail.creator._attributes;
-        } else {
-            return;
-        }
+        return detail.creator?._attributes;
     }
 
     addLink(link: Static<typeof LinkAttributes>): CoT {
@@ -327,7 +322,7 @@ export default class CoT {
      * @return {boolean}
      */
     is_tasking(): boolean {
-        return !!this.raw.event._attributes.type.match(/^t-/)
+        return this.raw.event._attributes.type.startsWith('t-')
     }
 
     /**
@@ -360,7 +355,7 @@ export default class CoT {
      * @return {boolean}
      */
     is_friend(): boolean {
-        return !!this.raw.event._attributes.type.match(/^a-f-/)
+        return this.raw.event._attributes.type.startsWith('a-f-')
     }
 
     /**
@@ -369,7 +364,7 @@ export default class CoT {
      * @return {boolean}
      */
     is_hostile(): boolean {
-        return !!this.raw.event._attributes.type.match(/^a-h-/)
+        return this.raw.event._attributes.type.startsWith('a-h-')
     }
 
     /**
@@ -378,7 +373,7 @@ export default class CoT {
      * @return {boolean}
      */
     is_unknown(): boolean {
-        return !!this.raw.event._attributes.type.match(/^a-u-/)
+        return this.raw.event._attributes.type.startsWith('a-u-')
     }
 
     /**
@@ -387,7 +382,7 @@ export default class CoT {
      * @return {boolean}
      */
     is_pending(): boolean {
-        return !!this.raw.event._attributes.type.match(/^a-p-/)
+        return this.raw.event._attributes.type.startsWith('a-p-')
     }
 
     /**
@@ -396,7 +391,7 @@ export default class CoT {
      * @return {boolean}
      */
     is_assumed(): boolean {
-        return !!this.raw.event._attributes.type.match(/^a-a-/)
+        return this.raw.event._attributes.type.startsWith('a-a-')
     }
 
     /**
@@ -405,7 +400,7 @@ export default class CoT {
      * @return {boolean}
      */
     is_neutral(): boolean {
-        return !!this.raw.event._attributes.type.match(/^a-n-/)
+        return this.raw.event._attributes.type.startsWith('a-n-')
     }
 
     /**
@@ -414,7 +409,7 @@ export default class CoT {
      * @return {boolean}
      */
     is_suspect(): boolean {
-        return !!this.raw.event._attributes.type.match(/^a-s-/)
+        return this.raw.event._attributes.type.startsWith('a-s-')
     }
 
     /**
@@ -423,7 +418,7 @@ export default class CoT {
      * @return {boolean}
      */
     is_joker(): boolean {
-        return !!this.raw.event._attributes.type.match(/^a-j-/)
+        return this.raw.event._attributes.type.startsWith('a-j-')
     }
 
     /**
@@ -432,7 +427,7 @@ export default class CoT {
      * @return {boolean}
      */
     is_faker(): boolean {
-        return !!this.raw.event._attributes.type.match(/^a-k-/)
+        return this.raw.event._attributes.type.startsWith('a-k-')
     }
 
     /**
@@ -441,7 +436,7 @@ export default class CoT {
      * @return {boolean}
      */
     is_atom(): boolean {
-        return !!this.raw.event._attributes.type.match(/^a-/)
+        return this.raw.event._attributes.type.startsWith('a-')
     }
 
     /**
@@ -450,7 +445,7 @@ export default class CoT {
      * @return {boolean}
      */
     is_airborne(): boolean {
-        return !!this.raw.event._attributes.type.match(/^a-.-A/)
+        return /^a-.-A/.test(this.raw.event._attributes.type)
     }
 
     /**
@@ -459,7 +454,7 @@ export default class CoT {
      * @return {boolean}
      */
     is_ground(): boolean {
-        return !!this.raw.event._attributes.type.match(/^a-.-G/)
+        return /^a-.-G/.test(this.raw.event._attributes.type)
     }
 
     /**
@@ -468,7 +463,7 @@ export default class CoT {
      * @return {boolean}
      */
     is_installation(): boolean {
-        return !!this.raw.event._attributes.type.match(/^a-.-G-I/)
+        return /^a-.-G-I/.test(this.raw.event._attributes.type)
     }
 
     /**
@@ -477,7 +472,7 @@ export default class CoT {
      * @return {boolean}
      */
     is_vehicle(): boolean {
-        return !!this.raw.event._attributes.type.match(/^a-.-G-E-V/)
+        return /^a-.-G-E-V/.test(this.raw.event._attributes.type)
     }
 
     /**
@@ -486,7 +481,7 @@ export default class CoT {
      * @return {boolean}
      */
     is_equipment(): boolean {
-        return !!this.raw.event._attributes.type.match(/^a-.-G-E/)
+        return /^a-.-G-E/.test(this.raw.event._attributes.type)
     }
 
     /**
@@ -495,7 +490,7 @@ export default class CoT {
      * @return {boolean}
      */
     is_surface(): boolean {
-        return !!this.raw.event._attributes.type.match(/^a-.-S/)
+        return /^a-.-S/.test(this.raw.event._attributes.type)
     }
 
     /**
@@ -504,7 +499,7 @@ export default class CoT {
      * @return {boolean}
      */
     is_subsurface(): boolean {
-        return !!this.raw.event._attributes.type.match(/^a-.-U/)
+        return /^a-.-U/.test(this.raw.event._attributes.type)
     }
 
     /**
@@ -513,7 +508,7 @@ export default class CoT {
      * @return {boolean}
      */
     is_uav(): boolean {
-        return !!this.raw.event._attributes.type.match(/^a-f-A-M-F-Q-r/)
+        return this.raw.event._attributes.type.startsWith('a-f-A-M-F-Q-r')
     }
 
     /**

@@ -18,11 +18,11 @@ export default class TypeValidator {
         body: unknown,
         opts?: TypeOpts
     ): Static<T> {
-        if (!opts) opts = {};
-        if (opts.verbose === undefined) opts.verbose = false;
-        if (opts.default === undefined) opts.default = true;
-        if (opts.convert === undefined) opts.convert = true;
-        if (opts.clean === undefined) opts.clean = true;
+        opts ??= {};
+        opts.verbose ??= false;
+        opts.default ??= true;
+        opts.convert ??= true;
+        opts.clean ??= true;
 
         if (opts.default) {
             Value.Default(type, body)

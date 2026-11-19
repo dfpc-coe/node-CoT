@@ -3,7 +3,7 @@ import test from 'node:test';
 import { CoTParser } from '../index.js';
 
 test('__address from ATAK XML', async () => {
-    const cot = await CoTParser.from_xml(`
+    const cot = CoTParser.from_xml(`
         <event version="2.0" uid="addr" type="a-f-G" how="h-g-i-g-o" time="2026-01-01T00:00:00Z" start="2026-01-01T00:00:00Z" stale="2026-01-01T00:05:00Z">
             <point lat="39.7392" lon="-104.9903" hae="1609" ce="9999999" le="9999999"/>
             <detail>

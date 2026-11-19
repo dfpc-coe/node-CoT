@@ -87,3 +87,14 @@ test('COT.archived', async () => {
     assert.equal((await CoTParser.to_geojson(cot)).properties.archived, undefined)
 });
 
+
+test('CoTParser.from_xml - truncated XML', () => {
+    for (const xml of [
+        '<event version="2.0" uid="x"><point lat="1"',
+        '<event version="2.0" uid="x"><point lat="1"/>',
+        '<event><detail>'
+    ]) {
+        assert.throws(() => CoTParser.from_xml(xml), /Malformed XML: unclosed element/);
+        assert.throws(() => CoTParser.from_xml_document(xml), /Malformed XML: unclosed element/);
+    }
+});

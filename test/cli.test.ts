@@ -14,7 +14,7 @@ interface CLIResult {
 }
 
 async function runCLI(args: string[]): Promise<CLIResult> {
-    return await new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
         const child = spawn(process.execPath, [
             '--import', 'tsx',
             fileURLToPath(new URL('../cli.ts', import.meta.url)),
@@ -26,11 +26,11 @@ async function runCLI(args: string[]): Promise<CLIResult> {
         let stdout = '';
         let stderr = '';
 
-        child.stdout.on('data', (chunk) => {
+        child.stdout.on('data', (chunk: Buffer) => {
             stdout += chunk.toString();
         });
 
-        child.stderr.on('data', (chunk) => {
+        child.stderr.on('data', (chunk: Buffer) => {
             stderr += chunk.toString();
         });
 
@@ -101,7 +101,11 @@ test('cli feature convert cot xml to geojson', async () => {
         assert.equal(result.code, 0);
         assert.equal(result.stderr, '');
 
-        const feature = JSON.parse(result.stdout);
+        const feature = JSON.parse(result.stdout) as {
+            type: string;
+            id: string;
+            properties: { callsign: string };
+        };
         assert.equal(feature.type, 'Feature');
         assert.equal(feature.id, 'cli-feature-2');
         assert.equal(feature.properties.callsign, 'CLI Feature 2');
@@ -120,7 +124,10 @@ test('cli package validate valid package', async () => {
     assert.equal(result.code, 0);
     assert.equal(result.stderr, '');
 
-    const output = JSON.parse(result.stdout);
+    const output = JSON.parse(result.stdout) as {
+        valid: boolean;
+        counts: { cots: number; attachments: number; files: number };
+    };
     assert.equal(output.valid, true);
     assert.equal(output.counts.cots, 1);
     assert.equal(output.counts.attachments, 1);
@@ -161,10 +168,13 @@ test('cli package validate reports embedded cot uid and schema error', async () 
         assert.equal(result.code, 1);
         assert.equal(result.stdout, '');
 
-        const output = JSON.parse(result.stderr);
+        const output = JSON.parse(result.stderr) as {
+            valid: boolean;
+            errors: Array<{ uid: string; error: string }>;
+        };
         assert.equal(output.valid, false);
         assert.equal(output.errors[0].uid, 'broken-cot-1');
-        assert.ok(String(output.errors[0].error).includes('must have required property'));
+        assert.ok(output.errors[0].error.includes('must have required property'));
     } finally {
         await pkg.destroy();
     }

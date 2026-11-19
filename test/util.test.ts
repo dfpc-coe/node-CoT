@@ -6,7 +6,7 @@ test('Util.cot_date - default', () => {
     const res = Util.cot_date();
 
     // Within 100ms of current time
-    assert.ok(+new Date(res.time) > +new Date() - 100, 'res.time within 100ms of current time');
+    assert.ok(+new Date(res.time) > Date.now() - 100, 'res.time within 100ms of current time');
 
     // res.start is the same as res.time
     assert.equal(+new Date(res.start), +new Date(res.time), 'by default res.start === res.time');
@@ -20,7 +20,7 @@ test('Util.cot_date - stale', () => {
     const res = Util.cot_date(null, null, 1000);
 
     // Within 100ms of current time
-    assert.ok(+new Date(res.time) > +new Date() - 100, 'res.time within 100ms of current time');
+    assert.ok(+new Date(res.time) > Date.now() - 100, 'res.time within 100ms of current time');
 
     // res.start is the same as res.time
     assert.equal(+new Date(res.start), +new Date(res.time), 'by default res.start === res.time');

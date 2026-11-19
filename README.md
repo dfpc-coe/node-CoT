@@ -73,6 +73,19 @@ export DEBUG_COTS=1
 
 Then the raw JSONified XML will be printed on each constructor invocation.
 
+### Validator Demo
+
+`demo/` is a Vue 3 app for checking CoT XML or a GeoJSON Feature against the
+schemas in `lib/` from a browser - paste or drop the message in the text box to
+see every validation error along with the converted GeoJSON or XML.
+
+```sh
+npm install
+cd demo
+npm install
+npm run dev
+```
+
 ## CoT Spec
 
 The CoT Spec is very informally developed by rough internal concensus

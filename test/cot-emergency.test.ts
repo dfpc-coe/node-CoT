@@ -20,7 +20,7 @@ test('COT Emergency - Troops in Contact', async () => {
     if (!cot.raw.event.detail) {
         assert.fail('No Detail Section')
     } else {
-        assert.ok(cot.raw.event.detail['_flow-tags_']);
+        assert.ok(Boolean(cot.raw.event.detail['_flow-tags_']));
         delete cot.raw.event.detail['_flow-tags_'];
 
         assert.deepEqual(cot.type(), 'b-a-o-opn', 'Type should be b-a-o-opn');
@@ -49,7 +49,7 @@ test('COT Emergency - Troops in Contact - No Callsign', async () => {
     if (!cot.raw.event.detail) {
         assert.fail('No Detail Section')
     } else {
-        assert.ok(cot.raw.event.detail['_flow-tags_']);
+        assert.ok(Boolean(cot.raw.event.detail['_flow-tags_']));
         delete cot.raw.event.detail['_flow-tags_'];
 
         assert.deepEqual(cot.type(), 'b-a-o-opn', 'Type should be b-a-o-opn');
@@ -79,7 +79,7 @@ test('COT Emergency - 911 Alert', async () => {
     if (!cot.raw.event.detail) {
         assert.fail('No Detail Section')
     } else {
-        assert.ok(cot.raw.event.detail['_flow-tags_']);
+        assert.ok(Boolean(cot.raw.event.detail['_flow-tags_']));
         delete cot.raw.event.detail['_flow-tags_'];
 
         assert.deepEqual(cot.type(), 'b-a-o-tbl', 'Type should be b-a-o-tbl');
@@ -108,7 +108,7 @@ test('COT Emergency - 911 Alert - No Callsign', async () => {
     if (!cot.raw.event.detail) {
         assert.fail('No Detail Section')
     } else {
-        assert.ok(cot.raw.event.detail['_flow-tags_']);
+        assert.ok(Boolean(cot.raw.event.detail['_flow-tags_']));
         delete cot.raw.event.detail['_flow-tags_'];
 
         assert.deepEqual(cot.type(), 'b-a-o-tbl', 'Type should be b-a-o-tbl');
@@ -138,7 +138,7 @@ test('COT Emergency - Cancel', async () => {
     if (!cot.raw.event.detail) {
         assert.fail('No Detail Section')
     } else {
-        assert.ok(cot.raw.event.detail['_flow-tags_']);
+        assert.ok(Boolean(cot.raw.event.detail['_flow-tags_']));
         delete cot.raw.event.detail['_flow-tags_'];
 
         assert.deepEqual(cot.type(), 'b-a-o-can', 'Type should be b-a-o-can');
@@ -167,7 +167,7 @@ test('COT Emergency - Cancel - No Callsign', async () => {
     if (!cot.raw.event.detail) {
         assert.fail('No Detail Section')
     } else {
-        assert.ok(cot.raw.event.detail['_flow-tags_']);
+        assert.ok(Boolean(cot.raw.event.detail['_flow-tags_']));
         delete cot.raw.event.detail['_flow-tags_'];
 
         assert.deepEqual(cot.type(), 'b-a-o-can', 'Type should be b-a-o-can');
@@ -197,7 +197,7 @@ test('COT Emergency - Ring The Bell', async () => {
     if (!cot.raw.event.detail) {
         assert.fail('No Detail Section')
     } else {
-        assert.ok(cot.raw.event.detail['_flow-tags_']);
+        assert.ok(Boolean(cot.raw.event.detail['_flow-tags_']));
         delete cot.raw.event.detail['_flow-tags_'];
 
         assert.deepEqual(cot.type(), 'b-a-o-pan', 'Type should be b-a-o-pan');
@@ -226,7 +226,7 @@ test('COT Emergency - Ring The Bell - No Callsign', async () => {
     if (!cot.raw.event.detail) {
         assert.fail('No Detail Section')
     } else {
-        assert.ok(cot.raw.event.detail['_flow-tags_']);
+        assert.ok(Boolean(cot.raw.event.detail['_flow-tags_']));
         delete cot.raw.event.detail['_flow-tags_'];
 
         assert.deepEqual(cot.type(), 'b-a-o-pan', 'Type should be b-a-o-pan');
@@ -256,7 +256,7 @@ test('COT Emergency - GeoFence Breached', async () => {
     if (!cot.raw.event.detail) {
         assert.fail('No Detail Section')
     } else {
-        assert.ok(cot.raw.event.detail['_flow-tags_']);
+        assert.ok(Boolean(cot.raw.event.detail['_flow-tags_']));
         delete cot.raw.event.detail['_flow-tags_'];
 
         assert.deepEqual(cot.type(), 'b-a-g', 'Type should be b-a-g');
@@ -285,7 +285,7 @@ test('COT Emergency - GeoFence Breached - No Callsign', async () => {
     if (!cot.raw.event.detail) {
         assert.fail('No Detail Section')
     } else {
-        assert.ok(cot.raw.event.detail['_flow-tags_']);
+        assert.ok(Boolean(cot.raw.event.detail['_flow-tags_']));
         delete cot.raw.event.detail['_flow-tags_'];
 
     assert.deepEqual(cot.type(), 'b-a-g', 'Type should be b-a-g');
@@ -298,7 +298,7 @@ test('COT Emergency - GeoFence Breached - No Callsign', async () => {
 });
 
 test('COT Emergency - WearOS', async () => {
-    const cot = await CoTParser.from_xml(`
+    const cot = CoTParser.from_xml(`
          <event version='2.0' uid='17eaa1c4-e137-4328-b5e4-294d2a7fd01d' type='b-a-o' time='2026-02-04T13:40:15.895Z' start='2026-02-04T13:40:15.895Z' stale='2026-02-04T13:55:15.895Z' how='h-e' access='Undefined'>
              <point lat='41.8838397' lon='-87.6590334' hae='155.50001525878906' ce='17.75' le='0.9278001' />
              <detail>
@@ -334,4 +334,27 @@ test('COT Emergency - WearOS', async () => {
             coordinates: [ -87.6590334, 41.8838397, 155.50001525878906 ]
         },
     });
+});
+
+test('COT Emergency - Self-closing element without callsign text', async () => {
+    const cot = CoTParser.from_xml('<event version="2.0" uid="peer-ca436e556558" type="a-f-G" how="m-g" time="2026-11-18T20:18:55.692Z" start="2026-11-18T20:18:55.692Z" stale="2026-11-18T20:19:59.502Z"><point lat="38.8586426" lon="-77.0535135" hae="9999999" ce="9999999" le="9999999"/><detail><contact callsign="ca436e556558"/><emergency type="false"/></detail></event>');
+
+    assert.deepEqual(cot.raw.event.detail?.emergency, {
+        _attributes: { type: 'false' }
+    });
+
+    const feat = await CoTParser.to_geojson(cot);
+
+    assert.equal(feat.id, 'peer-ca436e556558');
+    assert.equal(feat.properties.type, 'a-f-G');
+});
+
+test('COT Emergency - Element without attributes', () => {
+    const cot = CoTParser.from_xml('<event version="2.0" uid="peer-ca436e556558" type="a-f-G" how="m-g" time="2026-11-18T20:18:55.692Z" start="2026-11-18T20:18:55.692Z" stale="2026-11-18T20:19:59.502Z"><point lat="38.8586426" lon="-77.0535135" hae="9999999" ce="9999999" le="9999999"/><detail><contact callsign="ca436e556558"/><emergency>HIKE</emergency></detail></event>');
+
+    assert.deepEqual(cot.raw.event.detail?.emergency, {
+        _text: 'HIKE'
+    });
+
+    assert.ok(CoTParser.to_xml(cot).includes('<emergency>HIKE</emergency>'));
 });

@@ -12,7 +12,7 @@ export class Route extends CoT {
 
             super(cot.raw)
         } else {
-            const cot: Static<typeof JSONCoT> = {
+            const raw: Static<typeof JSONCoT> = {
                 event: {
                     _attributes: Util.cot_event_attr('b-m-r', 'h-e'),
                     point: Util.cot_point(),
@@ -21,7 +21,7 @@ export class Route extends CoT {
                 }
             };
 
-            super(cot)
+            super(raw)
         }
     }
 }

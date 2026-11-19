@@ -27,7 +27,7 @@ test('CoTParser.from_geojson - Point', async () => {
     if (!geo.raw.event.detail || !geo.raw.event.detail.remarks) {
         assert.fail('No Detail Section')
     } else {
-        assert.ok(geo.raw.event.detail['_flow-tags_']);
+        assert.ok(Boolean(geo.raw.event.detail['_flow-tags_']));
         delete geo.raw.event.detail['_flow-tags_'];
 
         assert.deepEqual(geo.raw.event.detail, {
@@ -68,7 +68,7 @@ test('CoTParser.from_geojson - Polygon', async () => {
     if (!geo.raw.event.detail || !geo.raw.event.detail.remarks) {
         assert.fail('No Detail Section')
     } else {
-        assert.ok(geo.raw.event.detail['_flow-tags_']);
+        assert.ok(Boolean(geo.raw.event.detail['_flow-tags_']));
         delete geo.raw.event.detail['_flow-tags_'];
 
         assert.deepEqual(geo.raw.event.detail, {
@@ -122,7 +122,7 @@ test('CoTParser.from_geojson - LineString', async () => {
     if (!geo.raw.event.detail || !geo.raw.event.detail.remarks) {
         assert.fail('No Detail Section')
     } else {
-        assert.ok(geo.raw.event.detail['_flow-tags_']);
+        assert.ok(Boolean(geo.raw.event.detail['_flow-tags_']));
         delete geo.raw.event.detail['_flow-tags_'];
 
         assert.deepEqual(geo.raw.event.detail, {
@@ -150,7 +150,7 @@ test('CoTParser.from_geojson - Start', async () => {
         type: 'Feature',
         properties: {
             // 1hr in the future
-            start: new Date(+new Date() + 60 * 60 * 1000).toISOString()
+            start: new Date(Date.now() + 60 * 60 * 1000).toISOString()
         },
         geometry: {
             type: 'Point',
@@ -159,12 +159,12 @@ test('CoTParser.from_geojson - Start', async () => {
     });
 
     // Approx +/- 100ms + 1hr ahead of Now
-    assert.ok(+new Date(geo.raw.event._attributes.start) > +new Date() + 60 * 60 * 1000 - 100);
-    assert.ok(+new Date(geo.raw.event._attributes.start) < +new Date() + 60 * 60 * 1000 + 100);
+    assert.ok(+new Date(geo.raw.event._attributes.start) > Date.now() + 60 * 60 * 1000 - 100);
+    assert.ok(+new Date(geo.raw.event._attributes.start) < Date.now() + 60 * 60 * 1000 + 100);
 
     // Approx +/- 100ms ahead of Now
-    assert.ok(+new Date(geo.raw.event._attributes.time) > +new Date() - 100);
-    assert.ok(+new Date(geo.raw.event._attributes.time) < +new Date() + 100);
+    assert.ok(+new Date(geo.raw.event._attributes.time) > Date.now() - 100);
+    assert.ok(+new Date(geo.raw.event._attributes.time) < Date.now() + 100);
 
     // Approx +/- 100ms +1hr20s ahead of now
     assert.ok(+new Date(geo.raw.event._attributes.stale) > +new Date(geo.raw.event._attributes.time) - 100 + 20 * 1000);
@@ -176,7 +176,7 @@ test('CoTParser.from_geojson - Start/Stale', async () => {
         type: 'Feature',
         properties: {
             // 1hr in the future
-            start: new Date(+new Date() + 60 * 60 * 1000).toISOString(),
+            start: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
             stale: 60 * 1000
         },
         geometry: {
@@ -186,12 +186,12 @@ test('CoTParser.from_geojson - Start/Stale', async () => {
     });
 
     // Approx +/- 100ms + 1hr ahead of Now
-    assert.ok(+new Date(geo.raw.event._attributes.start) > +new Date() + 60 * 60 * 1000 - 100);
-    assert.ok(+new Date(geo.raw.event._attributes.start) < +new Date() + 60 * 60 * 1000 + 100);
+    assert.ok(+new Date(geo.raw.event._attributes.start) > Date.now() + 60 * 60 * 1000 - 100);
+    assert.ok(+new Date(geo.raw.event._attributes.start) < Date.now() + 60 * 60 * 1000 + 100);
 
     // Approx +/- 100ms ahead of Now
-    assert.ok(+new Date(geo.raw.event._attributes.time) > +new Date() - 100);
-    assert.ok(+new Date(geo.raw.event._attributes.time) < +new Date() + 100);
+    assert.ok(+new Date(geo.raw.event._attributes.time) > Date.now() - 100);
+    assert.ok(+new Date(geo.raw.event._attributes.time) < Date.now() + 100);
 
     // Approx +/- 100ms +1hr60s ahead of now
     assert.ok(+new Date(geo.raw.event._attributes.stale) > +new Date(geo.raw.event._attributes.time) - 100 + 60 * 1000);
@@ -213,7 +213,7 @@ test('CoTParser.from_geojson - Icon', async () => {
     if (!geo.raw.event.detail || !geo.raw.event.detail.remarks) {
         assert.fail('No Detail Section')
     } else {
-        assert.ok(geo.raw.event.detail['_flow-tags_']);
+        assert.ok(Boolean(geo.raw.event.detail['_flow-tags_']));
         delete geo.raw.event.detail['_flow-tags_'];
 
         assert.deepEqual(geo.raw.event.detail, {

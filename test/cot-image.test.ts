@@ -28,7 +28,7 @@ function base(): CoT {
 }
 
 test('Parse inline image from XML', async () => {
-    const cot = await CoTParser.from_xml(`<event version='2.0' uid='0ed16b9e-a0c8-480f-8860-284b9afb2b1d' type='a-f-G' time='2023-11-15T20:48:16.097Z' start='2023-11-15T20:48:16.097Z' stale='2024-11-14T20:48:16.097Z' how='h-g-i-g-o'><point lat='38.2089117' lon='-104.6282182' hae='1455.285' ce='9999999.0' le='9999999.0' /><detail><image mime='image/png'>${png.toString('base64')}</image></detail></event>`);
+    const cot = CoTParser.from_xml(`<event version='2.0' uid='0ed16b9e-a0c8-480f-8860-284b9afb2b1d' type='a-f-G' time='2023-11-15T20:48:16.097Z' start='2023-11-15T20:48:16.097Z' stale='2024-11-14T20:48:16.097Z' how='h-g-i-g-o'><point lat='38.2089117' lon='-104.6282182' hae='1455.285' ce='9999999.0' le='9999999.0' /><detail><image mime='image/png'>${png.toString('base64')}</image></detail></event>`);
 
     assert.deepEqual(cot.raw.event.detail?.image, {
         _attributes: { mime: 'image/png' },
@@ -53,7 +53,7 @@ test('Image GeoJSON & Protobuf round trip', async () => {
 });
 
 test('Image without mime round trips through GeoJSON', async () => {
-    const feat = await CoTParser.to_geojson(await CoTParser.from_xml(`<event version='2.0' uid='0ed16b9e-a0c8-480f-8860-284b9afb2b1d' type='a-f-G' time='2023-11-15T20:48:16.097Z' start='2023-11-15T20:48:16.097Z' stale='2024-11-14T20:48:16.097Z' how='h-g-i-g-o'><point lat='38.2089117' lon='-104.6282182' hae='1455.285' ce='9999999.0' le='9999999.0' /><detail><image>${png.toString('base64')}</image></detail></event>`));
+    const feat = await CoTParser.to_geojson(CoTParser.from_xml(`<event version='2.0' uid='0ed16b9e-a0c8-480f-8860-284b9afb2b1d' type='a-f-G' time='2023-11-15T20:48:16.097Z' start='2023-11-15T20:48:16.097Z' stale='2024-11-14T20:48:16.097Z' how='h-g-i-g-o'><point lat='38.2089117' lon='-104.6282182' hae='1455.285' ce='9999999.0' le='9999999.0' /><detail><image>${png.toString('base64')}</image></detail></event>`));
 
     assert.deepEqual(feat.properties.image, { data: png.toString('base64') });
 

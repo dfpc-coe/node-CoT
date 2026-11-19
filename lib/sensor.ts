@@ -3,6 +3,11 @@ import { Position, Polygon } from './types/feature.js';
 import { SensorAttributes } from './types/types.js';
 import { sector } from '@turf/sector';
 
+function orZero(value?: number): number {
+    const defined = value ?? 0;
+    return Number.isNaN(defined) ? 0 : defined;
+}
+
 export default class Sensor {
     center: Static<typeof Position>;
     sensor: Static<typeof SensorAttributes>;
@@ -20,15 +25,17 @@ export default class Sensor {
      * `range` is a slant range so it is projected to the ground via the elevation
      */
     to_geojson(): Static<typeof Polygon> | null {
-        if (!this.sensor.range) return null;
+        const range = orZero(this.sensor.range);
+        if (range === 0) return null;
         if (typeof this.sensor.azimuth !== 'number') return null;
-        if (!this.sensor.fov) return null;
+        const fov = orZero(this.sensor.fov);
+        if (fov === 0) return null;
 
-        const elevation = this.sensor.elevation || 0;
-        const ground = this.sensor.range * Math.cos(elevation * Math.PI / 180);
+        const elevation = orZero(this.sensor.elevation);
+        const ground = range * Math.cos(elevation * Math.PI / 180);
         if (ground < 1) return null;
 
-        const half = this.sensor.fov / 2;
+        const half = fov / 2;
 
         return sector(
             this.center,

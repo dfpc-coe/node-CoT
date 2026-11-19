@@ -46,7 +46,7 @@ export class Iconset extends XMLDocument<IconsetType> {
             uid: this.raw.iconset._attributes.uid,
             version: this.raw.iconset._attributes.version,
             name: this.raw.iconset._attributes.name,
-            skip_resize: this.raw.iconset._attributes.skip_resize === undefined ? false : this.raw.iconset._attributes.skip_resize,
+            skip_resize: this.raw.iconset._attributes.skip_resize ?? false,
             default_group: this.raw.iconset._attributes.default_group,
             default_friendly: this.raw.iconset._attributes.default_friendly,
             default_hostile: this.raw.iconset._attributes.default_hostile,

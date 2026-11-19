@@ -1,6 +1,6 @@
 import Err from '@openaddresses/batch-error';
 import type { ValidateFunction } from 'ajv';
-import xmljs, { type Element } from '@tak-ps/xml-js';
+import { xml2js, js2xml, type Element } from '@tak-ps/xml-js';
 
 /**
  * Core XML Document support used for XML fortatted DataPackages documents
@@ -13,16 +13,19 @@ export default class XMLDocument<T> {
         this.raw = raw;
     }
 
-    static check<U>(input: string, check: ValidateFunction<unknown>): U {
-        const xml = xmljs.xml2js(input, { compact: true })
+    // oxlint-disable-next-line typescript/no-unnecessary-type-parameters
+    static check<U>(input: string, check: ValidateFunction): U {
+        const xml = xml2js(input, { compact: true })
 
         check(xml);
         if (check.errors) throw new Err(400, null, `${check.errors[0].message} (${check.errors[0].instancePath})`);
 
+        // oxlint-disable-next-line typescript/no-unsafe-type-assertion
         return xml as U;
     }
 
     to_xml(): string {
-        return xmljs.js2xml(this.raw as Element, { compact: true });
+        // oxlint-disable-next-line typescript/no-unsafe-type-assertion
+        return js2xml(this.raw as Element, { compact: true });
     }
 }

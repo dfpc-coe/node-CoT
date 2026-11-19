@@ -1,5 +1,6 @@
 import Err from '@openaddresses/batch-error';
 import XMLDocument from '../xml-document.js';
+import { toNumber } from '../utils/util.js';
 import type { Static } from '@sinclair/typebox'
 import BasemapSchema from '../types/basemap.js';
 import AJV from 'ajv';
@@ -35,18 +36,18 @@ export class Basemap extends XMLDocument<BasemapType> {
         backgroundColor: string | undefined;
         serverParts: string | undefined;
     } {
-        if (!this.raw.customMapSource) throw new Err(400, null, 'Unknown Basemap Type');
-        if (!this.raw.customMapSource.url) throw new Err(400, null, 'Unknown Basemap Type - Missing URL');
+        if (this.raw.customMapSource === undefined) throw new Err(400, null, 'Unknown Basemap Type');
+        if (this.raw.customMapSource.url === undefined) throw new Err(400, null, 'Unknown Basemap Type - Missing URL');
 
         return {
-            name: this.raw.customMapSource.name ? this.raw.customMapSource.name._text : undefined,
+            name: this.raw.customMapSource.name?._text,
             url: this.raw.customMapSource.url._text,
-            minZoom: this.raw.customMapSource.minZoom ? Number(this.raw.customMapSource.minZoom._text) : undefined,
-            maxZoom: this.raw.customMapSource.maxZoom ? Number(this.raw.customMapSource.maxZoom._text) : undefined,
-            tileType: this.raw.customMapSource.tileType ? this.raw.customMapSource.tileType._text : undefined,
-            tileUpdate: this.raw.customMapSource.tileUpdate ? this.raw.customMapSource.tileUpdate._text : undefined,
-            backgroundColor: this.raw.customMapSource.backgroundColor ? this.raw.customMapSource.backgroundColor._text : undefined,
-            serverParts: this.raw.customMapSource.serverParts ? this.raw.customMapSource.serverParts._text : undefined,
+            minZoom: this.raw.customMapSource.minZoom !== undefined ? toNumber(this.raw.customMapSource.minZoom._text) : undefined,
+            maxZoom: this.raw.customMapSource.maxZoom !== undefined ? toNumber(this.raw.customMapSource.maxZoom._text) : undefined,
+            tileType: this.raw.customMapSource.tileType?._text,
+            tileUpdate: this.raw.customMapSource.tileUpdate?._text,
+            backgroundColor: this.raw.customMapSource.backgroundColor?._text,
+            serverParts: this.raw.customMapSource.serverParts?._text,
         }
     }
 }

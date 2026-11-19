@@ -5,6 +5,10 @@ export type ParsedAttributeVisitor = (
     path: string[]
 ) => void;
 
+function isRecord(value: unknown): value is Record<string, unknown> {
+    return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
 export function visitElementAttributes(
     input: unknown,
     visitor: ParsedAttributeVisitor,
@@ -18,18 +22,15 @@ export function visitElementAttributes(
         return;
     }
 
-    if (!input || typeof input !== 'object') {
+    if (!isRecord(input)) {
         return;
     }
 
-    const record = input as Record<string, unknown>;
-    for (const [key, value] of Object.entries(record)) {
-        if (key === '_attributes' && value && typeof value === 'object' && !Array.isArray(value)) {
-            const attributes = value as Record<string, unknown>;
-
-            for (const [attributeKey, attributeValue] of Object.entries(attributes)) {
-                visitor(attributeKey, attributeValue, attributes, [...path, key]);
-                visitElementAttributes(attributes[attributeKey], visitor, [...path, key, attributeKey]);
+    for (const [key, value] of Object.entries(input)) {
+        if (key === '_attributes' && isRecord(value)) {
+            for (const [attributeKey, attributeValue] of Object.entries(value)) {
+                visitor(attributeKey, attributeValue, value, [...path, key]);
+                visitElementAttributes(value[attributeKey], visitor, [...path, key, attributeKey]);
             }
 
             continue;
@@ -52,4 +53,24 @@ export function normalizeBooleanAttributeValues(input: unknown): void {
             attributes[attributeKey] = false;
         }
     });
+}
+
+/**
+ * xml-js leaves a circular `_parent` reference on every element that is still
+ * open when the input ends
+ */
+export function hasUnclosedElements(input: unknown): boolean {
+    if (Array.isArray(input)) {
+        return input.some((value) => hasUnclosedElements(value));
+    }
+
+    if (!isRecord(input)) {
+        return false;
+    }
+
+    if ('_parent' in input) {
+        return true;
+    }
+
+    return Object.values(input).some((value) => hasUnclosedElements(value));
 }

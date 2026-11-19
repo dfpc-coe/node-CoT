@@ -1,0 +1,100 @@
+{
+    "$schema": "./node_modules/oxlint/configuration_schema.json",
+    "plugins": [
+        "typescript",
+        "unicorn",
+        "oxc",
+        "import",
+        "promise",
+        "node"
+    ],
+    "categories": {
+        "correctness": "error",
+        "suspicious": "error",
+        "perf": "error",
+        "pedantic": "error"
+    },
+    "rules": {
+        "import/default": "off",
+        "import/max-dependencies": "off",
+        "max-classes-per-file": "off",
+        "max-lines": "off",
+        "max-lines-per-function": "off",
+        "no-array-constructor": "error",
+        "no-await-in-loop": "off",
+        "no-empty": "error",
+        "no-negated-condition": "off",
+        "no-regex-spaces": "error",
+        "no-underscore-dangle": "off",
+        "no-unexpected-multiline": "error",
+        "no-var": "error",
+        "prefer-const": "error",
+        "prefer-rest-params": "error",
+        "prefer-spread": "error",
+        "require-await": "off",
+        "require-unicode-regexp": "off",
+        "typescript/no-empty-object-type": "error",
+        "typescript/no-explicit-any": "error",
+        "typescript/no-extraneous-class": "off",
+        "typescript/no-floating-promises": [
+            "error",
+            {
+                "allowForKnownSafeCalls": [
+                    {
+                        "from": "package",
+                        "package": "node:test",
+                        "name": [
+                            "test",
+                            "describe",
+                            "it"
+                        ]
+                    }
+                ]
+            }
+        ],
+        "typescript/no-namespace": "error",
+        "typescript/no-non-null-assertion": "error",
+        "typescript/no-require-imports": "error",
+        "typescript/prefer-nullish-coalescing": [
+            "error",
+            {
+                "ignorePrimitives": {
+                    "string": true
+                }
+            }
+        ],
+        "typescript/prefer-readonly-parameter-types": "off",
+        "typescript/require-await": "off",
+        "typescript/strict-boolean-expressions": [
+            "error",
+            {
+                "allowNullableString": true,
+                "allowNullableBoolean": true
+            }
+        ],
+        "unicorn/no-negated-condition": "off",
+        "unicorn/no-static-only-class": "off",
+        "unicorn/no-useless-undefined": "off"
+    },
+    "ignorePatterns": [
+        "docs",
+        "demo",
+        "coverage",
+        "dist",
+        "out"
+    ],
+    "overrides": [
+        {
+            "files": [
+                "test/**"
+            ],
+            "rules": {
+                "typescript/no-unsafe-type-assertion": "off",
+                "typescript/no-non-null-assertion": "off",
+                "typescript/no-deprecated": "off",
+                "unicorn/no-array-sort": "off",
+                "typescript/require-array-sort-compare": "off"
+            }
+        }
+    ]
+}

@@ -2,7 +2,6 @@ import Err from '@openaddresses/batch-error';
 import type { Static } from '@sinclair/typebox';
 import type {
     Feature,
-    Polygon,
     FeaturePropertyMission,
     FeaturePropertyMissionChange,
     FeaturePropertyMissionLayer,
@@ -21,11 +20,13 @@ import type {
     BioMeasurement,
     BioMeasurementLevel,
     BioMeasurementLevelAttributes,
+    MissionChanges,
 } from '../types/types.js'
 import Ellipse from '@turf/ellipse';
 import Truncate from '@turf/truncate';
 import { destination } from '@turf/destination';
 import Color from '../utils/color.js';
+import { jsonClone, toNumber } from '../utils/util.js';
 import Type2525 from '../utils/2525.js';
 import JSONCoT from '../types/types.js'
 import CoT from '../cot.js';
@@ -33,6 +34,10 @@ import CoT from '../cot.js';
 // GeoJSON Geospatial ops will truncate to the below
 const COORDINATE_PRECISION = 6;
 const ELLIPSE_TYPE_PREFIXES = ['u-d-c-c', 'u-r-b-c-c', 'u-d-c-e'];
+
+function hasFlowAttributes(flow: unknown): flow is { _attributes: Record<string, string> } {
+    return typeof flow === 'object' && flow !== null && '_attributes' in flow && Boolean(flow._attributes);
+}
 
 export interface ToGeoJSONOptions {
     /**
@@ -49,17 +54,17 @@ export async function to_geojson(
     cot: CoT,
     opts: ToGeoJSONOptions = {}
 ): Promise<Static<typeof Feature>> {
-    const raw: Static<typeof JSONCoT> = JSON.parse(JSON.stringify(cot.raw));
-    if (!raw.event.detail) raw.event.detail = {};
-    if (!raw.event.detail.contact) raw.event.detail.contact = { _attributes: { callsign: 'UNKNOWN' } };
-    if (!raw.event.detail.contact._attributes) raw.event.detail.contact._attributes = { callsign: 'UNKNOWN' };
+    const raw: Static<typeof JSONCoT> = jsonClone(cot.raw);
+    raw.event.detail ??= {};
+    raw.event.detail.contact ??= { _attributes: { callsign: 'UNKNOWN' } };
+    raw.event.detail.contact._attributes ??= { callsign: 'UNKNOWN' };
 
     const feat: Static<typeof Feature> = {
         id: raw.event._attributes.uid,
         type: 'Feature',
         properties: {
             callsign: raw.event.detail.contact._attributes.callsign || 'UNKNOWN',
-            center: [ Number(raw.event.point._attributes.lon), Number(raw.event.point._attributes.lat), Number(raw.event.point._attributes.hae) ],
+            center: [ toNumber(raw.event.point._attributes.lon), toNumber(raw.event.point._attributes.lat), toNumber(raw.event.point._attributes.hae) ],
             type: raw.event._attributes.type,
             how: raw.event._attributes.how || '',
             time: raw.event._attributes.time,
@@ -68,13 +73,13 @@ export async function to_geojson(
         },
         geometry: {
             type: 'Point',
-            coordinates: [ Number(raw.event.point._attributes.lon), Number(raw.event.point._attributes.lat), Number(raw.event.point._attributes.hae) ]
+            coordinates: [ toNumber(raw.event.point._attributes.lon), toNumber(raw.event.point._attributes.lat), toNumber(raw.event.point._attributes.hae) ]
         }
     };
 
-    const contact = JSON.parse(JSON.stringify(raw.event.detail.contact._attributes));
+    const contact = jsonClone(raw.event.detail.contact._attributes);
     delete contact.callsign;
-    if (Object.keys(contact).length) {
+    if (Object.keys(contact).length > 0) {
         feat.properties.contact = contact;
     }
 
@@ -89,7 +94,7 @@ export async function to_geojson(
     if (raw.event.detail.fileshare) {
         feat.properties.fileshare = raw.event.detail.fileshare._attributes;
         if (typeof feat.properties.fileshare?.sizeInBytes === 'string') {
-            feat.properties.fileshare.sizeInBytes = parseInt(feat.properties.fileshare.sizeInBytes)
+            feat.properties.fileshare.sizeInBytes = Math.trunc(Number(feat.properties.fileshare.sizeInBytes))
         }
     }
 
@@ -128,12 +133,12 @@ export async function to_geojson(
 
         if (rad.radmeasurement) {
             const measurements = Array.isArray(rad.radmeasurement) ? rad.radmeasurement : [rad.radmeasurement];
-            feat.properties.radsensordetail.radmeasurement = measurements.map((m: Static<typeof RadMeasurement>) => ({ ...m._attributes }));
+            feat.properties.radsensordetail.radmeasurement = measurements.map((m: Static<typeof RadMeasurement>) => m._attributes);
         }
 
         if (rad.physical_module) {
             const modules = Array.isArray(rad.physical_module) ? rad.physical_module : [rad.physical_module];
-            feat.properties.radsensordetail.physical_module = modules.map((m: Static<typeof RadPhysicalModule>) => ({ ...m._attributes }));
+            feat.properties.radsensordetail.physical_module = modules.map((m: Static<typeof RadPhysicalModule>) => m._attributes);
         }
 
         if (rad.search_algorithm) {
@@ -142,12 +147,12 @@ export async function to_geojson(
 
         if (rad.spectrum) {
             const spectra = Array.isArray(rad.spectrum) ? rad.spectrum : [rad.spectrum];
-            feat.properties.radsensordetail.spectrum = spectra.map((s: Static<typeof RadSpectrum>) => ({ ...s._attributes }));
+            feat.properties.radsensordetail.spectrum = spectra.map((s: Static<typeof RadSpectrum>) => s._attributes);
         }
 
         if (rad.isotope) {
             const isotopes = Array.isArray(rad.isotope) ? rad.isotope : [rad.isotope];
-            feat.properties.radsensordetail.isotope = isotopes.map((i: Static<typeof RadIsotope>) => ({ ...i._attributes }));
+            feat.properties.radsensordetail.isotope = isotopes.map((i: Static<typeof RadIsotope>) => i._attributes);
         }
 
         if (rad.data_permissions) {
@@ -167,7 +172,7 @@ export async function to_geojson(
 
         if (chem.detection) {
             const detections = Array.isArray(chem.detection) ? chem.detection : [chem.detection];
-            feat.properties.chemsensordetail.detection = detections.map((d: Static<typeof ChemDetection>) => ({ ...d._attributes }));
+            feat.properties.chemsensordetail.detection = detections.map((d: Static<typeof ChemDetection>) => d._attributes);
         }
     }
 
@@ -180,10 +185,10 @@ export async function to_geojson(
         if (bio.measurement) {
             const measurements = Array.isArray(bio.measurement) ? bio.measurement : [bio.measurement];
             feat.properties.biosensordetail.measurement = measurements.map((m: Static<typeof BioMeasurement>) => {
-                const measurement: { level?: Array<Static<typeof BioMeasurementLevelAttributes>> } & typeof m._attributes = { ...m._attributes };
+                const measurement: { level?: Array<Static<typeof BioMeasurementLevelAttributes>> } & typeof m._attributes = m._attributes;
                 if (m.level) {
                     const levels = Array.isArray(m.level) ? m.level : [m.level];
-                    measurement.level = levels.map((l: Static<typeof BioMeasurementLevel>) => ({ ...l._attributes }));
+                    measurement.level = levels.map((l: Static<typeof BioMeasurementLevel>) => l._attributes);
                 }
                 return measurement;
             });
@@ -243,12 +248,13 @@ export async function to_geojson(
     }
 
     if (raw.event.detail.attachment_list) {
+        // oxlint-disable-next-line typescript/no-unsafe-assignment
         feat.properties.attachments = JSON.parse(raw.event.detail.attachment_list._attributes.hashes);
     }
 
     if (raw.event.detail.image) {
         feat.properties.image = {
-            ...(raw.event.detail.image._attributes || {}),
+            ...raw.event.detail.image._attributes,
             data: raw.event.detail.image._text
         };
     }
@@ -271,7 +277,7 @@ export async function to_geojson(
                 });
         }
 
-        if (!feat.properties.links || !feat.properties.links.length) delete feat.properties.links;
+        if (feat.properties.links.length === 0) delete feat.properties.links;
     }
 
     if (raw.event.detail.archive) {
@@ -283,14 +289,16 @@ export async function to_geojson(
     }
 
     if (raw.event.detail.__chat) {
+        const chatgrp: unknown = raw.event.detail.__chat.chatgrp;
         feat.properties.chat = {
             ...raw.event.detail.__chat._attributes,
-            chatgrp: raw.event.detail.__chat.chatgrp
+            chatgrp
         }
     } else if (raw.event.detail.__chatreceipt) {
+        const chatgrp: unknown = raw.event.detail.__chatreceipt.chatgrp;
         feat.properties.chat = {
             ...raw.event.detail.__chatreceipt._attributes,
-            chatgrp: raw.event.detail.__chatreceipt.chatgrp
+            chatgrp
         }
     }
 
@@ -342,8 +350,9 @@ export async function to_geojson(
         feat.properties.group = raw.event.detail.__group._attributes;
     }
 
-    if (raw.event.detail['_flow-tags_']?._attributes) {
-        feat.properties.flow = raw.event.detail['_flow-tags_']._attributes;
+    const flow: unknown = raw.event.detail['_flow-tags_'];
+    if (hasFlowAttributes(flow)) {
+        feat.properties.flow = flow._attributes;
     }
 
     if (raw.event.detail.status?._attributes) {
@@ -356,30 +365,33 @@ export async function to_geojson(
         };
 
         if (raw.event.detail.mission.MissionChanges) {
-            const changes =
+            const missionChanges: Array<Static<typeof MissionChanges>> =
                 Array.isArray(raw.event.detail.mission.MissionChanges)
                     ? raw.event.detail.mission.MissionChanges
                     : [ raw.event.detail.mission.MissionChanges ]
 
+            const changes = missionChanges.flatMap((missionChange) => missionChange.MissionChange);
+
             mission.missionChanges = []
             for (const change of changes) {
                 const mc: Static<typeof FeaturePropertyMissionChange> = {
-                    contentUid: change.MissionChange.contentUid ? change.MissionChange.contentUid._text : undefined,
-                    creatorUid: change.MissionChange.creatorUid._text,
-                    isFederatedChange: change.MissionChange.isFederatedChange._text,
-                    missionName: change.MissionChange.missionName._text,
-                    timestamp: change.MissionChange.timestamp._text,
-                    type: change.MissionChange.type._text,
+                    contentUid: change.contentUid ? change.contentUid._text : undefined,
+                    // oxlint-disable-next-line typescript/no-unsafe-type-assertion
+                    creatorUid: change.creatorUid._text as string,
+                    isFederatedChange: change.isFederatedChange._text,
+                    missionName: change.missionName._text,
+                    timestamp: change.timestamp._text,
+                    type: change.type._text,
                 };
 
-                if (change.MissionChange.contentResource) {
-                    const cr = change.MissionChange.contentResource;
+                if (change.contentResource) {
+                    const cr = change.contentResource;
                     mc.contentResource = {
                         uid: cr.uid._text,
                         expiration: cr.expiration._text,
                         hash: cr.hash._text,
                         name: cr.name._text,
-                        size: parseInt(cr.size._text),
+                        size: Math.trunc(toNumber(cr.size._text)),
                         submissionTime: cr.submissionTime._text,
                         submitter: cr.submitter._text,
                         filename: cr.filename ? cr.filename._text : undefined,
@@ -387,21 +399,22 @@ export async function to_geojson(
                     };
                 }
 
-                if (change.MissionChange.content?.MissionProperty) {
-                    const mp = change.MissionChange.content.MissionProperty;
+                if (change.content?.MissionProperty) {
+                    const mp = change.content.MissionProperty;
                     mc.missionProperty = {
                         key: mp.key._text,
                         value: mp.value?._text ?? '',
                     };
                 }
 
-                if (change.MissionChange.details) {
+                if (change.details) {
+                    // oxlint-disable-next-line typescript/no-unsafe-type-assertion
                     mc.details = {
-                        ...change.MissionChange.details._attributes,
-                        ...change.MissionChange.details.location
-                            ? change.MissionChange.details.location._attributes
+                        ...change.details._attributes,
+                        ...change.details.location
+                            ? change.details.location._attributes
                             : {}
-                    };
+                    } as Static<typeof FeaturePropertyMissionChange>['details'];
                 }
 
                 mission.missionChanges.push(mc)
@@ -440,13 +453,14 @@ export async function to_geojson(
     }
 
     if (raw.event.detail.strokeColor?._attributes?.value !== undefined) {
-        const stroke = new Color(Number(raw.event.detail.strokeColor._attributes.value));
+        const stroke = new Color(toNumber(raw.event.detail.strokeColor._attributes.value));
         feat.properties.stroke = stroke.as_hex();
         feat.properties['stroke-opacity'] = stroke.as_opacity() / 255;
     }
 
-    if (raw.event.detail.strokeWeight?._attributes?.value) {
-        feat.properties['stroke-width'] = Number(raw.event.detail.strokeWeight._attributes.value);
+    const strokeWeight = raw.event.detail.strokeWeight?._attributes?.value ?? 0;
+    if (strokeWeight) {
+        feat.properties['stroke-width'] = toNumber(strokeWeight);
     }
 
     if (raw.event.detail.strokeStyle?._attributes?.value) {
@@ -458,7 +472,7 @@ export async function to_geojson(
 
         if (Array.isArray(raw.event.detail.color) && raw.event.detail.color.length > 1) {
             color = raw.event.detail.color[0];
-            if (!color._attributes) color._attributes = {};
+            color._attributes ??= {};
 
             for (let i = raw.event.detail.color.length - 1; i >= 1; i--) {
                 if (raw.event.detail.color[i]._attributes) {
@@ -471,8 +485,9 @@ export async function to_geojson(
             color = raw.event.detail.color;
         }
 
-        if (color?._attributes?.argb) {
-            const parsedColor = new Color(Number(color._attributes.argb));
+        const argb = color?._attributes?.argb ?? 0;
+        if (argb) {
+            const parsedColor = new Color(toNumber(argb));
             feat.properties['marker-color'] = parsedColor.as_hex();
             feat.properties['marker-opacity'] = parsedColor.as_opacity() / 255;
         }
@@ -484,12 +499,12 @@ export async function to_geojson(
 
         for (const l of raw.event.detail.link) {
             if (!l._attributes.point) continue;
-            coordinates.push(
-                l._attributes.point.split(',')
-                    .map((p: string) => { return Number(p.trim()) })
-                    .splice(0, 2)
-                    .reverse()
-            );
+            const coord = l._attributes.point.split(',')
+                .map((p: string) => { return Number(p.trim()) })
+                .splice(0, 2);
+            coord.reverse();
+
+            coordinates.push(coord);
         }
 
         // Range & Bearing Line
@@ -499,7 +514,7 @@ export async function to_geojson(
             if (!detail.range) throw new Error('Range value not provided')
             if (!detail.bearing) throw new Error('Bearing value not provided')
 
-            // TODO Support inclination
+            // Inclination is not yet supported
             const dest = destination(
                 cot.position(),
                 detail.range._attributes.value / 1000,
@@ -510,7 +525,7 @@ export async function to_geojson(
                 type: 'LineString',
                 coordinates: [cot.position(), dest]
             };
-        } else if (raw.event._attributes.type === 'u-d-r' || (coordinates[0][0] === coordinates[coordinates.length -1][0] && coordinates[0][1] === coordinates[coordinates.length -1][1])) {
+        } else if (raw.event._attributes.type === 'u-d-r' || (coordinates[0][0] === coordinates.at(-1)?.[0] && coordinates[0][1] === coordinates.at(-1)?.[1])) {
             if (raw.event._attributes.type === 'u-d-r') {
                 // CoT rectangles are only 4 points - GeoJSON needs to be closed
                 coordinates.push(coordinates[0])
@@ -522,7 +537,7 @@ export async function to_geojson(
             }
 
             if (raw.event.detail.fillColor?._attributes?.value !== undefined) {
-                const fill = new Color(Number(raw.event.detail.fillColor._attributes.value));
+                const fill = new Color(toNumber(raw.event.detail.fillColor._attributes.value));
                 feat.properties['fill-opacity'] = fill.as_opacity() / 255;
                 feat.properties['fill'] = fill.as_hex();
             }
@@ -535,10 +550,7 @@ export async function to_geojson(
     } else if (ELLIPSE_TYPE_PREFIXES.some((prefix) => raw.event._attributes.type.startsWith(prefix))) {
         if (!raw.event.detail.shape) throw new Err(400, null, `${raw.event._attributes.type} (Circle) must define shape value`)
 
-        if (
-            !raw.event.detail.shape.ellipse
-            || !raw.event.detail.shape.ellipse._attributes
-        ) throw new Err(400, null, `${raw.event._attributes.type} (Circle) must define ellipse shape value`)
+        if (!raw.event.detail.shape.ellipse?._attributes) throw new Err(400, null, `${raw.event._attributes.type} (Circle) must define ellipse shape value`)
 
         const ellipse: {
             major: number;
@@ -546,18 +558,18 @@ export async function to_geojson(
             angle: number;
             swapAxis?: boolean;
         } = {
-            major: Number(raw.event.detail.shape.ellipse._attributes.major),
-            minor: Number(raw.event.detail.shape.ellipse._attributes.minor),
-            angle: Number(raw.event.detail.shape.ellipse._attributes.angle)
+            major: toNumber(raw.event.detail.shape.ellipse._attributes.major),
+            minor: toNumber(raw.event.detail.shape.ellipse._attributes.minor),
+            angle: toNumber(raw.event.detail.shape.ellipse._attributes.angle)
         }
 
         if (raw.event.detail.shape.ellipse._attributes.swapAxis !== undefined) {
-            ellipse.swapAxis = Boolean(raw.event.detail.shape.ellipse._attributes.swapAxis);
+            ellipse.swapAxis = raw.event.detail.shape.ellipse._attributes.swapAxis;
         }
 
         // ATAK puts circle fill in detail.fillColor; KML PolyStyle (below) may override.
         if (raw.event.detail.fillColor?._attributes?.value !== undefined) {
-            const fill = new Color(Number(raw.event.detail.fillColor._attributes.value));
+            const fill = new Color(toNumber(raw.event.detail.fillColor._attributes.value));
             feat.properties['fill-opacity'] = fill.as_opacity() / 255;
             feat.properties['fill'] = fill.as_hex();
         }
@@ -568,18 +580,18 @@ export async function to_geojson(
                 : [raw.event.detail.shape.link])
             : [];
         const styleLink = styleLinks.find((link) => (
-            link?._attributes?.type === 'b-x-KmlStyle' && link.Style
+            link?._attributes?.type === 'b-x-KmlStyle' && link.Style !== undefined
         ));
 
         if (styleLink?.Style) {
             if (styleLink.Style.LineStyle?.color) {
                 let rawColor = styleLink.Style.LineStyle.color._text;
-                if (rawColor.startsWith('#')) rawColor = rawColor.substring(1);
+                if (rawColor.startsWith('#')) rawColor = rawColor.slice(1);
 
-                const a = parseInt(rawColor.substring(0, 2), 16);
-                const r = parseInt(rawColor.substring(2, 4), 16);
-                const g = parseInt(rawColor.substring(4, 6), 16);
-                const b = parseInt(rawColor.substring(6, 8), 16);
+                const a = parseInt(rawColor.slice(0, 2), 16);
+                const r = parseInt(rawColor.slice(2, 4), 16);
+                const g = parseInt(rawColor.slice(4, 6), 16);
+                const b = parseInt(rawColor.slice(6, 8), 16);
 
                 const strokeColor = new Color([a, r, g, b]);
                 feat.properties.stroke = strokeColor.as_hex();
@@ -588,17 +600,17 @@ export async function to_geojson(
             }
 
             if (styleLink.Style.LineStyle?.width) {
-                feat.properties['stroke-width'] = Number(styleLink.Style.LineStyle.width._text);
+                feat.properties['stroke-width'] = toNumber(styleLink.Style.LineStyle.width._text);
             }
 
             if (styleLink.Style.PolyStyle?.color) {
                 let rawColor = styleLink.Style.PolyStyle.color._text;
-                if (rawColor.startsWith('#')) rawColor = rawColor.substring(1);
+                if (rawColor.startsWith('#')) rawColor = rawColor.slice(1);
 
-                const a = parseInt(rawColor.substring(0, 2), 16);
-                const r = parseInt(rawColor.substring(2, 4), 16);
-                const g = parseInt(rawColor.substring(4, 6), 16);
-                const b = parseInt(rawColor.substring(6, 8), 16);
+                const a = parseInt(rawColor.slice(0, 2), 16);
+                const r = parseInt(rawColor.slice(2, 4), 16);
+                const g = parseInt(rawColor.slice(4, 6), 16);
+                const b = parseInt(rawColor.slice(6, 8), 16);
 
                 const fillColor = new Color([a, r, g, b]);
                 feat.properties['fill-opacity'] = fillColor.as_opacity() / 255;
@@ -607,9 +619,9 @@ export async function to_geojson(
         }
 
         feat.geometry = Truncate(Ellipse(
-            feat.geometry.coordinates as number[],
-            Number(ellipse.major) / 1000,
-            Number(ellipse.minor) / 1000,
+            feat.properties.center,
+            ellipse.major / 1000,
+            ellipse.minor / 1000,
             {
                 angle: 90 - ellipse.angle
             }
@@ -617,7 +629,7 @@ export async function to_geojson(
             precision: COORDINATE_PRECISION,
             coordinates: 3,
             mutate: true
-        }).geometry as Static<typeof Polygon>;
+        }).geometry;
 
         feat.properties.shape = {};
         feat.properties.shape.ellipse = ellipse;
@@ -627,8 +639,8 @@ export async function to_geojson(
 
         const vertices = Array.isArray(raw.event.detail.shape.polyline.vertex) ? raw.event.detail.shape.polyline.vertex : [raw.event.detail.shape.polyline.vertex];
         for (const v of vertices) {
-            const coord = [Number(v._attributes.lon), Number(v._attributes.lat)];
-            if (v._attributes.hae !== undefined) coord.push(Number(v._attributes.hae));
+            const coord = [toNumber(v._attributes.lon), toNumber(v._attributes.lat)];
+            if (v._attributes.hae !== undefined) coord.push(toNumber(v._attributes.hae));
             coordinates.push(coord);
         }
 
@@ -636,8 +648,8 @@ export async function to_geojson(
             feat.geometry = { type: 'Point', coordinates: coordinates[0] }
         } else if (raw.event.detail.shape.polyline._attributes?.closed === true) {
             const first = coordinates[0];
-            const last = coordinates[coordinates.length - 1];
-            if (first[0] !== last[0] || first[1] !== last[1]) coordinates.push(first);
+            const last = coordinates.at(-1);
+            if (first[0] !== last?.[0] || first[1] !== last[1]) coordinates.push(first);
 
             feat.geometry = { type: 'Polygon', coordinates: [coordinates] }
         } else {
@@ -657,16 +669,15 @@ export async function to_geojson(
                 feat.properties['stroke-opacity'] = stroke.as_opacity() / 255;
             }
         }
-    } else if (raw.event._attributes.type === 'b-m-p-s-m') {
-        if (
-            raw.event.detail.usericon?._attributes?.iconsetpath
-            && raw.event.detail.usericon._attributes.iconsetpath.startsWith('COT_MAPPING_SPOTMAP/b-m-p-s-m/')
-       ) {
-            const spot = new Color(Number(raw.event.detail.usericon._attributes.iconsetpath.split('/')[2]));
-            feat.properties['marker-color'] = spot.as_hex();
-            feat.properties['marker-opacity'] = spot.as_opacity() / 255;
-            delete feat.properties.icon;
-        }
+    } else if (
+        raw.event._attributes.type === 'b-m-p-s-m'
+        && raw.event.detail.usericon?._attributes?.iconsetpath
+        && raw.event.detail.usericon._attributes.iconsetpath.startsWith('COT_MAPPING_SPOTMAP/b-m-p-s-m/')
+    ) {
+        const spot = new Color(Number(raw.event.detail.usericon._attributes.iconsetpath.split('/')[2]));
+        feat.properties['marker-color'] = spot.as_hex();
+        feat.properties['marker-opacity'] = spot.as_opacity() / 255;
+        delete feat.properties.icon;
     }
 
     feat.properties.metadata = cot.metadata;
