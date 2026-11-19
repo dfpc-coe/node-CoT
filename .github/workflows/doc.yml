@@ -36,6 +36,11 @@ jobs:
         run: npm install
       - name: npm run doc
         run: npm run doc
+      - name: Build validator
+        working-directory: demo
+        run: |
+          npm install
+          npm run build -- --outDir ../docs/validator --emptyOutDir
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:

@@ -79,6 +79,10 @@ Then the raw JSONified XML will be printed on each constructor invocation.
 schemas in `lib/` from a browser - paste or drop the message in the text box to
 see every validation error along with the converted GeoJSON or XML.
 
+The latest version is hosted on our [Github Pages Site](https://dfpc-coe.github.io/node-CoT/validator/)
+
+Or run locally with
+
 ```sh
 npm install
 cd demo
