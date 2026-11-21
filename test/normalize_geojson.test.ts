@@ -206,3 +206,42 @@ test('normalize_geojson - Polygon', async () => {
         }
     });
 });
+
+test('normalize_geojson - Keeps caller supplied time, start and stale', async () => {
+    const feat = await CoTParser.normalize_geojson({
+        id: "4f1c2a8e-7b3d-4e6a-9c0f-2d5b8e1a3c7f",
+        type: "Feature",
+        properties: {
+            title: "Staging Area",
+            time: "2026-01-01T00:00:00.000Z",
+            start: "2026-01-01T00:05:00.000Z",
+            stale: "2027-01-01T00:00:00.000Z"
+        },
+        geometry: { "coordinates": [-108.2982, 39.0833], "type": "Point" },
+    });
+
+    assert.equal(feat.properties.time, "2026-01-01T00:00:00.000Z");
+    assert.equal(feat.properties.start, "2026-01-01T00:05:00.000Z");
+    assert.equal(feat.properties.stale, "2027-01-01T00:00:00.000Z");
+
+    const cot = await CoTParser.from_geojson(feat);
+    assert.equal(cot.raw.event._attributes.stale, "2027-01-01T00:00:00.000Z");
+});
+
+test('normalize_geojson - Defaults stale to one hour when missing', async () => {
+    const feat = await CoTParser.normalize_geojson({
+        type: "Feature",
+        properties: {
+            title: "Staging Area"
+        },
+        geometry: { "coordinates": [-108.2982, 39.0833], "type": "Point" },
+    });
+
+    assert.equal(typeof feat.properties.time, 'string');
+    assert.equal(typeof feat.properties.start, 'string');
+    assert.equal(typeof feat.properties.stale, 'string');
+    assert.equal(
+        new Date(feat.properties.stale).getTime() - new Date(feat.properties.time).getTime(),
+        60 * 60 * 1000
+    );
+});
