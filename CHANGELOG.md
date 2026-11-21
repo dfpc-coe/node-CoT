@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.60.1 - 2026-11-21
+
+- :arrow_up: Update Core Deps
+
 ### v14.60.0 - 2026-11-19
 
 - :tada: Introduce NodeCoT Online Validator
