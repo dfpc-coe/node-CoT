@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.61.1 - 2026-11-24
+
+- :bug: Accept a `spatial` detail with an empty or missing `attitude` or `spin` (Skydio sends `<spin/>`) instead of rejecting the CoT
+
 ### v14.61.0 - 2026-11-24
 
 - :tada: `to_geojson` returns the `hierarchy` of a GeoChat as `chat.hierarchy` (a tree of groups & contacts) and `GroupChat` accepts it back to address nested groups

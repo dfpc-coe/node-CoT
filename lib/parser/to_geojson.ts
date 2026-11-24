@@ -198,10 +198,15 @@ export async function to_geojson(
 
     if (raw.event.detail.spatial) {
         const spatial = raw.event.detail.spatial;
-        feat.properties.spatial = {
-            attitude: { ...spatial.attitude._attributes },
-            spin: { ...spatial.spin._attributes }
-        };
+        feat.properties.spatial = {};
+
+        if (spatial.attitude?._attributes) {
+            feat.properties.spatial.attitude = { ...spatial.attitude._attributes };
+        }
+
+        if (spatial.spin?._attributes) {
+            feat.properties.spatial.spin = { ...spatial.spin._attributes };
+        }
 
         if (spatial._attributes?.version !== undefined) {
             feat.properties.spatial.version = spatial._attributes.version;

@@ -133,8 +133,8 @@ export const FeaturePropertyBioSensorDetail = Type.Object({
 
 export const FeaturePropertySpatial = Type.Object({
     version: Type.Optional(Type.Number()),
-    attitude: SpatialAttitudeAttributes,
-    spin: SpatialSpinAttributes
+    attitude: Type.Optional(SpatialAttitudeAttributes),
+    spin: Type.Optional(SpatialSpinAttributes)
 });
 
 export const ChatHierarchy = Type.Object({

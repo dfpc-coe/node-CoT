@@ -369,3 +369,19 @@ test('Sensor2Polygon - no cone without a usable range', async () => {
 
     assert.equal(cot.sensor(), null);
 });
+
+test('Decode Skydio COT UAS Message with empty spin', async () => {
+    const packet = '<event version="2.0" uid="R70CA00E29C" type="a-f-A-M-H-Q" how="m-g" time="2026-11-24T15:44:11.452Z" start="2026-11-24T15:44:11.277Z" stale="2026-11-24T15:45:11.277Z"><point lat="39.08873" lon="-108.44908" hae="1431.71948" ce="0.0" le="0.0"/><detail><contact callsign="MCSO R10"/><source app="Skydio Ent App"/><__video url=""/><_uastool extendedCot="true" activeRoute="false"/><track course="90.000000"/><sensor range="100" azimuth="90.000000" fov="79.638633" displayMagneticReference="0" vfov="50.265855" roll="0" elevation="-1.354110"/><spatial><attitude roll="0.0" pitch="0.0" yaw="0.0"/><spin/></spatial><vehicle batteryRemainingCapacity="89" batteryMaxCapacity="100" goHomeBatteryPercent="-2147483648" hal="-2147483648" flightTimeRemaining="-2147483648" typeTag="_MAVLink_" isFlying="true" flightTime="-2147483648" type="MAV"/></detail></event>';
+
+    const cot = CoTParser.from_xml(packet);
+    const feat = await CoTParser.to_geojson(cot);
+
+    assert.deepEqual(feat.properties.spatial, {
+        attitude: { roll: 0, pitch: 0, yaw: 0 }
+    });
+
+    const back = await CoTParser.from_geojson(feat);
+    assert.deepEqual(back.raw.event.detail?.spatial, {
+        attitude: { _attributes: { roll: 0, pitch: 0, yaw: 0 } }
+    });
+});

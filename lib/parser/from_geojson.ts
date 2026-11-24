@@ -280,10 +280,15 @@ export async function from_geojson(
 
     if (feature.properties.spatial) {
         const spatial = feature.properties.spatial;
-        cot.event.detail.spatial = {
-            attitude: { _attributes: { ...spatial.attitude } },
-            spin: { _attributes: { ...spatial.spin } }
-        };
+        cot.event.detail.spatial = {};
+
+        if (spatial.attitude) {
+            cot.event.detail.spatial.attitude = { _attributes: { ...spatial.attitude } };
+        }
+
+        if (spatial.spin) {
+            cot.event.detail.spatial.spin = { _attributes: { ...spatial.spin } };
+        }
 
         if (spatial.version !== undefined) {
             cot.event.detail.spatial._attributes = { version: spatial.version };

@@ -467,7 +467,7 @@ export const SpatialAttitudeAttributes = Type.Object({
 });
 
 export const SpatialAttitude = Type.Object({
-    _attributes: SpatialAttitudeAttributes
+    _attributes: Type.Optional(SpatialAttitudeAttributes)
 });
 
 export const SpatialSpinAttributes = Type.Object({
@@ -492,7 +492,7 @@ export const SpatialSpinAttributes = Type.Object({
 });
 
 export const SpatialSpin = Type.Object({
-    _attributes: SpatialSpinAttributes
+    _attributes: Type.Optional(SpatialSpinAttributes)
 });
 
 export const Spatial = Type.Object({
@@ -501,8 +501,8 @@ export const Spatial = Type.Object({
             description: 'Version tag for this sub schema.'
         }))
     })),
-    attitude: SpatialAttitude,
-    spin: SpatialSpin
+    attitude: Type.Optional(SpatialAttitude),
+    spin: Type.Optional(SpatialSpin)
 });
 
 export const VideoAttributes = Type.Object({
