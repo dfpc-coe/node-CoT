@@ -17,6 +17,7 @@ import { classHighlighter } from '@lezer/highlight';
 import { xml } from '@codemirror/lang-xml';
 import { json } from '@codemirror/lang-json';
 import type { Format, Issue } from './validate.js';
+import { pretty } from './pretty.js';
 
 const props = defineProps<{
     modelValue: string;
@@ -150,6 +151,27 @@ onMounted(() => {
                     if (update.docChanged) emit('update:modelValue', update.state.doc.toString());
                 }),
                 EditorView.domEventHandlers({
+                    paste(event, target) {
+                        const text = event.clipboardData?.getData('text/plain');
+                        if (!text) return false;
+
+                        const { from, to } = target.state.selection.main;
+                        if (from !== 0 || to !== target.state.doc.length) return false;
+
+                        const formatted = pretty(text);
+                        if (formatted === text) return false;
+
+                        event.preventDefault();
+
+                        target.dispatch({
+                            changes: { from, to, insert: formatted },
+                            selection: { anchor: formatted.length },
+                            userEvent: 'input.paste',
+                            scrollIntoView: true
+                        });
+
+                        return true;
+                    },
                     drop(event, target) {
                         const file = event.dataTransfer?.files[0];
                         if (!file) return false;
@@ -157,7 +179,7 @@ onMounted(() => {
                         event.preventDefault();
 
                         void file.text().then((text) => {
-                            target.dispatch({ changes: { from: 0, to: target.state.doc.length, insert: text } });
+                            target.dispatch({ changes: { from: 0, to: target.state.doc.length, insert: pretty(text) } });
                         });
 
                         return true;

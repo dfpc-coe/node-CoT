@@ -12,6 +12,10 @@
 
 ### Pending Fixed
 
+### v14.61.2 - 2026-11-24
+
+- :rocket: Update Validator Demo to automatically prettify XML and GeoJSON
+
 ### v14.61.1 - 2026-11-24
 
 - :bug: Accept a `spatial` detail with an empty or missing `attitude` or `spin` (Skydio sends `<spin/>`) instead of rejecting the CoT
