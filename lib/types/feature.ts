@@ -137,6 +137,24 @@ export const FeaturePropertySpatial = Type.Object({
     spin: SpatialSpinAttributes
 });
 
+export const ChatHierarchy = Type.Object({
+    uid: Type.String(),
+    name: Type.String(),
+    type: Type.Union([Type.Literal('group'), Type.Literal('contact')]),
+    children: Type.Optional(Type.Array(Type.Any({
+        description: 'Nested ChatHierarchy nodes'
+    })))
+}, {
+    description: 'Group membership tree sent with a GeoChat to a user created group, rooted at the UserGroups group'
+});
+
+export type ChatHierarchyNode = {
+    uid: string;
+    name: string;
+    type: 'group' | 'contact';
+    children?: Array<ChatHierarchyNode>;
+};
+
 export const Properties = Type.Object({
     callsign: Type.String({ default: 'UNKNOWN' }),
     type: Type.String({ default: 'a-f-G' }),
@@ -201,7 +219,11 @@ export const Properties = Type.Object({
         chatroom: Type.String(),
         id: Type.Optional(Type.String()),
         senderCallsign: Type.String(),
-        chatgrp: Type.Any()
+        deleteChild: Type.Optional(Type.String({
+            description: 'UID of a group that the sender deleted from the group this message is addressed to'
+        })),
+        chatgrp: Type.Any(),
+        hierarchy: Type.Optional(ChatHierarchy)
     })),
     track: Type.Optional(TrackAttributes),
     dest: Type.Optional(Type.Union([MartiDestAttributes, Type.Array(MartiDestAttributes)])),

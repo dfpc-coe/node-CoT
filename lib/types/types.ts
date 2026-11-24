@@ -582,9 +582,11 @@ export const Chat = Type.Object({
         messageId: Type.Optional(Type.String()),
         chatroom: Type.String(),
         id: Type.Optional(Type.String()),
-        senderCallsign: Type.String()
+        senderCallsign: Type.String(),
+        deleteChild: Type.Optional(Type.String())
     }),
-    chatgrp: Type.Any()
+    chatgrp: Type.Any(),
+    hierarchy: Type.Optional(Type.Any())
 })
 
 export const TakVersionAttributes = Type.Object({

@@ -16,6 +16,7 @@ export * from './lib/xml/basemap.js';
 export * from './lib/xml/iconset.js';
 
 export * from './lib/builders/chat.js';
+export * from './lib/utils/chat.js';
 export * from './lib/builders/route.js';
 export * from './lib/builders/fileshare.js';
 export * from './lib/builders/force-delete.js';

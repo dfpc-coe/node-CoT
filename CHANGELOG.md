@@ -12,6 +12,13 @@
 
 ### Pending Fixed
 
+### v14.61.0 - 2026-11-24
+
+- :tada: `to_geojson` returns the `hierarchy` of a GeoChat as `chat.hierarchy` (a tree of groups & contacts) and `GroupChat` accepts it back to address nested groups
+- :tada: Add `deleteChild` to the `__chat` detail, the `chat` GeoJSON property and `GroupChat`
+- :bug: `DirectChat` event UID ends in the `messageId` instead of a random UUID, matching ATAK and the other chat builders
+- :tada: Add `GroupChat` builder for GeoChat messages to a user group, team group or `All Chat Rooms`, including the `hierarchy` ATAK uses to create an unknown group
+
 ### v14.60.1 - 2026-11-21
 
 - :arrow_up: Update Core Deps

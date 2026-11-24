@@ -28,6 +28,7 @@ import { destination } from '@turf/destination';
 import Color from '../utils/color.js';
 import { jsonClone, toNumber } from '../utils/util.js';
 import Type2525 from '../utils/2525.js';
+import { chatHierarchy } from '../utils/chat.js';
 import JSONCoT from '../types/types.js'
 import CoT from '../cot.js';
 
@@ -294,6 +295,9 @@ export async function to_geojson(
             ...raw.event.detail.__chat._attributes,
             chatgrp
         }
+
+        const hierarchy = chatHierarchy(raw.event.detail.__chat.hierarchy);
+        if (hierarchy) feat.properties.chat.hierarchy = hierarchy;
     } else if (raw.event.detail.__chatreceipt) {
         const chatgrp: unknown = raw.event.detail.__chatreceipt.chatgrp;
         feat.properties.chat = {
